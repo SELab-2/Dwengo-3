@@ -28,3 +28,8 @@ CREATE TABLE IF NOT EXISTS learning_objects (
     created_at TIMESTAMP DEFAULT NOW(),                         -- Timestamp when created
     updated_at TIMESTAMP DEFAULT NOW(),                         -- Timestamp when last updated
 );
+
+
+CREATE table learning_objects_keyword (
+
+);
