@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS learning_path_nodes (
 );
 CREATE TABLE IF NOT EXISTS learning_path_transitions (
     _id TEXT PRIMARY KEY,
-    from_node_id INT NOT NULL,
+    from_node_id TEXT NOT NULL,
     to_lo_hruid TEXT NOT NULL,
     to_version INT NOT NULL,
     to_language TEXT NOT NULL,
