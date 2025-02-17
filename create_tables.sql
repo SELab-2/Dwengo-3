@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS learning_path_nodes (
     language TEXT NOT NULL,
     instruction TEXT,
     start_node BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (lp_id) REFERENCES learning_paths(_id)
+    FOREIGN KEY (lp_id) REFERENCES learning_paths(_id),
     FOREIGN KEY (lo_hruid) REFERENCES learning_objects(hruid)
 );
 CREATE TABLE IF NOT EXISTS learning_path_transitions (
@@ -72,6 +72,6 @@ CREATE TABLE IF NOT EXISTS learning_path_transitions (
     to_language TEXT NOT NULL,
     condition TEXT,
     is_default BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (from_node_id) REFERENCES learning_path_nodes(_id)
+    FOREIGN KEY (from_node_id) REFERENCES learning_path_nodes(_id),
     FOREIGN KEY (to_lo_hruid) REFERENCES learning_objects(hruid)
 );
