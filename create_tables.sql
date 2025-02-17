@@ -1,7 +1,5 @@
-\c postgres
 DROP DATABASE dwengo_db;
 CREATE DATABASE dwengo_db;
-\c dwengo_db
 CREATE TABLE IF NOT EXISTS learning_objects (
     hruid TEXT UNIQUE NOT NULL,
     uuid TEXT UNIQUE NOT NULL,
