@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS learning_objects_keyword (
     UNIQUE (lo_id, keyword),
     FOREIGN KEY (lo_id) REFERENCES learning_objects(_id)
 );
-CREATE TABLE learning_paths (
+CREATE TABLE IF NOT EXISTS learning_paths (
     _id TEXT PRIMARY KEY,
     hruid TEXT UNIQUE NOT NULL,
     language TEXT NOT NULL,
@@ -53,8 +53,8 @@ CREATE TABLE learning_paths (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
-CREATE TABLE learning_path_nodes (
-    _id PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS learning_path_nodes (
+    _id TEXT PRIMARY KEY,
     lp_id TEXT NOT NULL,
     lo_hruid TEXT NOT NULL,
     version INT NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE learning_path_nodes (
     start_node BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (lp_id) REFERENCES learning_paths(_id) FOREIGN KEY (lo_hruid) REFERENCES learning_objects(hruid)
 );
-CREATE TABLE learning_path_transitions (
+CREATE TABLE IF NOT EXISTS learning_path_transitions (
     _id TEXT PRIMARY KEY,
     from_node_id INT NOT NULL,
     to_learningobject_hruid TEXT NOT NULL,
