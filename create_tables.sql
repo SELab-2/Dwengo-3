@@ -1,35 +1,76 @@
-CREATE DATABASE dwengo-groep3;
-
+DROP DATABASE dwengo_db;
+CREATE DATABASE dwengo_db;
 CREATE TABLE IF NOT EXISTS learning_objects (
-    hruid TEXT UNIQUE NOT NULL,                                 -- Human-readable unique ID
-    uuid TEXT UNIQUE NOT NULL,                                  -- Numerical equivalent of hruid
-    _id TEXT PRIMARY KEY,                                       -- Unique ID
-    version INT NOT NULL,                                       -- Version, unique with hruid/uuid + language
-    language TEXT NOT NULL,                                     -- Language of the learning object
-    title TEXT NOT NULL,                                        -- Short description
-    description TEXT,                                           -- Long description
-    content_type TEXT CHECK (content_type IN (
-        'text/plain', 'text/markdown', 'image/image-block',
-        'image/image', 'audio/mpeg', 'application/pdf', 'extern',
-        'blockly'
-    )),                                                         -- Type of content
-    keywords TEXT[],                                            -- Array of keywords
-    target_ages INT[],                                          -- Array of target ages
-    teacher_exclusive BOOLEAN DEFAULT FALSE,                    -- If it's exclusive for teachers
-    skos_concepts TEXT[],                                       -- Array of SKOS concept URIs
-    educational_goals JSON[],                                   -- JSON object for educational goals
-    copyright TEXT,                                             -- Copyright information
-    licence TEXT,                                               -- Licence information
-    difficulty NUMERIC CHECK (difficulty BETWEEN 1 AND 5),      -- Difficulty scale (1-5)
-    estimated_time NUMERIC,                                     -- Estimated time in minutes
-    return_value JSON,                                          -- JSON object for return value (callback URL + schema)
-    available BOOLEAN DEFAULT TRUE,                             -- Availability flag
-    content_location TEXT                                       -- External content location if applicable
-    created_at TIMESTAMP DEFAULT NOW(),                         -- Timestamp when created
-    updated_at TIMESTAMP DEFAULT NOW(),                         -- Timestamp when last updated
+    hruid TEXT UNIQUE NOT NULL,
+    uuid TEXT UNIQUE NOT NULL,
+    _id TEXT PRIMARY KEY,
+    version INT NOT NULL,
+    language TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    content_type TEXT CHECK (
+        content_type IN (
+            'text/plain',
+            'text/markdown',
+            'image/image-block',
+            'image/image',
+            'audio/mpeg',
+            'application/pdf',
+            'extern',
+            'blockly'
+        )
+    ),
+    target_ages INT [],
+    teacher_exclusive BOOLEAN DEFAULT FALSE,
+    skos_concepts TEXT [],
+    educational_goals JSON [],
+    copyright TEXT,
+    licence TEXT,
+    difficulty NUMERIC CHECK (
+        difficulty BETWEEN 1 AND 5
+    ),
+    estimated_time NUMERIC,
+    return_value JSON,
+    available BOOLEAN DEFAULT TRUE,
+    content_location TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
-
-
-CREATE table learning_objects_keyword (
-
+CREATE TABLE IF NOT EXISTS learning_objects_keyword (
+    lo_id TEXT PRIMARY KEY,
+    keyword TEXT NOT NULL,
+    UNIQUE (lo_id, keyword),
+    FOREIGN KEY (lo_id) REFERENCES learning_objects(_id)
+);
+CREATE TABLE learning_paths (
+    _id TEXT PRIMARY KEY,
+    hruid TEXT UNIQUE NOT NULL,
+    language TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    -- Base64 representation
+    image TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE TABLE learning_path_nodes (
+    _id PRIMARY KEY,
+    lp_id TEXT NOT NULL,
+    lo_hruid TEXT NOT NULL,
+    version INT NOT NULL,
+    language TEXT NOT NULL,
+    instruction TEXT,
+    start_node BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (lp_id) REFERENCES learning_paths(_id) FOREIGN KEY (lo_hruid) REFERENCES learning_objects(hruid)
+);
+CREATE TABLE learning_path_transitions (
+    _id TEXT PRIMARY KEY,
+    from_node_id INT NOT NULL,
+    to_learningobject_hruid TEXT NOT NULL,
+    to_version INT NOT NULL,
+    to_language TEXT NOT NULL,
+    condition TEXT,
+    is_default BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (from_node_id) REFERENCES learning_path_nodes(_id) ON DELETE CASCADE,
+    FOREIGN KEY (to_learningobject_hruid) REFERENCES learning_objects(hruid) ON DELETE CASCADE
 );
