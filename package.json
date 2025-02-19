@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\"",
-    "dev": "node index.js"
+    "dev": "nodemon index.ts"
   },
   "repository": {
     "type": "git",
@@ -31,5 +31,8 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.4.0"
   }
 }
