@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum content_type_enum {
+  text_plain        @map("text/plain")
+  text_markdown     @map("text/markdown")
+  image_image_block @map("image/image-block")
+  image_image       @map("image/image")
+  audio_mpeg        @map("audio/mpeg")
+  application_pdf   @map("application/pdf")
+  extern
+  blockly
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model learning_objects {
+  hruid                     String                      @unique
+  uuid                      String                      @unique
+  id                        String                      @id @map("_id")
+  version                   Int
+  language                  String
+  title                     String
+  description               String?
+  content_type              content_type_enum?
+  target_ages               Int[]
+  teacher_exclusive         Boolean?                    @default(false)
+  skos_concepts             String[]
+  educational_goals         Json[]                      @db.Json
+  copyright                 String?
+  licence                   String?
+  difficulty                Decimal?                    @db.Decimal
+  estimated_time            Decimal?                    @db.Decimal
+  return_value              Json?                       @db.Json
+  available                 Boolean?                    @default(true)
+  content_location          String?
+  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
+  updated_at                DateTime?                   @default(now()) @db.Timestamp(6)
+  learning_objects_keyword  learning_objects_keyword?
+  learning_path_nodes       learning_path_nodes[]
+  learning_path_transitions learning_path_transitions[]
+}
+
+model learning_objects_keyword {
+  lo_id            String           @id
+  keyword          String
+  learning_objects learning_objects @relation(fields: [lo_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([lo_id, keyword])
+}
+
+model learning_path_nodes {
+  id                        String                      @id @map("_id")
+  lp_id                     String
+  lo_hruid                  String
+  version                   Int
+  language                  String
+  instruction               String?
+  start_node                Boolean?                    @default(false)
+  learning_objects          learning_objects            @relation(fields: [lo_hruid], references: [hruid], onDelete: NoAction, onUpdate: NoAction)
+  learning_paths            learning_paths              @relation(fields: [lp_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learning_path_transitions learning_path_transitions[]
+}
+
+model learning_path_transitions {
+  id                  String              @id @map("_id")
+  from_node_id        String
+  to_lo_hruid         String
+  to_version          Int
+  to_language         String
+  condition           String?
+  is_default          Boolean?            @default(false)
+  learning_path_nodes learning_path_nodes @relation(fields: [from_node_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learning_objects    learning_objects    @relation(fields: [to_lo_hruid], references: [hruid], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model learning_paths {
+  id                  String                @id @map("_id")
+  hruid               String                @unique
+  language            String
+  title               String
+  description         String?
+  image               String?
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at          DateTime?             @default(now()) @db.Timestamp(6)
+  learning_path_nodes learning_path_nodes[]
+}

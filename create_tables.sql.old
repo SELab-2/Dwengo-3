@@ -1,15 +1,4 @@
-DROP DATABASE dwengo_db;
-CREATE DATABASE dwengo_db;
-CREATE TABLE IF NOT EXISTS learning_objects (
-    hruid TEXT UNIQUE NOT NULL,
-    uuid TEXT UNIQUE NOT NULL,
-    _id TEXT PRIMARY KEY,
-    version INT NOT NULL,
-    language TEXT NOT NULL,
-    title TEXT NOT NULL,
-    description TEXT,
-    content_type TEXT CHECK (
-        content_type IN (
+CREATE TYPE content_type_enum AS ENUM (
             'text/plain',
             'text/markdown',
             'image/image-block',
@@ -18,23 +7,32 @@ CREATE TABLE IF NOT EXISTS learning_objects (
             'application/pdf',
             'extern',
             'blockly'
-        )
-    ),
+);
+
+CREATE TABLE IF NOT EXISTS learning_objects (
+    hruid TEXT UNIQUE NOT NULL,
+    uuid TEXT UNIQUE NOT NULL,
+    _id TEXT PRIMARY KEY,
+    version INT NOT NULL,
+    language TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    content_type content_type_enum,
     target_ages INT [],
     teacher_exclusive BOOLEAN DEFAULT FALSE,
     skos_concepts TEXT [],
     educational_goals JSON [],
     copyright TEXT,
     licence TEXT,
-    difficulty NUMERIC CHECK (
-        difficulty BETWEEN 1 AND 5
-    ),
+    difficulty NUMERIC,
     estimated_time NUMERIC,
     return_value JSON,
     available BOOLEAN DEFAULT TRUE,
     content_location TEXT,
     created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    updated_at TIMESTAMP DEFAULT NOW(),
+
+    CONSTRAINT valid_difficulty CHECK (difficulty >= 1 AND difficulty <= 5)
 );
 CREATE TABLE IF NOT EXISTS learning_objects_keyword (
     lo_id TEXT PRIMARY KEY,
