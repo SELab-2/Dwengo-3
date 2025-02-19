@@ -13,5 +13,3 @@ Systeembeheerder: Jasper </br>
 **Frontend**: React, we hebben allemaal al ervaring met React. </br>
 **Backend**: ExpressJS, idem</br>
 **Databank**: PostgreSQL, idem. Ook omdat het relationeel gedeelte sterk zal worden gebruikt</br>
-
-test github actions pull request
