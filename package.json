@@ -4,6 +4,8 @@
   "description": "Dwengo leerplatform",
   "main": "index.js",
   "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev --skip-generate",
     "test": "echo \"Error: no test specified\"",
     "dev": "nodemon index.ts"
   },
