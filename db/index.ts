@@ -4,15 +4,15 @@ const prisma = new PrismaClient()
 
 
 async function main() {
-    const learning_object = await prisma.learning_objects.create({
+    const learning_object = await prisma.learningObject.create({
         data: {
             hruid: "test-hruid",
             uuid: "test-uuid",
-            id: "test-id",
             language: "nl",
             title: "Title of the object",
             version: 1,
             available: true,
+            content:"test-content"
         }
     });
     console.log(learning_object)
