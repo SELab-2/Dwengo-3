@@ -114,6 +114,7 @@ model Student {
   id      String  @id @default(uuid())
   userId  String  @unique
   classes Class[]
+  groups  Group[]
   user    User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -149,6 +150,7 @@ model Group {
   assignmentSubmissions AssignmentSubmission[]
   node                  LearningPathNode       @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  students              Student[]
 }
 
 model Assignment {
