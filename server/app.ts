@@ -1,8 +1,9 @@
 import express, {Express, Request, Response} from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from '@prisma/client'
+import { exit } from "process";
 
-dotenv.config();
+dotenv.config({path:"../.env"});
 
 const app: Express = express();
 const port = process.env.PORT || 3001;
