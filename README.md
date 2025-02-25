@@ -43,7 +43,7 @@ read -sp "Postgres password: " password && echo \
 
 Confirm the database is running:
 ```bash
-sudo docker ps
+sudo docker ps -a
 ```
 
 ---
@@ -51,7 +51,7 @@ sudo docker ps
 ## 3. Configure the environment
 Create a `.env` file in the root directory and add the following:
 ```
-DATABASE_URL="postgresql://postgres:<your_password>@localhost:5432/dwengo_db"
+DATABASE_URL="postgresql://postgres:<your_password>@172.17.0.1:5432/dwengo_db"
 ```
 Replace `<your_password>` with the password you set when running the `docker` command.
 
@@ -78,9 +78,10 @@ cd ../server
 npx prisma generate --schema ../db/prisma/schema.prisma
 ```
 
-To apply migrations (optional, if there are any):
+Apply migrations:
 ```bash
-npx prisma migrate dev --schema ../db/prisma/schema.prisma
+cd ../db
+npx prisma migrate dev
 ```
 
 ---
@@ -100,7 +101,9 @@ npm run start
 ```
 
 The React app should now be running at [http://localhost:3001](http://localhost:3001)  
-The Express server typically runs at [http://localhost:3000](http://localhost:3000) (check server config).
+The Express server typically runs at [http://localhost:3000](http://localhost:3000)
+
+You can change the ports in the `.env` file, if the ports are not configured the default ports are given above.
 
 ---
 
