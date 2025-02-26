@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { ClassController } from "./routes/classController";
+import { ClassController } from "./routes/class.routes";
 
 dotenv.config({ path: "../.env" });
 

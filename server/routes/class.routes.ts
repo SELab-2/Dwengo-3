@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { ClassService } from "../domain_layer/classService";
+import { ClassService } from "../domain/class.domain";
 
 export class ClassController {
   public router: Router;
