@@ -144,11 +144,11 @@ model ClassJoinRequest {
 
 model Group {
   id                    String                 @id @default(uuid())
-  nodeId                String
+  nodeId                String?
   assignmentId          String
   chat                  Chat?
   assignmentSubmissions AssignmentSubmission[]
-  node                  LearningPathNode       @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  node                  LearningPathNode?       @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }
