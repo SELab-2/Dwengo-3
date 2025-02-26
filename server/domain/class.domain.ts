@@ -1,12 +1,24 @@
-import { ClassPersistance } from "../persistence/class.persistance";
-const classPersistance = new ClassPersistance();
+import { ClassPersistence } from "../persistence/class.persistance";
+const classPersistance = new ClassPersistence();
 
 export class ClassService {
   public async getAllClasses() {
-    return classPersistance.getAllClasses();
+    return await classPersistance.getAllClasses();
   }
 
   public async getClassById(id: string) {
-    return classPersistance.getClassById(id);
+    return await classPersistance.getClassById(id);
+  }
+
+  public async createClass(name: string) {
+    return await classPersistance.createClass(name);
+  }
+
+  public async updateClass(id: string, name: string) {
+    return await classPersistance.updateClass(id, name);
+  }
+
+  public async deleteClass(id: string) {
+    return await classPersistance.deleteClass(id);
   }
 }

@@ -2,18 +2,33 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export class ClassPersistance {
+export class ClassPersistence {
   public async getAllClasses() {
-    const classes = await prisma.class.findMany();
-    return classes;
+    return await prisma.class.findMany();
   }
 
   public async getClassById(id: string) {
-    const classById = await prisma.class.findUnique({
-      where: {
-        id: id,
-      },
+    return await prisma.class.findUnique({
+      where: { id },
     });
-    return classById;
+  }
+
+  public async createClass(name: string) {
+    return await prisma.class.create({
+      data: { name },
+    });
+  }
+
+  public async updateClass(id: string, name: string) {
+    return await prisma.class.update({
+      where: { id },
+      data: { name },
+    });
+  }
+
+  public async deleteClass(id: string) {
+    return await prisma.class.delete({
+      where: { id },
+    });
   }
 }
