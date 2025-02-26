@@ -12,18 +12,21 @@ const app: Express = express();
 const port = process.env.PORT || 3001;
 
 const prisma = new PrismaClient()
-
 app.use(express.json());
 
-app.get("/hello", (req: Request, res: Response) => {
+const apiRouter = express.Router();
+
+app.use('/api', apiRouter);
+
+apiRouter.get("/hello", (req: Request, res: Response) => {
     res.send("Hello World");
 });
 
-app.get("/learningObject", async (req: Request, res: Response) => {
+apiRouter.get("/learningObject", async (req: Request, res: Response) => {
     res.send(await prisma.learningObject.findMany());
 });
 
-app.use('/learningPath', LearningPathRouter);
+apiRouter.use('/learningPath', LearningPathRouter);
 
 
 app.listen(port, () => {
