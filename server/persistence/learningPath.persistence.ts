@@ -26,6 +26,8 @@ export const getAllLearningPathsPersistence = async () => {
 }
 
 export const createLearningPathPersistence = async (lpJson: LearningPathJson) => {
+    // in case of errors, these are thrown up the function callstack
+
     const learningPath = await prisma.learningPath.create({
         data: {
             title: lpJson.title,
@@ -39,10 +41,11 @@ export const createLearningPathPersistence = async (lpJson: LearningPathJson) =>
     });
 
     // learningPathNodes have to be created and linked
-    lpJson.learningPathNodes.forEach((element: LearningPathNodeJson) => {
-        createLearningPathNodePersistence(element, learningPath.id);
-    });
-
+    await Promise.all(
+        lpJson.learningPathNodes.map((element: LearningPathNodeJson) =>
+            createLearningPathNodePersistence(element, learningPath.id)
+        )
+    );
 
     return learningPath; //JSON.stringify(learningPath);
 }

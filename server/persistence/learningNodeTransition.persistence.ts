@@ -8,5 +8,6 @@ const prisma = new PrismaClient();
 export const createLearningNodeTransitionPersistence = async (learningNodeTransitionJson: LearningNodeTransitionJson) => {
 
     // todo 
+    // eerst moet in de database nextNode optional gemaakt worden.
 
 }

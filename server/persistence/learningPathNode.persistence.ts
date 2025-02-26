@@ -16,13 +16,13 @@ export const createLearningPathNodePersistence = async (learningPathNodeJson: Le
                 connect: { id: lp_id }
             },
             learningObject: {
-                connect: { id: learningPathNodeJson.loId }
+                connect: { id: learningPathNodeJson.loId }  // learningObject has to exist before this point
             }
-            // todo test with existing learningObject
         }
     });
 
     // todo transitions have to be added 
+
 
     return learningPathNode;
 }
