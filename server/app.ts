@@ -7,10 +7,13 @@ import LearningPathRouter from "./routes/learningPath.routes";
 
 dotenv.config({ path: "../.env" });
 
+
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
 const prisma = new PrismaClient()
+
+app.use(express.json());
 
 app.get("/hello", (req: Request, res: Response) => {
     res.send("Hello World");

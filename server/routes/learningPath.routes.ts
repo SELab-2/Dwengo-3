@@ -1,5 +1,5 @@
 import express from 'express';
-import { getLearningPathByIdDomain, getAllLearningPathsDomain } from '../domain/learningPath.domain';
+import { getLearningPathByIdDomain, getAllLearningPathsDomain, createLearningPathDomain } from '../domain/learningPath.domain';
 
 const router = express.Router();
 
@@ -33,6 +33,20 @@ router.get('/:id', async (request, response) => {
     }
 });
 
+router.post('/', async (request, response) => {
+    // Create a new learning path
+    try {
+        const learningPath = await createLearningPathDomain(request.body);
+        response.json({ message: "succes", data: learningPath });
+    } catch (error) {
+        if (error instanceof Error) {
+            response.status(500)
+            response.json({ message: "error", data: error.message });
+        } else {
+            response.status(500).send('An unknown error occurred');
+        }
+    }
+});
 
 
 export default router;
