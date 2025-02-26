@@ -1,4 +1,5 @@
-import { Assignment, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { AssignmentJson } from './types';
 
 const prisma = new PrismaClient();
 
@@ -59,15 +60,15 @@ export const getAllAssignmentsByGroupIdPersistence = async (groupId: string) => 
     return assignments;
 }
 
-export const createAssignment = async (groups: string[][], classId: string, teacherId: string, learningPathId: string) => {
+export const createAssignmentPersistence = async (assignmentJson: AssignmentJson) => {
     const assignment = await prisma.assignment.create({
         data: {
-            classId: classId,
-            teacherId: teacherId,
-            lpId: learningPathId,
+            classId: assignmentJson.classId,
+            teacherId: assignmentJson.teacherId,
+            lpId: assignmentJson.learningPathId,
         }
     });
-    await prisma.$transaction(groups.map(group =>
+    await prisma.$transaction(assignmentJson.groups.map(group =>
             prisma.group.create({
                 data: {
                     assignmentId: assignment.id,
@@ -78,4 +79,5 @@ export const createAssignment = async (groups: string[][], classId: string, teac
             })
         )
     );
+    return assignment;
 }
