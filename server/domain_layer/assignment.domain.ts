@@ -1,4 +1,4 @@
-import { createAssignmentPersistence, getAllAssignmentsByClassIdPersistence, getAllAssignmentsByGroupIdPersistence, getAllAssignmentsByUserIdPersistence, getAssignmentByIdPersistence } from "../persistence_layer/assignment.persistence"
+import { createAssignmentPersistence, getAllAssignmentsByClassIdPersistence, getAllAssignmentsByGroupIdPersistence, getAllAssignmentsByTeacherIdPersistence, getAllAssignmentsByUserIdPersistence, getAssignmentByIdPersistence } from "../persistence_layer/assignment.persistence"
 import { AssignmentJson, AssignmentJsonSchema } from "../persistence_layer/types";
 
 export const getAssignmentByIdDomain = async (id: string) => {
@@ -7,6 +7,10 @@ export const getAssignmentByIdDomain = async (id: string) => {
 
 export const getAllAssignmentsByClassIdDomain = async (classId: string) => {
     return await getAllAssignmentsByClassIdPersistence(classId);
+}
+
+export const getAllAssignmentsByTeacherIdDomain = async (teacherId: string) => {
+    return await getAllAssignmentsByTeacherIdPersistence(teacherId);
 }
 
 export const getAllAssignmentsByGroupIdDomain = async (groupId: string) => {
