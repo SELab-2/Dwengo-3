@@ -1,10 +1,40 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export class ClassPersistence {
-  public async getAllClasses() {
-    return await prisma.class.findMany();
+  public async getClasses(
+    { page, pageSize, skip }: { page: number; pageSize: number; skip: number },
+    filters: {
+      name?: string;
+    }
+  ) {
+    const where: Prisma.ClassWhereInput = {
+      AND: [
+        filters.name
+          ? {
+              name: {
+                contains: filters.name,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            }
+          : {},
+        // Eventueel andere filters
+      ],
+    };
+
+    const [classes, total] = await prisma.$transaction([
+      prisma.class.findMany({ where, skip, take: pageSize }),
+      prisma.class.count({ where }),
+    ]);
+
+    return {
+      data: classes,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
   public async getClassById(id: string) {
