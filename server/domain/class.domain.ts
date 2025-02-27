@@ -16,7 +16,7 @@ export class ClassDomain {
     // Validate and parse pagination query parameters
     const paginationResult = this.paginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
-      throw new Error("Invalid pagination parameters");
+      throw paginationResult.error;
     }
     // Validate and parse name filter
     const nameResult = this.classFilterSchema.safeParse(query);
