@@ -1,4 +1,4 @@
-import { ClassPersistence } from "../persistence/class.persistance";
+import { ClassPersistence } from "../persistence/class.persistence";
 import { PaginationFilterSchema, ClassFilterSchema } from "./types";
 
 export class ClassDomain {

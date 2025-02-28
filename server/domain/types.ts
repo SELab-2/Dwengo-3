@@ -38,16 +38,8 @@ export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
 
 export type LearningPathNodeCreateParams = z.infer<typeof LearningPathNodeCreateSchema>;
 
+// ODO maybe change to shorter name
 export type LearningPathNodeTransitionCreateParams = z.infer<typeof LearningPathNodeTransitionCreateSchema>;
-
-
-
-
-
-
-
-
-
 
 
 
