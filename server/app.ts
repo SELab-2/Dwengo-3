@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import { ClassController } from "./routes/class.routes";
+import { ZodError } from "zod";
 
 dotenv.config({ path: "../.env" });
 
@@ -9,11 +10,13 @@ const port = process.env.PORT || 3001;
 
 app.use(express.json());
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   // TODO: Maybe make some error logging mechanism?
   console.error("[ERROR]", err);
 
-  const statusCode = err.status || 500;
+  // If the error is a ZodError, it means that the request did not pass the validation
+  let statusCode = err instanceof ZodError ? 400 : 500;
 
   if (process.env.NODE_ENV === "production") {
     res.status(statusCode).send("Something broke!");
@@ -28,8 +31,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 const apiRouter = express.Router();
 app.use("/api", apiRouter);
 
-const classController = new ClassController();
-apiRouter.use(classController.router);
+apiRouter.use(new ClassController().router);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);
