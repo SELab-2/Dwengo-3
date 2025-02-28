@@ -28,7 +28,7 @@ export class ClassDomain {
 
     return this.classPersistance.getClasses(
       paginationResult.data,
-      filtersResult.success ? filtersResult.data : {}
+      filtersResult.data
     );
   }
 
