@@ -3,18 +3,14 @@ import { PaginationFilterSchema, ClassFilterSchema } from "./types";
 
 export class ClassDomain {
   private classPersistance;
-  private paginationFilterSchema;
-  private classFilterSchema;
 
   constructor() {
     this.classPersistance = new ClassPersistence();
-    this.paginationFilterSchema = PaginationFilterSchema;
-    this.classFilterSchema = ClassFilterSchema;
   }
 
   public async getClasses(query: any) {
     // Validate and parse pagination query parameters
-    const paginationResult = this.paginationFilterSchema.safeParse(query);
+    const paginationResult = PaginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
       throw paginationResult.error;
     }
@@ -25,25 +21,25 @@ export class ClassDomain {
       throw filtersResult.error;
     }
 
-    return await this.classPersistance.getClasses(
+    return this.classPersistance.getClasses(
       paginationResult.data,
       filtersResult.success ? filtersResult.data : {}
     );
   }
 
   public async getClassById(id: string) {
-    return await this.classPersistance.getClassById(id);
+    return this.classPersistance.getClassById(id);
   }
 
   public async createClass(name: string) {
-    return await this.classPersistance.createClass(name);
+    return this.classPersistance.createClass(name);
   }
 
   public async updateClass(id: string, name: string) {
-    return await this.classPersistance.updateClass(id, name);
+    return this.classPersistance.updateClass(id, name);
   }
 
   public async deleteClass(id: string) {
-    return await this.classPersistance.deleteClass(id);
+    return this.classPersistance.deleteClass(id);
   }
 }

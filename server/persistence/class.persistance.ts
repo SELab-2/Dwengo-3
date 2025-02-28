@@ -45,45 +45,42 @@ export class ClassPersistence {
       ],
     };
 
-    const [classes, total] = await prisma.$transaction([
-      prisma.class.findMany({
-        where,
-        skip: paginationParams.skip,
-        take: paginationParams.pageSize,
-      }),
-      prisma.class.count({ where }),
-    ]);
+    const classes = await prisma.class.findMany({
+      where,
+      skip: paginationParams.skip,
+      take: paginationParams.pageSize,
+    });
 
     return {
       data: classes,
-      total,
+      total: classes.length,
       page: paginationParams.page,
       pageSize: paginationParams.pageSize,
-      totalPages: Math.ceil(total / paginationParams.pageSize),
+      totalPages: Math.ceil(classes.length / paginationParams.pageSize),
     };
   }
 
   public async getClassById(id: string) {
-    return await prisma.class.findUnique({
+    return prisma.class.findUnique({
       where: { id },
     });
   }
 
   public async createClass(name: string) {
-    return await prisma.class.create({
+    return prisma.class.create({
       data: { name },
     });
   }
 
   public async updateClass(id: string, name: string) {
-    return await prisma.class.update({
+    return prisma.class.update({
       where: { id },
       data: { name },
     });
   }
 
   public async deleteClass(id: string) {
-    return await prisma.class.delete({
+    return prisma.class.delete({
       where: { id },
     });
   }
