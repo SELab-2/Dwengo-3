@@ -59,9 +59,6 @@ export class ClassPersistence {
 
     return {
       data: classes,
-      total: totalCount,
-      page: paginationParams.page,
-      pageSize: paginationParams.pageSize,
       totalPages: Math.ceil(totalCount / paginationParams.pageSize),
     };
   }
