@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import { ClassController } from "./routes/class.routes";
 import { ZodError } from "zod";
+import { PrismaClient } from "@prisma/client";
 
 dotenv.config({ path: "../.env" });
 
