@@ -1,13 +1,12 @@
 import { PrismaClient, Prisma } from "@prisma/client";
+import { PaginationParams, ClassFilterParams } from "../domain/types";
 
 const prisma = new PrismaClient();
 
 export class ClassPersistence {
   public async getClasses(
-    { page, pageSize, skip }: { page: number; pageSize: number; skip: number },
-    filters: {
-      name?: string;
-    }
+    paginationParams: PaginationParams,
+    filters: ClassFilterParams
   ) {
     const where: Prisma.ClassWhereInput = {
       AND: [
@@ -19,21 +18,48 @@ export class ClassPersistence {
               },
             }
           : {},
-        // Eventueel andere filters
+        // Filter to check if every teacherID of the filter params is in the teachers array
+        filters.teacherIds && filters.teacherIds.length > 0
+          ? {
+              AND: filters.teacherIds.map((teacherId) => ({
+                teachers: {
+                  some: {
+                    id: teacherId,
+                  },
+                },
+              })),
+            }
+          : {},
+        // Filter to check if every studentID of the filter params is in the students array
+        filters.studentIds && filters.studentIds.length > 0
+          ? {
+              AND: filters.studentIds.map((studentId) => ({
+                students: {
+                  some: {
+                    id: studentId,
+                  },
+                },
+              })),
+            }
+          : {},
       ],
     };
 
     const [classes, total] = await prisma.$transaction([
-      prisma.class.findMany({ where, skip, take: pageSize }),
+      prisma.class.findMany({
+        where,
+        skip: paginationParams.skip,
+        take: paginationParams.pageSize,
+      }),
       prisma.class.count({ where }),
     ]);
 
     return {
       data: classes,
       total,
-      page,
-      pageSize,
-      totalPages: Math.ceil(total / pageSize),
+      page: paginationParams.page,
+      pageSize: paginationParams.pageSize,
+      totalPages: Math.ceil(total / paginationParams.pageSize),
     };
   }
 

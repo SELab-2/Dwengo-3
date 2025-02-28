@@ -18,23 +18,16 @@ export class ClassDomain {
     if (!paginationResult.success) {
       throw paginationResult.error;
     }
-    // Validate and parse name filter
-    const nameResult = this.classFilterSchema.safeParse(query);
-    const filters: { name?: string } = {};
 
-    if (nameResult.success) {
-      if (nameResult.data.name) {
-        filters.name = nameResult.data.name;
-      }
-    } else {
-      if (query.name !== undefined) {
-        throw nameResult.error;
-      }
+    // Validate and parse class filters
+    const filtersResult = ClassFilterSchema.safeParse(query);
+    if (!filtersResult.success) {
+      throw filtersResult.error;
     }
 
     return await this.classPersistance.getClasses(
       paginationResult.data,
-      filters
+      filtersResult.success ? filtersResult.data : {}
     );
   }
 
