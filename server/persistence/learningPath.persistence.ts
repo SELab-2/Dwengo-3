@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { LearningPathByFilterParams } from "../domain/types";
+import { LearningPathByFilterParams, LearningPathCreateParams } from "../domain/types";
 
 const prisma = new PrismaClient();
 
@@ -19,6 +19,7 @@ export class LearningPathPersistence {
                                     learningObject: {
                                         learningObjectsKeywords: {
                                             some: {
+                                                // TODO is a separate table for keywords necessary?
                                                 keyword: {
                                                     in: params.keywords, // Match any of the keywords
                                                     mode: Prisma.QueryMode.insensitive, // Case-insensitive search
@@ -54,5 +55,25 @@ export class LearningPathPersistence {
             },
         },
         );
+    }
+
+    // TODO: to be uniform, wrap the id in a params object?
+    public async getLearningPathById(id: string) {
+        return prisma.learningPath.findUnique({
+            where: {
+                id: id,
+            },
+            include: {
+                learningPathNodes: true,
+            },
+        });
+    }
+
+
+    // TODO : not that clean with type any, maybe make it more uniform with other functions
+    public async createLearningPath(data: any) {
+        return prisma.learningPath.create({
+            data: data, // TODO this probably will not work with nested learningPathNodes
+        });
     }
 }

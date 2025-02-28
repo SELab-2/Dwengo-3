@@ -1,5 +1,6 @@
 import { parse } from "path";
 import { LearningPathByIdSchema, LearningPathCreateSchema, LearningPathFilterSchema } from "./types";
+import { LearningPathPersistence } from "../persistence/learningPath.persistence";
 
 export class LearningPathDomain {
     private learningPathPersistence;
@@ -27,7 +28,7 @@ export class LearningPathDomain {
             throw parseResult.error;
         }
 
-        return this.learningPathPersistence.getLearningPathById(parseResult.data);
+        return this.learningPathPersistence.getLearningPathById(parseResult.data.id);
     }
 
     public async createLearningPath(query: any) {

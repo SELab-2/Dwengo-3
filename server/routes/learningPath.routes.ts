@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import { LearningPathDomain } from "../domain/learningPath.domain";
 
 export class LearningPathController {
     public router: Router;
@@ -33,7 +34,7 @@ export class LearningPathController {
     //     res.json(await this.learningPathDomain.deleteLearningPath(req.params.id));
     // };
 
-    private initizalizeRoutes() {
+    private initializeRoutes() {
         this.router.get("/", this.getLearningPaths);
         this.router.post("/", this.createLearningPath);
         this.router.get("/:id", this.getLearningPathById);
