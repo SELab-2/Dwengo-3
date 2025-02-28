@@ -11,7 +11,6 @@ export class ClassController {
     this.initializeRoutes();
   }
 
-  // TODO: Add error handling in the upper layer
   // The query parameters allow for request like these:
   // GET /api/class?name=math&page=1&pageSize=10
   // GET /api/class?teacherIds[]=0&teacherIds[]=1
@@ -22,24 +21,19 @@ export class ClassController {
   };
 
   private getClassById = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    res.json(await this.classDomain.getClassById(id));
+    res.json(await this.classDomain.getClassById(req.params.id));
   };
 
   private createClass = async (req: Request, res: Response) => {
-    const { name } = req.body;
-    res.json(await this.classDomain.createClass(name));
+    res.json(await this.classDomain.createClass(req.body));
   };
 
   private updateClass = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { name } = req.body;
-    res.json(await this.classDomain.updateClass(id, name));
+    res.json(await this.classDomain.updateClass(req.params.id, req.body));
   };
 
   private deleteClass = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    res.json(await this.classDomain.deleteClass(id));
+    res.json(await this.classDomain.deleteClass(req.params.id));
   };
 
   private initializeRoutes() {

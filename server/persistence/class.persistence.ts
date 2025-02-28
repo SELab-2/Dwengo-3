@@ -1,6 +1,10 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import { PaginationParams, ClassFilterParams } from "../domain/types";
-import { log } from "console";
+import {
+  PaginationParams,
+  ClassFilterParams,
+  ClassCreateParams,
+  ClassUpdateParams,
+} from "../domain/types";
 
 const prisma = new PrismaClient();
 
@@ -69,16 +73,16 @@ export class ClassPersistence {
     });
   }
 
-  public async createClass(name: string) {
+  public async createClass(params: ClassCreateParams) {
     return prisma.class.create({
-      data: { name },
+      data: { name: params.name },
     });
   }
 
-  public async updateClass(id: string, name: string) {
+  public async updateClass(id: string, params: ClassUpdateParams) {
     return prisma.class.update({
       where: { id },
-      data: { name },
+      data: { name: params.name },
     });
   }
 

@@ -1,5 +1,10 @@
 import { ClassPersistence } from "../persistence/class.persistence";
-import { PaginationFilterSchema, ClassFilterSchema } from "./types";
+import {
+  PaginationFilterSchema,
+  ClassFilterSchema,
+  ClassUpdateSchema,
+  ClassCreateSchema,
+} from "./types";
 
 export class ClassDomain {
   private classPersistance;
@@ -23,7 +28,7 @@ export class ClassDomain {
 
     return this.classPersistance.getClasses(
       paginationResult.data,
-      filtersResult.success ? filtersResult.data : {}
+      filtersResult.data
     );
   }
 
@@ -31,12 +36,22 @@ export class ClassDomain {
     return this.classPersistance.getClassById(id);
   }
 
-  public async createClass(name: string) {
-    return this.classPersistance.createClass(name);
+  public async createClass(body: any) {
+    // Validate and parse class create parameters
+    const createParamsResult = ClassCreateSchema.safeParse(body);
+    if (!createParamsResult.success) {
+      throw createParamsResult.error;
+    }
+    return this.classPersistance.createClass(createParamsResult.data);
   }
 
-  public async updateClass(id: string, name: string) {
-    return this.classPersistance.updateClass(id, name);
+  public async updateClass(id: string, body: any) {
+    // Validate and parse class update parameters
+    const updateParamsResult = ClassUpdateSchema.safeParse(body);
+    if (!updateParamsResult.success) {
+      throw updateParamsResult.error;
+    }
+    return this.classPersistance.updateClass(id, updateParamsResult.data);
   }
 
   public async deleteClass(id: string) {
