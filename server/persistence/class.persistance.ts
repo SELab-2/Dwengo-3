@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import { PaginationParams, ClassFilterParams } from "../domain/types";
+import { log } from "console";
 
 const prisma = new PrismaClient();
 
@@ -45,18 +46,23 @@ export class ClassPersistence {
       ],
     };
 
-    const classes = await prisma.class.findMany({
-      where,
-      skip: paginationParams.skip,
-      take: paginationParams.pageSize,
-    });
+    const [classes, totalCount] = await prisma.$transaction([
+      prisma.class.findMany({
+        where,
+        skip: paginationParams.skip,
+        take: paginationParams.pageSize,
+      }),
+      prisma.class.count({
+        where,
+      }),
+    ]);
 
     return {
       data: classes,
-      total: classes.length,
+      total: totalCount,
       page: paginationParams.page,
       pageSize: paginationParams.pageSize,
-      totalPages: Math.ceil(classes.length / paginationParams.pageSize),
+      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
     };
   }
 
