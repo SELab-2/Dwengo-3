@@ -11,6 +11,12 @@ export class ClassController {
     this.initializeRoutes();
   }
 
+  // TODO: Add error handling in the upper layer
+  // The query parameters allow for request like these:
+  // GET /api/class?name=math&page=1&pageSize=10
+  // GET /api/class?teacherIds[]=0&teacherIds[]=1
+  // ...
+
   private getClasses = async (req: Request, res: Response) => {
     res.json(await this.classDomain.getClasses(req.query));
   };
