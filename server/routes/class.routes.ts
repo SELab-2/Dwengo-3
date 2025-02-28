@@ -43,10 +43,10 @@ export class ClassController {
   };
 
   private initializeRoutes() {
-    this.router.get("/class", this.getClasses);
-    this.router.post("/class", this.createClass);
-    this.router.get("/class/:id", this.getClassById);
-    this.router.patch("/class/:id", this.updateClass);
-    this.router.delete("/class/:id", this.deleteClass);
+    this.router.get("/", this.getClasses);
+    this.router.post("/", this.createClass);
+    this.router.get("/:id", this.getClassById);
+    this.router.patch("/:id", this.updateClass);
+    this.router.delete("/:id", this.deleteClass);
   }
 }
