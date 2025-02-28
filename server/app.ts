@@ -1,24 +1,38 @@
-import express, {Express, Request, Response} from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
-import { PrismaClient } from '@prisma/client'
-import { exit } from "process";
+import { ClassController } from "./routes/class.routes";
+import { ZodError } from "zod";
 
-dotenv.config({path:"../.env"});
+dotenv.config({ path: "../.env" });
 
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
-const prisma = new PrismaClient()
+app.use(express.json());
 
-app.get("/hello", (req: Request, res: Response)=> {
-    res.send("Hello World");
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // TODO: Maybe make some error logging mechanism?
+  console.error("[ERROR]", err);
+
+  // If the error is a ZodError, it means that the request did not pass the validation
+  let statusCode = err instanceof ZodError ? 400 : 500;
+
+  if (process.env.NODE_ENV === "production") {
+    res.status(statusCode).send("Something broke!");
+  } else {
+    res.status(statusCode).json({
+      message: err.message || "Internal Server Error",
+      stack: err.stack,
+    });
+  }
 });
 
-app.get("/learningObject", async (req: Request, res: Response) => {
-    res.send(await prisma.learningObject.findMany());
-});
+const apiRouter = express.Router();
+app.use("/api", apiRouter);
 
+apiRouter.use(new ClassController().router);
 
 app.listen(port, () => {
-    console.log(`[SERVER] - listening on http://localhost:${port}`);
+  console.log(`[SERVER] - listening on http://localhost:${port}`);
 });
