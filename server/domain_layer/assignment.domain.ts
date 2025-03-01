@@ -1,30 +1,36 @@
-import { createAssignmentPersistence, getAllAssignmentsByClassIdPersistence, getAllAssignmentsByGroupIdPersistence, getAllAssignmentsByTeacherIdPersistence, getAllAssignmentsByUserIdPersistence, getAssignmentByIdPersistence } from "../persistence_layer/assignment.persistence"
-import { AssignmentJson, AssignmentJsonSchema } from "../persistence_layer/types";
+import { Assignment } from "@prisma/client";
+import { AssignmentPersistence } from "../persistence_layer/assignment.persistence"
+import { AssignmentFilterSchema, IdSchema, AssignmentJson, AssignmentJsonSchema } from "../persistence_layer/types";
 
-export const getAssignmentByIdDomain = async (id: string) => {
-    return await getAssignmentByIdPersistence(id);
-}
+export class AssignmentDomain {
+    private assignmentPersistence: AssignmentPersistence
 
-export const getAllAssignmentsByClassIdDomain = async (classId: string) => {
-    return await getAllAssignmentsByClassIdPersistence(classId);
-}
-
-export const getAllAssignmentsByTeacherIdDomain = async (teacherId: string) => {
-    return await getAllAssignmentsByTeacherIdPersistence(teacherId);
-}
-
-export const getAllAssignmentsByGroupIdDomain = async (groupId: string) => {
-    return await getAllAssignmentsByGroupIdPersistence(groupId);
-}
-
-export const getAllAssignmentsByUserIdDomain = async (userId: string) => {
-    return await getAllAssignmentsByUserIdPersistence(userId);
-}
-
-export const createAssignmentDomain = async (assignmentJson: AssignmentJson) => {
-    const parseResult = AssignmentJsonSchema.safeParse(assignmentJson);
-    if (!parseResult.success) {
-        throw new Error(`Invalid AssignmentJson: ${JSON.stringify(parseResult.error.format())}`);
+    public constructor() {
+        this.assignmentPersistence = new AssignmentPersistence();
     }
-    return await createAssignmentPersistence(assignmentJson);
+
+    public async getAssignment(assignmentId: string): Promise<Assignment | null> {
+        const parseResult = IdSchema.safeParse(assignmentId);
+        if (!parseResult.success) {
+            throw  parseResult.error;
+        }
+        return this.assignmentPersistence.getAssignmentById(parseResult.data);
+    }
+
+    public async getAssignments(query: any): Promise<Assignment[]> {
+        const filtersResults = AssignmentFilterSchema.safeParse(query);
+        if (!filtersResults.success) {
+            throw filtersResults.error;
+        }
+
+        return this.assignmentPersistence.getAssignments(filtersResults.data);
+    }
+
+    public async createAssigmen(assignmentJson: AssignmentJson): Promise<Assignment> {
+        const parseResult = AssignmentJsonSchema.safeParse(assignmentJson);
+        if (!parseResult.success) {
+            throw parseResult.error;
+        }
+        return this.assignmentPersistence.createAssignment(parseResult.data);
+    }
 }

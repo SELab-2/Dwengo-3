@@ -1,83 +1,82 @@
-import { PrismaClient } from '@prisma/client';
-import { AssignmentJson } from './types';
+import { Assignment, PrismaClient } from '@prisma/client';
+import { AssignmentJson, AssignmentFilterParams } from './types';
 
-const prisma = new PrismaClient();
+export class AssignmentPersistence {
+    private prisma: PrismaClient;
 
-export const getAssignmentByIdPersistence = async (id: string) => {
-    const assignment = await prisma.assignment.findUnique({
-        where: {
-            id: id
-        }
-    });
-    return assignment;
-}
+    public constructor() {
+        this.prisma = new PrismaClient();
+    }
 
-export const getAllAssignmentsByClassIdPersistence = async (classId: string) => {
-    const assignments = await prisma.assignment.findMany({
-        where: {
-            classId: classId
-        }
-    });
-    return assignments;
-}
+    public async getAssignmentById(id: string): Promise<Assignment | null> {
+        const assignment = await this.prisma.assignment.findUnique({
+            where: {
+                id: id
+            }
+        });
+        return assignment;
+    }
 
-export const getAllAssignmentsByTeacherIdPersistence = async (teacherId: string) => {
-    const assignments = await prisma.assignment.findMany({
-        where: {
-            teacherId: teacherId
-        }
-    });
-    return assignments;
-}
+    public async getAssignments(filters: AssignmentFilterParams): Promise<Assignment[]> {
+        const assignments = await this.prisma.assignment.findMany({
+            where: {
+                AND: [
+                    filters.classId
+                        ? {
+                            classId: filters.classId
+                        }
+                        : {},
+                    filters.teacherId
+                        ? {
+                            teacherId: filters.teacherId
+                        }
+                        : {},
+                    filters.groupId
+                        ? {
+                            groups: {
+                                some: {
+                                    id: filters.groupId
+                                }
+                            }
+                        }
+                        : {},
+                    filters.studentId
+                        ? {
+                            groups: {
+                                some: {
+                                    students: {
+                                        some: {
+                                            userId: filters.studentId
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        : {},
+            ]
+        }});
+        return assignments;
+    }
 
-export const getAllAssignmentsByUserIdPersistence = async (userId: string) => {
-    const assignments = await prisma.assignment.findMany({
-        where: {
-            groups: {
-                some: {
-                    students: {
-                        some: {
-                            userId: userId
+    public async createAssignment(assignmentJson: AssignmentJson): Promise<Assignment> {
+        const assignment = await this.prisma.assignment.create({
+            data: {
+                classId: assignmentJson.classId,
+                teacherId: assignmentJson.teacherId,
+                lpId: assignmentJson.learningPathId,
+            }
+        });
+        await this.prisma.$transaction(assignmentJson.groups.map(group =>
+                this.prisma.group.create({
+                    data: {
+                        assignmentId: assignment.id,
+                        students: {
+                            connect: group.map(student => ({id: student}))
                         }
                     }
-                }
-            }
-        }
-    });
-    return assignments;
-}
-
-export const getAllAssignmentsByGroupIdPersistence = async (groupId: string) => {
-    const assignments = await prisma.assignment.findMany({
-        where: {
-            groups: {
-                some: {
-                    id: groupId
-                }
-            }
-        }
-    });
-    return assignments;
-}
-
-export const createAssignmentPersistence = async (assignmentJson: AssignmentJson) => {
-    const assignment = await prisma.assignment.create({
-        data: {
-            classId: assignmentJson.classId,
-            teacherId: assignmentJson.teacherId,
-            lpId: assignmentJson.learningPathId,
-        }
-    });
-    await prisma.$transaction(assignmentJson.groups.map(group =>
-            prisma.group.create({
-                data: {
-                    assignmentId: assignment.id,
-                    students: {
-                        connect: group.map(student => ({id: student}))
-                    }
-                }
-            })
-        )
-    );
-    return assignment;
+                })
+            )
+        );
+        return assignment;
+    }
 }

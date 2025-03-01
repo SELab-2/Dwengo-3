@@ -7,9 +7,20 @@ export type AssignmentJson = {
     learningPathId: string
 };
 
-export const AssignmentJsonSchema = z.object({
-    groups: z.string().array().array().nonempty(),
-    classId: z.string(),
-    teacherId: z.string(),
-    learningPathId: z.string()
+export const AssignmentFilterSchema = z.object({
+    classId: z.string().uuid().optional(),
+    groupId: z.string().uuid().optional(),
+    teacherId: z.string().uuid().optional(),
+    studentId: z.string().uuid().optional()
 });
+
+export const AssignmentJsonSchema = z.object({
+    groups: z.string().uuid().array().array().nonempty(),
+    classId: z.string().uuid(),
+    teacherId: z.string().uuid(),
+    learningPathId: z.string().uuid()
+});
+
+export const IdSchema = z.string().uuid();
+
+export type AssignmentFilterParams = z.infer<typeof AssignmentFilterSchema>

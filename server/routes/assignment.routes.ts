@@ -1,51 +1,35 @@
-import express from 'express';
-import { createAssignmentDomain, getAllAssignmentsByClassIdDomain, getAllAssignmentsByGroupIdDomain, getAllAssignmentsByTeacherIdDomain, getAllAssignmentsByUserIdDomain, getAssignmentByIdDomain } from '../domain_layer/assignment.domain';
+import { Router, Response, Request } from 'express';
+import { AssignmentDomain } from '../domain_layer/assignment.domain';
 
-const router = express.Router();
+export class AssignmentController {
+    private router: Router;
+    private assignmentDomain: AssignmentDomain;
 
-router.get('/all', async (request, response) => {
-    const {classId, userId, groupId, teacherId} = request.query;
-    try {
-        let assignments;
-        if (classId != null) assignments = getAllAssignmentsByClassIdDomain(String(classId));
-        else if (userId != null) assignments = getAllAssignmentsByUserIdDomain(String(userId));
-        else if (groupId != null) assignments = getAllAssignmentsByGroupIdDomain(String(userId));
-        else if (teacherId != null) assignments = getAllAssignmentsByTeacherIdDomain(String(teacherId));
-        else throw Error('/assignments/all need ?classId=id or ?userId=id or ?teacherId=id or ?groupId=id');
-        response.json({ message: "succes", data: assignments });
-    } catch (error) {
-        if (error instanceof Error) {
-            response.status(500).json({ message: "error", data: error.message});
-        } else {
-            response.status(500).send('An unknown error occurred');
-        }
+    public constructor() {
+        this.router = Router();
+        this.assignmentDomain = new AssignmentDomain();
+        this.initializeRoutes();
     }
-});
 
-router.get('/:id', async (request, response) => {
-    try {
-        const assignment = await getAssignmentByIdDomain(request.params.id);
-        response.json({ message: "succes", data: assignment});
-    } catch (error) {
-        if (error instanceof Error) {
-            response.status(500).json({ message: "error", data: error.message});
-        } else {
-            response.status(500).send('An unknown error occurred');
-        }
+    private initializeRoutes(): void {
+        this.router.get('/', this.getAssignments);
+        this.router.get('/:id', this.getAssignment);
+        this.router.post('/', this.createAssignment);
     }
-});
 
-router.post('/', async (request, response) => {
-    try {
-        const assignment = await createAssignmentDomain(request.body);
-        response.json({ message: "succes", data: assignment});
-    } catch (error) {
-        if (error instanceof Error) {
-            response.status(500).json({ message: "error", data: error.message});
-        } else {
-            response.status(500).send('An unknown error occurred');
-        }
+    private async getAssignments(req: Request, res: Response): Promise<void> {
+        res.json(await this.assignmentDomain.getAssignments(req.query));
     }
-});
 
-export default router;
+    private async getAssignment(req: Request, res: Response): Promise<void> {
+        res.json(await this.assignmentDomain.getAssignment(req.params.id));
+    }
+
+    private async createAssignment(req: Request, res: Response): Promise<void> {
+        res.json(await this.assignmentDomain.createAssigmen(req.body));
+    }
+
+    public getRouter(): Router {
+        return this.router;
+    }
+}
