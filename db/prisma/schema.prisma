@@ -91,6 +91,7 @@ model LearningPath {
   updatedAt         DateTime?          @default(now()) @db.Timestamp
   learningPathNodes LearningPathNode[]
   assignments       Assignment[]
+  // TODO add creator id 
 }
 
 enum ClassRole {

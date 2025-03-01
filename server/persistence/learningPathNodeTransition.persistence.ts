@@ -7,15 +7,20 @@ export class LearningPathNodeTransitionPersistence {
 
     public async createLearningPathNodeTransition(
         data: any,
-        fromNodeId: string,
     ) {
 
+        const { fromNodeId, toNodeId, ...transitionData } = data;
         const transition = await prisma.learningNodeTransition.create({
             data: {
-                ...data,
+                ...transitionData,
                 fromNode: {
                     connect: {
                         id: fromNodeId,
+                    },
+                },
+                nextNode: {
+                    connect: {
+                        id: toNodeId,
                     },
                 },
             },

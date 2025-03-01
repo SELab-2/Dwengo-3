@@ -5,12 +5,6 @@ import { LearningPathNodePersistence } from "./learningPathNode.persistence";
 const prisma = new PrismaClient();
 
 export class LearningPathPersistence {
-    private learningPathNodePersistence;
-
-    constructor() {
-        this.learningPathNodePersistence = new LearningPathNodePersistence();
-    }
-
 
     public async getLearningPaths(
         params: LearningPathByFilterParams
@@ -84,21 +78,10 @@ export class LearningPathPersistence {
 
     // TODO : not that clean with type any, maybe make it more uniform with other functions
     public async createLearningPath(data: any) {
-        // learningPath without the learningPathNodes
-        const { learningPathNodes, ...restData } = data;
-
+        // create a learningPath without any connected nodes
         const learningPath = await prisma.learningPath.create({
-            data: restData, // TODO this probably will not work with nested learningPathNodes
+            data: data,
         });
-
-        // create the learningPathNodes
-        await Promise.all(
-            learningPathNodes.map(async (node: any) => {
-                this.learningPathNodePersistence.createLearningPathNode(node, learningPath.id);
-            })
-        );
-
-        // todo maybe return the learningPath with the learningPathNodes connected
         return learningPath;
     }
 }

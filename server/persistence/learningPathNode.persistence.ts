@@ -15,32 +15,25 @@ export class LearningPathNodePersistence {
 
     // function is only called when creating a new learningPath
     public async createLearningPathNode(
-        learningPathNode: any, lp_id: string
+        learningPathNode: any,
     ) {
-        const { learningPathOutgoingTransitions, loId, ...data } = learningPathNode;
+        // create a learnigPathNode without transitions and connect it to the learningPath
+        const { lpId, loId, ...data } = learningPathNode;
         const createdLearningPathNode = await prisma.learningPathNode.create({
             data: {
                 ...data,
                 learningPath: {
                     connect: {
-                        id: lp_id
-                    }
+                        id: lpId
+                    },
                 },
                 learningObject: {
                     connect: {
                         id: loId
-                    }
-                }
+                    },
+                },
             },
         });
-
-        // create the outgoing transitions
-        await Promise.all(
-            learningPathOutgoingTransitions.map(async (transition: any) => {
-                this.learningPathNodeTransitionPersistence.createLearningPathNodeTransition(transition, createdLearningPathNode.id);
-            }
-            ));
-
         return createdLearningPathNode;
     }
 }
