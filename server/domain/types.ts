@@ -30,7 +30,7 @@ export const LearningPathCreateSchema = z.object({
   image: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  learningPathNodes: z.array(LearningPathNodeCreateSchema),
+  learningPathNodes: z.array(LearningPathNodeCreateSchema).optional(),
   // assignments are later connected to the learningPath
 });
 
