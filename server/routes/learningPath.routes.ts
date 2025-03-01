@@ -24,6 +24,11 @@ export class LearningPathController {
         res.json(await this.learningPathDomain.createLearningPath(req.body));
     };
 
+    // TODO delete this method, TESTING PURPOSE ONLY 
+    private deleteLearningPath = async (req: Request, res: Response) => {
+        res.json(await this.learningPathDomain.deleteLearningPath());
+    };
+
     // TODO: uncomment this in case we add an attribute owner to learningPath
     // private updateLearningPath = async (req: Request, res: Response) => {
     //     res.json(await this.learningPathDomain.updateLearningPath(req.params.id, req.body));
@@ -38,6 +43,7 @@ export class LearningPathController {
         this.router.get("/", this.getLearningPaths);
         this.router.post("/", this.createLearningPath);
         this.router.get("/:id", this.getLearningPathById);
+        this.router.delete("/", this.deleteLearningPath);
         // this.router.patch("/:id", this.updateLearningPath);
         // this.router.delete("/:id", this.deleteLearningPath);
     }

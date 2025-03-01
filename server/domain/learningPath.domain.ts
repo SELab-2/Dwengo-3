@@ -37,6 +37,15 @@ export class LearningPathDomain {
             throw parseResult.error;
         }
         return this.learningPathPersistence.createLearningPath(parseResult.data);
-
     }
+
+    // TESTING PURPOSE ONLY, THIS SHOULD NOT BE IN PRODUCTION
+    public async deleteLearningPath() {
+        return this.learningPathPersistence.deleteLearningPath();
+    }
+
+
 }
+
+
+

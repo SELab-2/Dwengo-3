@@ -53,7 +53,8 @@ export class LearningPathPersistence {
                 learningPathNodes: {
                     include: {
                         learningObject: true,
-                        learningPathOutgoingTransitions: true // include learningObjects in response.
+                        learningPathOutgoingTransitions: true, // include learningObjects in response.
+                        learningPathIncomingTransitions: true,
                     },
                 },
             },
@@ -84,6 +85,12 @@ export class LearningPathPersistence {
         });
         return learningPath;
     }
+
+    // TESTING PURPOSE ONLY, THIS SHOULD NOT BE IN PRODUCTION
+    public async deleteLearningPath() {
+        return await prisma.learningPath.deleteMany({});
+    }
+
 }
 
 
