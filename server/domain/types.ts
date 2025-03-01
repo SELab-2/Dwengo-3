@@ -2,11 +2,11 @@ import { z } from "zod";
 
 export const LearningPathNodeTransitionCreateSchema = z.object({
   // id is returned on creation
-  fromNodeId: z.string(),
-  nextNodeId: z.string(),
+  //fromNodeId: z.string(), // can only be known after making the node
+  //nextNodeId: z.string(),
   condition: z.string().optional(),
   // nextNode is connected later, after creation of the next node
-  // fromNode is connected via froNodeId
+  // fromNode is connected via fromNodeId
 });
 
 export const LearningPathNodeCreateSchema = z.object({
@@ -30,7 +30,7 @@ export const LearningPathCreateSchema = z.object({
   image: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  learningPathNodes: z.array(LearningPathNodeCreateSchema).optional(),
+  learningPathNodes: z.array(LearningPathNodeCreateSchema), // learningPath must have nodes
   // assignments are later connected to the learningPath
 });
 

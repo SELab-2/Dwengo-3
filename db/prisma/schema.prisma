@@ -72,12 +72,12 @@ model LearningPathNode {
 }
 
 model LearningNodeTransition {
-  id         String           @id @default(uuid())
+  id         String            @id @default(uuid())
   fromNodeId String
-  nextNodeId String
+  nextNodeId String?
   condition  String? //If condition is null => default transition; else: "answer == 0" or "true==true"
-  nextNode   LearningPathNode @relation("incoming_transitions", fields: [nextNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  fromNode   LearningPathNode @relation("outgoing_transitions", fields: [fromNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  nextNode   LearningPathNode? @relation("incoming_transitions", fields: [nextNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fromNode   LearningPathNode  @relation("outgoing_transitions", fields: [fromNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model LearningPath {
