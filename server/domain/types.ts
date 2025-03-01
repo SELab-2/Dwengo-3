@@ -35,7 +35,10 @@ export type LearningPathNodeTransitionCreateParams = z.infer<typeof LearningPath
 
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),
-  age: z.array(z.number()).optional(),
+  age: z.array(z.string())
+    .transform((val) => val.map(Number))
+    .optional(),
+  id: z.string().optional(),
 });
 
 export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;

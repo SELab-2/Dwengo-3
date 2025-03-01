@@ -9,9 +9,6 @@ export class LearningPathPersistence {
     public async getLearningPaths(
         params: LearningPathByFilterParams
     ) {
-
-        console.log("params", params);
-
         const learningPaths = await prisma.learningPath.findMany({
             where: {
                 AND: [
@@ -47,12 +44,18 @@ export class LearningPathPersistence {
                             },
                         }
                         : {},
+
+                    params.id ? { id: params.id } : {},
                 ].filter(Boolean), // Remove empty objects from the AND array
             },
             include: {
                 learningPathNodes: {
                     include: {
-                        learningObject: true,
+                        learningObject: {
+                            include: {
+                                learningObjectsKeywords: true,
+                            },
+                        },
                         learningPathOutgoingTransitions: true, // include learningObjects in response.
                         learningPathIncomingTransitions: true,
                     },
@@ -65,16 +68,16 @@ export class LearningPathPersistence {
     }
 
     // TODO: to be uniform, wrap the id in a params object?
-    public async getLearningPathById(id: string) {
-        return await prisma.learningPath.findUnique({
-            where: {
-                id: id,
-            },
-            include: {
-                learningPathNodes: true,
-            },
-        });
-    }
+    // public async getLearningPathById(id: string) {
+    //     return await prisma.learningPath.findUnique({
+    //         where: {
+    //             id: id,
+    //         },
+    //         include: {
+    //             learningPathNodes: true,
+    //         },
+    //     });
+    // }
 
 
     // TODO : not that clean with type any, maybe make it more uniform with other functions

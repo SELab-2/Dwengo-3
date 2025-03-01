@@ -16,9 +16,9 @@ export class LearningPathController {
         res.json(await this.learningPathDomain.getLearningPaths(req.query));
     };
 
-    private getLearningPathById = async (req: Request, res: Response) => {
-        res.json(await this.learningPathDomain.getLearningPathById(req.params.id));
-    };
+    // private getLearningPathById = async (req: Request, res: Response) => {
+    //     res.json(await this.learningPathDomain.getLearningPathById(req.params.id));
+    // };
 
     private createLearningPath = async (req: Request, res: Response) => {
         res.json(await this.learningPathDomain.createLearningPath(req.body));
@@ -42,7 +42,7 @@ export class LearningPathController {
     private initializeRoutes() {
         this.router.get("/", this.getLearningPaths);
         this.router.post("/", this.createLearningPath);
-        this.router.get("/:id", this.getLearningPathById);
+        // this.router.get("/:id", this.getLearningPathById);
         this.router.delete("/", this.deleteLearningPath);
         // this.router.patch("/:id", this.updateLearningPath);
         // this.router.delete("/:id", this.deleteLearningPath);

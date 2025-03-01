@@ -11,6 +11,9 @@ export class LearningPathDomain {
 
     public async getLearningPaths(query: any) {
         // validate and parse keywords and age filters
+
+        console.log("query", query);
+
         const filtersResult = LearningPathFilterSchema.safeParse(query);
         if (!filtersResult.success) {
             throw filtersResult.error;
@@ -21,15 +24,15 @@ export class LearningPathDomain {
         );
     }
 
-    public async getLearningPathById(id: string) {
-        const parseResult = LearningPathByIdSchema.safeParse({ id });
+    // public async getLearningPathById(id: string) {
+    //     const parseResult = LearningPathByIdSchema.safeParse({ id });
 
-        if (!parseResult.success) {
-            throw parseResult.error;
-        }
+    //     if (!parseResult.success) {
+    //         throw parseResult.error;
+    //     }
 
-        return this.learningPathPersistence.getLearningPathById(parseResult.data.id);
-    }
+    //     return this.learningPathPersistence.getLearningPathById(parseResult.data.id);
+    // }
 
     public async createLearningPath(query: any) {
         const parseResult = LearningPathCreateSchema.safeParse(query);
