@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { LearningPathByFilterParams, LearningPathCreateParams } from "../domain/types";
-import { learningPathNodePersistence } from "./learningPathNodes.persistence";
+import { LearningPathNodePersistence } from "./learningPathNode.persistence";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,7 @@ export class LearningPathPersistence {
     private learningPathNodePersistence;
 
     constructor() {
-        this.learningPathNodePersistence = new learningPathNodePersistence();
+        this.learningPathNodePersistence = new LearningPathNodePersistence();
     }
 
 
@@ -58,7 +58,8 @@ export class LearningPathPersistence {
             include: {
                 learningPathNodes: {
                     include: {
-                        learningObject: true, // include learningObjects in response.
+                        learningObject: true,
+                        learningPathOutgoingTransitions: true // include learningObjects in response.
                     },
                 },
             },
