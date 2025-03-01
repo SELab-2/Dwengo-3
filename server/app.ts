@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { ClassController } from "./routes/class.routes";
 import { ZodError } from "zod";
 import { PrismaClient } from "@prisma/client";
+import { LearningPathController } from "./routes/learningPath.routes";
 
 dotenv.config({ path: "../.env" });
 
@@ -33,7 +34,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 const apiRouter = express.Router();
 app.use("/api", apiRouter);
 
-apiRouter.use(new ClassController().router);
+apiRouter.use('/class', new ClassController().router);
+apiRouter.use('/learningPath', new LearningPathController().router);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);

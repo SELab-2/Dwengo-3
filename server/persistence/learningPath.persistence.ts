@@ -9,7 +9,9 @@ export class LearningPathPersistence {
         params: LearningPathByFilterParams
     ) {
 
-        prisma.learningPath.findMany({
+        console.log("params", params);
+
+        const learningPaths = await prisma.learningPath.findMany({
             where: {
                 AND: [
                     params.keywords && params.keywords.length > 0
@@ -55,11 +57,13 @@ export class LearningPathPersistence {
             },
         },
         );
+
+        return learningPaths;
     }
 
     // TODO: to be uniform, wrap the id in a params object?
     public async getLearningPathById(id: string) {
-        return prisma.learningPath.findUnique({
+        return await prisma.learningPath.findUnique({
             where: {
                 id: id,
             },
@@ -72,7 +76,7 @@ export class LearningPathPersistence {
 
     // TODO : not that clean with type any, maybe make it more uniform with other functions
     public async createLearningPath(data: any) {
-        return prisma.learningPath.create({
+        return await prisma.learningPath.create({
             data: data, // TODO this probably will not work with nested learningPathNodes
         });
     }
