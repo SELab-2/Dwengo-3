@@ -2,7 +2,7 @@ import express, {Express, Request, Response} from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from '@prisma/client'
 import { exit } from "process";
-import AssignmentRouter from "./routes/assignment.routes"
+import { AssignmentController } from "./routes/assignment.routes";
 
 dotenv.config({path:"../.env"});
 
@@ -12,6 +12,8 @@ const port = process.env.PORT || 3001;
 const prisma = new PrismaClient()
 
 const apiRouter = express.Router();
+
+const assignmentController = new AssignmentController();
 
 app.use('/api', apiRouter);
 
@@ -23,7 +25,7 @@ apiRouter.get("/learningObject", async (req: Request, res: Response) => {
     res.send(await prisma.learningObject.findMany());
 });
 
-apiRouter.use('/assignment', AssignmentRouter);
+apiRouter.use('/assignment', assignmentController.getRouter());
 
 
 app.listen(port, () => {
