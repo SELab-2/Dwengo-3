@@ -1,4 +1,4 @@
-import { LearningPathByFilterParams, LearningPathCreateParams, LearningPathCreateSchema, LearningPathFilterSchema } from "./types";
+import { LearningPathByFilterParams, LearningPathCreateParams, LearningPathCreateSchema, LearningPathFilterSchema, PaginationFilterSchema } from "./types";
 import { LearningPathPersistence } from "../persistence/learningPath.persistence";
 
 export class LearningPathDomain {
@@ -9,13 +9,20 @@ export class LearningPathDomain {
     }
 
     public async getLearningPaths(query: LearningPathByFilterParams) {
+        const paginationParseResult = PaginationFilterSchema.safeParse(query);
+        if (!paginationParseResult.success) {
+            throw paginationParseResult.error;
+        }
+
+
         const filtersResult = LearningPathFilterSchema.safeParse(query);
         if (!filtersResult.success) {
             throw filtersResult.error;
         }
 
         return this.learningPathPersistence.getLearningPaths(
-            filtersResult.data
+            filtersResult.data,
+            paginationParseResult.data
         );
     }
 

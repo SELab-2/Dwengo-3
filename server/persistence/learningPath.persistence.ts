@@ -1,63 +1,78 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { LearningPathByFilterParams, LearningPathCreateParams } from "../domain/types";
+import { LearningPathByFilterParams, LearningPathCreateParams, PaginationParams } from "../domain/types";
 
 const prisma = new PrismaClient();
 
 export class LearningPathPersistence {
 
     public async getLearningPaths(
-        params: LearningPathByFilterParams
+        filters: LearningPathByFilterParams,
+        paginationParams: PaginationParams
     ) {
-        const learningPaths = await prisma.learningPath.findMany({
-            where: {
-                AND: [
-                    params.keywords && params.keywords.length > 0
-                        ? {
-                            learningPathNodes: {
-                                some: {
-                                    learningObject: {
-                                        learningObjectsKeywords: {
-                                            some: {
-                                                // TODO is a separate table for keywords necessary?
-                                                keyword: {
-                                                    in: params.keywords, // Match any of the keywords
-                                                    mode: Prisma.QueryMode.insensitive, // Case-insensitive search
-                                                },
+
+        const whereClause: Prisma.LearningPathWhereInput = {
+            AND: [
+                filters.keywords && filters.keywords.length > 0
+                    ? {
+                        learningPathNodes: {
+                            some: {
+                                learningObject: {
+                                    learningObjectsKeywords: {
+                                        some: {
+                                            // TODO is a separate table for keywords necessary?
+                                            keyword: {
+                                                in: filters.keywords, // Match any of the keywords
+                                                mode: Prisma.QueryMode.insensitive, // Case-insensitive search
                                             },
                                         },
                                     },
                                 },
                             },
-                        }
-                        : {},
-                    params.age && params.age.length > 0
-                        ? {
-                            learningPathNodes: {
-                                some: {
-                                    learningObject: {
-                                        targetAges: {
-                                            hasSome: params.age, // Match any of the target ages
-                                        },
+                        },
+                    }
+                    : {},
+                filters.age && filters.age.length > 0
+                    ? {
+                        learningPathNodes: {
+                            some: {
+                                learningObject: {
+                                    targetAges: {
+                                        hasSome: filters.age, // Match any of the target ages
                                     },
                                 },
                             },
-                        }
-                        : {},
+                        },
+                    }
+                    : {},
 
-                    params.id ? { id: params.id } : {},
-                ].filter(Boolean), // Remove empty objects from the AND array
-            },
-            include: {
-                learningPathNodes: {
-                    include: {
-                        learningObject: true,
+                filters.id ? { id: filters.id } : {},
+            ].filter(Boolean), // Remove empty objects from the AND array
+        };
+
+
+        const [learningPaths, totalCount] = await prisma.$transaction([
+            prisma.learningPath.findMany({
+                where: whereClause,
+                include: {
+                    learningPathNodes: {
+                        include: {
+                            learningObject: true,
+                        },
                     },
                 },
+                skip: paginationParams.skip,
+                take: paginationParams.pageSize,
             },
-        },
-        );
+            ),
+            prisma.learningPath.count({
+                where: whereClause,
+            }),
+        ]);
 
-        return learningPaths;
+        return {
+            data: learningPaths,
+            totalPages: Math.ceil(totalCount / paginationParams.pageSize),
+        }
     }
 
     public async createLearningPath(data: LearningPathCreateParams) {
