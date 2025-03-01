@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { LearningPathByFilterParams, LearningPathCreateParams } from "../domain/types";
-import { LearningPathNodePersistence } from "./learningPathNode.persistence";
 
 const prisma = new PrismaClient();
 
@@ -51,13 +50,7 @@ export class LearningPathPersistence {
             include: {
                 learningPathNodes: {
                     include: {
-                        learningObject: {
-                            include: {
-                                learningObjectsKeywords: true,
-                            },
-                        },
-                        learningPathOutgoingTransitions: true, // include learningObjects in response.
-                        learningPathIncomingTransitions: true,
+                        learningObject: true,
                     },
                 },
             },
@@ -67,64 +60,11 @@ export class LearningPathPersistence {
         return learningPaths;
     }
 
-    // TODO: to be uniform, wrap the id in a params object?
-    // public async getLearningPathById(id: string) {
-    //     return await prisma.learningPath.findUnique({
-    //         where: {
-    //             id: id,
-    //         },
-    //         include: {
-    //             learningPathNodes: true,
-    //         },
-    //     });
-    // }
-
-
-    // TODO : not that clean with type any, maybe make it more uniform with other functions
-    public async createLearningPath(data: any) {
+    public async createLearningPath(data: LearningPathCreateParams) {
         // create a learningPath without any connected nodes
         const learningPath = await prisma.learningPath.create({
             data: data,
         });
         return learningPath;
     }
-
-    // TESTING PURPOSE ONLY, THIS SHOULD NOT BE IN PRODUCTION
-    public async deleteLearningPath() {
-        return await prisma.learningPath.deleteMany({});
-    }
-
 }
-
-
-
-// CODE TO CREATE LEARNING OBJECT
-
-// await prisma.learningObject.create({
-//     data: {
-//         hruid: "LO1",
-//         uuid: "2eab514a-5bf7-48ea-88f1-2e1caf77df40",
-//         version: 1,
-//         language: "en",
-//         title: "Learning Object 1",
-//         description: "Learning Object 1 Description",
-//         targetAges: {
-//             set: [3, 4, 5],
-//         },
-//         teacherExclusive: false,
-//         skosConcepts: ["Math.com", "Science.com"],
-//         available: true,
-//         content: "Learning Object 1 Content",
-//         canUploadSubmission: true,
-//         learningObjectsKeywords: {
-//             create: [
-//                 {
-//                     keyword: "Math",
-//                 },
-//                 {
-//                     keyword: "Science",
-//                 },
-//             ],
-//         },
-//     },
-// });
