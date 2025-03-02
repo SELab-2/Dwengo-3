@@ -26,7 +26,7 @@ export class AssignmentController {
     }
 
     private async createAssignment(req: Request, res: Response): Promise<void> {
-        res.json(await this.assignmentDomain.createAssigmen(req.body));
+        res.json(await this.assignmentDomain.createAssigment(req.body));
     }
 
     public getRouter(): Router {

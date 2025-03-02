@@ -1,5 +1,5 @@
 import { Assignment, PrismaClient } from '@prisma/client';
-import { AssignmentJson, AssignmentFilterParams } from './types';
+import { AssignmentCreateParams, AssignmentFilterParams } from './types';
 
 export class AssignmentPersistence {
     private prisma: PrismaClient;
@@ -9,7 +9,7 @@ export class AssignmentPersistence {
     }
 
     public async getAssignmentById(id: string): Promise<Assignment | null> {
-        const assignment = await this.prisma.assignment.findUnique({
+        const assignment = this.prisma.assignment.findUnique({
             where: {
                 id: id
             }
@@ -18,7 +18,7 @@ export class AssignmentPersistence {
     }
 
     public async getAssignments(filters: AssignmentFilterParams): Promise<Assignment[]> {
-        const assignments = await this.prisma.assignment.findMany({
+        const assignments = this.prisma.assignment.findMany({
             where: {
                 AND: [
                     filters.classId
@@ -58,15 +58,15 @@ export class AssignmentPersistence {
         return assignments;
     }
 
-    public async createAssignment(assignmentJson: AssignmentJson): Promise<Assignment> {
+    public async createAssignment(params: AssignmentCreateParams): Promise<Assignment> {
         const assignment = await this.prisma.assignment.create({
             data: {
-                classId: assignmentJson.classId,
-                teacherId: assignmentJson.teacherId,
-                lpId: assignmentJson.learningPathId,
+                classId: params.classId,
+                teacherId: params.teacherId,
+                lpId: params.learningPathId,
             }
         });
-        await this.prisma.$transaction(assignmentJson.groups.map(group =>
+        await this.prisma.$transaction(params.groups.map(group =>
                 this.prisma.group.create({
                     data: {
                         assignmentId: assignment.id,

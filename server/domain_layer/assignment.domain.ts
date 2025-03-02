@@ -1,6 +1,6 @@
 import { Assignment } from "@prisma/client";
 import { AssignmentPersistence } from "../persistence_layer/assignment.persistence"
-import { AssignmentFilterSchema, IdSchema, AssignmentJson, AssignmentJsonSchema } from "../persistence_layer/types";
+import { AssignmentCreateParams, AssignmentFilterSchema, AssignmentSchema, IdSchema, Uuid } from "../persistence_layer/types";
 
 export class AssignmentDomain {
     private assignmentPersistence: AssignmentPersistence
@@ -9,7 +9,7 @@ export class AssignmentDomain {
         this.assignmentPersistence = new AssignmentPersistence();
     }
 
-    public async getAssignment(assignmentId: string): Promise<Assignment | null> {
+    public async getAssignment(assignmentId: Uuid): Promise<Assignment | null> {
         const parseResult = IdSchema.safeParse(assignmentId);
         if (!parseResult.success) {
             throw  parseResult.error;
@@ -22,12 +22,11 @@ export class AssignmentDomain {
         if (!filtersResults.success) {
             throw filtersResults.error;
         }
-
         return this.assignmentPersistence.getAssignments(filtersResults.data);
     }
 
-    public async createAssigmen(assignmentJson: AssignmentJson): Promise<Assignment> {
-        const parseResult = AssignmentJsonSchema.safeParse(assignmentJson);
+    public async createAssigment(query: any): Promise<Assignment> {
+        const parseResult = AssignmentSchema.safeParse(query);
         if (!parseResult.success) {
             throw parseResult.error;
         }

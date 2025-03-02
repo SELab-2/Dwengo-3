@@ -1,11 +1,5 @@
+import { SubmissionType } from "@prisma/client";
 import { z } from "zod";
-
-export type AssignmentJson = {
-    groups: string[][],
-    classId: string,
-    teacherId: string,
-    learningPathId: string
-};
 
 export const AssignmentFilterSchema = z.object({
     classId: z.string().uuid().optional(),
@@ -14,8 +8,8 @@ export const AssignmentFilterSchema = z.object({
     studentId: z.string().uuid().optional()
 });
 
-export const AssignmentJsonSchema = z.object({
-    groups: z.string().uuid().array().array().nonempty(),
+export const AssignmentSchema = z.object({
+    groups: z.string().uuid().array().nonempty().array().nonempty(),
     classId: z.string().uuid(),
     teacherId: z.string().uuid(),
     learningPathId: z.string().uuid()
@@ -23,4 +17,35 @@ export const AssignmentJsonSchema = z.object({
 
 export const IdSchema = z.string().uuid();
 
-export type AssignmentFilterParams = z.infer<typeof AssignmentFilterSchema>
+const FileSubmissionSchema = z.object({
+    fileName: z.string(),
+    filePath: z.string()
+});
+
+const MultipleChoiceSubSchema = z.object({
+    questionId: z.string(),
+    answerId: z.string()
+});
+
+export const SubmissionSchema = z.object({
+    groupId: z.string().uuid(),
+    nodeId: z.string().uuid()
+});
+
+export const SubmissionUpdateSchema = z.object({
+    groupIdNodeId: SubmissionSchema,
+    submissionType: z.nativeEnum(SubmissionType),
+    submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.array().nonempty().optional()])
+}).refine((data) => {
+    return data.submissionType === SubmissionType.MULTIPLE_CHOICE && data.submission, 
+    {message: "Multiple choice submission is required when submissionType is MULTIPLE_CHOICE"};
+});
+
+
+
+export type AssignmentCreateParams = z.infer<typeof AssignmentSchema>;
+export type Uuid = z.infer<typeof IdSchema>;
+export type AssignmentFilterParams = z.infer<typeof AssignmentFilterSchema>;
+export type AssignmentSubParams = z.infer<typeof SubmissionSchema>;
+export type AssignmentSubUpdataParams = z.infer<typeof SubmissionUpdateSchema>;
+export type FileSubmission = z.infer<typeof FileSubmissionSchema>;
