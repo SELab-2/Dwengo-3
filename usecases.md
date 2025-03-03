@@ -1,6 +1,6 @@
 #### Authorization
-| UseCase | API endpoints | Method | Status | Notes |
-|---------|---------------|--------|--------|-------|
+| UseCase | API endpoints | Method | Status | Notes | Assignee | 
+|---------|---------------|--------|--------|-------|----------| 
 |Student can login | `/auth/student/login`| `POST` | ? | /|
 |Student can register | `/auth/student/register`|`PUT`| ?| /|
 |Student can logout | `/auth/student/logout` |  `POST` |  ? | / |
@@ -9,8 +9,8 @@
 |Teacher can logout | `/auth/teacher/logout` | `POST` | ? | / |
 
 #### Class 
-| UseCase | API endpoints | Method | Status | Notes |
-|---------|---------------|--------|--------|-------|
+| UseCase | API endpoints | Method | Status | Notes | Assignee | 
+|---------|---------------|--------|--------|-------|----------| 
 |Teacher can create a class | `/class` | `PUT` | ? | /|
 |Teacher can see a list of his classes | `/class` | `GET` | ? | / |
 |Teacher can copy requestlink of a class to share it with students | `/class` | `GET` | ? | I think one GET enpoint with filters (keyword/id/age/...) per resource is best |
@@ -23,8 +23,8 @@
 |Teacher can see all the students in the class | `/class` of `/students` of `class/students` | `GET` | ? | Hier nog afspreken welke de beste is |
 
 #### Profile 
-| UseCase | API endpoints | Method | Status | Notes |
-|---------|---------------|--------|--------|-------|
+| UseCase | API endpoints | Method | Status | Notes | Assignee | 
+|---------|---------------|--------|--------|-------|----------| 
 |Teacher can see his profile information | /teacher | `GET` | ? | / | 
 |Teacher can change his profile information | /teacher | `PATCH` of `PUT`  | ? | / |
 |Teacher can see profile of one of his/her students | /student | `GET` | ? | / | 
@@ -33,17 +33,18 @@
 
 
 #### Learning
-| UseCase | API endpoints | Method | Status | Notes |
-|---------|---------------|--------|--------|-------|
-|Teacher can create an LearningPath | `/learningPath` | `PUT` | Done | / | 
-|Teacher can create LearningPathNodes and link them to a self created assignment | `/learningPathNode` | `PUT` | In progress | / | 
+| UseCase | API endpoints | Method | Status | Notes | Assignee | 
+|---------|---------------|--------|--------|-------|----------| 
+|Teacher can create an LearningPath | `/learningPath` | `PUT` | In progress | / | Martijn | 
+|Teacher can create LearningPathNodes and link them to a self created assignment | `/learningPathNode` | `PUT` | In progress | / | Martijn |  
 |Teacher can delete LearningPathNodes from a self created learningPath | `/learningPathNode`| `DELETE` | not started | Not really a priority|
 |Teacher can delete a self created LearningPath | `/learningPath` | `DELETE`| Not started | also not really a priority|
-|Teacher can define transitions between nodes and choose conditions for those transitions | `/learningPathNodeTransition` | `PUT` | ? | / |
+|Teacher can define transitions between nodes and choose conditions for those transitions | `/learningPathNodeTransition` | `PUT` | In progress | / | Martijn | 
 |Teacher can delete self created Transitions from a LearningPathNode | `/learningPathNodeTransition`| `DELETE` | ? | / | 
 |Teacher can split the class in groups and give the learningPath as an assignment to those groups | `/group` of `/class/group` \| `/assignment`| `PUT` \| `PUT` | ? | / | 
 |Student can see which assignments were given to him from all classes hes a part of | `/assignment`| `GET` | ? | / |
 |Student can see which learningPaths he has favorited/started that were not assigned | `/learningPath`| `GET` | ? | / |   
+|Students can browse public learningPaths and choose to favorite one of them | `/learningPath` (browse)\| `/Student/favorites` (favorite)| `GET` \| `POST`| ? | / | 
 |Students can see which assignments were given to him from a certain class | `/assignment` | `GET` | ? | / | 
 |Student can see a progressbar (for the group) for each of the assignments that was given to him | `/group/progress` | `GET` | ? | / | 
 |Student can see all nodes of a learningPath | `learningPath` | `GET` | ? | / |
@@ -56,10 +57,19 @@
 
 
 #### Discussions 
-| UseCase | API endpoints | Method | Status | Notes |
-|---------|---------------|--------|--------|-------|
+| UseCase | API endpoints | Method | Status | Notes | Assignee | 
+|---------|---------------|--------|--------|-------|----------| 
 |Student can place a discussionPost belonging to an assigned learningPath, only the group and teachers can see this | `/discussion` of `/group/discussion` \| `/discussionMessage` | `PUT` | ? | A discussionchat has to be created, and a message has to be created as well | 
- 
+|Teachers can see a list of discussions of different groups and different assignments | `/discussion` | `GET` | ? | / | 
+|Teachers in a class can respond to the discussionposts made by a student in a group. | `/discussionMessage` | `PUT` | ? | / | 
+
+
+#### Anouncements 
+| UseCase | API endpoints | Method | Status | Notes | Assignee | 
+|---------|---------------|--------|--------|-------|----------| 
+|Teacher can create an anouncement for one of his classes | `/anouncement` | `PUT` | ? | / | 
+|Teacher and student can see all the anouncements of a class they're in | `/anouncement` | `GET` | ? | / | 
+|Teacher can edit the anouncement after it has been placed | `/anouncement` | `PATCH` | ? | / | 
 
 
 
