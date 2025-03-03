@@ -1,5 +1,55 @@
 import { z } from "zod";
 
+
+export const LearningPathNodeTransitionCreateSchema = z.object({
+  fromNodeId: z.string(),
+  toNodeId: z.string(),
+  condition: z.string().optional(),
+});
+
+export const LearningPathNodeCreateSchema = z.object({
+  lpId: z.string(),
+  loId: z.string(),
+  instruction: z.string().optional(),
+  startNode: z.boolean(),
+});
+
+export const LearningPathCreateSchema = z.object({
+  hruid: z.string(),
+  language: z.string(),
+  title: z.string(),
+  description: z.string().optional(),
+  image: z.string().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+});
+
+export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
+
+export type LearningPathNodeCreateParams = z.infer<typeof LearningPathNodeCreateSchema>;
+
+// ODO maybe change to shorter name
+export type LearningPathNodeTransitionCreateParams = z.infer<typeof LearningPathNodeTransitionCreateSchema>;
+
+
+
+export const LearningPathFilterSchema = z.object({
+  keywords: z.array(z.string()).optional(),
+  age: z.array(z.string())
+    .transform((val) => val.map(Number))
+    .optional(),
+  id: z.string().optional(),
+});
+
+export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;
+
+export const LearningPathByIdSchema = z.object({
+  id: z.string().uuid("Id must be a valid UUID"),
+});
+
+export type LearningPathByIdParams = z.infer<typeof LearningPathByIdSchema>;
+
+
 export const PaginationFilterSchema = z
   .object({
     page: z

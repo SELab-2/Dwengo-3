@@ -17,35 +17,35 @@ export class ClassPersistence {
       AND: [
         filters.name
           ? {
-              name: {
-                contains: filters.name,
-                mode: Prisma.QueryMode.insensitive,
-              },
-            }
+            name: {
+              contains: filters.name,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          }
           : {},
         // Filter to check if every teacherID of the filter params is in the teachers array
         filters.teacherIds && filters.teacherIds.length > 0
           ? {
-              AND: filters.teacherIds.map((teacherId) => ({
-                teachers: {
-                  some: {
-                    id: teacherId,
-                  },
+            AND: filters.teacherIds.map((teacherId) => ({
+              teachers: {
+                some: {
+                  id: teacherId,
                 },
-              })),
-            }
+              },
+            })),
+          }
           : {},
         // Filter to check if every studentID of the filter params is in the students array
         filters.studentIds && filters.studentIds.length > 0
           ? {
-              AND: filters.studentIds.map((studentId) => ({
-                students: {
-                  some: {
-                    id: studentId,
-                  },
+            AND: filters.studentIds.map((studentId) => ({
+              students: {
+                some: {
+                  id: studentId,
                 },
-              })),
-            }
+              },
+            })),
+          }
           : {},
       ],
     };
@@ -68,26 +68,26 @@ export class ClassPersistence {
   }
 
   public async getClassById(id: string) {
-    return prisma.class.findUnique({
+    return await prisma.class.findUnique({
       where: { id },
     });
   }
 
   public async createClass(params: ClassCreateParams) {
-    return prisma.class.create({
+    return await prisma.class.create({
       data: { name: params.name },
     });
   }
 
   public async updateClass(id: string, params: ClassUpdateParams) {
-    return prisma.class.update({
+    return await prisma.class.update({
       where: { id },
       data: { name: params.name },
     });
   }
 
   public async deleteClass(id: string) {
-    return prisma.class.delete({
+    return await prisma.class.delete({
       where: { id },
     });
   }
