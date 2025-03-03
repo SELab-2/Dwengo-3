@@ -9,10 +9,18 @@ Communicatie klant: Jona </br>
 Backend verantwoordelijke: Robin </br>
 Systeembeheerder: Jasper </br>
 
+
+# Project overview
+
 ## Tech stack
 **Frontend**: React, we hebben allemaal al ervaring met React. </br>
-**Backend**: ExpressJS, idem</br>
-**Databank**: PostgreSQL, idem. Ook omdat het relationeel gedeelte sterk zal worden gebruikt</br>
+**Backend**: Prisma, ExpressJS, Docker, idem</br>
+**Databank**: PostgreSQL, idem. Ook omdat het relationeel gedeelte sterk zal worden gebruikt
+
+Database scheme is available on: <br>
+https://sel2-3.ugent.be/schemaspy/relationships.html
+
+To inspect the scheme, please use [UGent VPN](vpn.ugent.be)
 
 # Installation guide
 
@@ -61,7 +69,7 @@ Replace `<your_password>` with the password you set when running the `docker` co
 ## 4. Install dependencies & Prisma
 Install dependencies for both the server and client and generate the Prisma client:
 ```bash
-./install
+./install.sh
 ```
 
 ---
@@ -72,18 +80,18 @@ Install dependencies for both the server and client and generate the Prisma clie
 
 - **Start the server:**
 ```bash
-cd ../server
+cd server
 npm run start
 ```
 
 - **Start the client:**
 ```bash
-cd ../client
+cd client
 npm run start
 ```
 
-The React app should now be running at [http://localhost:3001](http://localhost:3001)
-The Express server typically runs at [http://localhost:3000](http://localhost:3000)
+The React app should now be running at [http://localhost:3000](http://localhost:3000) <br>
+The Express server typically runs at [http://localhost:3001](http://localhost:3001)
 
 You can change the ports in the `.env` file, if the ports are not configured the default ports are given above.
 
@@ -96,7 +104,7 @@ sudo docker ps -a
 ```
 - Confirm the Prisma client is generated:
 ```bash
-ls ../db/node_modules/.prisma
+ls db/node_modules/.prisma
 ```
 - Check the server and client logs for errors.
 
