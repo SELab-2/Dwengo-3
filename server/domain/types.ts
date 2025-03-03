@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 export const LearningPathNodeTransitionCreateSchema = z.object({
   fromNodeId: z.string(),
   toNodeId: z.string(),
@@ -111,3 +110,46 @@ export const ClassUpdateSchema = z.object({
 });
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
+
+export const learningObjectsQuerySchema = z.object({
+  keyword: z.string().optional()
+})
+
+export type LearningObjectsQuery = z.infer<typeof learningObjectsQuerySchema>;
+
+export const learningObjectsQueryByIdSchema = z.object({
+  id: z.string()
+})
+
+export const learningObjectSchema = z.object({
+  id: z.string(),
+  hruid: z.string(),
+  // TODO int4: version: z.number().int(),
+  language: z.string(),
+  title: z.string(),
+  description: z.string().nullable(),
+  // TODO ContentTypeEnum: z.enum().nullable(),
+  // TODO int4[]: targetAges: z.array(z.number().int()),
+  teacherExclusive: z.boolean(),
+  // TODO string is skosURI: skosConcepts: z.array(z.string()).nullable(),
+  // TODO object definition: educationalGoals: object().nullable(),
+  copyright: z.string().nullable(),
+  licence: z.string().nullable(),
+  // TODO decimal: difficulty: z.number(),
+  // TODO decimal: estimatedTime: z.number(),
+  available: z.boolean(),
+  // TODO timestamp: createdAt: z.date().nullable(),
+  // TODO timestamp: updatedAt: z.date().nullable(),
+  content: z.string(),
+  // TODO object definition: multipleChoice: object().nullable(),
+  canUploadSubmission: z.boolean()
+});
+
+export type LearningObjectParams = z.infer<typeof learningObjectSchema>;
+
+export const learningObjectKeywordSchema = z.object({
+  loId: z.string(),
+  nameKeyword: z.string()
+});
+
+export type LearningObjectKeywordParams = z.infer<typeof learningObjectKeywordSchema>;
