@@ -2,7 +2,6 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import { ClassController } from "./routes/class.routes";
 import { ZodError } from "zod";
-import { PrismaClient } from "@prisma/client";
 import { LearningPathController } from "./routes/learningPath.routes";
 import { LearningPathNodeController } from "./routes/learningPathNode.routes";
 import { LearningPathNodeTransitionController } from "./routes/learningPathNodeTransition.routes";
