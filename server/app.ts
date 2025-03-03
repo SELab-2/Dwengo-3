@@ -9,14 +9,13 @@ import { LearningPathNodeTransitionController } from "./routes/learningPathNodeT
 
 dotenv.config({ path: "../.env" });
 
-const prisma = new PrismaClient();
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
 app.use(express.json());
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response) => {
   // TODO: Maybe make some error logging mechanism?
   console.error("[ERROR]", err);
 
