@@ -1,14 +1,17 @@
-import { Assignment, PrismaClient } from '@prisma/client';
-import { AssignmentCreateParams, AssignmentFilterParams } from './types';
+import { Assignment, LearningObject, LearningPathNode, PrismaClient } from '@prisma/client';
+import { AssignmentCreateParams, AssignmentFilterParams, Uuid } from './types';
+import { AssignmentSubmissionDomain } from '../domain_layer/assignmentSubmission.domain';
 
 export class AssignmentPersistence {
     private prisma: PrismaClient;
+    private assignementSubDomain: AssignmentSubmissionDomain; 
 
     public constructor() {
         this.prisma = new PrismaClient();
+        this.assignementSubDomain = new AssignmentSubmissionDomain();
     }
 
-    public async getAssignmentById(id: string): Promise<Assignment | null> {
+    public async getAssignmentById(id: Uuid): Promise<Assignment | null> {
         const assignment = this.prisma.assignment.findUnique({
             where: {
                 id: id
@@ -64,19 +67,45 @@ export class AssignmentPersistence {
                 classId: params.classId,
                 teacherId: params.teacherId,
                 lpId: params.learningPathId,
+            },
+            include: {
+                learningPath: {
+                    include: {
+                        learningPathNodes: {
+                            include: {
+                                learningObject: true
+                            }
+                        }
+                    }
+                }
             }
         });
-        await this.prisma.$transaction(params.groups.map(group =>
+        const groupIds = await this.prisma.$transaction(params.groups.map((group: Uuid[]) =>
                 this.prisma.group.create({
                     data: {
                         assignmentId: assignment.id,
                         students: {
-                            connect: group.map(student => ({id: student}))
+                            connect: group.map((student: Uuid) => ({id: student}))
                         }
+                    },
+                    select:{
+                        id: true
                     }
                 })
             )
         );
+        const nodeWithSubmissions: any = [];
+        assignment.learningPath.learningPathNodes.forEach((node: LearningPathNode & {learningObject: LearningObject}) => {
+            if (node.learningObject.canUploadSubmission) {
+                groupIds.forEach((group: {id: string}) => {
+                    nodeWithSubmissions.push(this.assignementSubDomain.createAssignmentSubmission({
+                        nodeId: node.learningObject.id,
+                        groupId: group.id
+                    }));
+                });
+            }
+        });
+        await this.prisma.$transaction(nodeWithSubmissions);
         return assignment;
     }
 }
