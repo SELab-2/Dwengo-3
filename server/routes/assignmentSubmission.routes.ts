@@ -3,26 +3,26 @@ import { AssignmentSubmissionDomain } from "../domain_layer/assignmentSubmission
 
 export class AssignmentSubmissionController {
     private router: Router;
-    private assignmentSubDomain: AssignmentSubmissionDomain;
+    private assignmentSubmissionsDomain: AssignmentSubmissionDomain;
 
     public constructor() {
         this.router = Router();
-        this.assignmentSubDomain = new AssignmentSubmissionDomain();
+        this.assignmentSubmissionsDomain = new AssignmentSubmissionDomain();
         this.initializeRoutes();
     }
 
     private initializeRoutes(): void {
         this.router.get('/', this.getAssignmentSubmission);
-        this.router.patch('/', this.assignmentSubDomain.getUpload().single('file'), this.updateAssignmentSubmission); //TODO change 'file' to the correct field name
+        this.router.patch('/', this.assignmentSubmissionsDomain.getUpload().single('file'), this.updateAssignmentSubmission); //TODO change 'file' to the correct field name
 
     }
 
     private async getAssignmentSubmission(req: Request, res: Response): Promise<void> {
-        res.json(await this.assignmentSubDomain.getAssignmentSubmission(req.query));
+        res.json(await this.assignmentSubmissionsDomain.getAssignmentSubmission(req.query));
     }
 
     private async updateAssignmentSubmission(req: Request, res: Response): Promise<void> {
-        res.json(await this.assignmentSubDomain.updateAssignmentSubmission(req.body));
+        res.json(await this.assignmentSubmissionsDomain.updateAssignmentSubmission(req.body));
     }
 
     public getRouter(): Router {

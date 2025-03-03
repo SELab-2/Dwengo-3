@@ -94,18 +94,18 @@ export class AssignmentPersistence {
                 })
             )
         );
-        const nodeWithSubmissions: any = [];
+        const submissions: any = [];
         assignment.learningPath.learningPathNodes.forEach((node: LearningPathNode & {learningObject: LearningObject}) => {
             if (node.learningObject.canUploadSubmission) {
                 groupIds.forEach((group: {id: string}) => {
-                    nodeWithSubmissions.push(this.assignementSubDomain.createAssignmentSubmission({
+                    submissions.push(this.assignementSubDomain.createAssignmentSubmission({
                         nodeId: node.learningObject.id,
                         groupId: group.id
                     }));
                 });
             }
         });
-        await this.prisma.$transaction(nodeWithSubmissions);
+        await this.prisma.$transaction(submissions);
         return assignment;
     }
 }
