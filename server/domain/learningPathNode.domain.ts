@@ -1,5 +1,5 @@
 import { LearningPathNodePersistence } from "../persistence/learningPathNode.persistence";
-import { LearningPathNodeCreateSchema } from "./types";
+import { LearningPathNodeCreateParams, LearningPathNodeCreateSchema } from "./types";
 
 
 export class LearningPathNodeDomain {
@@ -9,7 +9,7 @@ export class LearningPathNodeDomain {
         this.learningPathNodePersistence = new LearningPathNodePersistence();
     }
 
-    public async createLearningPathNode(query: any) {
+    public async createLearningPathNode(query: LearningPathNodeCreateParams) {
         const parseResult = LearningPathNodeCreateSchema.safeParse(query);
         if (!parseResult.success) {
             throw parseResult.error;
