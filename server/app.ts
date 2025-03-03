@@ -14,7 +14,7 @@ const port = process.env.PORT || 3001;
 app.use(express.json());
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   // TODO: Maybe make some error logging mechanism?
   console.error("[ERROR]", err);
 
@@ -34,11 +34,13 @@ app.use((err: Error, req: Request, res: Response) => {
 const apiRouter = express.Router();
 app.use("/api", apiRouter);
 
-
-apiRouter.use('/class', new ClassController().router);
-apiRouter.use('/learningPath', new LearningPathController().router);
-apiRouter.use('/learningPathNode', new LearningPathNodeController().router);
-apiRouter.use('/learningPathNodeTransition', new LearningPathNodeTransitionController().router);
+apiRouter.use("/class", new ClassController().router);
+apiRouter.use("/learningPath", new LearningPathController().router);
+apiRouter.use("/learningPathNode", new LearningPathNodeController().router);
+apiRouter.use(
+  "/learningPathNodeTransition",
+  new LearningPathNodeTransitionController().router
+);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);
