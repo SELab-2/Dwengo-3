@@ -4,7 +4,7 @@ import {
   ClassFilterSchema,
   ClassUpdateSchema,
   ClassCreateSchema,
-  IdScheme,
+  UUIDValidationScheme,
 } from "./types";
 
 export class ClassDomain {
@@ -44,9 +44,9 @@ export class ClassDomain {
 
   public async updateClass(query: any, body: any) {
     // Validate and check for a valid UUID.
-    const idParamsResult = IdScheme.safeParse(query);
-    if (!idParamsResult.success) {
-      throw idParamsResult.error;
+    const UUIDParamsResult = UUIDValidationScheme.safeParse(query);
+    if (!UUIDParamsResult.success) {
+      throw UUIDParamsResult.error;
     }
 
     // Validate and parse class update parameters
@@ -56,18 +56,18 @@ export class ClassDomain {
     }
 
     return this.classPersistance.updateClass(
-      idParamsResult.data,
+      UUIDParamsResult.data,
       updateParamsResult.data
     );
   }
 
   public async deleteClass(query: any) {
     // Validate and check for a valid UUID.
-    const idParamsResult = IdScheme.safeParse(query);
-    if (!idParamsResult.success) {
-      throw idParamsResult.error;
+    const UUIDParamsResult = UUIDValidationScheme.safeParse(query);
+    if (!UUIDParamsResult.success) {
+      throw UUIDParamsResult.error;
     }
 
-    return this.classPersistance.deleteClass(idParamsResult.data);
+    return this.classPersistance.deleteClass(UUIDParamsResult.data);
   }
 }

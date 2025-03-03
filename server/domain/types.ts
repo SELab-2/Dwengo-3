@@ -1,4 +1,3 @@
-import e from "express";
 import { z } from "zod";
 
 export const LearningPathNodeTransitionCreateSchema = z.object({
@@ -83,9 +82,9 @@ export type PaginationParams = z.infer<typeof PaginationFilterSchema>;
 
 export const ClassFilterSchema = z.object({
   name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
-  teacherId: z.string().optional(),
-  studentId: z.string().optional(),
-  id: z.string().optional(),
+  teacherId: z.string().uuid().optional(),
+  studentId: z.string().uuid().optional(),
+  id: z.string().uuid().optional(),
 });
 
 export type ClassFilterParams = z.infer<typeof ClassFilterSchema>;
@@ -102,8 +101,8 @@ export const ClassUpdateSchema = z.object({
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
 
-export const IdScheme = z.object({
+export const UUIDValidationScheme = z.object({
   id: z.string().uuid("Id must be a valid UUID"),
 });
 
-export type IdParams = z.infer<typeof IdScheme>;
+export type UUIDParams = z.infer<typeof UUIDValidationScheme>;

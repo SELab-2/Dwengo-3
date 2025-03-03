@@ -4,7 +4,7 @@ import {
   ClassFilterParams,
   ClassCreateParams,
   ClassUpdateParams,
-  IdParams,
+  UUIDParams,
 } from "../domain/types";
 
 const prisma = new PrismaClient();
@@ -57,14 +57,14 @@ export class ClassPersistence {
     });
   }
 
-  public async updateClass(idParams: IdParams, params: ClassUpdateParams) {
+  public async updateClass(idParams: UUIDParams, params: ClassUpdateParams) {
     return await prisma.class.update({
       where: { id: idParams.id },
       data: { name: params.name },
     });
   }
 
-  public async deleteClass(idParams: IdParams) {
+  public async deleteClass(idParams: UUIDParams) {
     return await prisma.class.delete({
       where: { id: idParams.id },
     });
