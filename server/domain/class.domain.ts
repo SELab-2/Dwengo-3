@@ -43,6 +43,7 @@ export class ClassDomain {
   }
 
   public async updateClass(query: any, body: any) {
+    // TODO: check if the person who is updating this class is the owner of the class once we have authentication.
     // Validate and check for a valid UUID.
     const UUIDParamsResult = UUIDValidationScheme.safeParse(query);
     if (!UUIDParamsResult.success) {
@@ -62,6 +63,7 @@ export class ClassDomain {
   }
 
   public async deleteClass(query: any) {
+    // TODO: check if the person who is deleting this class is the owner of the class once we have authentication.
     // Validate and check for a valid UUID.
     const UUIDParamsResult = UUIDValidationScheme.safeParse(query);
     if (!UUIDParamsResult.success) {

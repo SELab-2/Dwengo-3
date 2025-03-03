@@ -51,16 +51,16 @@ export class ClassPersistence {
     };
   }
 
-  public async createClass(params: ClassCreateParams) {
+  public async createClass(data: ClassCreateParams) {
     return await prisma.class.create({
-      data: { name: params.name },
+      data,
     });
   }
 
-  public async updateClass(idParams: UUIDParams, params: ClassUpdateParams) {
+  public async updateClass(idParams: UUIDParams, data: ClassUpdateParams) {
     return await prisma.class.update({
       where: { id: idParams.id },
-      data: { name: params.name },
+      data,
     });
   }
 
