@@ -12,9 +12,9 @@ export class AssignmentController {
     }
 
     private initializeRoutes(): void {
-        this.router.get('/', this.getAssignments);
-        this.router.get('/:id', this.getAssignment);
-        this.router.post('/', this.createAssignment);
+        this.router.get('/', this.getAssignments.bind(this));
+        this.router.get('/:id', this.getAssignment.bind(this));
+        this.router.post('/', this.createAssignment.bind(this));
     }
 
     private async getAssignments(req: Request, res: Response): Promise<void> {
@@ -26,6 +26,7 @@ export class AssignmentController {
     }
 
     private async createAssignment(req: Request, res: Response): Promise<void> {
+        //console.log(req.body);
         res.json(await this.assignmentDomain.createAssigment(req.body));
     }
 

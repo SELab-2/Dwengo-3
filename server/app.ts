@@ -8,6 +8,8 @@ import { AssignmentSubmissionController } from "./routes/assignmentSubmission.ro
 dotenv.config({path:"../.env"});
 
 const app: Express = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 const port = process.env.PORT || 3001;
 
 const prisma = new PrismaClient()

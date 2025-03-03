@@ -22,10 +22,7 @@ const FileSubmissionSchema = z.object({
     filePath: z.string()
 });
 
-const MultipleChoiceSubSchema = z.object({
-    questionId: z.string(),
-    answerId: z.string()
-});
+const MultipleChoiceSubSchema = z.string()
 
 export const SubmissionSchema = z.object({
     groupId: z.string().uuid(),
@@ -33,9 +30,10 @@ export const SubmissionSchema = z.object({
 });
 
 export const SubmissionUpdateSchema = z.object({
-    groupIdNodeId: SubmissionSchema,
+    groupId: z.string().uuid(),
+    nodeId: z.string().uuid(),
     submissionType: z.nativeEnum(SubmissionType),
-    submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.array().nonempty().optional()])
+    submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()])
 }).refine((data: any) => {
     return data.submissionType === SubmissionType.MULTIPLE_CHOICE && !data.submission, 
     {message: "Multiple choice submission is required when submissionType is MULTIPLE_CHOICE"};

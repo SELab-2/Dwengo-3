@@ -31,7 +31,10 @@ export class AssignmentSubmissionPersistence {
     public async updateAssignmentSubmission(params: AssignmentSubUpdataParams): Promise<AssignmentSubmission> {
         return this.prisma.assignmentSubmission.update({
             where: {
-                groupId_nodeId: params.groupIdNodeId
+                groupId_nodeId: {
+                    groupId: params.groupId,
+                    nodeId: params.nodeId
+                }
             },
             data: {
                 submissionType: params.submissionType,

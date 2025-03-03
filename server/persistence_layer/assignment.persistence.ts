@@ -98,9 +98,11 @@ export class AssignmentPersistence {
         assignment.learningPath.learningPathNodes.forEach((node: LearningPathNode & {learningObject: LearningObject}) => {
             if (node.learningObject.canUploadSubmission) {
                 groupIds.forEach((group: {id: string}) => {
-                    submissions.push(this.assignementSubDomain.createAssignmentSubmission({
-                        nodeId: node.learningObject.id,
-                        groupId: group.id
+                    submissions.push(this.prisma.assignmentSubmission.create({
+                        data: {
+                            nodeId: node.id,
+                            groupId: group.id
+                        }
                     }));
                 });
             }
