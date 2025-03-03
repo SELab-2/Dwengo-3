@@ -1,5 +1,5 @@
+import e from "express";
 import { z } from "zod";
-
 
 export const LearningPathNodeTransitionCreateSchema = z.object({
   fromNodeId: z.string(),
@@ -26,29 +26,33 @@ export const LearningPathCreateSchema = z.object({
 
 export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
 
-export type LearningPathNodeCreateParams = z.infer<typeof LearningPathNodeCreateSchema>;
+export type LearningPathNodeCreateParams = z.infer<
+  typeof LearningPathNodeCreateSchema
+>;
 
 // ODO maybe change to shorter name
-export type LearningPathNodeTransitionCreateParams = z.infer<typeof LearningPathNodeTransitionCreateSchema>;
-
-
+export type LearningPathNodeTransitionCreateParams = z.infer<
+  typeof LearningPathNodeTransitionCreateSchema
+>;
 
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),
-  age: z.array(z.string())
+  age: z
+    .array(z.string())
     .transform((val) => val.map(Number))
     .optional(),
   id: z.string().optional(),
 });
 
-export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;
+export type LearningPathByFilterParams = z.infer<
+  typeof LearningPathFilterSchema
+>;
 
 export const LearningPathByIdSchema = z.object({
   id: z.string().uuid("Id must be a valid UUID"),
 });
 
 export type LearningPathByIdParams = z.infer<typeof LearningPathByIdSchema>;
-
 
 export const PaginationFilterSchema = z
   .object({
@@ -68,12 +72,9 @@ export const PaginationFilterSchema = z
   })
   .transform((data) => {
     // Transform to include skip
-    const page = data.page;
-    const pageSize = data.pageSize;
-    const skip = (page - 1) * pageSize;
+    const skip = (data.page - 1) * data.pageSize;
     return {
-      page,
-      pageSize,
+      pageSize: data.pageSize,
       skip,
     };
   });
@@ -82,20 +83,9 @@ export type PaginationParams = z.infer<typeof PaginationFilterSchema>;
 
 export const ClassFilterSchema = z.object({
   name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
-  teacherIds: z
-    .array(
-      z.string()
-      // TODO: Uncomment this line when we have teacher entries in the databse with uuids
-      //.uuid("Each teacherId must be a valid UUID")
-    )
-    .optional(),
-  studentIds: z
-    .array(
-      z.string()
-      // TODO: Uncomment this line when we have student entries in the databse with uuids
-      //.uuid("Each studentId must be a valid UUID")
-    )
-    .optional(),
+  teacherId: z.string().optional(),
+  studentId: z.string().optional(),
+  id: z.string().optional(),
 });
 
 export type ClassFilterParams = z.infer<typeof ClassFilterSchema>;
@@ -111,3 +101,9 @@ export const ClassUpdateSchema = z.object({
 });
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
+
+export const IdScheme = z.object({
+  id: z.string().uuid("Id must be a valid UUID"),
+});
+
+export type IdParams = z.infer<typeof IdScheme>;

@@ -4,6 +4,7 @@ import {
   ClassFilterSchema,
   ClassUpdateSchema,
   ClassCreateSchema,
+  IdScheme,
 } from "./types";
 
 export class ClassDomain {
@@ -32,10 +33,6 @@ export class ClassDomain {
     );
   }
 
-  public async getClassById(id: string) {
-    return this.classPersistance.getClassById(id);
-  }
-
   public async createClass(body: any) {
     // Validate and parse class create parameters
     const createParamsResult = ClassCreateSchema.safeParse(body);
@@ -45,16 +42,32 @@ export class ClassDomain {
     return this.classPersistance.createClass(createParamsResult.data);
   }
 
-  public async updateClass(id: string, body: any) {
+  public async updateClass(query: any, body: any) {
+    // Validate and check for a valid UUID.
+    const idParamsResult = IdScheme.safeParse(query);
+    if (!idParamsResult.success) {
+      throw idParamsResult.error;
+    }
+
     // Validate and parse class update parameters
     const updateParamsResult = ClassUpdateSchema.safeParse(body);
     if (!updateParamsResult.success) {
       throw updateParamsResult.error;
     }
-    return this.classPersistance.updateClass(id, updateParamsResult.data);
+
+    return this.classPersistance.updateClass(
+      idParamsResult.data,
+      updateParamsResult.data
+    );
   }
 
-  public async deleteClass(id: string) {
-    return this.classPersistance.deleteClass(id);
+  public async deleteClass(query: any) {
+    // Validate and check for a valid UUID.
+    const idParamsResult = IdScheme.safeParse(query);
+    if (!idParamsResult.success) {
+      throw idParamsResult.error;
+    }
+
+    return this.classPersistance.deleteClass(idParamsResult.data);
   }
 }

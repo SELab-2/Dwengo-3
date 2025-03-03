@@ -20,27 +20,22 @@ export class ClassController {
     res.json(await this.classDomain.getClasses(req.query));
   };
 
-  private getClassById = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.getClassById(req.params.id));
-  };
-
   private createClass = async (req: Request, res: Response) => {
     res.json(await this.classDomain.createClass(req.body));
   };
 
   private updateClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.updateClass(req.params.id, req.body));
+    res.json(await this.classDomain.updateClass(req.query, req.body));
   };
 
   private deleteClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.deleteClass(req.params.id));
+    res.json(await this.classDomain.deleteClass(req.query));
   };
 
   private initializeRoutes() {
     this.router.get("/", this.getClasses);
     this.router.post("/", this.createClass);
-    this.router.get("/:id", this.getClassById);
-    this.router.patch("/:id", this.updateClass);
-    this.router.delete("/:id", this.deleteClass);
+    this.router.patch("/", this.updateClass);
+    this.router.delete("/", this.deleteClass);
   }
 }
