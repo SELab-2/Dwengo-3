@@ -1,6 +1,6 @@
 import { Assignment } from "@prisma/client";
-import { AssignmentPersistence } from "../persistence_layer/assignment.persistence"
-import { AssignmentCreateParams, AssignmentFilterSchema, AssignmentSchema, IdSchema, Uuid } from "../persistence_layer/types";
+import { AssignmentPersistence } from "../persistence/assignment.persistence"
+import { AssignmentFilterSchema, AssignmentSchema, IdSchema, Uuid } from "./types";
 
 export class AssignmentDomain {
     private assignmentPersistence: AssignmentPersistence

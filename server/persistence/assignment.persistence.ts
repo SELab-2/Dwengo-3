@@ -1,6 +1,6 @@
 import { Assignment, LearningObject, LearningPathNode, PrismaClient } from '@prisma/client';
-import { AssignmentCreateParams, AssignmentFilterParams, Uuid } from './types';
-import { AssignmentSubmissionDomain } from '../domain_layer/assignmentSubmission.domain';
+import { AssignmentCreateParams, AssignmentFilterParams, Uuid } from '../domain/types';
+import { AssignmentSubmissionDomain } from '../domain/assignmentSubmission.domain';
 
 export class AssignmentPersistence {
     private prisma: PrismaClient;

@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { AssignmentSubmissionDomain } from "../domain_layer/assignmentSubmission.domain";
+import { AssignmentSubmissionDomain } from "../domain/assignmentSubmission.domain";
 
 export class AssignmentSubmissionController {
     private router: Router;

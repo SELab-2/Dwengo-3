@@ -1,5 +1,5 @@
 import { AssignmentSubmission, PrismaClient } from "@prisma/client";
-import { AssignmentSubParams, AssignmentSubUpdataParams, Uuid } from "./types";
+import { AssignmentSubParams, AssignmentSubUpdataParams, Uuid } from "../domain/types";
 
 export class AssignmentSubmissionPersistence {
     private prisma: PrismaClient;

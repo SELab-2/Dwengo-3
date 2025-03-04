@@ -1,6 +1,6 @@
 import { Class, ClassRole, LearningPath, LearningPathNode, PrismaClient, Student, Teacher } from "@prisma/client";
 import dotenv from "dotenv";
-import { AssignmentDomain } from "./domain_layer/assignment.domain";
+import { AssignmentDomain } from "./domain/assignment.domain";
 
 dotenv.config({path:"../.env"});
 
@@ -36,7 +36,6 @@ class TestData {
             teacherId: teacher.id,
             learningPathId: lp.id
         });
-
         console.log(assignment);
     }
 

@@ -1,6 +1,6 @@
 import { AssignmentSubmission, SubmissionType } from "@prisma/client";
-import { AssignmentSubmissionPersistence } from "../persistence_layer/assignmentSubmission.persistence";
-import { FileSubmission, SubmissionSchema, SubmissionUpdateSchema, Uuid } from "../persistence_layer/types";
+import { AssignmentSubmissionPersistence } from "../persistence/assignmentSubmission.persistence";
+import { FileSubmission, SubmissionSchema, SubmissionUpdateSchema, Uuid } from "./types";
 import multer, { Multer } from 'multer';
 import { Request } from 'express';
 
@@ -53,7 +53,7 @@ export class AssignmentSubmissionDomain {
     }
 
     public async updateAssignmentSubmission(req: Request): Promise<AssignmentSubmission> {
-        console.log(req.body);
+        //console.log(req.body);
         const parseResult = SubmissionUpdateSchema.safeParse(req.body);
         if (!parseResult.success) {
             throw parseResult.error;
