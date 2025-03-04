@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { LearningPathNodeTransitionCreateParams } from "../domain/types";
+import { PrismaSingleton } from "../prismaSingleton";
 
-
-const prisma = new PrismaClient();
 
 export class LearningPathNodeTransitionPersistence {
 
@@ -12,7 +10,7 @@ export class LearningPathNodeTransitionPersistence {
         // Create a transition and connect it from previous to next node
 
         const { fromNodeId, toNodeId, ...transitionData } = data;
-        const transition = await prisma.learningNodeTransition.create({
+        const transition = await PrismaSingleton.instance.learningNodeTransition.create({
             data: {
                 ...transitionData,
                 fromNode: {
