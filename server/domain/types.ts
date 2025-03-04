@@ -73,7 +73,7 @@ export const PaginationFilterSchema = z
     // Transform to include skip
     const skip = (data.page - 1) * data.pageSize;
     return {
-      pageSize: data.pageSize,
+      take: data.pageSize,
       skip,
     };
   });

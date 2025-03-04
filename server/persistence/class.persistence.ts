@@ -36,7 +36,7 @@ export class ClassPersistence {
       PrismaSingleton.instance.class.findMany({
         where,
         skip: paginationParams.skip,
-        take: paginationParams.pageSize,
+        take: paginationParams.take,
       }),
       PrismaSingleton.instance.class.count({
         where,
@@ -45,7 +45,7 @@ export class ClassPersistence {
 
     return {
       data: classes,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
+      totalPages: Math.ceil(totalCount / paginationParams.take),
     };
   }
 
