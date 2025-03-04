@@ -12,6 +12,7 @@
 | UseCase | API endpoints | Method | Status | Notes | Assignee | 
 |---------|---------------|--------|--------|-------|----------| 
 |Teacher can create a class | `/class` | `PUT` | ? | /|
+|Teacher can change the name of the class he is teacher of | `/class` | `PATCH` | ? | / | 
 |Teacher can see a list of his classes | `/class` | `GET` | ? | / |
 |Teacher can copy requestlink of a class to share it with students | `/class` | `GET` | ? | I think one GET enpoint with filters (keyword/id/age/...) per resource is best |
 |Student can send request to join class | `/class/studentRequest/` | `PUT` | Not started | / |
