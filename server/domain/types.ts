@@ -32,6 +32,18 @@ export type LearningPathNodeCreateParams = z.infer<typeof LearningPathNodeCreate
 export type LearningPathNodeTransitionCreateParams = z.infer<typeof LearningPathNodeTransitionCreateSchema>;
 
 
+export const AnnouncementFilterSchema = z.object({
+  classId: z.string().optional(),
+  teacherId: z.string().optional(),
+  studentId: z.string().optional(),
+  announcementId: z.string().optional(),
+}).refine((data) => Object.values(data).some((value) => value !== undefined), {
+  message: "At least one filter must be provided.",
+  path: [],
+});
+
+export type AnnouncementByFilterParams = z.infer<typeof AnnouncementFilterSchema>;
+
 
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),
