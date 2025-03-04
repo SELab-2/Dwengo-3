@@ -28,9 +28,19 @@ export class ClassController {
     res.json(await this.classDomain.deleteClass(req.query));
   };
 
+  private studentJoinRequest = async (req: Request, res: Response) => {
+    res.json(await this.classDomain.createClassJoinRequest(req.body));
+  };
+
+  private teacherJoinRequest = async (req: Request, res: Response) => {
+    res.json(await this.classDomain.createClassJoinRequest(req.body));
+  };
+
   private initializeRoutes() {
     this.router.get("/", this.getClasses);
-    this.router.post("/", this.createClass);
+    this.router.put("/", this.createClass);
     this.router.delete("/", this.deleteClass);
+    this.router.put("/studentRequest", this.studentJoinRequest)
+    this.router.put("/teacherRequest", this.teacherJoinRequest)
   }
 }

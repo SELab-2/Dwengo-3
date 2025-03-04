@@ -4,6 +4,7 @@ import {
   ClassFilterSchema,
   ClassCreateSchema,
   UUIDValidationScheme,
+  ClassJoinRequestScheme,
 } from "./types";
 
 export class ClassDomain {
@@ -51,5 +52,14 @@ export class ClassDomain {
     }
 
     return this.classPersistance.deleteClass(UUIDParamsResult.data);
+  }
+
+  public async createClassJoinRequest(body: any) {
+    const ClassJoinRequestParams = ClassJoinRequestScheme.safeParse(body);
+    if (!ClassJoinRequestParams.success) {
+      throw ClassJoinRequestParams.error;
+    }
+
+    return this.classPersistance.createClassJoinRequest(ClassJoinRequestParams.data);
   }
 }

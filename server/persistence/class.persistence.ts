@@ -5,6 +5,7 @@ import {
   ClassFilterParams,
   ClassCreateParams,
   UUIDParams,
+  ClassJoinRequestParams,
 } from "../domain/types";
 
 export class ClassPersistence {
@@ -16,11 +17,11 @@ export class ClassPersistence {
       AND: [
         filters.name
           ? {
-              name: {
-                contains: filters.name,
-                mode: Prisma.QueryMode.insensitive,
-              },
-            }
+            name: {
+              contains: filters.name,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          }
           : {},
         filters.teacherId
           ? { teachers: { some: { id: filters.teacherId } } }
@@ -59,5 +60,12 @@ export class ClassPersistence {
     return await PrismaSingleton.instance.class.delete({
       where: { id: idParams.id },
     });
+  }
+
+  public async createClassJoinRequest(data: ClassJoinRequestParams) {
+    // TODO: Implement this method once we have authentication.
+    //return await PrismaSingleton.instance.class.update({
+
+    //});
   }
 }

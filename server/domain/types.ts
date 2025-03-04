@@ -101,3 +101,9 @@ export const UUIDValidationScheme = z.object({
 });
 
 export type UUIDParams = z.infer<typeof UUIDValidationScheme>;
+
+export const ClassJoinRequestScheme = z.object({
+  classId: z.string().uuid("ClassId must be a valid UUID"),
+})
+
+export type ClassJoinRequestParams = z.infer<typeof ClassJoinRequestScheme>;
