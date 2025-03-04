@@ -70,7 +70,7 @@
 |---------|---------------|--------|--------|-------|----------| 
 |Teacher can create an anouncement for one of his classes | `/anouncement` | `PUT` | ? | / | 
 |Teacher and student can see all the anouncements of a class they're in | `/anouncement` | `GET` | ? | / | 
-|Teacher can edit the anouncement after it has been placed | `/anouncement` | `PATCH` | ? | / | 
+|Teacher can edit the anouncement after it has been placed | `/anouncement/:id` | `PATCH` | ? | / | 
 
 
 
