@@ -1,3 +1,4 @@
+import { AnnouncementPersistence } from "../persistence/announcement.persistence";
 import { AnnouncementByFilterParams, AnnouncementFilterSchema, PaginationFilterSchema } from "./types";
 
 
@@ -25,6 +26,7 @@ export class AnnouncementDomain {
     }
 
     public async createAnnouncement(query: AnnouncementCreateParams) {
+
     }
 
     public async updateAnnouncement(id: string, query: AnnouncementUpdateParams) {
