@@ -2,7 +2,6 @@ import { ClassPersistence } from "../persistence/class.persistence";
 import {
   PaginationFilterSchema,
   ClassFilterSchema,
-  ClassUpdateSchema,
   ClassCreateSchema,
   UUIDValidationScheme,
 } from "./types";
@@ -39,27 +38,8 @@ export class ClassDomain {
     if (!createParamsResult.success) {
       throw createParamsResult.error;
     }
+
     return this.classPersistance.createClass(createParamsResult.data);
-  }
-
-  public async updateClass(query: any, body: any) {
-    // TODO: check if the person who is updating this class is the owner of the class once we have authentication.
-    // Validate and check for a valid UUID.
-    const UUIDParamsResult = UUIDValidationScheme.safeParse(query);
-    if (!UUIDParamsResult.success) {
-      throw UUIDParamsResult.error;
-    }
-
-    // Validate and parse class update parameters
-    const updateParamsResult = ClassUpdateSchema.safeParse(body);
-    if (!updateParamsResult.success) {
-      throw updateParamsResult.error;
-    }
-
-    return this.classPersistance.updateClass(
-      UUIDParamsResult.data,
-      updateParamsResult.data
-    );
   }
 
   public async deleteClass(query: any) {

@@ -1,13 +1,11 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { PrismaSingleton } from "../prismaSingleton";
 import {
   PaginationParams,
   ClassFilterParams,
   ClassCreateParams,
-  ClassUpdateParams,
   UUIDParams,
 } from "../domain/types";
-
-const prisma = new PrismaClient();
 
 export class ClassPersistence {
   public async getClasses(
@@ -34,13 +32,13 @@ export class ClassPersistence {
       ],
     };
 
-    const [classes, totalCount] = await prisma.$transaction([
-      prisma.class.findMany({
+    const [classes, totalCount] = await PrismaSingleton.instance.$transaction([
+      PrismaSingleton.instance.class.findMany({
         where,
         skip: paginationParams.skip,
         take: paginationParams.pageSize,
       }),
-      prisma.class.count({
+      PrismaSingleton.instance.class.count({
         where,
       }),
     ]);
@@ -52,20 +50,13 @@ export class ClassPersistence {
   }
 
   public async createClass(data: ClassCreateParams) {
-    return await prisma.class.create({
-      data,
-    });
-  }
-
-  public async updateClass(idParams: UUIDParams, data: ClassUpdateParams) {
-    return await prisma.class.update({
-      where: { id: idParams.id },
-      data,
+    return await PrismaSingleton.instance.class.create({
+      data: { owner: { connect: { id: data.owner } }, name: data.name },
     });
   }
 
   public async deleteClass(idParams: UUIDParams) {
-    return await prisma.class.delete({
+    return await PrismaSingleton.instance.class.delete({
       where: { id: idParams.id },
     });
   }

@@ -24,10 +24,6 @@ export class ClassController {
     res.json(await this.classDomain.createClass(req.body));
   };
 
-  private updateClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.updateClass(req.query, req.body));
-  };
-
   private deleteClass = async (req: Request, res: Response) => {
     res.json(await this.classDomain.deleteClass(req.query));
   };
@@ -35,7 +31,6 @@ export class ClassController {
   private initializeRoutes() {
     this.router.get("/", this.getClasses);
     this.router.post("/", this.createClass);
-    this.router.patch("/", this.updateClass);
     this.router.delete("/", this.deleteClass);
   }
 }
