@@ -1,0 +1,1054 @@
+{
+  "users": [
+    {
+      "id": "user-1",
+      "name": "John",
+      "surname": "Doe",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-2",
+      "name": "Jane",
+      "surname": "Smith",
+      "role": "TEACHER"
+    },
+    {
+      "id": "user-3",
+      "name": "Alice",
+      "surname": "Johnson",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-4",
+      "name": "Bob",
+      "surname": "Brown",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-5",
+      "name": "Charlie",
+      "surname": "Davis",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-6",
+      "name": "David",
+      "surname": "Miller",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-7",
+      "name": "Eve",
+      "surname": "Wilson",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-8",
+      "name": "Frank",
+      "surname": "Moore",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-9",
+      "name": "Grace",
+      "surname": "Taylor",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-10",
+      "name": "Hank",
+      "surname": "Anderson",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-11",
+      "name": "Ivy",
+      "surname": "Thomas",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-12",
+      "name": "Jack",
+      "surname": "Jackson",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-13",
+      "name": "Kathy",
+      "surname": "White",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-14",
+      "name": "Leo",
+      "surname": "Harris",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-15",
+      "name": "Mia",
+      "surname": "Martin",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-16",
+      "name": "Nina",
+      "surname": "Thompson",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-17",
+      "name": "Oscar",
+      "surname": "Garcia",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-18",
+      "name": "Paul",
+      "surname": "Martinez",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-19",
+      "name": "Quinn",
+      "surname": "Robinson",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-20",
+      "name": "Rita",
+      "surname": "Clark",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-21",
+      "name": "Sam",
+      "surname": "Rodriguez",
+      "role": "STUDENT"
+    },
+    {
+      "id": "user-22",
+      "name": "Tom",
+      "surname": "Lewis",
+      "role": "TEACHER"
+    },
+    {
+      "id": "user-23",
+      "name": "Uma",
+      "surname": "Lee",
+      "role": "TEACHER"
+    },
+    {
+      "id": "user-24",
+      "name": "Vince",
+      "surname": "Walker",
+      "role": "TEACHER"
+    }
+  ],
+  "students": [
+    {
+      "id": "student-1",
+      "userId": "user-1"
+    },
+    {
+      "id": "student-2",
+      "userId": "user-3"
+    },
+    {
+      "id": "student-3",
+      "userId": "user-4"
+    },
+    {
+      "id": "student-4",
+      "userId": "user-5"
+    },
+    {
+      "id": "student-5",
+      "userId": "user-6"
+    },
+    {
+      "id": "student-6",
+      "userId": "user-7"
+    },
+    {
+      "id": "student-7",
+      "userId": "user-8"
+    },
+    {
+      "id": "student-8",
+      "userId": "user-9"
+    },
+    {
+      "id": "student-9",
+      "userId": "user-10"
+    },
+    {
+      "id": "student-10",
+      "userId": "user-11"
+    },
+    {
+      "id": "student-11",
+      "userId": "user-12"
+    },
+    {
+      "id": "student-12",
+      "userId": "user-13"
+    },
+    {
+      "id": "student-13",
+      "userId": "user-14"
+    },
+    {
+      "id": "student-14",
+      "userId": "user-15"
+    },
+    {
+      "id": "student-15",
+      "userId": "user-16"
+    },
+    {
+      "id": "student-16",
+      "userId": "user-17"
+    },
+    {
+      "id": "student-17",
+      "userId": "user-18"
+    },
+    {
+      "id": "student-18",
+      "userId": "user-19"
+    },
+    {
+      "id": "student-19",
+      "userId": "user-20"
+    },
+    {
+      "id": "student-20",
+      "userId": "user-21"
+    }
+  ],
+  "teachers": [
+    {
+      "id": "teacher-1",
+      "userId": "user-2"
+    },
+    {
+      "id": "teacher-2",
+      "userId": "user-22"
+    },
+    {
+      "id": "teacher-3",
+      "userId": "user-23"
+    }
+  ],
+  "classes": [
+    {
+      "id": "class-1",
+      "name": "Math 101",
+      "students": [
+        {
+          "id": "student-1",
+          "userId": "user-1"
+        },
+        {
+          "id": "student-2",
+          "userId": "user-3"
+        },
+        {
+          "id": "student-3",
+          "userId": "user-4"
+        },
+        {
+          "id": "student-4",
+          "userId": "user-5"
+        },
+        {
+          "id": "student-5",
+          "userId": "user-6"
+        }
+      ],
+      "teachers": [
+        {
+          "id": "teacher-1",
+          "userId": "user-2"
+        }
+      ],
+      "assignment": [
+        {
+          "id": "assignment-1",
+          "lpId": "lp-1",
+          "teacherId": "teacher-1",
+          "classId": "class-1"
+        }
+      ],
+      "classJoinRequests": [
+        {
+          "id": "join-1",
+          "classId": "class-1",
+          "userId": "user-9"
+        }
+      ]
+    },
+    {
+      "id": "class-2",
+      "name": "Science 101",
+      "students": [
+        {
+          "id": "student-6",
+          "userId": "user-7"
+        },
+        {
+          "id": "student-7",
+          "userId": "user-8"
+        },
+        {
+          "id": "student-8",
+          "userId": "user-9"
+        },
+        {
+          "id": "student-9",
+          "userId": "user-10"
+        },
+        {
+          "id": "student-10",
+          "userId": "user-11"
+        }
+      ],
+      "teachers": [
+        {
+          "id": "teacher-2",
+          "userId": "user-22"
+        }
+      ],
+      "assignment": [
+        {
+          "id": "assignment-2",
+          "lpId": "lp-2",
+          "teacherId": "teacher-2",
+          "classId": "class-2"
+        }
+      ],
+      "classJoinRequests": [
+        {
+          "id": "join-2",
+          "classId": "class-2",
+          "userId": "user-6"
+        }
+      ]
+    },
+    {
+      "id": "class-3",
+      "name": "History 101",
+      "students": [
+        {
+          "id": "student-11",
+          "userId": "user-12"
+        },
+        {
+          "id": "student-12",
+          "userId": "user-13"
+        },
+        {
+          "id": "student-13",
+          "userId": "user-14"
+        },
+        {
+          "id": "student-14",
+          "userId": "user-15"
+        },
+        {
+          "id": "student-15",
+          "userId": "user-16"
+        }
+      ],
+      "teachers": [
+        {
+          "id": "teacher-3",
+          "userId": "user-23"
+        }
+      ],
+      "assignment": [
+        {
+          "id": "assignment-3",
+          "lpId": "lp-3",
+          "teacherId": "teacher-3",
+          "classId": "class-3"
+        }
+      ],
+      "classJoinRequests": []
+    }
+  ],
+  "assignments": [
+    {
+      "id": "assignment-1",
+      "lpId": "lp-1",
+      "teacherId": "teacher-1",
+      "classId": "class-1",
+      "groups": [
+        {
+          "id": "group-2",
+          "nodeId": "node-2",
+          "assignmentId": "assignment-1"
+        },
+        {
+          "id": "group-3",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-1"
+        },
+        {
+          "id": "group-1",
+          "nodeId": "node-1",
+          "assignmentId": "assignment-1"
+        }
+      ]
+    },
+    {
+      "id": "assignment-2",
+      "lpId": "lp-2",
+      "teacherId": "teacher-2",
+      "classId": "class-2",
+      "groups": [
+        {
+          "id": "group-5",
+          "nodeId": "node-2",
+          "assignmentId": "assignment-2"
+        },
+        {
+          "id": "group-4",
+          "nodeId": "node-2",
+          "assignmentId": "assignment-2"
+        }
+      ]
+    },
+    {
+      "id": "assignment-3",
+      "lpId": "lp-3",
+      "teacherId": "teacher-3",
+      "classId": "class-3",
+      "groups": [
+        {
+          "id": "group-7",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        },
+        {
+          "id": "group-8",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        },
+        {
+          "id": "group-9",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        },
+        {
+          "id": "group-10",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        },
+        {
+          "id": "group-6",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        }
+      ]
+    }
+  ],
+  "learningPaths": [
+    {
+      "id": "lp-1",
+      "hruid": "lp-hruid-1",
+      "language": "en",
+      "title": "Learning Path 1",
+      "description": "Description of Learning Path 1",
+      "image": null,
+      "createdAt": "2025-03-05T14:05:29.577Z",
+      "updatedAt": "2025-03-05T14:05:29.577Z"
+    },
+    {
+      "id": "lp-2",
+      "hruid": "lp-hruid-2",
+      "language": "en",
+      "title": "Learning Path 2",
+      "description": "Description of Learning Path 2",
+      "image": null,
+      "createdAt": "2025-03-05T14:05:29.577Z",
+      "updatedAt": "2025-03-05T14:05:29.577Z"
+    },
+    {
+      "id": "lp-3",
+      "hruid": "lp-hruid-3",
+      "language": "en",
+      "title": "Learning Path 3",
+      "description": "Description of Learning Path 3",
+      "image": null,
+      "createdAt": "2025-03-05T14:05:29.577Z",
+      "updatedAt": "2025-03-05T14:05:29.577Z"
+    }
+  ],
+  "learningPathNodes": [
+    {
+      "id": "node-1",
+      "lpId": "lp-1",
+      "loId": "lo-1",
+      "instruction": "Instruction for node 1",
+      "startNode": true,
+      "groups": [
+        {
+          "id": "group-1",
+          "nodeId": "node-1",
+          "assignmentId": "assignment-1"
+        }
+      ],
+      "assignmentSubmissions": [
+        {
+          "id": "submission-1",
+          "groupId": "group-1",
+          "nodeId": "node-1",
+          "submissionType": "MULTIPLE_CHOICE",
+          "fileOriginalName": null,
+          "fileName": null,
+          "multipleChoiceAnswer": 1
+        }
+      ]
+    },
+    {
+      "id": "node-2",
+      "lpId": "lp-2",
+      "loId": "lo-2",
+      "instruction": "Instruction for node 2",
+      "startNode": true,
+      "groups": [
+        {
+          "id": "group-2",
+          "nodeId": "node-2",
+          "assignmentId": "assignment-1"
+        },
+        {
+          "id": "group-5",
+          "nodeId": "node-2",
+          "assignmentId": "assignment-2"
+        },
+        {
+          "id": "group-4",
+          "nodeId": "node-2",
+          "assignmentId": "assignment-2"
+        }
+      ],
+      "assignmentSubmissions": [
+        {
+          "id": "submission-2",
+          "groupId": "group-2",
+          "nodeId": "node-2",
+          "submissionType": "FILE",
+          "fileOriginalName": "file1.pdf",
+          "fileName": "file1.pdf",
+          "multipleChoiceAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "node-3",
+      "lpId": "lp-3",
+      "loId": "lo-3",
+      "instruction": "Instruction for node 3",
+      "startNode": true,
+      "groups": [
+        {
+          "id": "group-3",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-1"
+        },
+        {
+          "id": "group-7",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        },
+        {
+          "id": "group-8",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        },
+        {
+          "id": "group-9",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        },
+        {
+          "id": "group-10",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        },
+        {
+          "id": "group-6",
+          "nodeId": "node-3",
+          "assignmentId": "assignment-3"
+        }
+      ],
+      "assignmentSubmissions": [
+        {
+          "id": "submission-3",
+          "groupId": "group-3",
+          "nodeId": "node-3",
+          "submissionType": "MULTIPLE_CHOICE",
+          "fileOriginalName": null,
+          "fileName": null,
+          "multipleChoiceAnswer": 2
+        }
+      ]
+    }
+  ],
+  "learningObjects": [
+    {
+      "id": "lo-1",
+      "hruid": "lo-hruid-1",
+      "uuid": "lo-uuid-1",
+      "version": 1,
+      "language": "en",
+      "title": "Learning Object 1",
+      "description": null,
+      "contentType": null,
+      "targetAges": [],
+      "teacherExclusive": false,
+      "skosConcepts": [],
+      "educationalGoals": [],
+      "copyright": null,
+      "licence": null,
+      "difficulty": null,
+      "estimatedTime": null,
+      "returnValue": null,
+      "available": true,
+      "createdAt": "2025-03-05T14:05:29.584Z",
+      "updatedAt": "2025-03-05T14:05:29.584Z",
+      "content": "Content of Learning Object 1",
+      "multipleChoice": null,
+      "canUploadSubmission": true,
+      "learningPathNodes": [
+        {
+          "id": "node-1",
+          "lpId": "lp-1",
+          "loId": "lo-1",
+          "instruction": "Instruction for node 1",
+          "startNode": true
+        }
+      ]
+    },
+    {
+      "id": "lo-2",
+      "hruid": "lo-hruid-2",
+      "uuid": "lo-uuid-2",
+      "version": 1,
+      "language": "en",
+      "title": "Learning Object 2",
+      "description": null,
+      "contentType": null,
+      "targetAges": [],
+      "teacherExclusive": false,
+      "skosConcepts": [],
+      "educationalGoals": [],
+      "copyright": null,
+      "licence": null,
+      "difficulty": null,
+      "estimatedTime": null,
+      "returnValue": null,
+      "available": true,
+      "createdAt": "2025-03-05T14:05:29.584Z",
+      "updatedAt": "2025-03-05T14:05:29.584Z",
+      "content": "Content of Learning Object 2",
+      "multipleChoice": null,
+      "canUploadSubmission": true,
+      "learningPathNodes": [
+        {
+          "id": "node-2",
+          "lpId": "lp-2",
+          "loId": "lo-2",
+          "instruction": "Instruction for node 2",
+          "startNode": true
+        }
+      ]
+    },
+    {
+      "id": "lo-3",
+      "hruid": "lo-hruid-3",
+      "uuid": "lo-uuid-3",
+      "version": 1,
+      "language": "en",
+      "title": "Learning Object 3",
+      "description": null,
+      "contentType": null,
+      "targetAges": [],
+      "teacherExclusive": false,
+      "skosConcepts": [],
+      "educationalGoals": [],
+      "copyright": null,
+      "licence": null,
+      "difficulty": null,
+      "estimatedTime": null,
+      "returnValue": null,
+      "available": true,
+      "createdAt": "2025-03-05T14:05:29.584Z",
+      "updatedAt": "2025-03-05T14:05:29.584Z",
+      "content": "Content of Learning Object 3",
+      "multipleChoice": null,
+      "canUploadSubmission": true,
+      "learningPathNodes": [
+        {
+          "id": "node-3",
+          "lpId": "lp-3",
+          "loId": "lo-3",
+          "instruction": "Instruction for node 3",
+          "startNode": true
+        }
+      ]
+    }
+  ],
+  "assignmentSubmissions": [
+    {
+      "id": "submission-1",
+      "groupId": "group-1",
+      "nodeId": "node-1",
+      "submissionType": "MULTIPLE_CHOICE",
+      "fileOriginalName": null,
+      "fileName": null,
+      "multipleChoiceAnswer": 1
+    },
+    {
+      "id": "submission-2",
+      "groupId": "group-2",
+      "nodeId": "node-2",
+      "submissionType": "FILE",
+      "fileOriginalName": "file1.pdf",
+      "fileName": "file1.pdf",
+      "multipleChoiceAnswer": null
+    },
+    {
+      "id": "submission-3",
+      "groupId": "group-3",
+      "nodeId": "node-3",
+      "submissionType": "MULTIPLE_CHOICE",
+      "fileOriginalName": null,
+      "fileName": null,
+      "multipleChoiceAnswer": 2
+    }
+  ],
+  "learningNodeTransitions": [
+    {
+      "id": "transition-1",
+      "fromNodeId": "node-1",
+      "nextNodeId": "node-2",
+      "condition": "answer == 1"
+    },
+    {
+      "id": "transition-2",
+      "fromNodeId": "node-2",
+      "nextNodeId": "node-3",
+      "condition": "answer == 2"
+    }
+  ],
+  "learningObjectKeywords": [
+    {
+      "loId": "lo-1",
+      "keyword": "keyword1"
+    },
+    {
+      "loId": "lo-2",
+      "keyword": "keyword2"
+    },
+    {
+      "loId": "lo-3",
+      "keyword": "keyword3"
+    }
+  ],
+  "groups": [
+    {
+      "id": "group-2",
+      "nodeId": "node-2",
+      "assignmentId": "assignment-1",
+      "chat": {
+        "id": "chat-2",
+        "groupId": "group-2"
+      },
+      "students": [
+        {
+          "id": "student-3",
+          "userId": "user-4"
+        },
+        {
+          "id": "student-4",
+          "userId": "user-5"
+        }
+      ],
+      "assignmentSubmissions": [
+        {
+          "id": "submission-2",
+          "groupId": "group-2",
+          "nodeId": "node-2",
+          "submissionType": "FILE",
+          "fileOriginalName": "file1.pdf",
+          "fileName": "file1.pdf",
+          "multipleChoiceAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "group-3",
+      "nodeId": "node-3",
+      "assignmentId": "assignment-1",
+      "chat": null,
+      "students": [
+        {
+          "id": "student-5",
+          "userId": "user-6"
+        },
+        {
+          "id": "student-6",
+          "userId": "user-7"
+        }
+      ],
+      "assignmentSubmissions": [
+        {
+          "id": "submission-3",
+          "groupId": "group-3",
+          "nodeId": "node-3",
+          "submissionType": "MULTIPLE_CHOICE",
+          "fileOriginalName": null,
+          "fileName": null,
+          "multipleChoiceAnswer": 2
+        }
+      ]
+    },
+    {
+      "id": "group-1",
+      "nodeId": "node-1",
+      "assignmentId": "assignment-1",
+      "chat": {
+        "id": "chat-1",
+        "groupId": "group-1"
+      },
+      "students": [
+        {
+          "id": "student-1",
+          "userId": "user-1"
+        },
+        {
+          "id": "student-2",
+          "userId": "user-3"
+        }
+      ],
+      "assignmentSubmissions": [
+        {
+          "id": "submission-1",
+          "groupId": "group-1",
+          "nodeId": "node-1",
+          "submissionType": "MULTIPLE_CHOICE",
+          "fileOriginalName": null,
+          "fileName": null,
+          "multipleChoiceAnswer": 1
+        }
+      ]
+    },
+    {
+      "id": "group-5",
+      "nodeId": "node-2",
+      "assignmentId": "assignment-2",
+      "chat": null,
+      "students": [
+        {
+          "id": "student-9",
+          "userId": "user-10"
+        },
+        {
+          "id": "student-10",
+          "userId": "user-11"
+        }
+      ],
+      "assignmentSubmissions": []
+    },
+    {
+      "id": "group-4",
+      "nodeId": "node-2",
+      "assignmentId": "assignment-2",
+      "chat": null,
+      "students": [
+        {
+          "id": "student-7",
+          "userId": "user-8"
+        },
+        {
+          "id": "student-8",
+          "userId": "user-9"
+        }
+      ],
+      "assignmentSubmissions": []
+    },
+    {
+      "id": "group-7",
+      "nodeId": "node-3",
+      "assignmentId": "assignment-3",
+      "chat": null,
+      "students": [
+        {
+          "id": "student-13",
+          "userId": "user-14"
+        },
+        {
+          "id": "student-14",
+          "userId": "user-15"
+        }
+      ],
+      "assignmentSubmissions": []
+    },
+    {
+      "id": "group-8",
+      "nodeId": "node-3",
+      "assignmentId": "assignment-3",
+      "chat": null,
+      "students": [
+        {
+          "id": "student-15",
+          "userId": "user-16"
+        },
+        {
+          "id": "student-16",
+          "userId": "user-17"
+        }
+      ],
+      "assignmentSubmissions": []
+    },
+    {
+      "id": "group-9",
+      "nodeId": "node-3",
+      "assignmentId": "assignment-3",
+      "chat": null,
+      "students": [
+        {
+          "id": "student-17",
+          "userId": "user-18"
+        },
+        {
+          "id": "student-18",
+          "userId": "user-19"
+        }
+      ],
+      "assignmentSubmissions": []
+    },
+    {
+      "id": "group-10",
+      "nodeId": "node-3",
+      "assignmentId": "assignment-3",
+      "chat": null,
+      "students": [
+        {
+          "id": "student-19",
+          "userId": "user-20"
+        },
+        {
+          "id": "student-20",
+          "userId": "user-21"
+        }
+      ],
+      "assignmentSubmissions": []
+    },
+    {
+      "id": "group-6",
+      "nodeId": "node-3",
+      "assignmentId": "assignment-3",
+      "chat": null,
+      "students": [
+        {
+          "id": "student-11",
+          "userId": "user-12"
+        },
+        {
+          "id": "student-12",
+          "userId": "user-13"
+        }
+      ],
+      "assignmentSubmissions": []
+    }
+  ],
+  "classJoinRequests": [
+    {
+      "id": "join-1",
+      "classId": "class-1",
+      "userId": "user-9"
+    },
+    {
+      "id": "join-2",
+      "classId": "class-2",
+      "userId": "user-6"
+    }
+  ],
+  "chats": [
+    {
+      "id": "chat-1",
+      "groupId": "group-1",
+      "messages": [
+        {
+          "id": 1,
+          "content": "Message content 1",
+          "senderId": "user-1",
+          "chatId": "chat-1",
+          "createdAt": "2025-03-05T14:05:29.605Z"
+        }
+      ],
+      "members": [
+        {
+          "id": "user-1",
+          "name": "John",
+          "surname": "Doe",
+          "role": "STUDENT"
+        },
+        {
+          "id": "user-2",
+          "name": "Jane",
+          "surname": "Smith",
+          "role": "TEACHER"
+        }
+      ]
+    },
+    {
+      "id": "chat-2",
+      "groupId": "group-2",
+      "messages": [
+        {
+          "id": 2,
+          "content": "Message content 2",
+          "senderId": "user-3",
+          "chatId": "chat-2",
+          "createdAt": "2025-03-05T14:05:29.605Z"
+        }
+      ],
+      "members": [
+        {
+          "id": "user-3",
+          "name": "Alice",
+          "surname": "Johnson",
+          "role": "STUDENT"
+        },
+        {
+          "id": "user-4",
+          "name": "Bob",
+          "surname": "Brown",
+          "role": "STUDENT"
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "id": 1,
+      "content": "Message content 1",
+      "senderId": "user-1",
+      "chatId": "chat-1",
+      "createdAt": "2025-03-05T14:05:29.605Z"
+    },
+    {
+      "id": 2,
+      "content": "Message content 2",
+      "senderId": "user-3",
+      "chatId": "chat-2",
+      "createdAt": "2025-03-05T14:05:29.605Z"
+    }
+  ]
+}
