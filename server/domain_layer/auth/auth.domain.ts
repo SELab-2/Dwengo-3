@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import {LoginRequest, RegisterRequest} from "../../routes/auth/RequestTypes";
 import * as persistence from "../../persistence_layer/auth/auth.persistence";
 import {ClassRole, User} from "@prisma/client";
@@ -6,7 +7,7 @@ export async function registerUser(registerRequest: RegisterRequest): Promise<Us
     return await persistence.saveUser({
         username: registerRequest.username,
         email: registerRequest.email,
-        password: registerRequest.password,
+        password: crypto.createHash("sha512").update(registerRequest.password).digest("base64"),
         name: registerRequest.name,
         surname: registerRequest.surname,
         role: registerRequest.role as ClassRole
