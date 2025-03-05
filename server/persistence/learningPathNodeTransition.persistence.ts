@@ -1,7 +1,6 @@
-import { PrismaSingleton } from "./prismaSingleton";
 import { PrismaClient } from "@prisma/client";
 import { LearningPathNodeTransitionCreateParams } from "../util/types/learningPathNodeTransition.types";
-
+import { PrismaSingleton } from "./prismaSingleton";
 
 export class LearningPathNodeTransitionPersistence {
   public async createLearningPathNodeTransition(

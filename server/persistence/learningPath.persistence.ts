@@ -1,8 +1,7 @@
-
-import { PrismaSingleton } from "./prismaSingleton";
-import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { LearningPathByFilterParams, LearningPathCreateParams } from "../util/types/learningPath.types";
 import { PaginationParams } from "../util/types/pagination.types";
+import { PrismaSingleton } from "./prismaSingleton";
 
 export class LearningPathPersistence {
   public async getLearningPaths(

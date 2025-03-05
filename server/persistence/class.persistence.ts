@@ -4,6 +4,7 @@ import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from "../util
 import { Prisma } from "@prisma/client";
 
 
+
 export class ClassPersistence {
   public async getClasses(
     paginationParams: PaginationParams,
