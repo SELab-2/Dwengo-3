@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { LearningPathNodeTransitionCreateParams } from "../domain/types";
+import { LearningPathNodeTransitionCreateParams } from "../util/types/learningPathNodeTransition.types";
 
 
 const prisma = new PrismaClient();
