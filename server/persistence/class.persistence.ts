@@ -17,11 +17,11 @@ export class ClassPersistence {
       AND: [
         filters.name
           ? {
-            name: {
-              contains: filters.name,
-              mode: Prisma.QueryMode.insensitive,
-            },
-          }
+              name: {
+                contains: filters.name,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            }
           : {},
         filters.teacherId
           ? { teachers: { some: { id: filters.teacherId } } }
