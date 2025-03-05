@@ -1,5 +1,6 @@
 import { AnnouncementPersistence } from "../persistence/announcement.persistence";
-import { AnnouncementByFilterParams, AnnouncementCreateParams, AnnouncementFilterSchema, PaginationFilterSchema, AnnouncementCreateSchema, AnnouncementUpdateParams, AnnouncementUpdateSchema } from "./types";
+import { AnnouncementByFilterParams, AnnouncementCreateParams, AnnouncementCreateSchema, AnnouncementFilterSchema, AnnouncementUpdateParams, AnnouncementUpdateSchema } from "../util/announcement.types";
+import { PaginationFilterSchema } from "./types";
 
 
 export class AnnouncementDomain {
