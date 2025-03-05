@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@eslint/js": "^9.21.0",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
@@ -38,19 +39,41 @@
     "globals": "^16.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.0.2",
+    "eslint-plugin-prettier": "^5.2.3",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "nodemon": "^3.1.9",
+    "prettier": "^3.5.3",
+    "prisma": "^6.4.1",
     "prettier": "^3.5.3",
     "prisma": "^6.4.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.26.0"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.26.0"
   },
   "dependencies": {
+    "@prisma/client": "^6.4.1",
     "@prisma/client": "^6.4.1",
     "dotenv": "^16.4.7",
     "express": "^5",
     "zod": "^3.24.2"
+  },
+  "prisma": {
+    "schema": "../db/prisma/schema.prisma"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*": "prettier --write"
   },
   "prisma": {
     "schema": "../db/prisma/schema.prisma"
