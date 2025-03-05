@@ -1,4 +1,4 @@
-import { AnnouncementByFilterParams, PaginationParams } from "../domain/types";
+import { AnnouncementByFilterParams, AnnouncementCreateParams, PaginationParams } from "../domain/types";
 
 //import prisma client from somewhere
 
@@ -8,13 +8,13 @@ export class AnnouncementPersistence {
         paginationParams: PaginationParams
     ) {
         //TODO 
-
-
     }
 
     public async createAnnouncement(query: AnnouncementCreateParams) {
+        //TODO 
     }
 
-    public async updateAnnouncement(id: string, query: AnnouncementUpdateParams) {
+    public async updateAnnouncement(query: AnnouncementCreateParams) {
+        //TODO
     }
 }

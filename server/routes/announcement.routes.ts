@@ -1,3 +1,5 @@
+import { Request, Response, Router } from "express";
+import { AnnouncementDomain } from "../domain/announcement.domain";
 
 export class AnnouncementController {
     public router: Router;
@@ -18,10 +20,10 @@ export class AnnouncementController {
     }
 
     private updateAnnouncement = async (req: Request, res: Response) => {
-        res.json(await this.announcementDomain.updateAnnouncement(req.params.id, req.body));
+        res.json(await this.announcementDomain.updateAnnouncement(req.body));
     }
 
-    private initializeRouters() {
+    private initializeRoutes() {
         this.router.put('/', this.createAnnouncement);
         this.router.get('/', this.getAnnouncements);
         this.router.patch('/:id', this.updateAnnouncement);

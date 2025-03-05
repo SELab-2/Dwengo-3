@@ -1,6 +1,37 @@
 import { z } from "zod";
 
 
+/* ANNOUNCEMENT */
+export const AnnouncementFilterSchema = z.object({
+  classId: z.string().optional(),
+  teacherId: z.string().optional(),
+  studentId: z.string().optional(),
+  announcementId: z.string().optional(),
+}).refine((data) => Object.values(data).some((value) => value !== undefined), {
+  message: "At least one filter must be provided.",
+  path: [],
+});
+
+
+export const AnnouncementCreateParamsSchema = z.object({
+  title: z.string().min(1, "Title must be a non-empty string").trim(),
+  content: z.string().min(1, "Content must be a non-empty string").trim(),
+  classId: z.string(),
+  teacherId: z.string(),
+});
+
+export const AnnouncementUpdateParamsSchema = z.object({
+  id: z.string().uuid("Id must be a valid UUID"),
+  title: z.string().min(1, "Title must be a non-empty string").trim().optional(),
+  content: z.string().min(1, "Content must be a non-empty string").trim().optional(),
+});
+
+
+
+/* ############################## */
+/* ####### LEARNING PATH ######## */
+/* ############################## */
+
 export const LearningPathNodeTransitionCreateSchema = z.object({
   fromNodeId: z.string(),
   toNodeId: z.string(),
@@ -24,27 +55,6 @@ export const LearningPathCreateSchema = z.object({
   updatedAt: z.coerce.date().optional(),
 });
 
-export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
-
-export type LearningPathNodeCreateParams = z.infer<typeof LearningPathNodeCreateSchema>;
-
-// ODO maybe change to shorter name
-export type LearningPathNodeTransitionCreateParams = z.infer<typeof LearningPathNodeTransitionCreateSchema>;
-
-
-export const AnnouncementFilterSchema = z.object({
-  classId: z.string().optional(),
-  teacherId: z.string().optional(),
-  studentId: z.string().optional(),
-  announcementId: z.string().optional(),
-}).refine((data) => Object.values(data).some((value) => value !== undefined), {
-  message: "At least one filter must be provided.",
-  path: [],
-});
-
-export type AnnouncementByFilterParams = z.infer<typeof AnnouncementFilterSchema>;
-
-
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),
   age: z.array(z.string())
@@ -53,44 +63,50 @@ export const LearningPathFilterSchema = z.object({
   id: z.string().optional(),
 });
 
-export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;
-
 export const LearningPathByIdSchema = z.object({
   id: z.string().uuid("Id must be a valid UUID"),
 });
 
-export type LearningPathByIdParams = z.infer<typeof LearningPathByIdSchema>;
 
 
-export const PaginationFilterSchema = z
-  .object({
-    page: z
-      .string()
-      .regex(/^\d+$/, "Page must be a positive integer")
-      .transform(Number)
-      .refine((val) => val > 0, "Page must be greater than 0")
-      .default("1"),
 
-    pageSize: z
-      .string()
-      .regex(/^\d+$/, "PageSize must be a positive integer")
-      .transform(Number)
-      .refine((val) => val > 0, "PageSize must be greater than 0")
-      .default("10"),
-  })
-  .transform((data) => {
-    // Transform to include skip
-    const page = data.page;
-    const pageSize = data.pageSize;
-    const skip = (page - 1) * pageSize;
-    return {
-      page,
-      pageSize,
-      skip,
-    };
-  });
 
-export type PaginationParams = z.infer<typeof PaginationFilterSchema>;
+
+
+
+
+
+
+
+
+
+export const PaginationFilterSchema = z.object({
+  page: z
+    .string()
+    .regex(/^\d+$/, "Page must be a positive integer")
+    .transform(Number)
+    .refine((val) => val > 0, "Page must be greater than 0")
+    .default("1"),
+
+  pageSize: z
+    .string()
+    .regex(/^\d+$/, "PageSize must be a positive integer")
+    .transform(Number)
+    .refine((val) => val > 0, "PageSize must be greater than 0")
+    .default("10"),
+}).transform((data) => {
+  // Transform to include skip
+  const page = data.page;
+  const pageSize = data.pageSize;
+  const skip = (page - 1) * pageSize;
+  return {
+    page,
+    pageSize,
+    skip,
+  };
+});
+
+
 
 export const ClassFilterSchema = z.object({
   name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
@@ -110,16 +126,26 @@ export const ClassFilterSchema = z.object({
     .optional(),
 });
 
-export type ClassFilterParams = z.infer<typeof ClassFilterSchema>;
+export const ClassUpdateSchema = z.object({
+  name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
+});
 
 export const ClassCreateSchema = z.object({
   name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
 });
 
+
+export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
+export type LearningPathNodeCreateParams = z.infer<typeof LearningPathNodeCreateSchema>;
+export type LearningPathNodeTransitionCreateParams = z.infer<typeof LearningPathNodeTransitionCreateSchema>;
+export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;
+export type LearningPathByIdParams = z.infer<typeof LearningPathByIdSchema>;
+
+export type ClassFilterParams = z.infer<typeof ClassFilterSchema>;
 export type ClassCreateParams = z.infer<typeof ClassCreateSchema>;
-
-export const ClassUpdateSchema = z.object({
-  name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
-});
-
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
+
+export type AnnouncementByFilterParams = z.infer<typeof AnnouncementFilterSchema>;
+export type AnnouncementCreateParams = z.infer<typeof AnnouncementCreateParamsSchema>;
+
+export type PaginationParams = z.infer<typeof PaginationFilterSchema>;

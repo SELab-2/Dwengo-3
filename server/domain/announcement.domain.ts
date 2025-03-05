@@ -1,5 +1,5 @@
 import { AnnouncementPersistence } from "../persistence/announcement.persistence";
-import { AnnouncementByFilterParams, AnnouncementFilterSchema, PaginationFilterSchema } from "./types";
+import { AnnouncementByFilterParams, AnnouncementCreateParams, AnnouncementFilterSchema, PaginationFilterSchema } from "./types";
 
 
 export class AnnouncementDomain {
@@ -10,6 +10,8 @@ export class AnnouncementDomain {
     }
 
     public async getAnnouncements(query: AnnouncementByFilterParams) {
+        // TODO check if the request is allowed by checking the cookies
+
         const paginationParseResult = PaginationFilterSchema.safeParse(query);
         if (!paginationParseResult.success) {
             throw paginationParseResult.error;
@@ -26,10 +28,11 @@ export class AnnouncementDomain {
     }
 
     public async createAnnouncement(query: AnnouncementCreateParams) {
-
+        //TODO
     }
 
-    public async updateAnnouncement(id: string, query: AnnouncementUpdateParams) {
+    public async updateAnnouncement(query: AnnouncementCreateParams) {
+        //TODO 
     }
 
 }
