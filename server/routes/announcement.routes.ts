@@ -26,6 +26,6 @@ export class AnnouncementController {
     private initializeRoutes() {
         this.router.put('/', this.createAnnouncement);
         this.router.get('/', this.getAnnouncements);
-        this.router.patch('/:id', this.updateAnnouncement);
+        this.router.patch('/', this.updateAnnouncement);
     }
 }

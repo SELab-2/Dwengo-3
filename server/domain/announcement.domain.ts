@@ -1,5 +1,5 @@
 import { AnnouncementPersistence } from "../persistence/announcement.persistence";
-import { AnnouncementByFilterParams, AnnouncementCreateParams, AnnouncementFilterSchema, PaginationFilterSchema } from "./types";
+import { AnnouncementByFilterParams, AnnouncementCreateParams, AnnouncementFilterSchema, PaginationFilterSchema, AnnouncementCreateSchema, AnnouncementUpdateParams, AnnouncementUpdateSchema } from "./types";
 
 
 export class AnnouncementDomain {
@@ -28,11 +28,23 @@ export class AnnouncementDomain {
     }
 
     public async createAnnouncement(query: AnnouncementCreateParams) {
-        //TODO
+        // TODO check if this is allowed by using cookies
+
+        const parseResult = AnnouncementCreateSchema.safeParse(query);
+        if (!parseResult.success) {
+            throw parseResult.error;
+        }
+        return this.announcementPersistence.createAnnouncement(parseResult.data);
     }
 
-    public async updateAnnouncement(query: AnnouncementCreateParams) {
-        //TODO 
+    public async updateAnnouncement(query: AnnouncementUpdateParams) {
+        // TODO check if this is allowed by using cookies
+
+        const parseResult = AnnouncementUpdateSchema.safeParse(query);
+        if (!parseResult.success) {
+            throw parseResult.error;
+        }
+        return this.announcementPersistence.updateAnnouncement(parseResult.data);
     }
 
 }
