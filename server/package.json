@@ -6,6 +6,7 @@
   "scripts": {
     "prisma-generate": "npx prisma generate --schema ../db/prisma/schema.prisma",
     "start": "nodemon app.ts",
+    "test:unit": "vitest -c ./vitest.config.unit.ts",
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",
     "readData": "ts-node util/db-scripts/readData.ts",
     "deleteData": "ts-node util/db-scripts/deleteData.ts"
@@ -41,10 +42,13 @@
     "nodemon": "^3.1.9",
     "prettier": "^3.5.3",
     "prisma": "^6.4.1",
+    "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.26.0"
+    "typescript-eslint": "^8.26.0",
+    "vitest": "^3.0.7",
+    "vitest-mock-extended": "^3.0.1"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
