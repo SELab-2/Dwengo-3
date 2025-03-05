@@ -1,5 +1,6 @@
-import { LearningPathByFilterParams, LearningPathCreateParams, LearningPathCreateSchema, LearningPathFilterSchema, PaginationFilterSchema } from "./types";
 import { LearningPathPersistence } from "../persistence/learningPath.persistence";
+import { LearningPathByFilterParams, LearningPathCreateParams, LearningPathCreateSchema, LearningPathFilterSchema } from "../util/types/learningPath.types";
+import { PaginationFilterSchema } from "../util/types/pagination.types";
 
 export class LearningPathDomain {
     private learningPathPersistence;

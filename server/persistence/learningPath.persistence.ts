@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { LearningPathByFilterParams, LearningPathCreateParams, PaginationParams } from "../domain/types";
+import { LearningPathByFilterParams, LearningPathCreateParams } from "../util/types/learningPath.types";
+import { PaginationParams } from "../util/types/pagination.types";
 
 const prisma = new PrismaClient();
 

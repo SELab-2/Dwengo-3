@@ -1,10 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import {
-  PaginationParams,
-  ClassFilterParams,
-  ClassCreateParams,
-  ClassUpdateParams,
-} from "../domain/types";
+import { PaginationParams } from "../util/types/pagination.types";
+import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from "../util/types/class.types";
 
 const prisma = new PrismaClient();
 
