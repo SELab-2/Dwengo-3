@@ -1,12 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "../prismaSingleton";
-import {
-  PaginationParams,
-  ClassFilterParams,
-  ClassCreateParams,
-  UUIDParams,
-  ClassJoinRequestParams,
-} from "../domain/types";
+import { PaginationParams } from "../util/types/pagination.types";
+import { ClassFilterParams, ClassCreateParams, UUIDParams, ClassJoinRequestParams } from "../util/types/class.types";
 
 export class ClassPersistence {
   public async getClasses(
@@ -37,7 +32,7 @@ export class ClassPersistence {
       PrismaSingleton.instance.class.findMany({
         where,
         skip: paginationParams.skip,
-        take: paginationParams.take,
+        take: paginationParams.pageSize,
       }),
       PrismaSingleton.instance.class.count({
         where,
@@ -46,7 +41,7 @@ export class ClassPersistence {
 
     return {
       data: classes,
-      totalPages: Math.ceil(totalCount / paginationParams.take),
+      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
     };
   }
 
