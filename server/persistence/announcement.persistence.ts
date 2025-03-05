@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { AnnouncementByFilterParams, AnnouncementCreateParams, AnnouncementUpdateParams } from "../util/types/announcement.types";
-import { PaginationParams } from "../domain/types";
+import { PaginationParams } from "../util/types/pagination.types";
+
 
 //TODO : import prisma client from singleton
 const prisma = new PrismaClient();

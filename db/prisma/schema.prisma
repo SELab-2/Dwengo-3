@@ -206,7 +206,6 @@ model Message {
   createdAt DateTime @default(now()) @db.Timestamp
 }
 
-//TODO create announcement model 
 model Announcement {
   id        String  @id @default(uuid())
   title     String

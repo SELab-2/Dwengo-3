@@ -1,8 +1,7 @@
-import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
-import { PrismaClient, Prisma } from "@prisma/client";
 import { PaginationParams } from "../util/types/pagination.types";
 import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from "../util/types/class.types";
+import { Prisma } from "@prisma/client";
 
 
 export class ClassPersistence {
@@ -14,35 +13,35 @@ export class ClassPersistence {
       AND: [
         filters.name
           ? {
-              name: {
-                contains: filters.name,
-                mode: Prisma.QueryMode.insensitive,
-              },
-            }
+            name: {
+              contains: filters.name,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          }
           : {},
         // Filter to check if every teacherID of the filter params is in the teachers array
         filters.teacherIds && filters.teacherIds.length > 0
           ? {
-              AND: filters.teacherIds.map((teacherId) => ({
-                teachers: {
-                  some: {
-                    id: teacherId,
-                  },
+            AND: filters.teacherIds.map((teacherId) => ({
+              teachers: {
+                some: {
+                  id: teacherId,
                 },
-              })),
-            }
+              },
+            })),
+          }
           : {},
         // Filter to check if every studentID of the filter params is in the students array
         filters.studentIds && filters.studentIds.length > 0
           ? {
-              AND: filters.studentIds.map((studentId) => ({
-                students: {
-                  some: {
-                    id: studentId,
-                  },
+            AND: filters.studentIds.map((studentId) => ({
+              students: {
+                some: {
+                  id: studentId,
                 },
-              })),
-            }
+              },
+            })),
+          }
           : {},
       ],
     };

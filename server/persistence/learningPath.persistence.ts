@@ -1,7 +1,6 @@
 
-import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { LearningPathByFilterParams, LearningPathCreateParams } from "../util/types/learningPath.types";
 import { PaginationParams } from "../util/types/pagination.types";
 
@@ -14,35 +13,35 @@ export class LearningPathPersistence {
       AND: [
         filters.keywords && filters.keywords.length > 0
           ? {
-              learningPathNodes: {
-                some: {
-                  learningObject: {
-                    learningObjectsKeywords: {
-                      some: {
-                        // TODO is a separate table for keywords necessary?
-                        keyword: {
-                          in: filters.keywords, // Match any of the keywords
-                          mode: Prisma.QueryMode.insensitive, // Case-insensitive search
-                        },
+            learningPathNodes: {
+              some: {
+                learningObject: {
+                  learningObjectsKeywords: {
+                    some: {
+                      // TODO is a separate table for keywords necessary?
+                      keyword: {
+                        in: filters.keywords, // Match any of the keywords
+                        mode: Prisma.QueryMode.insensitive, // Case-insensitive search
                       },
                     },
                   },
                 },
               },
-            }
+            },
+          }
           : {},
         filters.age && filters.age.length > 0
           ? {
-              learningPathNodes: {
-                some: {
-                  learningObject: {
-                    targetAges: {
-                      hasSome: filters.age, // Match any of the target ages
-                    },
+            learningPathNodes: {
+              some: {
+                learningObject: {
+                  targetAges: {
+                    hasSome: filters.age, // Match any of the target ages
                   },
                 },
               },
-            }
+            },
+          }
           : {},
 
         filters.id ? { id: filters.id } : {},
