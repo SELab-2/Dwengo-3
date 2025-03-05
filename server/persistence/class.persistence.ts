@@ -1,11 +1,7 @@
-import { Prisma } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
+import { PaginationParams } from "../util/types/pagination.types";
+import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from "../util/types/class.types";
 import { PrismaSingleton } from "./prismaSingleton";
-import {
-  PaginationParams,
-  ClassFilterParams,
-  ClassCreateParams,
-  ClassUpdateParams,
-} from "../domain/types";
 
 export class ClassPersistence {
   public async getClasses(
