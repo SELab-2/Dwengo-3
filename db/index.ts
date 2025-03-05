@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
 
+dotenv.config({path: "../.env"});
 const prisma = new PrismaClient()
-dotenv.config() // Load the environment variables
 
 async function main() {
     const learning_object = await prisma.learningObject.create({
