@@ -5,7 +5,10 @@
   "main": "app.ts",
   "scripts": {
     "prisma-generate": "npx prisma generate --schema ../db/prisma/schema.prisma",
-    "start": "nodemon app.ts"
+    "start": "nodemon app.ts",
+    "insertData": "ts-node util/deleteData && ts-node util/insertData.ts",
+    "readData": "ts-node util/readData.ts",
+    "deleteData": "ts-node util/deleteData.ts"
   },
   "repository": {
     "type": "git",
