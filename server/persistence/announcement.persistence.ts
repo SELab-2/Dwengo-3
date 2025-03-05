@@ -1,10 +1,9 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { AnnouncementByFilterParams, AnnouncementCreateParams, AnnouncementUpdateParams } from "../util/types/announcement.types";
 import { PaginationParams } from "../util/types/pagination.types";
-
+import { PrismaSingleton } from "./prismaSingleton";
 
 //TODO : import prisma client from singleton
-const prisma = new PrismaClient();
 
 export class AnnouncementPersistence {
     public async getAnnouncements(
@@ -28,8 +27,8 @@ export class AnnouncementPersistence {
                     } : {}
             ]
         };
-        const [announcements, totalCount] = await prisma.$transaction([
-            prisma.announcement.findMany({
+        const [announcements, totalCount] = await PrismaSingleton.instance.$transaction([
+            PrismaSingleton.instance.announcement.findMany({
                 where: whereClause,
                 include: {
                     class: true,
@@ -38,7 +37,7 @@ export class AnnouncementPersistence {
                 skip: paginationParams.skip,
                 take: paginationParams.pageSize
             }),
-            prisma.announcement.count({
+            PrismaSingleton.instance.announcement.count({
                 where: whereClause  // TODO this is probably not efficient
             })
         ]);
@@ -51,7 +50,7 @@ export class AnnouncementPersistence {
 
     public async createAnnouncement(announcementCreateParams: AnnouncementCreateParams) {
         const { classId, teacherId, ...data } = announcementCreateParams;
-        const announcement = await prisma.announcement.create({
+        const announcement = await PrismaSingleton.instance.announcement.create({
             data: {
                 ...data,
                 class: {
@@ -78,7 +77,7 @@ export class AnnouncementPersistence {
         if (announcementUpdateParams.content !== undefined) {
             updateData.content = announcementUpdateParams.content;
         }
-        const updatedAnnouncement = await prisma.announcement.update({
+        const updatedAnnouncement = await PrismaSingleton.instance.announcement.update({
             where: { id: announcementUpdateParams.id },
             data: updateData,
         });
