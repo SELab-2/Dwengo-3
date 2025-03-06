@@ -1,4 +1,5 @@
 import { PrismaSingleton } from "../../persistence/prismaSingleton";
+import { PaginationParams } from "../types/pagination.types";
 
 /**
  * Generic pagination function for Prisma models.
@@ -16,7 +17,7 @@ export async function searchAndPaginate<
 >(
   model: T,
   whereClause: WhereInput,
-  paginationParams: { skip: number; pageSize: number },
+  paginationParams: PaginationParams,
   include?: IncludeInput,
 ) {
   const [data, totalCount] = await PrismaSingleton.instance.$transaction([
