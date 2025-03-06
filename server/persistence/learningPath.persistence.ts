@@ -14,11 +14,10 @@ export class LearningPathPersistence {
     this.prisma = PrismaSingleton.instance;
   }
 
-  public async getLearningPaths(
+  private buildWhereClause(
     filters: LearningPathByFilterParams,
-    paginationParams: PaginationParams,
-  ) {
-    const whereClause: Prisma.LearningPathWhereInput = {
+  ): Prisma.LearningPathWhereInput {
+    return {
       AND: [
         filters.keywords && filters.keywords.length > 0
           ? {
@@ -27,10 +26,9 @@ export class LearningPathPersistence {
                   learningObject: {
                     learningObjectsKeywords: {
                       some: {
-                        // TODO is a separate table for keywords necessary?
                         keyword: {
-                          in: filters.keywords, // Match any of the keywords
-                          mode: Prisma.QueryMode.insensitive, // Case-insensitive search
+                          in: filters.keywords,
+                          mode: Prisma.QueryMode.insensitive,
                         },
                       },
                     },
@@ -45,17 +43,24 @@ export class LearningPathPersistence {
                 some: {
                   learningObject: {
                     targetAges: {
-                      hasSome: filters.age, // Match any of the target ages
+                      hasSome: filters.age,
                     },
                   },
                 },
               },
             }
           : {},
-
         filters.id ? { id: filters.id } : {},
-      ], // Remove empty objects from the AND array
+      ],
     };
+  }
+
+  public async getLearningPaths(
+    filters: LearningPathByFilterParams,
+    paginationParams: PaginationParams,
+  ) {
+    const whereClause: Prisma.LearningPathWhereInput =
+      this.buildWhereClause(filters);
 
     return searchAndPaginate(
       this.prisma.learningPath,

@@ -15,11 +15,8 @@ export class ClassPersistence {
     this.prisma = PrismaSingleton.instance;
   }
 
-  public async getClasses(
-    paginationParams: PaginationParams,
-    filters: ClassFilterParams,
-  ) {
-    const where: Prisma.ClassWhereInput = {
+  private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
+    return {
       AND: [
         filters.name
           ? {
@@ -29,7 +26,6 @@ export class ClassPersistence {
               },
             }
           : {},
-        // Filter to check if every teacherID of the filter params is in the teachers array
         filters.teacherIds && filters.teacherIds.length > 0
           ? {
               AND: filters.teacherIds.map((teacherId) => ({
@@ -41,7 +37,6 @@ export class ClassPersistence {
               })),
             }
           : {},
-        // Filter to check if every studentID of the filter params is in the students array
         filters.studentIds && filters.studentIds.length > 0
           ? {
               AND: filters.studentIds.map((studentId) => ({
@@ -55,6 +50,13 @@ export class ClassPersistence {
           : {},
       ],
     };
+  }
+
+  public async getClasses(
+    paginationParams: PaginationParams,
+    filters: ClassFilterParams,
+  ) {
+    const where: Prisma.ClassWhereInput = this.buildWhereClause(filters);
 
     return searchAndPaginate(this.prisma.class, where, paginationParams, {
       students: true,
