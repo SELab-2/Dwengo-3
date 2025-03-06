@@ -71,20 +71,20 @@ export class ClassPersistence {
   }
 
   public async createClass(params: ClassCreateParams) {
-    return await PrismaSingleton.instance.class.create({
+    return await this.prisma.class.create({
       data: { name: params.name },
     });
   }
 
   public async updateClass(id: string, params: ClassUpdateParams) {
-    return await PrismaSingleton.instance.class.update({
+    return await this.prisma.class.update({
       where: { id },
       data: { name: params.name },
     });
   }
 
   public async deleteClass(id: string) {
-    return await PrismaSingleton.instance.class.delete({
+    return await this.prisma.class.delete({
       where: { id },
     });
   }

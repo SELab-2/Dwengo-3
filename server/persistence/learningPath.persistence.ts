@@ -78,7 +78,7 @@ export class LearningPathPersistence {
 
   public async createLearningPath(data: LearningPathCreateParams) {
     // create a learningPath without any connected nodes
-    const learningPath = await PrismaSingleton.instance.learningPath.create({
+    const learningPath = await this.prisma.learningPath.create({
       data: data,
     });
     return learningPath;
