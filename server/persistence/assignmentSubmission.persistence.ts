@@ -32,17 +32,6 @@ export class AssignmentSubmissionPersistence {
             totalPages: Math.ceil(totalCount / paginationParams.pageSize)
         };
     }
-
-    /*
-    public async createAssignmentSubmission(params: AssignmentSubParams): Promise<AssignmentSubmission> {
-        return this.prisma.assignmentSubmission.create({
-            data: {
-                groupId: params.groupId,
-                nodeId: params.nodeId
-            }
-        });
-    }
-    */
     
     public async updateAssignmentSubmission(params: AssignmentSubUpdataParams): Promise<AssignmentSubmission> {
         return PrismaSingleton.instance.assignmentSubmission.update({

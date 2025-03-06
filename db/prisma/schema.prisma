@@ -192,7 +192,6 @@ model Discussion {
   messages Message[]
   members  User[]
   group    Group     @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-	@@map("Discussion")
 }
 
 model Message {
@@ -201,6 +200,6 @@ model Message {
   senderId   String
   chatId     String
   sender     User       @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  discussion Discussion @relation(fields: [chatId], references: [id])
+  discussion Discussion @relation(fields: [chatId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt  DateTime   @default(now()) @db.Timestamp
 }

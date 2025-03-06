@@ -26,18 +26,7 @@ export class AssignmentSubmissionDomain {
         );
     }
 
-    /*
-    public async createAssignmentSubmission(query: any): Promise<AssignmentSubmission> {
-        const parseResult =  SubmissionSchema.safeParse(query);
-        if (!parseResult.success) {
-            throw parseResult.error;
-        }
-        return this.assignmentSubPersistence.createAssignmentSubmission(parseResult.data);
-    }
-    */
-
     public async updateAssignmentSubmission(req: Request): Promise<AssignmentSubmission> {
-        //console.log(req.body);
         const parseResult = SubmissionUpdateSchema.safeParse(req.body);
         if (!parseResult.success) {
             throw parseResult.error;
