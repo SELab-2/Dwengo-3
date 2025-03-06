@@ -1,5 +1,5 @@
 import { LearningPathNodeTransitionPersistence } from "../persistence/learningPathNodeTransition.persistence";
-import { LearningPathNodeTransitionCreateParams, LearningPathNodeTransitionCreateSchema } from "./types";
+import { LearningPathNodeTransitionCreateParams, LearningPathNodeTransitionCreateSchema } from "../util/types/learningPathNodeTransition.types";
 
 export class LearningPathNodeTransitionDomain {
     private learningPathNodeTransitionPersistence;
