@@ -9,14 +9,14 @@ export class AssignmentSubmissionPersistence {
     }
 
     public async getAssignmentSubmission(
-        params: AssignmentSubFilterParams,
+        filters: AssignmentSubFilterParams,
         paginationParams: PaginationParams
     ): Promise<{data: AssignmentSubmission[], totalPages: number}> {
         const whereClause: Prisma.AssignmentSubmissionWhereInput = {
             AND: [
-                params.groupId ? { groupId: params.groupId } : {},
-                params.nodeId ? {nodeId: params.nodeId} : {},
-                params.id ? {id: params.id} : {}
+                filters.groupId ? { groupId: filters.groupId } : {},
+                filters.nodeId ? {nodeId: filters.nodeId} : {},
+                filters.id ? {id: filters.id} : {}
             ]
         }
 
