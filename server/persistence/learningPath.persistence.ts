@@ -1,12 +1,22 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { LearningPathByFilterParams, LearningPathCreateParams } from "../util/types/learningPath.types";
+import {
+  LearningPathByFilterParams,
+  LearningPathCreateParams,
+} from "../util/types/learningPath.types";
 import { PaginationParams } from "../util/types/pagination.types";
 import { PrismaSingleton } from "./prismaSingleton";
+import { paginate } from "../util/pagination/pagination.util";
 
 export class LearningPathPersistence {
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = PrismaSingleton.instance;
+  }
+
   public async getLearningPaths(
     filters: LearningPathByFilterParams,
-    paginationParams: PaginationParams
+    paginationParams: PaginationParams,
   ) {
     const whereClause: Prisma.LearningPathWhereInput = {
       AND: [
@@ -44,32 +54,17 @@ export class LearningPathPersistence {
           : {},
 
         filters.id ? { id: filters.id } : {},
-      ].filter(Boolean), // Remove empty objects from the AND array
+      ], // Remove empty objects from the AND array
     };
 
-    const [learningPaths, totalCount] =
-      await PrismaSingleton.instance.$transaction([
-        PrismaSingleton.instance.learningPath.findMany({
-          where: whereClause,
-          include: {
-            learningPathNodes: {
-              include: {
-                learningObject: true,
-              },
-            },
-          },
-          skip: paginationParams.skip,
-          take: paginationParams.pageSize,
-        }),
-        PrismaSingleton.instance.learningPath.count({
-          where: whereClause,
-        }),
-      ]);
-
-    return {
-      data: learningPaths,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return paginate(this.prisma.learningPath, whereClause, paginationParams, {
+      learningPathNodes: {
+        // NOTE: why does this not need to be wrapped in an include?
+        include: {
+          learningObject: true,
+        },
+      },
+    });
   }
 
   public async createLearningPath(data: LearningPathCreateParams) {
