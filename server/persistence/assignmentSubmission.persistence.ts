@@ -1,5 +1,5 @@
-import { AssignmentSubmission, PrismaClient } from "@prisma/client";
-import { AssignmentSubParams, AssignmentSubUpdataParams, Uuid } from "../domain/types";
+import { AssignmentSubmission, Prisma, PrismaClient } from "@prisma/client";
+import { AssignmentSubFilterParams, AssignmentSubUpdataParams, PaginationParams, Uuid } from "../domain/types";
 
 export class AssignmentSubmissionPersistence {
     private prisma: PrismaClient;
@@ -8,17 +8,36 @@ export class AssignmentSubmissionPersistence {
         this.prisma = new PrismaClient();
     }
 
-    public async getAssignmentSubmission(params: AssignmentSubParams): Promise<AssignmentSubmission | null> {
-        return this.prisma.assignmentSubmission.findUnique({
-            where: {
-                groupId_nodeId : {
-                    groupId: params.groupId,
-                    nodeId: params.nodeId
-                }
+    public async getAssignmentSubmission(
+        params: AssignmentSubFilterParams,
+        paginationParams: PaginationParams
+    ): Promise<{data: AssignmentSubmission[], totalPages: number}> {
+        const whereClause: Prisma.AssignmentSubmissionWhereInput = {
+            AND: [
+                params.groupId ? { groupId: params.groupId } : {},
+                params.nodeId ? {nodeId: params.nodeId} : {},
+                params.id ? {id: params.id} : {}
+            ]
+        }
+
+        const [assignmentsSubs, totalCount] = await this.prisma.$transaction([
+            this.prisma.assignmentSubmission.findMany({
+                where: whereClause,
+                skip: paginationParams.skip,
+                take: paginationParams.pageSize
             }
-        });
+            ),
+            this.prisma.assignmentSubmission.count({
+                where: whereClause
+            })
+        ]);
+        return {
+            data: assignmentsSubs,
+            totalPages: Math.ceil(totalCount / paginationParams.pageSize)
+        };
     }
 
+    /*
     public async createAssignmentSubmission(params: AssignmentSubParams): Promise<AssignmentSubmission> {
         return this.prisma.assignmentSubmission.create({
             data: {
@@ -27,6 +46,7 @@ export class AssignmentSubmissionPersistence {
             }
         });
     }
+    */
     
     public async updateAssignmentSubmission(params: AssignmentSubUpdataParams): Promise<AssignmentSubmission> {
         return this.prisma.assignmentSubmission.update({

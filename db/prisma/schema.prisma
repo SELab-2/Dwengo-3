@@ -108,7 +108,7 @@ model User {
   teacher           Teacher?
   classJoinRequests ClassJoinRequest[]
   messages          Message[]
-  chats             Chat[]
+  discussions       Discussion[]
 }
 
 model Student {
@@ -148,7 +148,7 @@ model Group {
   id                    String                 @id @default(uuid())
   nodeId                String?
   assignmentId          String
-  chat                  Chat?
+  discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
   node                  LearningPathNode?       @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -186,20 +186,21 @@ model AssignmentSubmission {
   @@unique([groupId, nodeId])
 }
 
-model Chat {
+model Discussion {
   id       String    @id @default(uuid())
   groupId  String    @unique
   messages Message[]
   members  User[]
   group    Group     @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+	@@map("Discussion")
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
-  content   String
-  senderId  String
-  chatId    String
-  sender    User     @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  createdAt DateTime @default(now()) @db.Timestamp
+  id         Int        @id @default(autoincrement())
+  content    String
+  senderId   String
+  chatId     String
+  sender     User       @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  discussion Discussion @relation(fields: [chatId], references: [id])
+  createdAt  DateTime   @default(now()) @db.Timestamp
 }

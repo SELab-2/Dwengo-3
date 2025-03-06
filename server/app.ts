@@ -12,7 +12,7 @@ dotenv.config({ path: "../.env" });
 
 const app: Express = express();
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+//app.use(express.urlencoded({extended: true}));
 const port = process.env.PORT || 3001;
 
 // Error handling middleware
@@ -43,8 +43,8 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router
 );
-apiRouter.use('/assignment', new AssignmentController().getRouter());
-apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().getRouter());
+apiRouter.use('/assignment', new AssignmentController().router);
+apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().router);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);

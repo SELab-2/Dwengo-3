@@ -1,28 +1,18 @@
-import { Assignment, LearningObject, LearningPathNode, PrismaClient } from '@prisma/client';
-import { AssignmentCreateParams, AssignmentFilterParams, Uuid } from '../domain/types';
-import { AssignmentSubmissionDomain } from '../domain/assignmentSubmission.domain';
+import { Assignment, LearningObject, LearningPathNode, Prisma, PrismaClient } from '@prisma/client';
+import { AssignmentCreateParams, AssignmentFilterParams, PaginationParams, Uuid } from '../domain/types';
 
 export class AssignmentPersistence {
     private prisma: PrismaClient;
-    private assignementSubDomain: AssignmentSubmissionDomain; 
 
     public constructor() {
         this.prisma = new PrismaClient();
-        this.assignementSubDomain = new AssignmentSubmissionDomain();
     }
 
-    public async getAssignmentById(id: Uuid): Promise<Assignment | null> {
-        const assignment = this.prisma.assignment.findUnique({
-            where: {
-                id: id
-            }
-        });
-        return assignment;
-    }
-
-    public async getAssignments(filters: AssignmentFilterParams): Promise<Assignment[]> {
-        const assignments = this.prisma.assignment.findMany({
-            where: {
+    public async getAssignments(
+        filters: AssignmentFilterParams,
+        paginationParams: PaginationParams
+    ): Promise<{data: Assignment[], totalPages: number}> {
+        const whereClause: Prisma.AssignmentWhereInput = {
                 AND: [
                     filters.classId
                         ? {
@@ -56,17 +46,48 @@ export class AssignmentPersistence {
                             }
                         }
                         : {},
+                    filters.id
+                        ? {
+                            id: filters.id
+                        } : {},
             ]
-        }});
-        return assignments;
+        };
+
+        const [assignments, totalcount] = await this.prisma.$transaction([
+            this.prisma.assignment.findMany({
+                where: whereClause,
+                skip: paginationParams.skip,
+                take: paginationParams.pageSize
+            }),
+            this.prisma.assignment.count({
+                where: whereClause
+            })
+        ]);
+        return {
+            data: assignments,
+            totalPages: Math.ceil(totalcount / paginationParams.pageSize)
+        };
     }
 
     public async createAssignment(params: AssignmentCreateParams): Promise<Assignment> {
+        //create assignment
         const assignment = await this.prisma.assignment.create({
             data: {
-                classId: params.classId,
-                teacherId: params.teacherId,
-                lpId: params.learningPathId,
+                class: {
+                    connect: {
+                        id: params.classId
+                    }
+                },
+                teacher: {
+                    connect: {
+                        id: params.teacherId
+                    }
+                },
+                learningPath: {
+                    connect: {
+                        id: params.learningPathId
+                    }
+                }
             },
             include: {
                 learningPath: {
@@ -80,10 +101,15 @@ export class AssignmentPersistence {
                 }
             }
         });
+        //create groups for the assignment and save the ids for creating assignment submissions
         const groupIds = await this.prisma.$transaction(params.groups.map((group: Uuid[]) =>
                 this.prisma.group.create({
                     data: {
-                        assignmentId: assignment.id,
+                        assignment: {
+                            connect: {
+                                id: assignment.id
+                            }
+                        },
                         students: {
                             connect: group.map((student: Uuid) => ({id: student}))
                         }
@@ -94,20 +120,29 @@ export class AssignmentPersistence {
                 })
             )
         );
+        //create an assignment submission for every group and node of the learning path that accecpt submissions
         const submissions: any = [];
         assignment.learningPath.learningPathNodes.forEach((node: LearningPathNode & {learningObject: LearningObject}) => {
             if (node.learningObject.canUploadSubmission) {
                 groupIds.forEach((group: {id: string}) => {
                     submissions.push(this.prisma.assignmentSubmission.create({
                         data: {
-                            nodeId: node.id,
-                            groupId: group.id
+                            node: {
+                                connect: {
+                                    id: node.id
+                                }
+                            },
+                            group: {
+                                connect: {
+                                    id: group.id
+                                }
+                            }
                         }
                     }));
                 });
             }
         });
-        await this.prisma.$transaction(submissions);
+        this.prisma.$transaction(submissions);
         return assignment;
     }
 }

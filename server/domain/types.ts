@@ -117,10 +117,11 @@ export const AssignmentFilterSchema = z.object({
     classId: z.string().uuid().optional(),
     groupId: z.string().uuid().optional(),
     teacherId: z.string().uuid().optional(),
-    studentId: z.string().uuid().optional()
+    studentId: z.string().uuid().optional(),
+    id: z.string().uuid().optional()
 });
 
-export const AssignmentSchema = z.object({
+export const AssignmentCreateSchema = z.object({
     groups: z.string().uuid().array().nonempty().array().nonempty(),
     classId: z.string().uuid(),
     teacherId: z.string().uuid(),
@@ -136,9 +137,10 @@ const FileSubmissionSchema = z.object({
 
 const MultipleChoiceSubSchema = z.string()
 
-export const SubmissionSchema = z.object({
-    groupId: z.string().uuid(),
-    nodeId: z.string().uuid()
+export const SubmissionFilterSchema = z.object({
+    groupId: z.string().uuid().optional(),
+    nodeId: z.string().uuid().optional(),
+    id: z.string().uuid().optional()
 });
 
 export const SubmissionUpdateSchema = z.object({
@@ -153,9 +155,9 @@ export const SubmissionUpdateSchema = z.object({
 
 
 
-export type AssignmentCreateParams = z.infer<typeof AssignmentSchema>;
+export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;
 export type Uuid = z.infer<typeof IdSchema>;
 export type AssignmentFilterParams = z.infer<typeof AssignmentFilterSchema>;
-export type AssignmentSubParams = z.infer<typeof SubmissionSchema>;
+export type AssignmentSubFilterParams = z.infer<typeof SubmissionFilterSchema>;
 export type AssignmentSubUpdataParams = z.infer<typeof SubmissionUpdateSchema>;
 export type FileSubmission = z.infer<typeof FileSubmissionSchema>;

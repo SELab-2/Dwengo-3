@@ -1,6 +1,6 @@
 import { Assignment } from "@prisma/client";
 import { AssignmentPersistence } from "../persistence/assignment.persistence"
-import { AssignmentFilterSchema, AssignmentSchema, IdSchema, Uuid } from "./types";
+import { AssignmentFilterSchema, AssignmentCreateSchema, PaginationFilterSchema, Uuid } from "./types";
 
 export class AssignmentDomain {
     private assignmentPersistence: AssignmentPersistence
@@ -9,24 +9,23 @@ export class AssignmentDomain {
         this.assignmentPersistence = new AssignmentPersistence();
     }
 
-    public async getAssignment(assignmentId: Uuid): Promise<Assignment | null> {
-        const parseResult = IdSchema.safeParse(assignmentId);
-        if (!parseResult.success) {
-            throw  parseResult.error;
+    public async getAssignments(query: any): Promise<{data: Assignment[], totalPages: number}> {
+        const paginationParseResult = PaginationFilterSchema.safeParse(query);
+        if (!paginationParseResult.success) {
+            throw paginationParseResult.error;
         }
-        return this.assignmentPersistence.getAssignmentById(parseResult.data);
-    }
-
-    public async getAssignments(query: any): Promise<Assignment[]> {
         const filtersResults = AssignmentFilterSchema.safeParse(query);
         if (!filtersResults.success) {
             throw filtersResults.error;
         }
-        return this.assignmentPersistence.getAssignments(filtersResults.data);
+        return this.assignmentPersistence.getAssignments(
+            filtersResults.data,
+            paginationParseResult.data
+        );
     }
 
     public async createAssigment(query: any): Promise<Assignment> {
-        const parseResult = AssignmentSchema.safeParse(query);
+        const parseResult = AssignmentCreateSchema.safeParse(query);
         if (!parseResult.success) {
             throw parseResult.error;
         }
