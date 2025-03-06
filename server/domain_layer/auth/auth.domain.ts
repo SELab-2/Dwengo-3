@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import {LoginRequest, RegisterRequest} from "../../routes/auth/RequestTypes";
+import {LoginRequest, RegisterRequest} from "../../util/types/RequestTypes";
 import * as persistence from "../../persistence_layer/auth/auth.persistence";
 import {ClassRole, User} from "@prisma/client";
 

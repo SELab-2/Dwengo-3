@@ -1,5 +1,5 @@
 import express, {Request, Response, Router} from "express";
-import {LoginRequest, LoginSchema} from "./RequestTypes";
+import {LoginRequest, LoginSchema} from "../../util/types/RequestTypes";
 import {loginUser, registerUser} from "../../domain_layer/auth/auth.domain";
 import {getUserById} from "../../persistence_layer/auth/auth.persistence";
 import {User} from "@prisma/client";
@@ -50,22 +50,17 @@ async function login(req: Request, res: Response): Promise<void> {
         return;
     }
 
-    try {
-        const loginRequest = LoginSchema.safeParse(req.body);
-        if (!loginRequest.success) {
-            res.status(400).send("Bad request: " + loginRequest.error.message);
-            return;
-        }
-
-        // password should not be sent to the client
-        const user: UserDto = await loginUser(loginRequest.data as LoginRequest);
-        const cookie = generateCookie(user);
-        res.cookie("DWENGO_SESSION", cookie, {maxAge: 6 * 60 * 60 * 1000, httpOnly: true}); // 6 hours
-        res.status(http2.constants.HTTP_STATUS_OK).send(user);
-    } catch (error) {
-        // todo: may need better error handling
-        res.status(http2.constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send("Internal server error");
+    const loginRequest = LoginSchema.safeParse(req.body);
+    if (!loginRequest.success) {
+        res.status(http2.constants.HTTP_STATUS_BAD_REQUEST).send("Bad request: " + loginRequest.error.message);
+        return;
     }
+
+    // password should not be sent to the client
+    const user: UserDto = await loginUser(loginRequest.data as LoginRequest);
+    const cookie = generateCookie(user);
+    res.cookie("DWENGO_SESSION", cookie, {maxAge: 6 * 60 * 60 * 1000, httpOnly: true}); // 6 hours
+    res.status(http2.constants.HTTP_STATUS_OK).send(user);
 }
 
 /**
