@@ -22,7 +22,7 @@ export const SubmissionUpdateSchema = z.object({
     nodeId: z.string().uuid(),
     submissionType: z.nativeEnum(SubmissionType),
     submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()])
-}).refine((data) => data.submissionType === SubmissionType.MULTIPLE_CHOICE && !data.submission, {
+}).refine((data) => data.submissionType === SubmissionType.MULTIPLE_CHOICE && data.submission === undefined, {
     message: "Multiple choice submission is required when submissionType is MULTIPLE_CHOICE",
     path: [],
 });
