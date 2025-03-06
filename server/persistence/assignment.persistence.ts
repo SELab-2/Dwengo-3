@@ -84,17 +84,6 @@ export class AssignmentPersistence {
                         id: params.learningPathId
                     }
                 }
-            },
-            include: {
-                learningPath: {
-                    include: {
-                        learningPathNodes: {
-                            include: {
-                                learningObject: true
-                            }
-                        }
-                    }
-                }
             }
         });
         //create groups for the assignment and save the ids for creating assignment submissions
