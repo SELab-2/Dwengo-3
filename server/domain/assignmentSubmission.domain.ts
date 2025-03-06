@@ -2,13 +2,14 @@ import { AssignmentSubmission, SubmissionType } from "@prisma/client";
 import { AssignmentSubmissionPersistence } from "../persistence/assignmentSubmission.persistence";
 import { Request } from 'express';
 import { PaginationFilterSchema } from "../util/types/pagination.types";
-import { SubmissionFilterSchema, SubmissionUpdateSchema, FileSubmission } from "../util/types/assignmentSubmission.types";
+import { SubmissionFilterSchema, SubmissionUpdateAndCreateSchema, FileSubmission, AssignmentSubUpdataAndCreateParams } from "../util/types/assignmentSubmission.types";
+import { SafeParseReturnType } from "zod";
 
 export class AssignmentSubmissionDomain {
-    private assignmentSubPersistence: AssignmentSubmissionPersistence;
+    private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
 
     public constructor() {
-        this.assignmentSubPersistence = new AssignmentSubmissionPersistence();
+        this.assignmentSubmissionPersistence = new AssignmentSubmissionPersistence();
     }
 
     public async getAssignmentSubmissions(query: any): Promise<{data: AssignmentSubmission[], totalPages: number}> {
@@ -20,14 +21,22 @@ export class AssignmentSubmissionDomain {
         if (!parseResult.success) {
             throw parseResult.error;
         }
-        return this.assignmentSubPersistence.getAssignmentSubmissions(
+        return this.assignmentSubmissionPersistence.getAssignmentSubmissions(
             parseResult.data,
             paginationParseResult.data
         );
     }
 
+    public async createAssignmentSubmission(req: Request): Promise<AssignmentSubmission> {
+        return this.assignmentSubmissionPersistence.createAssignmentSubmission(this.parseSubmissionRequest(req));
+    } 
+
     public async updateAssignmentSubmission(req: Request): Promise<AssignmentSubmission> {
-        const parseResult = SubmissionUpdateSchema.safeParse(req.body);
+        return this.assignmentSubmissionPersistence.updateAssignmentSubmission(this.parseSubmissionRequest(req));
+    }
+
+    private parseSubmissionRequest(req: Request): AssignmentSubUpdataAndCreateParams {
+        const parseResult = SubmissionUpdateAndCreateSchema.safeParse(req.body);
         if (!parseResult.success) {
             throw parseResult.error;
         }
@@ -41,6 +50,6 @@ export class AssignmentSubmissionDomain {
             }
             parseResult.data.submission = fileSubmission;
         }
-        return this.assignmentSubPersistence.updateAssignmentSubmission(parseResult.data);
+        return parseResult.data;
     }
 }

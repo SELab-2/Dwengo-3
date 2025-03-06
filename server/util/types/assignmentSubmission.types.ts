@@ -17,7 +17,7 @@ export const SubmissionFilterSchema = z.object({
     path: [],
 });
 
-export const SubmissionUpdateSchema = z.object({
+export const SubmissionUpdateAndCreateSchema = z.object({
     groupId: z.string().uuid(),
     nodeId: z.string().uuid(),
     submissionType: z.nativeEnum(SubmissionType),
@@ -28,5 +28,5 @@ export const SubmissionUpdateSchema = z.object({
 });
 
 export type AssignmentSubFilterParams = z.infer<typeof SubmissionFilterSchema>;
-export type AssignmentSubUpdataParams = z.infer<typeof SubmissionUpdateSchema>;
+export type AssignmentSubUpdataAndCreateParams = z.infer<typeof SubmissionUpdateAndCreateSchema>;
 export type FileSubmission = z.infer<typeof FileSubmissionSchema>;

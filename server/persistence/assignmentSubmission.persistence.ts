@@ -1,5 +1,5 @@
 import { AssignmentSubmission, Prisma, PrismaClient } from "@prisma/client";
-import { AssignmentSubFilterParams, AssignmentSubUpdataParams } from "../util/types/assignmentSubmission.types";
+import { AssignmentSubFilterParams, AssignmentSubUpdataAndCreateParams } from "../util/types/assignmentSubmission.types";
 import { PaginationParams } from "../util/types/pagination.types";
 import { PrismaSingleton } from "./prismaSingleton";
 
@@ -32,8 +32,27 @@ export class AssignmentSubmissionPersistence {
             totalPages: Math.ceil(totalCount / paginationParams.pageSize)
         };
     }
+
+    public async createAssignmentSubmission(params: AssignmentSubUpdataAndCreateParams): Promise<AssignmentSubmission> {
+        return PrismaSingleton.instance.assignmentSubmission.create({
+            data: {
+                node: {
+                    connect: {
+                        id: params.nodeId
+                    }
+                },
+                group: {
+                    connect: {
+                        id: params.groupId
+                    }
+                },
+                submissionType: params.submissionType,
+                submission: params.submission
+            }
+        })
+    }
     
-    public async updateAssignmentSubmission(params: AssignmentSubUpdataParams): Promise<AssignmentSubmission> {
+    public async updateAssignmentSubmission(params: AssignmentSubUpdataAndCreateParams): Promise<AssignmentSubmission> {
         return PrismaSingleton.instance.assignmentSubmission.update({
             where: {
                 groupId_nodeId: {

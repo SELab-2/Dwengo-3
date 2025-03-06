@@ -39,11 +39,16 @@ export class AssignmentSubmissionController {
 
     private initializeRoutes(): void {
         this.router.get('/', this.getAssignmentSubmission.bind(this));
+        this.router.put('/', this.upload.single('file'), this.createAssignmentSubmission.bind(this));
         this.router.patch('/', this.upload.single('file'), this.updateAssignmentSubmission.bind(this)); //TODO change 'file' to the correct field name
     }
 
     private async getAssignmentSubmission(req: Request, res: Response): Promise<void> {
         res.json(await this.assignmentSubmissionsDomain.getAssignmentSubmissions(req.query));
+    }
+
+    private async createAssignmentSubmission(req: Request, res: Response): Promise<void> {
+        res.json(await this.assignmentSubmissionsDomain.createAssignmentSubmission(req));
     }
 
     /*curl -X PATCH localhost:3001/api/assignmentSubmission 
