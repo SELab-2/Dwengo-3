@@ -43,7 +43,7 @@ export class AssignmentSubmissionController {
     }
 
     private async getAssignmentSubmission(req: Request, res: Response): Promise<void> {
-        res.json(await this.assignmentSubmissionsDomain.getAssignmentSubmission(req.query));
+        res.json(await this.assignmentSubmissionsDomain.getAssignmentSubmissions(req.query));
     }
 
     /*curl -X PATCH localhost:3001/api/assignmentSubmission 

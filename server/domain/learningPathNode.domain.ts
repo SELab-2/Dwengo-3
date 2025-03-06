@@ -1,5 +1,5 @@
 import { LearningPathNodePersistence } from "../persistence/learningPathNode.persistence";
-import { LearningPathNodeCreateParams, LearningPathNodeCreateSchema } from "./types";
+import { LearningPathNodeCreateParams, LearningPathNodeCreateSchema } from "../util/types/learningPathNode.types";
 
 
 export class LearningPathNodeDomain {

@@ -1,14 +1,10 @@
 import { AssignmentSubmission, Prisma, PrismaClient } from "@prisma/client";
-import { AssignmentSubFilterParams, AssignmentSubUpdataParams, PaginationParams, Uuid } from "../domain/types";
+import { AssignmentSubFilterParams, AssignmentSubUpdataParams } from "../util/types/assignmentSubmission.types";
+import { PaginationParams } from "../util/types/pagination.types";
+import { PrismaSingleton } from "./prismaSingleton";
 
 export class AssignmentSubmissionPersistence {
-    private prisma: PrismaClient;
-
-    public constructor() {
-        this.prisma = new PrismaClient();
-    }
-
-    public async getAssignmentSubmission(
+    public async getAssignmentSubmissions(
         filters: AssignmentSubFilterParams,
         paginationParams: PaginationParams
     ): Promise<{data: AssignmentSubmission[], totalPages: number}> {
@@ -20,14 +16,14 @@ export class AssignmentSubmissionPersistence {
             ]
         }
 
-        const [assignmentsSubs, totalCount] = await this.prisma.$transaction([
-            this.prisma.assignmentSubmission.findMany({
+        const [assignmentsSubs, totalCount] = await PrismaSingleton.instance.$transaction([
+            PrismaSingleton.instance.assignmentSubmission.findMany({
                 where: whereClause,
                 skip: paginationParams.skip,
                 take: paginationParams.pageSize
             }
             ),
-            this.prisma.assignmentSubmission.count({
+            PrismaSingleton.instance.assignmentSubmission.count({
                 where: whereClause
             })
         ]);
@@ -49,7 +45,7 @@ export class AssignmentSubmissionPersistence {
     */
     
     public async updateAssignmentSubmission(params: AssignmentSubUpdataParams): Promise<AssignmentSubmission> {
-        return this.prisma.assignmentSubmission.update({
+        return PrismaSingleton.instance.assignmentSubmission.update({
             where: {
                 groupId_nodeId: {
                     groupId: params.groupId,

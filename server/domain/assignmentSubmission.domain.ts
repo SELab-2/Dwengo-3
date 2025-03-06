@@ -1,7 +1,8 @@
 import { AssignmentSubmission, SubmissionType } from "@prisma/client";
 import { AssignmentSubmissionPersistence } from "../persistence/assignmentSubmission.persistence";
-import { FileSubmission, PaginationFilterSchema, SubmissionFilterSchema, SubmissionUpdateSchema } from "./types";
 import { Request } from 'express';
+import { PaginationFilterSchema } from "../util/types/pagination.types";
+import { SubmissionFilterSchema, SubmissionUpdateSchema, FileSubmission } from "../util/types/assignmentSubmission.types";
 
 export class AssignmentSubmissionDomain {
     private assignmentSubPersistence: AssignmentSubmissionPersistence;
@@ -10,7 +11,7 @@ export class AssignmentSubmissionDomain {
         this.assignmentSubPersistence = new AssignmentSubmissionPersistence();
     }
 
-    public async getAssignmentSubmission(query: any): Promise<{data: AssignmentSubmission[], totalPages: number}> {
+    public async getAssignmentSubmissions(query: any): Promise<{data: AssignmentSubmission[], totalPages: number}> {
         const paginationParseResult = PaginationFilterSchema.safeParse(query);
         if (!paginationParseResult.success) {
             throw paginationParseResult.error;
@@ -19,7 +20,7 @@ export class AssignmentSubmissionDomain {
         if (!parseResult.success) {
             throw parseResult.error;
         }
-        return this.assignmentSubPersistence.getAssignmentSubmission(
+        return this.assignmentSubPersistence.getAssignmentSubmissions(
             parseResult.data,
             paginationParseResult.data
         );

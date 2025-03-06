@@ -1,13 +1,9 @@
 import { Assignment, LearningObject, LearningPathNode, Prisma, PrismaClient } from '@prisma/client';
-import { AssignmentCreateParams, AssignmentFilterParams, PaginationParams, Uuid } from '../domain/types';
+import { AssignmentCreateParams, AssignmentFilterParams, Uuid } from '../util/types/assignment.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { PrismaSingleton } from './prismaSingleton';
 
 export class AssignmentPersistence {
-    private prisma: PrismaClient;
-
-    public constructor() {
-        this.prisma = new PrismaClient();
-    }
-
     public async getAssignments(
         filters: AssignmentFilterParams,
         paginationParams: PaginationParams
@@ -53,13 +49,13 @@ export class AssignmentPersistence {
             ]
         };
 
-        const [assignments, totalcount] = await this.prisma.$transaction([
-            this.prisma.assignment.findMany({
+        const [assignments, totalcount] = await PrismaSingleton.instance.$transaction([
+            PrismaSingleton.instance.assignment.findMany({
                 where: whereClause,
                 skip: paginationParams.skip,
                 take: paginationParams.pageSize
             }),
-            this.prisma.assignment.count({
+            PrismaSingleton.instance.assignment.count({
                 where: whereClause
             })
         ]);
@@ -71,7 +67,7 @@ export class AssignmentPersistence {
 
     public async createAssignment(params: AssignmentCreateParams): Promise<Assignment> {
         //create assignment
-        const assignment = await this.prisma.assignment.create({
+        const assignment = await PrismaSingleton.instance.assignment.create({
             data: {
                 class: {
                     connect: {
@@ -102,8 +98,8 @@ export class AssignmentPersistence {
             }
         });
         //create groups for the assignment and save the ids for creating assignment submissions
-        const groupIds = await this.prisma.$transaction(params.groups.map((group: Uuid[]) =>
-                this.prisma.group.create({
+        const groupIds = await PrismaSingleton.instance.$transaction(params.groups.map((group: Uuid[]) =>
+                PrismaSingleton.instance.group.create({
                     data: {
                         assignment: {
                             connect: {
@@ -125,7 +121,7 @@ export class AssignmentPersistence {
         assignment.learningPath.learningPathNodes.forEach((node: LearningPathNode & {learningObject: LearningObject}) => {
             if (node.learningObject.canUploadSubmission) {
                 groupIds.forEach((group: {id: string}) => {
-                    submissions.push(this.prisma.assignmentSubmission.create({
+                    submissions.push(PrismaSingleton.instance.assignmentSubmission.create({
                         data: {
                             node: {
                                 connect: {
@@ -142,7 +138,7 @@ export class AssignmentPersistence {
                 });
             }
         });
-        this.prisma.$transaction(submissions);
+        PrismaSingleton.instance.$transaction(submissions);
         return assignment;
     }
 }

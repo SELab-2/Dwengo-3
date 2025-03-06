@@ -1,6 +1,7 @@
 import { Assignment } from "@prisma/client";
 import { AssignmentPersistence } from "../persistence/assignment.persistence"
-import { AssignmentFilterSchema, AssignmentCreateSchema, PaginationFilterSchema, Uuid } from "./types";
+import { AssignmentFilterSchema, AssignmentCreateSchema } from "../util/types/assignment.types";
+import { PaginationFilterSchema } from "../util/types/pagination.types";
 
 export class AssignmentDomain {
     private assignmentPersistence: AssignmentPersistence
