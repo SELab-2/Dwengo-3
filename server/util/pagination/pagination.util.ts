@@ -9,7 +9,7 @@ import { PrismaSingleton } from "../../persistence/prismaSingleton";
  * @param include - Optional `include` clause for related models.
  * @returns Paginated data and total pages.
  */
-export async function paginate<
+export async function searchAndPaginate<
   T extends { findMany: Function; count: Function },
   WhereInput,
   IncludeInput,

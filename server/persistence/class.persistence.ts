@@ -1,12 +1,23 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import { PaginationParams } from "../util/types/pagination.types";
-import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from "../util/types/class.types";
+import {
+  ClassCreateParams,
+  ClassFilterParams,
+  ClassUpdateParams,
+} from "../util/types/class.types";
 import { PrismaSingleton } from "./prismaSingleton";
+import { searchAndPaginate } from "../util/pagination/pagination.util";
 
 export class ClassPersistence {
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = PrismaSingleton.instance;
+  }
+
   public async getClasses(
     paginationParams: PaginationParams,
-    filters: ClassFilterParams
+    filters: ClassFilterParams,
   ) {
     const where: Prisma.ClassWhereInput = {
       AND: [
@@ -45,21 +56,10 @@ export class ClassPersistence {
       ],
     };
 
-    const [classes, totalCount] = await PrismaSingleton.instance.$transaction([
-      PrismaSingleton.instance.class.findMany({
-        where,
-        skip: paginationParams.skip,
-        take: paginationParams.pageSize,
-      }),
-      PrismaSingleton.instance.class.count({
-        where,
-      }),
-    ]);
-
-    return {
-      data: classes,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(this.prisma.class, where, paginationParams, {
+      students: true,
+      teachers: true,
+    });
   }
 
   public async getClassById(id: string) {

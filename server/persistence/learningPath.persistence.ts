@@ -5,7 +5,7 @@ import {
 } from "../util/types/learningPath.types";
 import { PaginationParams } from "../util/types/pagination.types";
 import { PrismaSingleton } from "./prismaSingleton";
-import { paginate } from "../util/pagination/pagination.util";
+import { searchAndPaginate } from "../util/pagination/pagination.util";
 
 export class LearningPathPersistence {
   private prisma: PrismaClient;
@@ -57,14 +57,18 @@ export class LearningPathPersistence {
       ], // Remove empty objects from the AND array
     };
 
-    return paginate(this.prisma.learningPath, whereClause, paginationParams, {
-      learningPathNodes: {
-        // NOTE: why does this not need to be wrapped in an include?
-        include: {
-          learningObject: true,
+    return searchAndPaginate(
+      this.prisma.learningPath,
+      whereClause,
+      paginationParams,
+      {
+        learningPathNodes: {
+          include: {
+            learningObject: true,
+          },
         },
       },
-    });
+    );
   }
 
   public async createLearningPath(data: LearningPathCreateParams) {
