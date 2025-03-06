@@ -116,29 +116,6 @@ export class AssignmentPersistence {
                 })
             )
         );
-        //create an assignment submission for every group and node of the learning path that accecpt submissions
-        const submissions: any = [];
-        assignment.learningPath.learningPathNodes.forEach((node: LearningPathNode & {learningObject: LearningObject}) => {
-            if (node.learningObject.canUploadSubmission) {
-                groupIds.forEach((group: {id: string}) => {
-                    submissions.push(PrismaSingleton.instance.assignmentSubmission.create({
-                        data: {
-                            node: {
-                                connect: {
-                                    id: node.id
-                                }
-                            },
-                            group: {
-                                connect: {
-                                    id: group.id
-                                }
-                            }
-                        }
-                    }));
-                });
-            }
-        });
-        PrismaSingleton.instance.$transaction(submissions);
         return assignment;
     }
 }
