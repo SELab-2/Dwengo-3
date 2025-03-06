@@ -70,16 +70,10 @@ export class AnnouncementPersistence {
 
     public async updateAnnouncement(announcementUpdateParams: AnnouncementUpdateParams) {
 
-        const updateData: Partial<{ title: string; content: string }> = {};
-        if (announcementUpdateParams.title !== undefined) {
-            updateData.title = announcementUpdateParams.title;
-        }
-        if (announcementUpdateParams.content !== undefined) {
-            updateData.content = announcementUpdateParams.content;
-        }
+        const { id, ...data } = announcementUpdateParams;
         const updatedAnnouncement = await PrismaSingleton.instance.announcement.update({
-            where: { id: announcementUpdateParams.id },
-            data: updateData,
+            where: { id: id },
+            data: data,
         });
         return updatedAnnouncement;
     }
