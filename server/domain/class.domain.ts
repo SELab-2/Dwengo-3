@@ -3,7 +3,6 @@ import { PaginationFilterSchema } from "../util/types/pagination.types";
 import {
   ClassFilterSchema,
   ClassCreateSchema,
-  ClassJoinRequestScheme,
   ClassUpdateSchema,
 } from "../util/types/class.types";
 
@@ -43,16 +42,6 @@ export class ClassDomain {
     }
 
     return this.classPersistance.createClass(createParamsResult.data);
-  }
-
-
-  public async createClassJoinRequest(body: any) {
-    const ClassJoinRequestParams = ClassJoinRequestScheme.safeParse(body);
-    if (!ClassJoinRequestParams.success) {
-      throw ClassJoinRequestParams.error;
-    }
-
-    return this.classPersistance.createClassJoinRequest(ClassJoinRequestParams.data);
   }
 
   public async updateClass(body: any) {

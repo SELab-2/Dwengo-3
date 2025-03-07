@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "../prismaSingleton";
 import { PaginationParams } from "../util/types/pagination.types";
-import { ClassFilterParams, ClassCreateParams, ClassJoinRequestParams, ClassUpdateParams } from "../util/types/class.types";
+import { ClassFilterParams, ClassCreateParams, ClassUpdateParams } from "../util/types/class.types";
 
 export class ClassPersistence {
   public async getClasses(
@@ -58,12 +58,5 @@ export class ClassPersistence {
       where: { id },
       data: data
     });
-  }
-
-  public async createClassJoinRequest(data: ClassJoinRequestParams) {
-    // TODO: Implement this method once we have authentication.
-    //return await PrismaSingleton.instance.class.update({
-
-    //});
   }
 }

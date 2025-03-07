@@ -16,11 +16,7 @@ export const ClassFilterSchema = z.object({
   
   export type ClassCreateParams = z.infer<typeof ClassCreateSchema>;
   
-  export const ClassJoinRequestScheme = z.object({
-    classId: z.string().uuid("ClassId must be a valid UUID"),
-  })
-  
-  export type ClassJoinRequestParams = z.infer<typeof ClassJoinRequestScheme>;
+
 
   export const ClassUpdateSchema = z.object({
     id: z.string().uuid("Id must be a valid UUID"),
