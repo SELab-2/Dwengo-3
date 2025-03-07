@@ -5,6 +5,8 @@ import { ZodError } from "zod";
 import { LearningPathController } from "./routes/learningPath.routes";
 import { LearningPathNodeController } from "./routes/learningPathNode.routes";
 import { LearningPathNodeTransitionController } from "./routes/learningPathNodeTransition.routes";
+import { DiscussionController } from "./routes/discussion.routes";
+import { MessageController } from "./routes/message.routes";
 
 dotenv.config({ path: "../.env" });
 
@@ -41,6 +43,8 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router
 );
+apiRouter.use("/discussion", new DiscussionController().router);
+apiRouter.use("/message", new MessageController().router);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);

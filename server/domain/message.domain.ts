@@ -2,7 +2,7 @@ import { MessagePersistence } from "../persistence/message.persistence";
 import { queryWithPaginationParser } from "../util/pagination/queryWithPaginationParser.util";
 import { MessageCreateSchema, MessageFilterSchema } from "../util/types/message.types";
 
-class MessageDomain {
+export class MessageDomain {
     private messagePersistence: MessagePersistence;
 
     public constructor() {
