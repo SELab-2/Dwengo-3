@@ -17,7 +17,8 @@
 |Teacher can copy requestlink of a class to share it with students | `/class` | `GET` | ? | I think one GET enpoint with filters (keyword/id/age/...) per resource is best |
 |Student can send request to join class | `/class/studentRequest/` | `PUT` | Not started | / |
 |Teacher can see a list of requests to join class | `/class/studentRequest` | `GET` | not started | / | 
-|Teacher can accept a student's request to join the class | `/class/studentRequest` | `POST` | Not started | / |
+|Teacher can accept/reject a student's request to join the class | `/class/studentRequest` | `POST` | Not started | / |
+|Teacher can accept/reject a teacher's request to join the class | `/class/teacherRequest` | `POST` | Not started | / | 
 |Student can see a list of classes of which he is part | `/class` | `GET` | ? | / |
 |Teacher can send a request to join a class (as a co-teacher) | `/class/teacherRequest` | `PUT` | Not started | / | 
 |Teacher can see a list of teacherrequests to join the class (as co-teacher) | `/class/teacherRequest`  | `GET` | ?   |  / | 
