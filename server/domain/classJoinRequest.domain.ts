@@ -1,5 +1,9 @@
 import { PaginationFilterSchema } from "../util/types/pagination.types";
-import { ClassJoinRequestCreateScheme, ClassJoinRequestDecisionSchema, ClassJoinRequestFilterSchema } from "../util/types/classJoinRequest.types";
+import {
+  ClassJoinRequestCreateScheme,
+  ClassJoinRequestDecisionSchema,
+  ClassJoinRequestFilterSchema,
+} from "../util/types/classJoinRequest.types";
 import { ClassJoinRequestPersistence } from "../persistence/classJoinRequest.persistence";
 
 export class ClassJoinRequestDomain {
@@ -9,35 +13,44 @@ export class ClassJoinRequestDomain {
     this.classJoinRequestPersistance = new ClassJoinRequestPersistence();
   }
 
-  public async createClassJoinRequest(body: any) {
+  public async createClassJoinRequest(body: unknown) {
     const ClassJoinRequestParams = ClassJoinRequestCreateScheme.safeParse(body);
     if (!ClassJoinRequestParams.success) {
       throw ClassJoinRequestParams.error;
     }
 
-    return this.classJoinRequestPersistance.createClassJoinRequest(ClassJoinRequestParams.data);
+    return this.classJoinRequestPersistance.createClassJoinRequest(
+      ClassJoinRequestParams.data,
+    );
   }
 
-  public async getJoinRequests(query: any) {
+  public async getJoinRequests(query: unknown) {
     const paginationResult = PaginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
       throw paginationResult.error;
     }
 
-    const ClassJoinRequestFilterResult = ClassJoinRequestFilterSchema.safeParse(query);
+    const ClassJoinRequestFilterResult =
+      ClassJoinRequestFilterSchema.safeParse(query);
     if (!ClassJoinRequestFilterResult.success) {
       throw ClassJoinRequestFilterResult.error;
     }
 
-    return this.classJoinRequestPersistance.getJoinRequests(paginationResult.data, ClassJoinRequestFilterResult.data);
+    return this.classJoinRequestPersistance.getJoinRequests(
+      paginationResult.data,
+      ClassJoinRequestFilterResult.data,
+    );
   }
 
-  public async handleJoinRequest(body: any) {
-    const ClassJoinRequestDecisionParams = ClassJoinRequestDecisionSchema.safeParse(body);
+  public async handleJoinRequest(body: unknown) {
+    const ClassJoinRequestDecisionParams =
+      ClassJoinRequestDecisionSchema.safeParse(body);
     if (!ClassJoinRequestDecisionParams.success) {
       throw ClassJoinRequestDecisionParams.error;
     }
-    
-    return this.classJoinRequestPersistance.handleJoinRequest(ClassJoinRequestDecisionParams.data);
+
+    return this.classJoinRequestPersistance.handleJoinRequest(
+      ClassJoinRequestDecisionParams.data,
+    );
   }
 }

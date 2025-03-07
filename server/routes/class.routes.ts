@@ -22,7 +22,7 @@ export class ClassController {
 
   private updateClass = async (req: Request, res: Response) => {
     res.json(await this.classDomain.updateClass(req.body));
-  }
+  };
 
   private initializeRoutes() {
     this.router.get("/", this.getClasses);

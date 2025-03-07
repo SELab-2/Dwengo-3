@@ -1,6 +1,10 @@
 import { PrismaSingleton } from "../prismaSingleton";
 import { PaginationParams } from "../util/types/pagination.types";
-import { ClassJoinRequestCreateParams, ClassJoinRequestDecisionParams, ClassJoinRequestFilterParams } from "../util/types/classJoinRequest.types";
+import {
+  ClassJoinRequestCreateParams,
+  ClassJoinRequestDecisionParams,
+  ClassJoinRequestFilterParams,
+} from "../util/types/classJoinRequest.types";
 import { Prisma } from "@prisma/client";
 
 export class ClassJoinRequestPersistence {
@@ -8,11 +12,13 @@ export class ClassJoinRequestPersistence {
     // TODO: Implement this method once we have authentication so we can determine the userId of the requester.
     // TODO(?): check if the user already has a join request for the class.
     //return await PrismaSingleton.instance.classJoinRequest.update({
-
     //});
   }
 
-  public async getJoinRequests(paginationParams: PaginationParams, filters: ClassJoinRequestFilterParams) {
+  public async getJoinRequests(
+    paginationParams: PaginationParams,
+    filters: ClassJoinRequestFilterParams,
+  ) {
     // TODO: check if the requester is a teacher of the class the joinRequests are for.
     const where: Prisma.ClassJoinRequestWhereInput = {
       AND: [
@@ -22,16 +28,17 @@ export class ClassJoinRequestPersistence {
       ],
     };
 
-    const [classJoinRequests, totalCount] = await PrismaSingleton.instance.$transaction([
-      PrismaSingleton.instance.classJoinRequest.findMany({
-        where,
-        skip: paginationParams.skip,
-        take: paginationParams.pageSize,
-      }),
-      PrismaSingleton.instance.classJoinRequest.count({
-        where
-      }),
-    ]);
+    const [classJoinRequests, totalCount] =
+      await PrismaSingleton.instance.$transaction([
+        PrismaSingleton.instance.classJoinRequest.findMany({
+          where,
+          skip: paginationParams.skip,
+          take: paginationParams.pageSize,
+        }),
+        PrismaSingleton.instance.classJoinRequest.count({
+          where,
+        }),
+      ]);
 
     return {
       data: classJoinRequests,
@@ -41,13 +48,14 @@ export class ClassJoinRequestPersistence {
 
   public async handleJoinRequest(data: ClassJoinRequestDecisionParams) {
     // TODO: check if the requester is a teacher of the class the joinRequest is for.
-    if(data.acceptRequest) {
+    if (data.acceptRequest) {
       // Delete the join request.
-      const classJoinRequest = await PrismaSingleton.instance.classJoinRequest.delete({
-        where: {
-          id: data.requestId,
-        },
-      });
+      const classJoinRequest =
+        await PrismaSingleton.instance.classJoinRequest.delete({
+          where: {
+            id: data.requestId,
+          },
+        });
 
       // Add the student/teacher to the class.
       await PrismaSingleton.instance.class.update({

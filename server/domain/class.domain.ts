@@ -13,7 +13,7 @@ export class ClassDomain {
     this.classPersistance = new ClassPersistence();
   }
 
-  public async getClasses(query: any) {
+  public async getClasses(query: unknown) {
     // TODO: check if the person requesting is in the requested classes.
     // Validate and parse pagination query parameters
     const paginationResult = PaginationFilterSchema.safeParse(query);
@@ -29,11 +29,11 @@ export class ClassDomain {
 
     return this.classPersistance.getClasses(
       paginationResult.data,
-      filtersResult.data
+      filtersResult.data,
     );
   }
 
-  public async createClass(body: any) {
+  public async createClass(body: unknown) {
     // TODO: check if the person creating is a teacher.
     // Validate and parse class create parameters
     const createParamsResult = ClassCreateSchema.safeParse(body);
@@ -44,7 +44,7 @@ export class ClassDomain {
     return this.classPersistance.createClass(createParamsResult.data);
   }
 
-  public async updateClass(body: any) {
+  public async updateClass(body: unknown) {
     // TODO: check if the person updating is owner.
     // Validate and parse class update parameters
     const updateParamsResult = ClassUpdateSchema.safeParse(body);
