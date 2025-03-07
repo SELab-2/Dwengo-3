@@ -1,16 +1,16 @@
 import { PaginationFilterSchema } from "../util/types/pagination.types";
-import { ClassJoinRequestScheme, ClassJoinRequestFilterSchema } from "../util/types/classJoinRequest.types";
+import { ClassJoinRequestCreateScheme, ClassJoinRequestDecisionSchema, ClassJoinRequestFilterSchema } from "../util/types/classJoinRequest.types";
 import { ClassJoinRequestPersistence } from "../persistence/classJoinRequest.persistence";
 
 export class ClassJoinRequestDomain {
-  private classJoinRequestPersistance;
+  private classJoinRequestPersistance: ClassJoinRequestPersistence;
 
   constructor() {
     this.classJoinRequestPersistance = new ClassJoinRequestPersistence();
   }
 
   public async createClassJoinRequest(body: any) {
-    const ClassJoinRequestParams = ClassJoinRequestScheme.safeParse(body);
+    const ClassJoinRequestParams = ClassJoinRequestCreateScheme.safeParse(body);
     if (!ClassJoinRequestParams.success) {
       throw ClassJoinRequestParams.error;
     }
@@ -18,7 +18,7 @@ export class ClassJoinRequestDomain {
     return this.classJoinRequestPersistance.createClassJoinRequest(ClassJoinRequestParams.data);
   }
 
-  public async getStudentJoinRequests(query: any) {
+  public async getJoinRequests(query: any) {
     const paginationResult = PaginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
       throw paginationResult.error;
@@ -29,7 +29,15 @@ export class ClassJoinRequestDomain {
       throw ClassJoinRequestFilterResult.error;
     }
 
-    return this.classJoinRequestPersistance.getStudentJoinRequests(paginationResult.data);
+    return this.classJoinRequestPersistance.getJoinRequests(paginationResult.data, ClassJoinRequestFilterResult.data);
   }
 
+  public async handleJoinRequest(body: any) {
+    const ClassJoinRequestDecisionParams = ClassJoinRequestDecisionSchema.safeParse(body);
+    if (!ClassJoinRequestDecisionParams.success) {
+      throw ClassJoinRequestDecisionParams.error;
+    }
+    
+    return this.classJoinRequestPersistance.handleJoinRequest(ClassJoinRequestDecisionParams.data);
+  }
 }
