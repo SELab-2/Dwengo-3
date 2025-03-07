@@ -1,8 +1,8 @@
-import express, {Request, Response, Router} from "express";
-import {LoginRequest, LoginSchema} from "../../util/types/RequestTypes";
-import {loginUser, registerUser} from "../../domain_layer/auth/auth.domain";
-import {getUserById} from "../../persistence_layer/auth/auth.persistence";
-import {User} from "@prisma/client";
+import express, { Request, Response, Router } from "express";
+import { LoginRequest, LoginSchema } from "../util/types/RequestTypes";
+import { loginUser, registerUser } from "../domain/user.domain";
+import { getUserById } from "../persistence/auth/users.persistance";
+import { User } from "@prisma/client";
 import crypto from "crypto";
 import * as http2 from "node:http2";
 
@@ -26,10 +26,13 @@ type UserDto = Omit<User, "password">;
  * @param res - The response.
  */
 async function register(req: Request, res: Response): Promise<void> {
-    const user: UserDto = await registerUser(req.body);
-    const cookie = generateCookie(user);
-    res.cookie("DWENGO_SESSION", cookie, {maxAge: 6 * 60 * 60 * 1000, httpOnly: true}); // 6 hours
-    res.status(http2.constants.HTTP_STATUS_OK).send(user);
+  const user: UserDto = await registerUser(req.body);
+  const cookie = generateCookie(user);
+  res.cookie("DWENGO_SESSION", cookie, {
+    maxAge: 6 * 60 * 60 * 1000,
+    httpOnly: true,
+  }); // 6 hours
+  res.status(http2.constants.HTTP_STATUS_OK).send(user);
 }
 
 /**
@@ -45,22 +48,27 @@ async function register(req: Request, res: Response): Promise<void> {
  * @param res - The response.
  */
 async function login(req: Request, res: Response): Promise<void> {
-    if (req.body === null || req.body === undefined) {
-        res.status(http2.constants.HTTP_STATUS_BAD_REQUEST).send("Bad request");
-        return;
-    }
+  if (req.body === null || req.body === undefined) {
+    res.status(http2.constants.HTTP_STATUS_BAD_REQUEST).send("Bad request");
+    return;
+  }
 
-    const loginRequest = LoginSchema.safeParse(req.body);
-    if (!loginRequest.success) {
-        res.status(http2.constants.HTTP_STATUS_BAD_REQUEST).send("Bad request: " + loginRequest.error.message);
-        return;
-    }
+  const loginRequest = LoginSchema.safeParse(req.body);
+  if (!loginRequest.success) {
+    res
+      .status(http2.constants.HTTP_STATUS_BAD_REQUEST)
+      .send("Bad request: " + loginRequest.error.message);
+    return;
+  }
 
-    // password should not be sent to the client
-    const user: UserDto = await loginUser(loginRequest.data as LoginRequest);
-    const cookie = generateCookie(user);
-    res.cookie("DWENGO_SESSION", cookie, {maxAge: 6 * 60 * 60 * 1000, httpOnly: true}); // 6 hours
-    res.status(http2.constants.HTTP_STATUS_OK).send(user);
+  // password should not be sent to the client
+  const user: UserDto = await loginUser(loginRequest.data as LoginRequest);
+  const cookie = generateCookie(user);
+  res.cookie("DWENGO_SESSION", cookie, {
+    maxAge: 6 * 60 * 60 * 1000,
+    httpOnly: true,
+  }); // 6 hours
+  res.status(http2.constants.HTTP_STATUS_OK).send(user);
 }
 
 /**
@@ -75,8 +83,8 @@ async function login(req: Request, res: Response): Promise<void> {
  * @param res - The response.
  */
 async function clearCookie(req: Request, res: Response): Promise<void> {
-    res.clearCookie("DWENGO_SESSION");
-    res.status(http2.constants.HTTP_STATUS_OK).send();
+  res.clearCookie("DWENGO_SESSION");
+  res.status(http2.constants.HTTP_STATUS_OK).send();
 }
 
 /**
@@ -90,9 +98,12 @@ async function clearCookie(req: Request, res: Response): Promise<void> {
  * @returns The generated cookie.
  */
 export function generateCookie(user: UserDto): string {
-    let cookie: string = user.id + "?";
-    const hash = crypto.createHash("sha512").update(JSON.stringify(user)).digest("base64");
-    return cookie + hash;
+  let cookie: string = user.id + "?";
+  const hash = crypto
+    .createHash("sha512")
+    .update(JSON.stringify(user))
+    .digest("base64");
+  return cookie + hash;
 }
 
 /**
@@ -106,22 +117,24 @@ export function generateCookie(user: UserDto): string {
  * @returns True if the cookie is valid, false otherwise.
  */
 export async function verifyCookie(cookie: string): Promise<boolean> {
-    if (cookie === undefined || cookie === null || cookie === "") return false;
+  if (cookie === undefined || cookie === null || cookie === "") return false;
 
-    const [id, hash] = cookie.split("?");
-    if (id === undefined || hash === undefined) return false;
+  const [id, hash] = cookie.split("?");
+  if (id === undefined || hash === undefined) return false;
 
-    const user: UserDto | null = await getUserById(id);
-    if (user === null) return false;
+  const user: UserDto | null = await getUserById(id);
+  if (user === null) return false;
 
-    const newHash = crypto.createHash("sha512").update(JSON.stringify(user)).digest("base64");
-    return hash === newHash;
+  const newHash = crypto
+    .createHash("sha512")
+    .update(JSON.stringify(user))
+    .digest("base64");
+  return hash === newHash;
 }
-
 
 // STUDENT
 router.post(studentPrefix + "/login", async (req: Request, res: Response) => {
-    return login(req, res);
+  return login(req, res);
 });
 
 /**
@@ -129,16 +142,16 @@ router.post(studentPrefix + "/login", async (req: Request, res: Response) => {
  * Cookie is checked on validity in the middleware defined in [app.ts].
  */
 router.post(studentPrefix + "/logout", (req: Request, res: Response) => {
-    return clearCookie(req, res);
+  return clearCookie(req, res);
 });
 
 router.put(studentPrefix + "/register", async (req: Request, res: Response) => {
-    return register(req, res);
+  return register(req, res);
 });
 
 // TEACHER
 router.post(teacherPrefix + "/login", async (req: Request, res: Response) => {
-    return login(req, res);
+  return login(req, res);
 });
 
 /**
@@ -146,9 +159,9 @@ router.post(teacherPrefix + "/login", async (req: Request, res: Response) => {
  * Cookie is checked on validity in the middleware defined in [app.ts].
  */
 router.post(teacherPrefix + "/logout", (req: Request, res: Response) => {
-    return clearCookie(req, res);
+  return clearCookie(req, res);
 });
 
 router.put(teacherPrefix + "/register", async (req: Request, res: Response) => {
-    return register(req, res);
+  return register(req, res);
 });

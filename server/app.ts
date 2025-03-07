@@ -1,8 +1,8 @@
 import cookieParser from "cookie-parser";
-import {PrismaClient} from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 import * as http2 from "node:http2";
 
-import { router as auth, verifyCookie } from "./routes/auth/auth.router";
+import { router as auth, verifyCookie } from "./routes/auth.router";
 import express, { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import { ClassController } from "./routes/class.routes";
@@ -15,17 +15,24 @@ dotenv.config({ path: "../.env" });
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
-// todo - Robin: change to PrismaSingleton
-const prisma = new PrismaClient();
-
-app.use(cookieParser(), async (req: Request, res: Response, next: NextFunction) => {
+// cookie validating middleware
+app.use(
+  cookieParser(),
+  async (req: Request, res: Response, next: NextFunction) => {
     const verified = await verifyCookie(req.cookies["DWENGO_SESSION"]);
     if (verified) {
-        next();
+      next();
     } else {
+      const path = req.path;
+      if (path !== "/api/auth/login" && path !== "/api/auth/register") {
+        console.debug(`unauthorized: ${path}`);
         res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
+        return;
+      }
+      next();
     }
-});
+  },
+);
 app.use(express.json());
 
 // Error handling middleware
@@ -54,7 +61,7 @@ apiRouter.use("/learningPath", new LearningPathController().router);
 apiRouter.use("/learningPathNode", new LearningPathNodeController().router);
 apiRouter.use(
   "/learningPathNodeTransition",
-  new LearningPathNodeTransitionController().router
+  new LearningPathNodeTransitionController().router,
 );
 apiRouter.use("/auth", auth);
 
