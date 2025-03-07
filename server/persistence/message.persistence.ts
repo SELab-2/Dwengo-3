@@ -1,6 +1,6 @@
 import { Message, Prisma, PrismaClient } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
-import { MessageCreateParams, MessageFilterParams } from "../util/types/message.types";
+import { MessageCreateParams, MessageFilterParams, MessageId, MessageUpdateParams } from "../util/types/message.types";
 import { PaginationParams } from "../util/types/pagination.types";
 
 export class MessagePersistence {
@@ -54,4 +54,24 @@ export class MessagePersistence {
             }
         });
     }
+
+    public async updateMessage(params: MessageUpdateParams): Promise<Message> {
+        return this.prisma.message.update({
+            where: {
+                id: params.id
+            },
+            data: {
+                content: params.content
+            }
+
+        });
+    }
+
+    public async deleteMessage(id: MessageId): Promise<Message> {
+        return this.prisma.message.delete({
+            where: {
+                id: id
+            }
+        });
+    } 
 }
