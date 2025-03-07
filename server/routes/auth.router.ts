@@ -26,13 +26,13 @@ type UserDto = Omit<User, "password">;
  * @param res - The response.
  */
 async function register(req: Request, res: Response): Promise<void> {
-  const user: UserDto = await registerUser(req.body);
-  const cookie = generateCookie(user);
+  const user: User = await registerUser(req.body);
+  const cookie = generateCookie(user.id, user.email, user.password);
   res.cookie("DWENGO_SESSION", cookie, {
     maxAge: 6 * 60 * 60 * 1000,
     httpOnly: true,
   }); // 6 hours
-  res.status(http2.constants.HTTP_STATUS_OK).send(user);
+  res.status(http2.constants.HTTP_STATUS_OK).send(user as UserDto);
 }
 
 /**
@@ -62,8 +62,8 @@ async function login(req: Request, res: Response): Promise<void> {
   }
 
   // password should not be sent to the client
-  const user: UserDto = await loginUser(loginRequest.data as LoginRequest);
-  const cookie = generateCookie(user);
+  const user: User = await loginUser(loginRequest.data as LoginRequest);
+  const cookie = generateCookie(user.id, user.email, user.password);
   res.cookie("DWENGO_SESSION", cookie, {
     maxAge: 6 * 60 * 60 * 1000,
     httpOnly: true,
@@ -94,14 +94,20 @@ async function clearCookie(req: Request, res: Response): Promise<void> {
  * The cookie will contain the user's id, followed by a question mark and a hash of the user's data.
  * The hash is created with the SHA-512 algorithm and encoded in base64.
  *
- * @param user - The user to generate the cookie from.
  * @returns The generated cookie.
+ * @param userId the id of the user to generate a cookie for.
+ * @param email the email of the user, used in the hash
+ * @param password the password of the user, used in the hash
  */
-export function generateCookie(user: UserDto): string {
-  let cookie: string = user.id + "?";
+export function generateCookie(
+  userId: string,
+  email: string,
+  password: string,
+): string {
+  let cookie: string = userId + "?";
   const hash = crypto
     .createHash("sha512")
-    .update(JSON.stringify(user))
+    .update(userId + email + password)
     .digest("base64");
   return cookie + hash;
 }
@@ -122,14 +128,13 @@ export async function verifyCookie(cookie: string): Promise<boolean> {
   const [id, hash] = cookie.split("?");
   if (id === undefined || hash === undefined) return false;
 
-  const user: UserDto | null = await getUserById(id);
+  const user: User | null = await getUserById(id);
   if (user === null) return false;
 
-  const newHash = crypto
-    .createHash("sha512")
-    .update(JSON.stringify(user))
-    .digest("base64");
-  return hash === newHash;
+  const string = user.id + user.email + user.password;
+
+  const newHash = crypto.createHash("sha512").update(string).digest("base64");
+  return hash.trim() === newHash.trim();
 }
 
 // STUDENT

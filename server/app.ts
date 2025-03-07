@@ -1,5 +1,5 @@
 import cookieParser from "cookie-parser";
-import { PrismaClient } from "@prisma/client";
+import { ClassRole, PrismaClient } from "@prisma/client";
 import * as http2 from "node:http2";
 
 import { router as auth, verifyCookie } from "./routes/auth.router";
@@ -19,12 +19,19 @@ const port = process.env.PORT || 3001;
 app.use(
   cookieParser(),
   async (req: Request, res: Response, next: NextFunction) => {
+    console.debug("Cookie:", req.cookies["DWENGO_SESSION"]);
     const verified = await verifyCookie(req.cookies["DWENGO_SESSION"]);
+    console.log(verified);
     if (verified) {
       next();
     } else {
       const path = req.path;
-      if (path !== "/api/auth/login" && path !== "/api/auth/register") {
+      if (
+        !path.startsWith("/api/auth") ||
+        !["student", "teacher"].some((role) =>
+          path.startsWith(`/api/auth/${role}`),
+        )
+      ) {
         console.debug(`unauthorized: ${path}`);
         res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
         return;
