@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { ClassDomain } from "../domain/class.domain";
-import { ClassJoinRequestController } from "./classJoinRequest.persistence";
+import { ClassJoinRequestController } from "./classJoinRequest.routes";
 
 export class ClassController {
   public router: Router;

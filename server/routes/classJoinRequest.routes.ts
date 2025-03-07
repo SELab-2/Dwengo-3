@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { ClassJoinRequestDomain } from "../domain/classJoinRequest.domain";
+import { ClassJoinRequestGetType } from "../util/types/classJoinRequest.types";
 
 export class ClassJoinRequestController {
   public router: Router;
@@ -17,8 +18,22 @@ export class ClassJoinRequestController {
     );
   };
 
-  private getJoinRequests = async (req: Request, res: Response) => {
-    res.json(await this.classJoinRequestDomain.getJoinRequests(req.query));
+  private getStudentJoinRequests = async (req: Request, res: Response) => {
+    res.json(
+      await this.classJoinRequestDomain.getJoinRequests(
+        ClassJoinRequestGetType.STUDENT,
+        req.query,
+      ),
+    );
+  };
+
+  private getTeacherJoinRequests = async (req: Request, res: Response) => {
+    res.json(
+      await this.classJoinRequestDomain.getJoinRequests(
+        ClassJoinRequestGetType.TEACHER,
+        req.query,
+      ),
+    );
   };
 
   private handleJoinRequest = async (req: Request, res: Response) => {
@@ -28,8 +43,8 @@ export class ClassJoinRequestController {
   private initializeRoutes() {
     this.router.put("/studentRequest", this.createJoinRequest);
     this.router.put("/teacherRequest", this.createJoinRequest);
-    this.router.get("/studentRequest", this.getJoinRequests);
-    this.router.get("/teacherRequest", this.getJoinRequests);
+    this.router.get("/studentRequest", this.getStudentJoinRequests);
+    this.router.get("/teacherRequest", this.getTeacherJoinRequests);
     this.router.post("/studentRequest", this.handleJoinRequest);
     this.router.post("/teacherRequest", this.handleJoinRequest);
   }

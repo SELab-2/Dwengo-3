@@ -4,6 +4,7 @@ import {
   ClassJoinRequestCreateParams,
   ClassJoinRequestDecisionParams,
   ClassJoinRequestFilterParams,
+  ClassJoinRequestGetType,
 } from "../util/types/classJoinRequest.types";
 import { Prisma } from "@prisma/client";
 
@@ -16,15 +17,25 @@ export class ClassJoinRequestPersistence {
   }
 
   public async getJoinRequests(
+    type: ClassJoinRequestGetType,
     paginationParams: PaginationParams,
     filters: ClassJoinRequestFilterParams,
   ) {
     // TODO: check if the requester is a teacher of the class the joinRequests are for.
+    // We need to do this to not expose the Prisma.EnumClassRoleFilter<"User"> type to the domain layer.
+    let filterByRole: Prisma.UserWhereInput = {};
+    if (type === ClassJoinRequestGetType.STUDENT) {
+      filterByRole = { role: "STUDENT" };
+    } else if (type === ClassJoinRequestGetType.TEACHER) {
+      filterByRole = { role: "TEACHER" };
+    }
+
     const where: Prisma.ClassJoinRequestWhereInput = {
       AND: [
         filters.id ? { id: filters.id } : {},
         filters.classId ? { classId: filters.classId } : {},
         filters.userId ? { userId: filters.userId } : {},
+        { user: filterByRole },
       ],
     };
 

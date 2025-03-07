@@ -33,3 +33,8 @@ export const ClassJoinRequestDecisionSchema = z
 export type ClassJoinRequestDecisionParams = z.infer<
   typeof ClassJoinRequestDecisionSchema
 >;
+
+export enum ClassJoinRequestGetType {
+  STUDENT = "student",
+  TEACHER = "teacher",
+}
