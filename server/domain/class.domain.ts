@@ -3,8 +3,8 @@ import { PaginationFilterSchema } from "../util/types/pagination.types";
 import {
   ClassFilterSchema,
   ClassCreateSchema,
-  UUIDValidationScheme,
   ClassJoinRequestScheme,
+  ClassUpdateSchema,
 } from "../util/types/class.types";
 
 export class ClassDomain {
@@ -15,6 +15,7 @@ export class ClassDomain {
   }
 
   public async getClasses(query: any) {
+    // TODO: check if the person requesting is in the requested classes.
     // Validate and parse pagination query parameters
     const paginationResult = PaginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
@@ -34,6 +35,7 @@ export class ClassDomain {
   }
 
   public async createClass(body: any) {
+    // TODO: check if the person creating is a teacher.
     // Validate and parse class create parameters
     const createParamsResult = ClassCreateSchema.safeParse(body);
     if (!createParamsResult.success) {
@@ -43,16 +45,6 @@ export class ClassDomain {
     return this.classPersistance.createClass(createParamsResult.data);
   }
 
-  public async deleteClass(query: any) {
-    // TODO: check if the person who is deleting this class is the owner of the class once we have authentication.
-    // Validate and check for a valid UUID.
-    const UUIDParamsResult = UUIDValidationScheme.safeParse(query);
-    if (!UUIDParamsResult.success) {
-      throw UUIDParamsResult.error;
-    }
-
-    return this.classPersistance.deleteClass(UUIDParamsResult.data);
-  }
 
   public async createClassJoinRequest(body: any) {
     const ClassJoinRequestParams = ClassJoinRequestScheme.safeParse(body);
@@ -61,5 +53,15 @@ export class ClassDomain {
     }
 
     return this.classPersistance.createClassJoinRequest(ClassJoinRequestParams.data);
+  }
+
+  public async updateClass(body: any) {
+    // TODO: check if the person updating is owner.
+    // Validate and parse class update parameters
+    const updateParamsResult = ClassUpdateSchema.safeParse(body);
+    if (!updateParamsResult.success) {
+      throw updateParamsResult.error;
+    }
+    return this.classPersistance.updateClass(updateParamsResult.data);
   }
 }

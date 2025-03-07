@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "../prismaSingleton";
 import { PaginationParams } from "../util/types/pagination.types";
-import { ClassFilterParams, ClassCreateParams, UUIDParams, ClassJoinRequestParams } from "../util/types/class.types";
+import { ClassFilterParams, ClassCreateParams, ClassJoinRequestParams, ClassUpdateParams } from "../util/types/class.types";
 
 export class ClassPersistence {
   public async getClasses(
@@ -51,9 +51,12 @@ export class ClassPersistence {
     });
   }
 
-  public async deleteClass(idParams: UUIDParams) {
-    return await PrismaSingleton.instance.class.delete({
-      where: { id: idParams.id },
+  public async updateClass(params: ClassUpdateParams) {
+    const { id, ...data } = params;
+
+    return await PrismaSingleton.instance.class.update({
+      where: { id },
+      data: data
     });
   }
 
