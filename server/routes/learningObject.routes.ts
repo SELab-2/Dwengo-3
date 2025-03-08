@@ -11,10 +11,6 @@ export class LearningObjectController {
     this.initializeRoutes();
   }
 
-  private getLearningObjects = async (req: Request, res: Response) => {
-    res.json(await this.learningObjectDomain.getLearningObjects(req.query));
-  };
-
   private createLearningObject = async (req: Request, res: Response) => {
     res.json(await this.learningObjectDomain.createLearningObject(req.body));
   };
@@ -46,7 +42,6 @@ export class LearningObjectController {
   */
 
   private initializeRoutes() {
-    this.router.get("/learningobject", this.getLearningObjects);
     this.router.post("/learningobject", this.createLearningObject);
     this.router.get("/learningobject/:id", this.getLearningObjectById);
     this.router.patch("/learningobject/:id", this.updateLearningObject);

@@ -15,7 +15,11 @@ export class LearningObjectKeywordPersistence {
         });
     }
 
-    // TODO create
+    public async createLearningObjectKeyword(data: {loId: string, keyword: string}) {
+        return await prisma.learningObjectKeyword.create({
+            data: data
+        });
+    }
 
     // TODO update
 

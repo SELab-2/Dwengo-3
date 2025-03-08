@@ -1,25 +1,15 @@
 import { PrismaClient, LearningObject, LearningObjectKeyword } from "@prisma/client";
-import { LearningObjectsQuery  } from '../domain/types';
+import { LearningObjectCreateParams, LearningObjectWithoutKeywords } from "../domain/types";
 
 const prisma = new PrismaClient();
 
 export class LearningObjectPersistence {
-    public async getLearningObjects(learningPathNodesIncluded: boolean) {
-        return await prisma.learningObject.findMany({
-            include: {
-                learningPathNodes: learningPathNodesIncluded
-            }
-        });
-    }
 
-    public async getLearningObjectById(id: string, learningPathNodesIncluded: boolean) {
+    public async getLearningObjectById(id: string) {
         return await prisma.learningObject.findUnique({
             where: { 
                 id: id 
             },
-            include: {
-                learningPathNodes: learningPathNodesIncluded
-            }
         });
     }
 
@@ -38,7 +28,12 @@ export class LearningObjectPersistence {
         });
     }
 
-    // TODO create
+    public async createLearningObject(data: LearningObjectWithoutKeywords) {
+        const learningObject = await prisma.learningObject.create({
+            data: data,
+        });
+        return learningObject;
+    }
 
     // TODO update
 
