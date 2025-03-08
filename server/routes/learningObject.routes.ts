@@ -27,8 +27,14 @@ export class LearningObjectController {
     res.json(await this.learningObjectDomain.deleteLearningObject(req.params.id));
   };
 
-  private getLearningObjectKeyword = async (req: Request, res: Response) => {
-    res.json(await this.learningObjectDomain.getLearningObjectKeywords(req.query));
+  private getLearningObjectKeywords = async (req: Request, res: Response) => {
+    const loId = req.query.loId;
+
+    if (typeof loId === 'string') {
+      res.json(await this.learningObjectDomain.getLearningObjectKeywords(loId));
+    } else {
+      res.status(400).json({ error: 'loId query parameter is required and must be a string' });
+    }
   };
 
   /* TODO 
@@ -45,8 +51,8 @@ export class LearningObjectController {
     this.router.post("/learningobject", this.createLearningObject);
     this.router.get("/learningobject/:id", this.getLearningObjectById);
     this.router.patch("/learningobject/:id", this.updateLearningObject);
-    this.router.delete("/learningobject/:id", this.deleteLearningObject);
-    this.router.get("/learningobject/keyword", this.getLearningObjectKeyword);
+    this.router.delete("/learningobject/:id", this.deleteLearningObject);   
+    this.router.get("/learningobject/keyword", this.getLearningObjectKeywords);
 
     /* TODO 
     this.router.put("/learningobject/keyword", this.updateLearningObjectKeyword);

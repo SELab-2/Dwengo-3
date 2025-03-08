@@ -157,3 +157,9 @@ export const LearningObjectCreateSchema = z.object({
 export type LearningObjectCreateParams = z.infer<typeof LearningObjectCreateSchema>;
 
 export type LearningObjectWithoutKeywords = Omit<LearningObjectCreateParams, "learningObjectsKeywords">;
+
+export const LearningObjectUpdateSchema = LearningObjectCreateSchema.partial();
+
+export type LearningObjectUpdateParams = z.infer<typeof LearningObjectUpdateSchema>;
+
+export type LearningObjectUpdateWithoutKeywords = Omit<LearningObjectUpdateParams, "learningObjectsKeywords">;

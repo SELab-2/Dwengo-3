@@ -1,5 +1,5 @@
-import { PrismaClient, LearningObject, LearningObjectKeyword } from "@prisma/client";
-import { LearningObjectCreateParams, LearningObjectWithoutKeywords } from "../domain/types";
+import { PrismaClient } from "@prisma/client";
+import { LearningObjectUpdateWithoutKeywords, LearningObjectWithoutKeywords } from "../domain/types";
 
 const prisma = new PrismaClient();
 
@@ -35,7 +35,18 @@ export class LearningObjectPersistence {
         return learningObject;
     }
 
-    // TODO update
+    public async updateLearningObject(id: string, data: LearningObjectUpdateWithoutKeywords) {
+        return await prisma.learningObject.update({
+            where: {id: id},
+            data: data
+        });
+    }
 
-    // TODO delete
+    public async deleteLearningObject(id: string) {
+        return await prisma.learningNodeTransition.delete({
+            where: {
+                id: id,
+            }
+        })
+    }
 }

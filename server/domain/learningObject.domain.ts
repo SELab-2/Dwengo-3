@@ -1,6 +1,7 @@
+import { parse } from "path";
 import { LearningObjectPersistence } from "../persistence/learningObject.persistence";
 import { LearningObjectKeywordPersistence } from "../persistence/learningObjectKeyword.persistence";
-import { LearningObjectCreateParams, LearningObjectCreateSchema } from "./types";
+import { LearningObjectCreateParams, LearningObjectCreateSchema, LearningObjectUpdateParams, LearningObjectUpdateSchema } from "./types";
 
 export class LearningObjectDomain {
     private learningObjectPersistence;
@@ -28,16 +29,22 @@ export class LearningObjectDomain {
         return this.learningObjectPersistence.getLearningObjectById(id);
     }
 
-    public async updateLearningObject(id: string, body: any) {
-        
+    public async updateLearningObject(id: string, body: LearningObjectUpdateParams) {
+        const parseResult = LearningObjectUpdateSchema.safeParse(body);
+        if (!parseResult.success) {
+            throw parseResult.error;
+        }
+        const {learningObjectsKeywords, ...dataWithoutKeywords} = parseResult.data;
+        await this.learningObjectPersistence.updateLearningObject(id, dataWithoutKeywords);
+        // TODO: Update keywords
     }
 
     public async deleteLearningObject(id: string) {
-        
+        return this.learningObjectPersistence.deleteLearningObject(id);
     }
 
-    public async getLearningObjectKeywords(query: any) {
-        
+    public async getLearningObjectKeywords(loId: string) {
+        return this.learningObjectKeywordPersistence.getLearningObjectKeywordsByLoId(loId);
     }
 
     /* TODO onduidelijk
