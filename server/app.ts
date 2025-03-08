@@ -8,7 +8,7 @@ import { LearningPathNodeTransitionController } from "./routes/learningPathNodeT
 
 dotenv.config({ path: "../.env" });
 
-const app: Express = express();
+export const app: Express = express();
 const port = process.env.PORT || 3001;
 
 app.use(express.json());
