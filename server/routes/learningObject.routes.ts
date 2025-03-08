@@ -37,26 +37,11 @@ export class LearningObjectController {
     }
   };
 
-  /* TODO 
-  private updateLearningObjectKeyword = async (req: Request, res: Response) => {
-    res.json(await this.learningObjectDomain.updateLearningObjectKeyword(req.params.loID, req.body));
-  };
-
-  private deleteLearningObjectKeyword = async (req: Request, res: Response) => {
-    res.json(await this.learningObjectDomain.deleteLearningObjectKeyword(req.params.loID));
-  };
-  */
-
   private initializeRoutes() {
     this.router.post("/learningobject", this.createLearningObject);
     this.router.get("/learningobject/:id", this.getLearningObjectById);
     this.router.patch("/learningobject/:id", this.updateLearningObject);
     this.router.delete("/learningobject/:id", this.deleteLearningObject);   
     this.router.get("/learningobject/keyword", this.getLearningObjectKeywords);
-
-    /* TODO 
-    this.router.put("/learningobject/keyword", this.updateLearningObjectKeyword);
-    this.router.delete("/learningobject/keyword", this.deleteLearningObjectKeyword);
-    */
   }
 }

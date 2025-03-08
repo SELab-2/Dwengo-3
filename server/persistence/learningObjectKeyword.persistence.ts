@@ -18,9 +18,16 @@ export class LearningObjectKeywordPersistence {
         });
     }
 
-    // TODO update
-
-    // TODO delete
+    public async deleteLearningObjectKeyword(data: {loId: string, keyword: string}) {
+        return await prisma.learningObjectKeyword.delete({
+            where: {
+                loId_keyword: {
+                    loId: data.loId,
+                    keyword: data.keyword
+                }
+            }
+        })
+    }
 }
 
 
