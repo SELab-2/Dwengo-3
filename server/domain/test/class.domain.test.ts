@@ -42,13 +42,13 @@ describe("class domain test", () => {
     });
     test("responds as expected on valid input", async () => {
       const body: any = { name: "name" };
-      expect(await classDomain.createClass(body)).toStrictEqual(
+      await expect(classDomain.createClass(body)).resolves.toStrictEqual(
         mockCreateClass(body),
       );
     });
-    test("throws error on invalid input", () => {
+    test("throws error on invalid input", async () => {
       const body: any = { name: "" };
-      expect(() => classDomain.createClass(body)).rejects.toThrow(ZodError);
+      await expect(classDomain.createClass(body)).rejects.toThrow(ZodError);
     });
   });
 });

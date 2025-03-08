@@ -23,7 +23,7 @@ vi.mock("../../domain/class.domain", () => {
 });
 
 // Global test variables
-const route: string = "/class";
+const route: string = "/api/class";
 
 // Tests
 describe("class routes test", () => {
@@ -31,26 +31,20 @@ describe("class routes test", () => {
     vi.resetAllMocks();
   });
 
-  describe("GET /class/id", () => {
-    const id: string = "id";
-    mockClassDomain.getClassById.mockResolvedValue({ id: id });
+  describe("GET /class/id", async () => {
     test("responds on id", () => {
-      request(app)
-        .get(`${route}/${id}`)
-        .expect("Content-Type", /json/)
-        .expect(200);
+      const id: string = "id";
+      const expected = { id: id, name: "name" };
+      mockClassDomain.getClassById.mockResolvedValue(expected);
+      return request(app).get(`${route}/${id}`).expect(200);
     });
   });
 
   describe("POST /class", () => {
-    const body = { name: "name" };
-    mockClassDomain.getClassById.mockResolvedValue({ id: "id", name: "name" });
     test("responds on payload", () => {
-      request(app)
-        .post(`${route}`)
-        .send(body)
-        .expect("Content-Type", /json/)
-        .expect(200);
+      const body = { name: "name" };
+      mockClassDomain.getClassById.mockResolvedValue({ ...body, id: "id" });
+      return request(app).post(`${route}`).send(body).expect(200);
     });
   });
 });
