@@ -46,7 +46,7 @@ describe("class domain test", () => {
         mockCreateClass(body),
       );
     });
-    test("throws error on invalid input", async () => {
+    test("throws error on invalid input", () => {
       const body: any = { name: "" };
       expect(() => classDomain.createClass(body)).rejects.toThrow(ZodError);
     });
