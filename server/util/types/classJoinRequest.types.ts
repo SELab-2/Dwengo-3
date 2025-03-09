@@ -8,11 +8,15 @@ export type ClassJoinRequestCreateParams = z.infer<
   typeof ClassJoinRequestCreateScheme
 >;
 
-export const ClassJoinRequestFilterSchema = z.object({
-  id: z.string().uuid().optional(),
-  classId: z.string().uuid().optional(),
-  userId: z.string().uuid().optional(),
-});
+export const ClassJoinRequestFilterSchema = z
+  .object({
+    classId: z.string().uuid().optional(),
+    userId: z.string().uuid().optional(),
+  })
+  .refine((data) => data.classId || data.userId, {
+    message: "At least one of classId or userId must be provided.",
+    path: ["classId", "userId"], // This will attach the error to both fields
+  });
 
 export type ClassJoinRequestFilterParams = z.infer<
   typeof ClassJoinRequestFilterSchema
@@ -33,8 +37,3 @@ export const ClassJoinRequestDecisionSchema = z
 export type ClassJoinRequestDecisionParams = z.infer<
   typeof ClassJoinRequestDecisionSchema
 >;
-
-export enum ClassJoinRequestType {
-  STUDENT = "student",
-  TEACHER = "teacher",
-}

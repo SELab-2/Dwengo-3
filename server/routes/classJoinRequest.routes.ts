@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { ClassJoinRequestDomain } from "../domain/classJoinRequest.domain";
-import { ClassJoinRequestType } from "../util/types/classJoinRequest.types";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class ClassJoinRequestController {
   public router: Router;
@@ -14,37 +14,36 @@ export class ClassJoinRequestController {
 
   private createJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.createClassJoinRequest(req.body),
-    );
-  };
-
-  private getStudentJoinRequests = async (req: Request, res: Response) => {
-    res.json(
-      await this.classJoinRequestDomain.getJoinRequests(
-        ClassJoinRequestType.STUDENT,
-        req.query,
+      await this.classJoinRequestDomain.createClassJoinRequest(
+        req.body,
+        await getUserFromReq(req),
       ),
     );
   };
 
-  private getTeacherJoinRequests = async (req: Request, res: Response) => {
+  private getJoinRequests = async (req: Request, res: Response) => {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
-        ClassJoinRequestType.TEACHER,
         req.query,
+        await getUserFromReq(req),
       ),
     );
   };
 
   private handleJoinRequest = async (req: Request, res: Response) => {
-    res.json(await this.classJoinRequestDomain.handleJoinRequest(req.body));
+    res.json(
+      await this.classJoinRequestDomain.handleJoinRequest(
+        req.body,
+        await getUserFromReq(req),
+      ),
+    );
   };
 
   private initializeRoutes() {
     this.router.put("/studentRequest", this.createJoinRequest);
     this.router.put("/teacherRequest", this.createJoinRequest);
-    this.router.get("/studentRequest", this.getStudentJoinRequests);
-    this.router.get("/teacherRequest", this.getTeacherJoinRequests);
+    this.router.get("/studentRequest", this.getJoinRequests);
+    this.router.get("/teacherRequest", this.getJoinRequests);
     this.router.post("/studentRequest", this.handleJoinRequest);
     this.router.post("/teacherRequest", this.handleJoinRequest);
   }
