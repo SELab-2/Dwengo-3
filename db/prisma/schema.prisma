@@ -133,7 +133,6 @@ model Teacher {
 model Class {
   id                String             @id @default(uuid())
   name              String             @default("New class")
-  ownerId           String
   students          Student[]
   teachers          Teacher[]
   assignment        Assignment[]
