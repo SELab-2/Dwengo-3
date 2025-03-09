@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { ClassDomain } from "../domain/class.domain";
 import { ClassJoinRequestController } from "./classJoinRequest.routes";
-import { getUserIdFromReq } from "../domain/user.domain";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class ClassController {
   public router: Router;
@@ -14,18 +14,20 @@ export class ClassController {
   }
 
   private getClasses = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.getClasses(req.query));
+    res.json(
+      await this.classDomain.getClasses(req.query, await getUserFromReq(req)),
+    );
   };
 
   private createClass = async (req: Request, res: Response) => {
     res.json(
-      await this.classDomain.createClass(req.body, getUserIdFromReq(req)),
+      await this.classDomain.createClass(req.body, await getUserFromReq(req)),
     );
   };
 
   private updateClass = async (req: Request, res: Response) => {
     res.json(
-      await this.classDomain.updateClass(req.body, getUserIdFromReq(req)),
+      await this.classDomain.updateClass(req.body, await getUserFromReq(req)),
     );
   };
 

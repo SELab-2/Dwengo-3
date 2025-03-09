@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { LoginRequest, RegisterRequest } from "../util/types/RequestTypes";
 import * as persistence from "../persistence/auth/users.persistance";
 import { ClassRole, User } from "@prisma/client";
+import { UserEntity, UserSchema } from "../util/types/user.types";
 
 export async function registerUser(
   registerRequest: RegisterRequest,
@@ -43,7 +44,9 @@ export async function expectUserRole(id: string, expectedRole: ClassRole) {
     );
 }
 
-// Function that extracts the cookie from a request and returns the user id
-export function getUserIdFromReq(req: Request) {
-  return req.cookies["DWENGO_SESSION"].split("?")[0];
+export async function getUserFromReq(req: Request): Promise<UserEntity> {
+  const id = req.cookies["DWENGO_SESSION"].split("?")[0];
+  const parsedUser = UserSchema.safeParse(await persistence.getUserById(id));
+  if (!parsedUser.success) throw parsedUser.error; // Shouldn't happen...
+  return parsedUser.data;
 }
