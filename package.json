@@ -2,7 +2,8 @@
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "prisma": "^6.4.1"
   },
   "scripts": {
     "prepare": "husky"
@@ -13,5 +14,8 @@
     "*.css": "prettier --write",
     "*.json": "prettier --write",
     "*.md": "prettier --write"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.4.1"
   }
 }
