@@ -45,7 +45,7 @@ export class ClassDomain {
   }
 
   public async updateClass(body: unknown) {
-    // TODO: check if the person updating is owner.
+    // TODO: check if the person updating is a teacher of the class.
     // Validate and parse class update parameters
     const updateParamsResult = ClassUpdateSchema.safeParse(body);
     if (!updateParamsResult.success) {

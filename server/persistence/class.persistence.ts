@@ -1,12 +1,16 @@
 import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "../prismaSingleton";
 import { PaginationParams } from "../util/types/pagination.types";
-import { ClassFilterParams, ClassCreateParams, ClassUpdateParams } from "../util/types/class.types";
+import {
+  ClassFilterParams,
+  ClassCreateParams,
+  ClassUpdateParams,
+} from "../util/types/class.types";
 
 export class ClassPersistence {
   public async getClasses(
     paginationParams: PaginationParams,
-    filters: ClassFilterParams
+    filters: ClassFilterParams,
   ) {
     const where: Prisma.ClassWhereInput = {
       AND: [
@@ -47,7 +51,7 @@ export class ClassPersistence {
 
   public async createClass(data: ClassCreateParams) {
     return await PrismaSingleton.instance.class.create({
-      data: { owner: { connect: { id: data.owner } }, name: data.name },
+      data: { name: data.name },
     });
   }
 
@@ -56,7 +60,7 @@ export class ClassPersistence {
 
     return await PrismaSingleton.instance.class.update({
       where: { id },
-      data: data
+      data: data,
     });
   }
 }
