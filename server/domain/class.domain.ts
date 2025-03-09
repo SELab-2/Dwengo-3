@@ -5,6 +5,7 @@ import {
   ClassCreateSchema,
   ClassUpdateSchema,
 } from "../util/types/class.types";
+import { expectUserRole } from "./user.domain";
 
 export class ClassDomain {
   private classPersistance;
@@ -33,8 +34,9 @@ export class ClassDomain {
     );
   }
 
-  public async createClass(body: unknown) {
-    // TODO: check if the person creating is a teacher.
+  public async createClass(body: unknown, userId: string) {
+    await expectUserRole(userId, "TEACHER");
+
     // Validate and parse class create parameters
     const createParamsResult = ClassCreateSchema.safeParse(body);
     if (!createParamsResult.success) {
@@ -44,13 +46,22 @@ export class ClassDomain {
     return this.classPersistance.createClass(createParamsResult.data);
   }
 
-  public async updateClass(body: unknown) {
-    // TODO: check if the person updating is a teacher of the class.
+  public async updateClass(body: unknown, userId: string) {
     // Validate and parse class update parameters
     const updateParamsResult = ClassUpdateSchema.safeParse(body);
     if (!updateParamsResult.success) {
       throw updateParamsResult.error;
     }
+
+    if (
+      !this.classPersistance.isTeacherFromClass(
+        userId,
+        updateParamsResult.data.id,
+      )
+    ) {
+      throw new Error("User is not a teacher of the class");
+    }
+
     return this.classPersistance.updateClass(updateParamsResult.data);
   }
 }

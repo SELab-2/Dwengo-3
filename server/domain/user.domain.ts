@@ -1,3 +1,4 @@
+import { Request } from "express";
 import crypto from "crypto";
 import { LoginRequest, RegisterRequest } from "../util/types/RequestTypes";
 import * as persistence from "../persistence/auth/users.persistance";
@@ -40,4 +41,9 @@ export async function expectUserRole(id: string, expectedRole: ClassRole) {
     throw new Error(
       `User role ${user.role} does not match expected role of ${expectedRole}`,
     );
+}
+
+// Function that extracts the cookie from a request and returns the user id
+export function getUserIdFromReq(req: Request) {
+  return req.cookies["DWENGO_SESSION"].split("?")[0];
 }

@@ -37,6 +37,10 @@ export class ClassPersistence {
         where,
         skip: paginationParams.skip,
         take: paginationParams.pageSize,
+        include: {
+          students: true,
+          teachers: true,
+        },
       }),
       PrismaSingleton.instance.class.count({
         where,
@@ -62,5 +66,19 @@ export class ClassPersistence {
       where: { id },
       data: data,
     });
+  }
+
+  public async isTeacherFromClass(userId: string, classId: string) {
+    const teacher = await PrismaSingleton.instance.teacher.findFirst({
+      where: {
+        userId,
+        classes: {
+          some: {
+            id: classId,
+          },
+        },
+      },
+    });
+    return teacher !== null;
   }
 }
