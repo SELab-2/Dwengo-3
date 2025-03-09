@@ -1,8 +1,8 @@
 import cookieParser from "cookie-parser";
-import { PrismaClient } from "@prisma/client";
+import { ClassRole, PrismaClient } from "@prisma/client";
 import * as http2 from "node:http2";
 
-import { router as auth, verifyCookie } from "./routes/auth/auth.router";
+import { router as auth, verifyCookie } from "./routes/auth.router";
 import express, { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import { ClassController } from "./routes/class.routes";
@@ -17,17 +17,28 @@ dotenv.config({ path: "../.env" });
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
-// todo - Robin: change to PrismaSingleton
-const prisma = new PrismaClient();
-
+// cookie validating middleware
 app.use(
   cookieParser(),
   async (req: Request, res: Response, next: NextFunction) => {
+    console.debug("Cookie:", req.cookies["DWENGO_SESSION"]);
     const verified = await verifyCookie(req.cookies["DWENGO_SESSION"]);
+    console.log(verified);
     if (verified) {
       next();
     } else {
-      res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
+      const path = req.path;
+      if (
+        !path.startsWith("/api/auth") ||
+        !["student", "teacher"].some((role) =>
+          path.startsWith(`/api/auth/${role}`),
+        )
+      ) {
+        console.debug(`unauthorized: ${path}`);
+        res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
+        return;
+      }
+      next();
     }
   },
 );

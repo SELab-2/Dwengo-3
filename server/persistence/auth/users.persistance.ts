@@ -1,7 +1,7 @@
-import { ClassRole, PrismaClient, User } from "@prisma/client";
-import { isContext } from "node:vm";
+import { ClassRole, User } from "@prisma/client";
+import { PrismaSingleton } from "../prismaSingleton";
 
-const prisma = new PrismaClient();
+const prisma = PrismaSingleton.instance;
 
 export async function saveUser(user: Omit<User, "id">): Promise<User> {
   let data: any = {
@@ -50,6 +50,19 @@ export async function deleteUser(id: string): Promise<User> {
   return prisma.user.delete({
     where: {
       id: id,
+    },
+  });
+}
+
+export async function getUserRoleById(
+  id: string,
+): Promise<{ role: ClassRole } | null> {
+  return prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      role: true,
     },
   });
 }
