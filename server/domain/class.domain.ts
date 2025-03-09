@@ -37,7 +37,7 @@ export class ClassDomain {
       for (const classData of data) {
         let isTeacherOfThisClass = false;
         for (const teacher of classData.teachers) {
-          if (teacher.id === user.id) {
+          if (teacher.userId === user.id) {
             isTeacherOfThisClass = true;
           }
         }
@@ -53,7 +53,7 @@ export class ClassDomain {
       for (const a of data) {
         let isStudentOfThisClass = false;
         for (const b of a.students) {
-          if (b.id === user.id) {
+          if (b.userId === user.id) {
             isStudentOfThisClass = true;
           }
         }
