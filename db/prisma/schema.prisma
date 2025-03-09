@@ -112,7 +112,6 @@ model User {
   classJoinRequests ClassJoinRequest[]
   messages          Message[]
   discussions       Discussion[]
-  classes           Class[]
 }
 
 model Student {
@@ -139,7 +138,6 @@ model Class {
   teachers          Teacher[]
   assignment        Assignment[]
   classJoinRequests ClassJoinRequest[]
-  owner             User               @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model ClassJoinRequest {
