@@ -3,7 +3,7 @@ import {
   ClassJoinRequestCreateScheme,
   ClassJoinRequestDecisionSchema,
   ClassJoinRequestFilterSchema,
-  ClassJoinRequestGetType,
+  ClassJoinRequestType,
 } from "../util/types/classJoinRequest.types";
 import { ClassJoinRequestPersistence } from "../persistence/classJoinRequest.persistence";
 
@@ -25,7 +25,7 @@ export class ClassJoinRequestDomain {
     );
   }
 
-  public async getJoinRequests(type: ClassJoinRequestGetType, query: unknown) {
+  public async getJoinRequests(type: ClassJoinRequestType, query: unknown) {
     const paginationResult = PaginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
       throw paginationResult.error;

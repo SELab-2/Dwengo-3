@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { ClassJoinRequestDomain } from "../domain/classJoinRequest.domain";
-import { ClassJoinRequestGetType } from "../util/types/classJoinRequest.types";
+import { ClassJoinRequestType } from "../util/types/classJoinRequest.types";
 
 export class ClassJoinRequestController {
   public router: Router;
@@ -21,7 +21,7 @@ export class ClassJoinRequestController {
   private getStudentJoinRequests = async (req: Request, res: Response) => {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
-        ClassJoinRequestGetType.STUDENT,
+        ClassJoinRequestType.STUDENT,
         req.query,
       ),
     );
@@ -30,7 +30,7 @@ export class ClassJoinRequestController {
   private getTeacherJoinRequests = async (req: Request, res: Response) => {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
-        ClassJoinRequestGetType.TEACHER,
+        ClassJoinRequestType.TEACHER,
         req.query,
       ),
     );

@@ -34,7 +34,7 @@ export type ClassJoinRequestDecisionParams = z.infer<
   typeof ClassJoinRequestDecisionSchema
 >;
 
-export enum ClassJoinRequestGetType {
+export enum ClassJoinRequestType {
   STUDENT = "student",
   TEACHER = "teacher",
 }
