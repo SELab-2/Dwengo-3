@@ -1,6 +1,7 @@
 import request from "supertest";
 import { describe, beforeEach, test, vi } from "vitest";
 import { app } from "../../app";
+import path from "path";
 
 // Domain mock
 const { mockClassDomain } = vi.hoisted(() => {
@@ -36,7 +37,7 @@ describe("class routes test", () => {
       const id: string = "id";
       const expected = { id: id, name: "name" };
       mockClassDomain.getClassById.mockResolvedValue(expected);
-      return request(app).get(`${route}/${id}`).expect(200);
+      return request(app).get(path.join(route, id)).expect(200);
     });
   });
 
@@ -44,7 +45,7 @@ describe("class routes test", () => {
     test("responds on payload", () => {
       const body = { name: "name" };
       mockClassDomain.getClassById.mockResolvedValue({ ...body, id: "id" });
-      return request(app).post(`${route}`).send(body).expect(200);
+      return request(app).post(path.join(route)).send(body).expect(200);
     });
   });
 });
