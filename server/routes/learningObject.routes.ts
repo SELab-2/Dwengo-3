@@ -15,8 +15,8 @@ export class LearningObjectController {
     res.json(await this.learningObjectDomain.createLearningObject(req.body));
   };
 
-  private getLearningObjectById = async (req: Request, res: Response) => {
-    res.json(await this.learningObjectDomain.getLearningObjectById(req.params.id));
+  private getLearningObjects = async (req: Request, res: Response) => {
+    res.json(await this.learningObjectDomain.getLearningObjects(req.query));
   };
 
   private updateLearningObject = async (req: Request, res: Response) => {
@@ -27,21 +27,10 @@ export class LearningObjectController {
     res.json(await this.learningObjectDomain.deleteLearningObject(req.params.id));
   };
 
-  private getLearningObjectKeywords = async (req: Request, res: Response) => {
-    const loId = req.query.loId;
-
-    if (typeof loId === 'string') {
-      res.json(await this.learningObjectDomain.getLearningObjectKeywords(loId));
-    } else {
-      res.status(400).json({ error: 'loId query parameter is required and must be a string' });
-    }
-  };
-
   private initializeRoutes() {
-    this.router.post("/learningobject", this.createLearningObject);
-    this.router.get("/learningobject/:id", this.getLearningObjectById);
-    this.router.patch("/learningobject/:id", this.updateLearningObject);
-    this.router.delete("/learningobject/:id", this.deleteLearningObject);   
-    this.router.get("/learningobject/keyword", this.getLearningObjectKeywords);
+    this.router.post("/", this.createLearningObject);
+    this.router.get("/", this.getLearningObjects);
+    this.router.patch("/:id", this.updateLearningObject);
+    this.router.delete("/:id", this.deleteLearningObject);   
   }
 }

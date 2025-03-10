@@ -163,3 +163,13 @@ export const LearningObjectUpdateSchema = LearningObjectCreateSchema.partial();
 export type LearningObjectUpdateParams = z.infer<typeof LearningObjectUpdateSchema>;
 
 export type LearningObjectUpdateWithoutKeywords = Omit<LearningObjectUpdateParams, "learningObjectsKeywords">;
+
+export const LearningObjectFilterSchema = z.object({
+  keywords: z.array(z.string()).optional(),
+  targetAges: z.array(z.string())
+    .transform((val) => val.map(Number))
+    .optional(),
+  id: z.string().optional(),
+});
+
+export type LearningObjectFilterParams = z.infer<typeof LearningObjectFilterSchema>;

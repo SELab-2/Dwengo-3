@@ -4,14 +4,6 @@ const prisma = new PrismaClient();
 
 export class LearningObjectKeywordPersistence {
 
-    public async getLearningObjectKeywordsByLoId(loId: string) {
-        return await prisma.learningObjectKeyword.findMany({
-            where: { 
-                loId: loId
-            }
-        });
-    }
-
     public async createLearningObjectKeyword(data: {loId: string, keyword: string}) {
         return await prisma.learningObjectKeyword.create({
             data: data

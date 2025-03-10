@@ -1,7 +1,7 @@
 import { parse } from "path";
 import { LearningObjectPersistence } from "../persistence/learningObject.persistence";
 import { LearningObjectKeywordPersistence } from "../persistence/learningObjectKeyword.persistence";
-import { LearningObjectCreateParams, LearningObjectCreateSchema, LearningObjectUpdateParams, LearningObjectUpdateSchema } from "./types";
+import { LearningObjectCreateParams, LearningObjectCreateSchema, LearningObjectFilterParams, LearningObjectFilterSchema, LearningObjectUpdateParams, LearningObjectUpdateSchema } from "./types";
 
 export class LearningObjectDomain {
     private learningObjectPersistence;
@@ -25,8 +25,12 @@ export class LearningObjectDomain {
         }));
     }
 
-    public async getLearningObjectById(id: string) {
-        return this.learningObjectPersistence.getLearningObjectById(id);
+    public async getLearningObjects(query: LearningObjectFilterParams) {
+        const parseResult = LearningObjectFilterSchema.safeParse(query);
+        if (!parseResult.success) {
+            throw parseResult.error;
+        }
+        return this.learningObjectPersistence.getLearningObjects(parseResult.data);
     }
 
     public async updateLearningObject(id: string, body: LearningObjectUpdateParams) {
@@ -42,18 +46,4 @@ export class LearningObjectDomain {
     public async deleteLearningObject(id: string) {
         return this.learningObjectPersistence.deleteLearningObject(id);
     }
-
-    public async getLearningObjectKeywords(loId: string) {
-        return this.learningObjectKeywordPersistence.getLearningObjectKeywordsByLoId(loId);
-    }
-
-    /* TODO onduidelijk
-    public async updateLearningObjectKeyword() {
-        
-    }
-
-    public async deleteLearningObjectKeyword() {
-        
-    }
-    */
 }
