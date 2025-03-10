@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: integration_tests_prisma
+    ports:
+      - '5433:5433'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dwengo_test_db
