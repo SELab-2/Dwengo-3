@@ -1,11 +1,10 @@
 #!/bin/bash
 
 cd ./util/test-files
-source .env.test
 docker compose up -d 
 
 cd ../../../db
-npx prisma migrate dev
+dotenv -e ../server/util/test-files/.env.test -- npx prisma migrate dev
 
 cd ../server
 vitest run -c ./util/test-files/vitest.config.integration.ts
