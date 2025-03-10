@@ -1,18 +1,22 @@
-import { Prisma } from "@prisma/client";
-import { PrismaSingleton } from "../prismaSingleton";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { PaginationParams } from "../util/types/pagination.types";
 import {
-  ClassFilterParams,
   ClassCreateParams,
+  ClassFilterParams,
   ClassUpdateParams,
 } from "../util/types/class.types";
+import { PrismaSingleton } from "./prismaSingleton";
+import { searchAndPaginate } from "../util/pagination/pagination.util";
 
 export class ClassPersistence {
-  public async getClasses(
-    paginationParams: PaginationParams,
-    filters: ClassFilterParams,
-  ) {
-    const where: Prisma.ClassWhereInput = {
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = PrismaSingleton.instance;
+  }
+
+  private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
+    return {
       AND: [
         filters.teacherId
           ? { teachers: { some: { id: filters.teacherId } } }
@@ -23,30 +27,22 @@ export class ClassPersistence {
         filters.id ? { id: filters.id } : {},
       ],
     };
+  }
 
-    const [classes, totalCount] = await PrismaSingleton.instance.$transaction([
-      PrismaSingleton.instance.class.findMany({
-        where,
-        skip: paginationParams.skip,
-        take: paginationParams.pageSize,
-        include: {
-          students: true,
-          teachers: true,
-        },
-      }),
-      PrismaSingleton.instance.class.count({
-        where,
-      }),
-    ]);
+  public async getClasses(
+    paginationParams: PaginationParams,
+    filters: ClassFilterParams,
+  ) {
+    const where: Prisma.ClassWhereInput = this.buildWhereClause(filters);
 
-    return {
-      data: classes,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(this.prisma.class, where, paginationParams, {
+      students: true,
+      teachers: true,
+    });
   }
 
   public async getClassById(id: string) {
-    return await PrismaSingleton.instance.class.findUnique({
+    return await this.prisma.class.findUnique({
       where: { id },
       include: {
         students: true,
@@ -54,24 +50,23 @@ export class ClassPersistence {
       },
     });
   }
-
-  public async createClass(data: ClassCreateParams) {
-    return await PrismaSingleton.instance.class.create({
-      data: { name: data.name },
+  public async createClass(params: ClassCreateParams) {
+    return await this.prisma.class.create({
+      data: { name: params.name },
     });
   }
 
   public async updateClass(params: ClassUpdateParams) {
     const { id, ...data } = params;
 
-    return await PrismaSingleton.instance.class.update({
+    return await this.prisma.class.update({
       where: { id },
       data: data,
     });
   }
 
   public async isTeacherFromClass(userId: string, classId: string) {
-    const teacher = await PrismaSingleton.instance.teacher.findFirst({
+    const teacher = await this.prisma.teacher.findFirst({
       where: {
         userId,
         classes: {
