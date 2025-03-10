@@ -18,36 +18,13 @@ export class ClassPersistence {
   private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
     return {
       AND: [
-        filters.name
-          ? {
-              name: {
-                contains: filters.name,
-                mode: Prisma.QueryMode.insensitive,
-              },
-            }
+        filters.teacherId
+          ? { teachers: { some: { id: filters.teacherId } } }
           : {},
-        filters.teacherIds && filters.teacherIds.length > 0
-          ? {
-              AND: filters.teacherIds.map((teacherId) => ({
-                teachers: {
-                  some: {
-                    id: teacherId,
-                  },
-                },
-              })),
-            }
+        filters.studentId
+          ? { students: { some: { id: filters.studentId } } }
           : {},
-        filters.studentIds && filters.studentIds.length > 0
-          ? {
-              AND: filters.studentIds.map((studentId) => ({
-                students: {
-                  some: {
-                    id: studentId,
-                  },
-                },
-              })),
-            }
-          : {},
+        filters.id ? { id: filters.id } : {},
       ],
     };
   }
@@ -65,27 +42,40 @@ export class ClassPersistence {
   }
 
   public async getClassById(id: string) {
-    return await PrismaSingleton.instance.class.findUnique({
+    return await this.prisma.class.findUnique({
       where: { id },
+      include: {
+        students: true,
+        teachers: true,
+      },
     });
   }
-
   public async createClass(params: ClassCreateParams) {
     return await this.prisma.class.create({
       data: { name: params.name },
     });
   }
 
-  public async updateClass(id: string, params: ClassUpdateParams) {
+  public async updateClass(params: ClassUpdateParams) {
+    const { id, ...data } = params;
+
     return await this.prisma.class.update({
       where: { id },
-      data: { name: params.name },
+      data: data,
     });
   }
 
-  public async deleteClass(id: string) {
-    return await this.prisma.class.delete({
-      where: { id },
+  public async isTeacherFromClass(userId: string, classId: string) {
+    const teacher = await this.prisma.teacher.findFirst({
+      where: {
+        userId,
+        classes: {
+          some: {
+            id: classId,
+          },
+        },
+      },
     });
+    return teacher !== null;
   }
 }

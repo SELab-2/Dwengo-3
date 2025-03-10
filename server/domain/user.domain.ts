@@ -1,7 +1,9 @@
+import { Request } from "express";
 import crypto from "crypto";
 import { LoginRequest, RegisterRequest } from "../util/types/RequestTypes";
 import * as persistence from "../persistence/auth/users.persistance";
 import { ClassRole, User } from "@prisma/client";
+import { UserEntity, UserSchema } from "../util/types/user.types";
 
 export async function registerUser(
   registerRequest: RegisterRequest,
@@ -40,4 +42,12 @@ export async function expectUserRole(id: string, expectedRole: ClassRole) {
     throw new Error(
       `User role ${user.role} does not match expected role of ${expectedRole}`,
     );
+}
+
+export async function getUserFromReq(req: Request): Promise<UserEntity> {
+  const id = req.cookies["DWENGO_SESSION"].split("?")[0];
+  const user = await persistence.getUserById(id);
+  const parsedUser = UserSchema.safeParse(user);
+  if (!parsedUser.success) throw parsedUser.error; // Shouldn't happen...
+  return parsedUser.data;
 }

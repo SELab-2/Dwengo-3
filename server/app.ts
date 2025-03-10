@@ -72,8 +72,11 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router,
 );
-apiRouter.use('/assignment', new AssignmentController().router);
-apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().router);
+apiRouter.use("/assignment", new AssignmentController().router);
+apiRouter.use(
+  "/assignmentSubmission",
+  new AssignmentSubmissionController().router,
+);
 apiRouter.use("/auth", auth);
 
 app.listen(port, () => {
