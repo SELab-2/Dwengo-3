@@ -46,7 +46,8 @@ export async function expectUserRole(id: string, expectedRole: ClassRole) {
 
 export async function getUserFromReq(req: Request): Promise<UserEntity> {
   const id = req.cookies["DWENGO_SESSION"].split("?")[0];
-  const parsedUser = UserSchema.safeParse(await persistence.getUserById(id));
+  const user = await persistence.getUserById(id);
+  const parsedUser = UserSchema.safeParse(user);
   if (!parsedUser.success) throw parsedUser.error; // Shouldn't happen...
   return parsedUser.data;
 }

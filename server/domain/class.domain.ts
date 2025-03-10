@@ -27,44 +27,64 @@ export class ClassDomain {
       throw filtersResult.error;
     }
 
-    const { data, totalPages } = await this.classPersistance.getClasses(
-      paginationResult.data,
-      filtersResult.data,
-    );
+    const { id, studentId, teacherId } = filtersResult.data;
 
-    // If the user is a teacher, check if the user is a teacher of all the classes.
-    if (user.role === ClassRoleEnum.TEACHER) {
-      for (const classData of data) {
-        let isTeacherOfThisClass = false;
-        for (const teacher of classData.teachers) {
-          if (teacher.userId === user.id) {
-            isTeacherOfThisClass = true;
-          }
-        }
+    if (id) {
+      // Class Id is given => fetch class and check if user is a teacher or student
+      const classData = await this.classPersistance.getClassById(id);
+
+      if (!classData) {
+        throw new Error("Class not found.");
+      }
+
+      if (user.role === ClassRoleEnum.TEACHER) {
+        const isTeacherOfThisClass = classData.teachers.some(
+          (teacher) => teacher.userId === user.id,
+        );
 
         if (!isTeacherOfThisClass) {
           throw new Error("Can't fetch classes you're not a teacher of.");
         }
       }
-    }
 
-    // If the user is a student, check if the user is a student of all the classes.
-    if (user.role === ClassRoleEnum.STUDENT) {
-      for (const a of data) {
-        let isStudentOfThisClass = false;
-        for (const b of a.students) {
-          if (b.userId === user.id) {
-            isStudentOfThisClass = true;
-          }
-        }
+      if (user.role === ClassRoleEnum.STUDENT) {
+        const isStudentOfThisClass = classData.students.some(
+          (student) => student.userId === user.id,
+        );
 
         if (!isStudentOfThisClass) {
           throw new Error("Can't fetch classes you're not a student of.");
         }
       }
-    }
 
-    return { data, totalPages };
+      return { data: [classData], totalPages: 1 };
+    } else {
+      if (!studentId && !teacherId) {
+        throw new Error(
+          "Either studentId, teacherId or classId must be provided.",
+        );
+      }
+
+      if (
+        (studentId &&
+          user.role === ClassRoleEnum.STUDENT &&
+          user.student?.id !== studentId) ||
+        (teacherId &&
+          user.role === ClassRoleEnum.TEACHER &&
+          user.teacher?.id !== teacherId)
+      ) {
+        throw new Error(
+          "User ID does correspond with the provided studentId or teacherId.",
+        );
+      }
+
+      const { data, totalPages } = await this.classPersistance.getClasses(
+        paginationResult.data,
+        filtersResult.data,
+      );
+
+      return { data, totalPages };
+    }
   }
 
   public async createClass(body: unknown, user: UserEntity) {

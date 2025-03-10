@@ -14,14 +14,6 @@ export class ClassPersistence {
   ) {
     const where: Prisma.ClassWhereInput = {
       AND: [
-        filters.name
-          ? {
-              name: {
-                contains: filters.name,
-                mode: Prisma.QueryMode.insensitive,
-              },
-            }
-          : {},
         filters.teacherId
           ? { teachers: { some: { id: filters.teacherId } } }
           : {},
@@ -51,6 +43,16 @@ export class ClassPersistence {
       data: classes,
       totalPages: Math.ceil(totalCount / paginationParams.pageSize),
     };
+  }
+
+  public async getClassById(id: string) {
+    return await PrismaSingleton.instance.class.findUnique({
+      where: { id },
+      include: {
+        students: true,
+        teachers: true,
+      },
+    });
   }
 
   public async createClass(data: ClassCreateParams) {
