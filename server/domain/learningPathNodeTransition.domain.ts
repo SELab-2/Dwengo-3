@@ -1,18 +1,26 @@
 import { LearningPathNodeTransitionPersistence } from "../persistence/learningPathNodeTransition.persistence";
-import { LearningPathNodeTransitionCreateParams, LearningPathNodeTransitionCreateSchema } from "./types";
+import {
+  LearningPathNodeTransitionCreateParams,
+  LearningPathNodeTransitionCreateSchema,
+} from "../util/types/learningPathNodeTransition.types";
 
 export class LearningPathNodeTransitionDomain {
-    private learningPathNodeTransitionPersistence;
+  private learningPathNodeTransitionPersistence;
 
-    constructor() {
-        this.learningPathNodeTransitionPersistence = new LearningPathNodeTransitionPersistence();
-    }
+  constructor() {
+    this.learningPathNodeTransitionPersistence =
+      new LearningPathNodeTransitionPersistence();
+  }
 
-    public async createLearningPathNodeTransition(query: LearningPathNodeTransitionCreateParams) {
-        const parseResult = LearningPathNodeTransitionCreateSchema.safeParse(query);
-        if (!parseResult.success) {
-            throw parseResult.error;
-        }
-        return this.learningPathNodeTransitionPersistence.createLearningPathNodeTransition(parseResult.data);
+  public async createLearningPathNodeTransition(
+    query: LearningPathNodeTransitionCreateParams,
+  ) {
+    const parseResult = LearningPathNodeTransitionCreateSchema.safeParse(query);
+    if (!parseResult.success) {
+      throw parseResult.error;
     }
+    return this.learningPathNodeTransitionPersistence.createLearningPathNodeTransition(
+      parseResult.data,
+    );
+  }
 }

@@ -1,5 +1,7 @@
 import { Request, Response, Router } from "express";
 import { ClassDomain } from "../domain/class.domain";
+import { ClassJoinRequestController } from "./classJoinRequest.routes";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class ClassController {
   public router: Router;
@@ -11,36 +13,28 @@ export class ClassController {
     this.initializeRoutes();
   }
 
-  // The query parameters allow for request like these:
-  // GET /api/class?name=math&page=1&pageSize=10
-  // GET /api/class?teacherIds[]=0&teacherIds[]=1
-  // ...
-
   private getClasses = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.getClasses(req.query));
-  };
-
-  private getClassById = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.getClassById(req.params.id));
+    res.json(
+      await this.classDomain.getClasses(req.query, await getUserFromReq(req)),
+    );
   };
 
   private createClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.createClass(req.body));
+    res.json(
+      await this.classDomain.createClass(req.body, await getUserFromReq(req)),
+    );
   };
 
   private updateClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.updateClass(req.params.id, req.body));
-  };
-
-  private deleteClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.deleteClass(req.params.id));
+    res.json(
+      await this.classDomain.updateClass(req.body, await getUserFromReq(req)),
+    );
   };
 
   private initializeRoutes() {
     this.router.get("/", this.getClasses);
-    this.router.post("/", this.createClass);
-    this.router.get("/:id", this.getClassById);
-    this.router.patch("/:id", this.updateClass);
-    this.router.delete("/:id", this.deleteClass);
+    this.router.put("/", this.createClass);
+    this.router.patch("/", this.updateClass);
+    this.router.use("/", new ClassJoinRequestController().router);
   }
 }
