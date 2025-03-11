@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { LearningPathNodeDomain } from "../domain/learningPathNode.domain";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class LearningPathNodeController {
   public router: Router;
@@ -13,7 +14,10 @@ export class LearningPathNodeController {
 
   private createLearningPathNode = async (req: Request, res: Response) => {
     res.json(
-      await this.learningPathNodeDomain.createLearningPathNode(req.body),
+      await this.learningPathNodeDomain.createLearningPathNode(
+        req.body,
+        await getUserFromReq(req),
+      ),
     );
   };
 

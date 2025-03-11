@@ -36,6 +36,8 @@ export class ClassController {
      * @swagger
      * /api/class:
      *   get:
+     *     security:
+     *     - cookieAuth: []
      *     tags: [Class]
      *     summary: Get list of classes
      *     description: Fetches a list of classes filtered by optional query parameters such as teacherId, studentId, or class ID.
