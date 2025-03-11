@@ -8,6 +8,8 @@ import { ZodError } from "zod";
 import { LearningPathController } from "./routes/learningPath.routes";
 import { LearningPathNodeController } from "./routes/learningPathNode.routes";
 import { LearningPathNodeTransitionController } from "./routes/learningPathNodeTransition.routes";
+import { DiscussionController } from "./routes/discussion.routes";
+import { MessageController } from "./routes/message.routes";
 import { AnnouncementController } from "./routes/announcement.routes";
 import { LearningObjectController } from "./routes/learningObject.routes";
 import { AssignmentController } from "./routes/assignment.routes";
@@ -92,6 +94,8 @@ apiRouter.use(
 );
 
 apiRouter.use("/auth", auth);
+apiRouter.use("/discussion", new DiscussionController().router);
+apiRouter.use("/message", new MessageController().router);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);
