@@ -83,7 +83,6 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router,
 );
-
 apiRouter.use("/learningobject", new LearningObjectController().router);
 apiRouter.use("/announcement", new AnnouncementController().router);
 apiRouter.use("/assignment", new AssignmentController().router);

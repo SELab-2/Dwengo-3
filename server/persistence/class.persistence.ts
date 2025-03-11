@@ -4,12 +4,13 @@ import {
   ClassFilterParams,
   ClassUpdateParams,
 } from "../util/types/class.types";
+import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
 import { searchAndPaginate } from "../util/pagination/pagination.util";
 import { Prisma, PrismaClient } from "@prisma/client";
 
 export class ClassPersistence {
-  private prisma: PrismaClient;
+  private prisma;
 
   constructor() {
     this.prisma = PrismaSingleton.instance;
