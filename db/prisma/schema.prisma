@@ -201,13 +201,13 @@ model Discussion {
 }
 
 model Message {
-  id         Int        @id @default(autoincrement())
-  content    String
-  senderId   String
-  chatId     String
-  sender     User       @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  discussion Discussion @relation(fields: [chatId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdAt  DateTime   @default(now()) @db.Timestamp
+  id           Int        @id @default(autoincrement())
+  content      String
+  senderId     String
+  discussionId String
+  sender       User       @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt    DateTime   @default(now()) @db.Timestamp
 }
 
 model Announcement {

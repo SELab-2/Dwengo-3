@@ -1,4 +1,4 @@
-import { AssignmentSubmission, SubmissionType } from "@prisma/client";
+import { AssignmentSubmission, ClassRole, SubmissionType } from "@prisma/client";
 import { AssignmentSubmissionPersistence } from "../persistence/assignmentSubmission.persistence";
 import { Request } from "express";
 import { PaginationFilterSchema } from "../util/types/pagination.types";
@@ -8,18 +8,22 @@ import {
   FileSubmission,
   AssignmentSubUpdataAndCreateParams,
 } from "../util/types/assignmentSubmission.types";
-import { SafeParseReturnType } from "zod";
+import { UserEntity } from "../util/types/user.types";
+import { checkIfUserIsInGroup, compareUserIdWithFilterId } from "../util/coockie-checks/coockieChecks.util";
+import { GroupPersistence } from "../persistence/group.persistence";
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
+  private groupPersistence: GroupPersistence;
 
   public constructor() {
-    this.assignmentSubmissionPersistence =
-      new AssignmentSubmissionPersistence();
+    this.assignmentSubmissionPersistence = new AssignmentSubmissionPersistence();
+    this.groupPersistence = new GroupPersistence();
   }
 
   public async getAssignmentSubmissions(
     query: any,
+    user: UserEntity
   ): Promise<{ data: AssignmentSubmission[]; totalPages: number }> {
     const paginationParseResult = PaginationFilterSchema.safeParse(query);
     if (!paginationParseResult.success) {
@@ -29,25 +33,30 @@ export class AssignmentSubmissionDomain {
     if (!parseResult.success) {
       throw parseResult.error;
     }
-    return this.assignmentSubmissionPersistence.getAssignmentSubmissions(
-      parseResult.data,
-      paginationParseResult.data,
-    );
+    const filters = parseResult.data;
+    checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
+    const submissions = await this.assignmentSubmissionPersistence.getAssignmentSubmissions(filters, paginationParseResult.data);
+    if (filters.id && submissions.data.length === 1) {
+      checkIfUserIsInGroup(user, submissions.data[0].groupId, this.groupPersistence);
+    }
+    return submissions;
   }
 
   public async createAssignmentSubmission(
     req: Request,
+    user: UserEntity
   ): Promise<AssignmentSubmission> {
     return this.assignmentSubmissionPersistence.createAssignmentSubmission(
-      this.parseSubmissionRequest(req),
+      this.checkSubmissionRequest(req, user),
     );
   }
 
   public async updateAssignmentSubmission(
     req: Request,
+    user: UserEntity
   ): Promise<AssignmentSubmission> {
     return this.assignmentSubmissionPersistence.updateAssignmentSubmission(
-      this.parseSubmissionRequest(req),
+      this.checkSubmissionRequest(req, user),
     );
   }
 
@@ -71,5 +80,13 @@ export class AssignmentSubmissionDomain {
       parseResult.data.submission = fileSubmission;
     }
     return parseResult.data;
+  }
+  private checkSubmissionRequest(req: Request, user: UserEntity): AssignmentSubUpdataAndCreateParams {
+    if (user.role !== ClassRole.STUDENT) {
+      throw new Error("Only students can create or update submissions");
+    }
+    const data = this.parseSubmissionRequest(req);
+    checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
+    return data;
   }
 }

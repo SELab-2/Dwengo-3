@@ -1,9 +1,6 @@
 import {
   Assignment,
-  LearningObject,
-  LearningPathNode,
   Prisma,
-  PrismaClient,
 } from "@prisma/client";
 import {
   AssignmentCreateParams,
@@ -100,8 +97,8 @@ export class AssignmentPersistence {
         },
       },
     });
-    //create groups for the assignment and save the ids for creating assignment submissions
-    const groupIds = await PrismaSingleton.instance.$transaction(
+    //create groups for the assignment
+    await PrismaSingleton.instance.$transaction(
       params.groups.map((group: Uuid[]) =>
         PrismaSingleton.instance.group.create({
           data: {
@@ -113,10 +110,7 @@ export class AssignmentPersistence {
             students: {
               connect: group.map((student: Uuid) => ({ id: student })),
             },
-          },
-          select: {
-            id: true,
-          },
+          }
         }),
       ),
     );
