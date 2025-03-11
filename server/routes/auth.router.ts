@@ -212,6 +212,76 @@ router.post(studentPrefix + "/logout", (req: Request, res: Response) => {
   return clearCookie(req, res);
 });
 
+/**
+ * @swagger
+ * /api/auth/student/register:
+ *   put:
+ *     tags: [Auth]
+ *     summary: Registers a new student and sets session cookie on successful registration.
+ *     description: Registers a new student and sets a session cookie upon successful registration.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: "username"
+ *               email:
+ *                 type: string
+ *                 example: "student@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "password"
+ *               surname:
+ *                 type: string
+ *                 example: "surname"
+ *               name:
+ *                 type: string
+ *                 example: "name"
+ *               role:
+ *                 type: string
+ *                 example: "STUDENT"
+ *     responses:
+ *       200:
+ *         description: Successful registration, returns user data (excluding password) and sets a session cookie.
+ *         headers:
+ *           Set-Cookie:
+ *             description: The session cookie containing user session information.
+ *             schema:
+ *               type: string
+ *             example: "DWENGO_SESSION=someunreadablesessionid"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                   example: "STUDENT"
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: The error message
+ */
 router.put(studentPrefix + "/register", async (req: Request, res: Response) => {
   return register(req, res);
 });
