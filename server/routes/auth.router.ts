@@ -199,14 +199,35 @@ export async function verifyCookie(cookie: string): Promise<boolean> {
  *         description: A session cookie with the user ID and hash of the user data, set upon successful login.
  *         type: string
  */
-
 router.post(studentPrefix + "/login", async (req: Request, res: Response) => {
   return login(req, res);
 });
 
 /**
- * Clear the cookie from the user.
- * Cookie is checked on validity in the middleware defined in [app.ts].
+ * @swagger
+ * /api/auth/student/logout:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Log out a student
+ *     description: Clears the session cookie and logs out the student.
+ *     responses:
+ *       200:
+ *         description: Successful logout. The session cookie is cleared.
+ *         headers:
+ *           Set-Cookie:
+ *             description: The session cookie is cleared.
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: The error message
  */
 router.post(studentPrefix + "/logout", (req: Request, res: Response) => {
   return clearCookie(req, res);
@@ -286,19 +307,166 @@ router.put(studentPrefix + "/register", async (req: Request, res: Response) => {
   return register(req, res);
 });
 
-// TEACHER
+/**
+ * @swagger
+ * /api/auth/teacher/login:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Teacher login
+ *     description: Logs in a teacher and sets a session cookie upon successful authentication.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "teacher@example.com"  # <-- FIXED INDENTATION
+ *               password:
+ *                 type: string
+ *                 example: "password"  # <-- FIXED INDENTATION
+ *             required:
+ *               - email
+ *               - password
+ *     responses:
+ *       200:
+ *         description: Successful login, returns user data (excluding password) and sets a session cookie.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *         headers:
+ *           Set-Cookie:
+ *             description: The session cookie containing user session information.
+ *             schema:
+ *               type: string
+ *               example: "DWENGO_SESSION=someunreadablesessionid"
+ *       500:
+ *         description: Server error
+ *     cookies:
+ *       DWENGO_SESSION:
+ *         description: A session cookie with the user ID and hash of the user data, set upon successful login.
+ *         type: string
+ */
 router.post(teacherPrefix + "/login", async (req: Request, res: Response) => {
   return login(req, res);
 });
 
 /**
- * Clear the cookie from the user.
- * Cookie is checked on validity in the middleware defined in [app.ts].
+ * @swagger
+ * /api/auth/teacher/logout:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Log out a teacher
+ *     description: Clears the session cookie and logs out the teacher.
+ *     responses:
+ *       200:
+ *         description: Successful logout. The session cookie is cleared.
+ *         headers:
+ *           Set-Cookie:
+ *             description: The session cookie is cleared.
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: The error message
  */
 router.post(teacherPrefix + "/logout", (req: Request, res: Response) => {
   return clearCookie(req, res);
 });
 
+/**
+ * @swagger
+ * /api/auth/teacher/register:
+ *   put:
+ *     tags: [Auth]
+ *     summary: Registers a new teacher and sets session cookie on successful registration.
+ *     description: Registers a new teacher and sets a session cookie upon successful registration.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: "username"
+ *               email:
+ *                 type: string
+ *                 example: "teacher@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "password"
+ *               surname:
+ *                 type: string
+ *                 example: "surname"
+ *               name:
+ *                 type: string
+ *                 example: "name"
+ *               role:
+ *                 type: string
+ *                 example: "TEACHER"
+ *     responses:
+ *       200:
+ *         description: Successful registration, returns user data (excluding password) and sets a session cookie.
+ *         headers:
+ *           Set-Cookie:
+ *             description: The session cookie containing user session information.
+ *             schema:
+ *               type: string
+ *             example: "DWENGO_SESSION=someunreadablesessionid"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                   example: "TEACHER"
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: The error message
+ */
 router.put(teacherPrefix + "/register", async (req: Request, res: Response) => {
   return register(req, res);
 });
