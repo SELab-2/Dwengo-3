@@ -26,7 +26,7 @@ export class LearningObjectDomain {
     user: UserEntity,
   ) {
     if (user.role != ClassRoleEnum.TEACHER) {
-      throw Error;
+      throw new Error("User must be a teacher to create a learning object");
     }
     const parseResult = LearningObjectCreateSchema.safeParse(query);
     if (!parseResult.success) {
@@ -61,7 +61,7 @@ export class LearningObjectDomain {
   ) {
     /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
     if (learningObject.owner != user.userId) {
-      return
+      throw new Error("You can only update your own learning object");
     } */
 
     const parseResult = LearningObjectUpdateSchema.safeParse(body);
@@ -80,7 +80,7 @@ export class LearningObjectDomain {
   public async deleteLearningObject(id: string, user: UserEntity) {
     /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
     if (learningObject.owner != user.userId) {
-      return
+      throw new Error("You can only delete your own learning object");
     } */
     return this.learningObjectPersistence.deleteLearningObject(id);
   }
