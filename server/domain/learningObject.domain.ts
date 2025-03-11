@@ -26,7 +26,7 @@ export class LearningObjectDomain {
     user: UserEntity,
   ) {
     if (user.role != ClassRoleEnum.TEACHER) {
-      return;
+      throw Error;
     }
     const parseResult = LearningObjectCreateSchema.safeParse(query);
     if (!parseResult.success) {
@@ -60,7 +60,7 @@ export class LearningObjectDomain {
     user: UserEntity,
   ) {
     /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
-    if (learningObject.owner != user.username) {
+    if (learningObject.owner != user.userId) {
       return
     } */
 
@@ -79,7 +79,7 @@ export class LearningObjectDomain {
 
   public async deleteLearningObject(id: string, user: UserEntity) {
     /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
-    if (learningObject.owner != user.username) {
+    if (learningObject.owner != user.userId) {
       return
     } */
     return this.learningObjectPersistence.deleteLearningObject(id);

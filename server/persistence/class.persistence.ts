@@ -1,4 +1,3 @@
-import { PrismaSingleton } from "./prismaSingleton";
 import { PaginationParams } from "../util/types/pagination.types";
 import {
   ClassCreateParams,
@@ -7,6 +6,7 @@ import {
 } from "../util/types/class.types";
 import { PrismaSingleton } from "./prismaSingleton";
 import { searchAndPaginate } from "../util/pagination/pagination.util";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 export class ClassPersistence {
   private prisma: PrismaClient;
@@ -18,14 +18,6 @@ export class ClassPersistence {
   private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
     return {
       AND: [
-        filters.name
-          ? {
-              name: {
-                contains: filters.name,
-                mode: Prisma.QueryMode.insensitive,
-              },
-            }
-          : {},
         filters.teacherId
           ? { teachers: { some: { id: filters.teacherId } } }
           : {},

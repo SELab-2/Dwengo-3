@@ -1,13 +1,18 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaSingleton } from "./prismaSingleton";
 import {
   LearningObjectFilterParams,
   LearningObjectUpdateWithoutKeywords,
   LearningObjectWithoutKeywords,
 } from "../util/types/learningObject.types";
 
-const prisma = new PrismaClient();
-
 export class LearningObjectPersistence {
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = PrismaSingleton.instance;
+  }
+
   public async getLearningObjects(filters: LearningObjectFilterParams) {
     const whereClause: Prisma.LearningObjectWhereInput = {
       AND: [
@@ -35,7 +40,7 @@ export class LearningObjectPersistence {
       ].filter(Boolean), // Remove empty objects from the AND array
     };
 
-    return await prisma.learningObject.findMany({
+    return await this.prisma.learningObject.findMany({
       where: whereClause,
       include: {
         learningObjectsKeywords: true,
@@ -44,7 +49,7 @@ export class LearningObjectPersistence {
   }
 
   public async createLearningObject(data: LearningObjectWithoutKeywords) {
-    const learningObject = await prisma.learningObject.create({
+    const learningObject = await this.prisma.learningObject.create({
       data: data,
     });
     return learningObject;
@@ -54,14 +59,14 @@ export class LearningObjectPersistence {
     id: string,
     data: LearningObjectUpdateWithoutKeywords,
   ) {
-    return await prisma.learningObject.update({
+    return await this.prisma.learningObject.update({
       where: { id: id },
       data: data,
     });
   }
 
   public async deleteLearningObject(id: string) {
-    return await prisma.learningNodeTransition.delete({
+    return await this.prisma.learningNodeTransition.delete({
       where: {
         id: id,
       },
