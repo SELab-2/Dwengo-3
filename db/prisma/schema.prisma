@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "../../server/node_modules/.prisma/client"
+  output   = "../../server/node_modules/.prisma/client"
 }
 
 datasource db {
@@ -157,7 +157,7 @@ model Group {
   assignmentId          String
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
-  node                  LearningPathNode?       @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  node                  LearningPathNode?      @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }
@@ -179,16 +179,16 @@ enum SubmissionType {
 }
 
 model AssignmentSubmission {
-  id                   String           @id @default(uuid())
-  groupId              String
-  nodeId               String
-  submissionType       SubmissionType?
-  submission           Json?
+  id             String           @id @default(uuid())
+  groupId        String
+  nodeId         String
+  submissionType SubmissionType?
+  submission     Json?
   //fileOriginalName     String?
   //fileName             String?
   //multipleChoiceAnswer Int? // index of the multiple choice answer
-  node                 LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  group                Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  group          Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([groupId, nodeId])
 }
