@@ -33,10 +33,10 @@ export class LearningPathDomain {
   }
 
   public async createLearningPath(
-    query: LearningPathCreateParams,
+    body: LearningPathCreateParams,
     user: UserEntity,
   ) {
-    const parseResult = LearningPathCreateSchema.safeParse(query);
+    const parseResult = LearningPathCreateSchema.safeParse(body);
     if (!parseResult.success) {
       throw parseResult.error;
     }

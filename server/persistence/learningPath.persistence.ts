@@ -43,7 +43,7 @@ export class LearningPathPersistence {
                 some: {
                   learningObject: {
                     targetAges: {
-                      hasSome: filters.age,
+                      hasSome: filters.age, // Match any of the target ages
                     },
                   },
                 },

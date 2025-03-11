@@ -5,6 +5,7 @@ import {
 } from "../util/types/learningPathNodeTransition.types";
 import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
 
+
 export class LearningPathNodeTransitionDomain {
   private learningPathNodeTransitionPersistence;
 
@@ -14,10 +15,10 @@ export class LearningPathNodeTransitionDomain {
   }
 
   public async createLearningPathNodeTransition(
-    query: LearningPathNodeTransitionCreateParams,
+    body: LearningPathNodeTransitionCreateParams,
     user: UserEntity,
   ) {
-    const parseResult = LearningPathNodeTransitionCreateSchema.safeParse(query);
+    const parseResult = LearningPathNodeTransitionCreateSchema.safeParse(body);
     if (!parseResult.success) {
       throw parseResult.error;
     }
