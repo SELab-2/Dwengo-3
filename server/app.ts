@@ -11,6 +11,7 @@ import { LearningPathNodeTransitionController } from "./routes/learningPathNodeT
 import { DiscussionController } from "./routes/discussion.routes";
 import { MessageController } from "./routes/message.routes";
 import { AnnouncementController } from "./routes/announcement.routes";
+import { LearningObjectController } from "./routes/learningObject.routes";
 import { AssignmentController } from "./routes/assignment.routes";
 import { AssignmentSubmissionController } from "./routes/assignmentSubmission.routes";
 import swaggerUi from "swagger-ui-express";
@@ -84,7 +85,7 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router,
 );
-
+apiRouter.use("/learningobject", new LearningObjectController().router);
 apiRouter.use("/announcement", new AnnouncementController().router);
 apiRouter.use("/assignment", new AssignmentController().router);
 apiRouter.use(

@@ -26,6 +26,36 @@ export class LearningPathNodeTransitionController {
   };
 
   private initializeRoutes() {
+    /**
+     * @swagger
+     * /api/learningPathNodeTransition:
+     *   post:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningPathNodeTransition
+     *     summary: Create a new learning path node transition
+     *     description: Creates a new transition between two learning path nodes with the provided data.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/LearningPathNodeTransitionCreate'
+     *     responses:
+     *       201:
+     *         description: Learning path node transition created successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningPathNodeTransitionGet'
+     *       400:
+     *         description: Bad request due to invalid input.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       500:
+     *         description: Internal server error.
+     */
     this.router.post("/", this.createLearningPathNodeTransition);
   }
 }

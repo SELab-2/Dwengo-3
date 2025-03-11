@@ -1,0 +1,75 @@
+import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaSingleton } from "./prismaSingleton";
+import {
+  LearningObjectFilterParams,
+  LearningObjectUpdateWithoutKeywords,
+  LearningObjectWithoutKeywords,
+} from "../util/types/learningObject.types";
+
+export class LearningObjectPersistence {
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = PrismaSingleton.instance;
+  }
+
+  public async getLearningObjects(filters: LearningObjectFilterParams) {
+    const whereClause: Prisma.LearningObjectWhereInput = {
+      AND: [
+        filters.keywords && filters.keywords.length > 0
+          ? {
+              learningObjectsKeywords: {
+                some: {
+                  keyword: {
+                    in: filters.keywords, // Match any of the keywords
+                    mode: Prisma.QueryMode.insensitive, // Case-insensitive search
+                  },
+                },
+              },
+            }
+          : {},
+        filters.targetAges && filters.targetAges.length > 0
+          ? {
+              targetAges: {
+                hasSome: filters.targetAges, // Match any of the target ages
+              },
+            }
+          : {},
+
+        filters.id ? { id: filters.id } : {},
+      ].filter(Boolean), // Remove empty objects from the AND array
+    };
+
+    return await this.prisma.learningObject.findMany({
+      where: whereClause,
+      include: {
+        learningObjectsKeywords: true,
+      },
+    });
+  }
+
+  public async createLearningObject(data: LearningObjectWithoutKeywords) {
+    const learningObject = await this.prisma.learningObject.create({
+      data: data,
+    });
+    return learningObject;
+  }
+
+  public async updateLearningObject(
+    id: string,
+    data: LearningObjectUpdateWithoutKeywords,
+  ) {
+    return await this.prisma.learningObject.update({
+      where: { id: id },
+      data: data,
+    });
+  }
+
+  public async deleteLearningObject(id: string) {
+    return await this.prisma.learningNodeTransition.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
+}

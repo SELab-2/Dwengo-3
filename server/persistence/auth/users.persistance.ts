@@ -4,10 +4,10 @@ import { PrismaSingleton } from "../prismaSingleton";
 const prisma = PrismaSingleton.instance;
 
 export async function saveUser(user: Omit<User, "id">): Promise<User> {
-  let data: any = {
+  const data: any = {
     ...user,
   };
-  let include: any = {};
+  const include: any = {};
 
   if (user.role === ClassRole.TEACHER) {
     data.teacher = {
