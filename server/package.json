@@ -6,7 +6,7 @@
   "scripts": {
     "prisma-generate": "npx prisma generate --schema ../db/prisma/schema.prisma",
     "start": "nodemon app.ts",
-    "test:unit": "vitest run -c util/test-files/vitest.config.unit.ts",
+    "test:unit": "vitest -c util/test-files/vitest.config.unit.ts",
     "test:int": "./util/test-files/integration_test.sh",
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",
     "readData": "ts-node util/db-scripts/readData.ts",
