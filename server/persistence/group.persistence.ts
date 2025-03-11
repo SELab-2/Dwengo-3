@@ -1,4 +1,4 @@
-import { Assignment, Group, PrismaClient, Student } from "@prisma/client";
+import { Assignment, Group, PrismaClient, Student, Teacher } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
 import { Uuid } from "../util/types/assignment.types";
 
@@ -9,14 +9,18 @@ export class GroupPersistence {
         this.prisma = PrismaSingleton.instance;
     }
 
-    public async getGroupById(groupId: Uuid): Promise<Group & {assignment: Assignment; students: Student[]} | null> {
+    public async getGroupById(groupId: Uuid): Promise<Group & {assignment: Assignment & {teacher: Teacher}; students: Student[]} | null> {
         return this.prisma.group.findUnique({
             where: {
                 id: groupId
             },
             include: {
-                assignment: true,
-                students: true
+                assignment: {
+                    include: {
+                        teacher: true
+                    }
+                },
+                students: true,
             }
         })
     }
