@@ -69,15 +69,9 @@
         }
       },
 
-      "LearningPathNode": {
+      "LearningPathNodeCreate": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The unique identifier for the learning path node.",
-            "example": "550e8400-e29b-41d4-a716-446655440001"
-          },
           "lpId": {
             "type": "string",
             "description": "The ID of the learning path this node belongs to.",
@@ -101,6 +95,18 @@
         },
         "required": ["lpId, loId", "startNode"]
       },
+      "LearningPathNodeGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning path node.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          }
+        }
+      },
+
       "LearningPathNodeTransition": {
         "type": "object",
         "properties": {
