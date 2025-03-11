@@ -8,11 +8,13 @@ import { ZodError } from "zod";
 import { LearningPathController } from "./routes/learningPath.routes";
 import { LearningPathNodeController } from "./routes/learningPathNode.routes";
 import { LearningPathNodeTransitionController } from "./routes/learningPathNodeTransition.routes";
+import { AnnouncementController } from "./routes/announcement.routes";
 import { AssignmentController } from "./routes/assignment.routes";
 import { AssignmentSubmissionController } from "./routes/assignmentSubmission.routes";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerDocument from "./swagger.json";
 import swaggerJsdoc from "swagger-jsdoc";
+
 
 dotenv.config({ path: "../.env" });
 const app: Express = express();
@@ -81,11 +83,12 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router,
 );
-apiRouter.use("/assignment", new AssignmentController().router);
-apiRouter.use(
-  "/assignmentSubmission",
-  new AssignmentSubmissionController().router,
-);
+
+
+apiRouter.use("/announcement", new AnnouncementController().router);
+apiRouter.use('/assignment', new AssignmentController().router);
+apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().router);
+
 apiRouter.use("/auth", auth);
 
 app.listen(port, () => {

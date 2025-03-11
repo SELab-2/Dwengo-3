@@ -128,6 +128,8 @@ model Teacher {
   classes    Class[]
   assignment Assignment[]
   user       User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  Announcement Announcement[]
 }
 
 model Class {
@@ -137,6 +139,7 @@ model Class {
   teachers          Teacher[]
   assignment        Assignment[]
   classJoinRequests ClassJoinRequest[]
+  Announcement      Announcement[]
 }
 
 model ClassJoinRequest {
@@ -205,4 +208,14 @@ model Message {
   sender     User       @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   discussion Discussion @relation(fields: [chatId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt  DateTime   @default(now()) @db.Timestamp
+}
+
+model Announcement {
+  id        String  @id @default(uuid())
+  title     String
+  content   String
+  classId   String
+  class     Class   @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

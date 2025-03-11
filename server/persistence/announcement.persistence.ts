@@ -1,0 +1,80 @@
+import { Prisma, PrismaClient } from "@prisma/client";
+import { AnnouncementByFilterParams, AnnouncementCreateParams, AnnouncementUpdateParams } from "../util/types/announcement.types";
+import { PaginationParams } from "../util/types/pagination.types";
+import { PrismaSingleton } from "./prismaSingleton";
+
+//TODO : import prisma client from singleton
+
+export class AnnouncementPersistence {
+    public async getAnnouncements(
+        filters: AnnouncementByFilterParams,
+        paginationParams: PaginationParams
+    ) {
+        const whereClause: Prisma.AnnouncementWhereInput = {
+            AND: [
+                filters.classId ? { classId: filters.classId } : {},
+                filters.teacherId ? { teacherId: filters.teacherId } : {},
+                filters.id ? { id: filters.id } : {},
+                filters.studentId ?
+                    {
+                        class: {
+                            students: {
+                                some: {
+                                    id: filters.studentId
+                                }
+                            }
+                        }
+                    } : {}
+            ]
+        };
+        const [announcements, totalCount] = await PrismaSingleton.instance.$transaction([
+            PrismaSingleton.instance.announcement.findMany({
+                where: whereClause,
+                include: {
+                    class: true,
+                    teacher: true
+                },
+                skip: paginationParams.skip,
+                take: paginationParams.pageSize
+            }),
+            PrismaSingleton.instance.announcement.count({
+                where: whereClause  // TODO this is probably not efficient
+            })
+        ]);
+
+        return {
+            announcements,
+            totalPages: Math.ceil(totalCount / paginationParams.pageSize)
+        };
+    }
+
+    public async createAnnouncement(announcementCreateParams: AnnouncementCreateParams) {
+        const { classId, teacherId, ...data } = announcementCreateParams;
+        const announcement = await PrismaSingleton.instance.announcement.create({
+            data: {
+                ...data,
+                class: {
+                    connect: {
+                        id: classId
+                    }
+                },
+                teacher: {
+                    connect: {
+                        id: teacherId
+                    }
+                }
+            }
+        });
+        return announcement;
+    }
+
+    public async updateAnnouncement(announcementUpdateParams: AnnouncementUpdateParams) {
+
+        const { id, ...data } = announcementUpdateParams;
+        const updatedAnnouncement = await PrismaSingleton.instance.announcement.update({
+            where: { id: id },
+            data: data,
+        });
+        return updatedAnnouncement;
+    }
+}

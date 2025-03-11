@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaSingleton } from "./prismaSingleton";
 import { PaginationParams } from "../util/types/pagination.types";
 import {
   ClassCreateParams,
@@ -18,6 +18,14 @@ export class ClassPersistence {
   private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
     return {
       AND: [
+        filters.name
+          ? {
+            name: {
+              contains: filters.name,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          }
+          : {},
         filters.teacherId
           ? { teachers: { some: { id: filters.teacherId } } }
           : {},

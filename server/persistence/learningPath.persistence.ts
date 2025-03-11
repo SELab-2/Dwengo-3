@@ -35,10 +35,16 @@ export class LearningPathPersistence {
                   },
                 },
               },
-            }
+            },
+          }
           : {},
         filters.age && filters.age.length > 0
           ? {
+            learningPathNodes: {
+              some: {
+                learningObject: {
+                  targetAges: {
+                    hasSome: filters.age, // Match any of the target ages
               learningPathNodes: {
                 some: {
                   learningObject: {
@@ -48,7 +54,8 @@ export class LearningPathPersistence {
                   },
                 },
               },
-            }
+            },
+          }
           : {},
         filters.id ? { id: filters.id } : {},
       ],
