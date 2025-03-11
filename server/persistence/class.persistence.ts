@@ -1,16 +1,22 @@
 import { PrismaSingleton } from "./prismaSingleton";
 import { PaginationParams } from "../util/types/pagination.types";
-import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from "../util/types/class.types";
-import { Prisma } from "@prisma/client";
-
-
+import {
+  ClassCreateParams,
+  ClassFilterParams,
+  ClassUpdateParams,
+} from "../util/types/class.types";
+import { PrismaSingleton } from "./prismaSingleton";
+import { searchAndPaginate } from "../util/pagination/pagination.util";
 
 export class ClassPersistence {
-  public async getClasses(
-    paginationParams: PaginationParams,
-    filters: ClassFilterParams
-  ) {
-    const where: Prisma.ClassWhereInput = {
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = PrismaSingleton.instance;
+  }
+
+  private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
+    return {
       AND: [
         filters.name
           ? {
@@ -20,72 +26,64 @@ export class ClassPersistence {
             },
           }
           : {},
-        // Filter to check if every teacherID of the filter params is in the teachers array
-        filters.teacherIds && filters.teacherIds.length > 0
-          ? {
-            AND: filters.teacherIds.map((teacherId) => ({
-              teachers: {
-                some: {
-                  id: teacherId,
-                },
-              },
-            })),
-          }
+        filters.teacherId
+          ? { teachers: { some: { id: filters.teacherId } } }
           : {},
-        // Filter to check if every studentID of the filter params is in the students array
-        filters.studentIds && filters.studentIds.length > 0
-          ? {
-            AND: filters.studentIds.map((studentId) => ({
-              students: {
-                some: {
-                  id: studentId,
-                },
-              },
-            })),
-          }
+        filters.studentId
+          ? { students: { some: { id: filters.studentId } } }
           : {},
+        filters.id ? { id: filters.id } : {},
       ],
     };
+  }
 
-    const [classes, totalCount] = await PrismaSingleton.instance.$transaction([
-      PrismaSingleton.instance.class.findMany({
-        where,
-        skip: paginationParams.skip,
-        take: paginationParams.pageSize,
-      }),
-      PrismaSingleton.instance.class.count({
-        where,
-      }),
-    ]);
+  public async getClasses(
+    paginationParams: PaginationParams,
+    filters: ClassFilterParams,
+  ) {
+    const where: Prisma.ClassWhereInput = this.buildWhereClause(filters);
 
-    return {
-      data: classes,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(this.prisma.class, where, paginationParams, {
+      students: true,
+      teachers: true,
+    });
   }
 
   public async getClassById(id: string) {
-    return await PrismaSingleton.instance.class.findUnique({
+    return await this.prisma.class.findUnique({
       where: { id },
+      include: {
+        students: true,
+        teachers: true,
+      },
     });
   }
-
   public async createClass(params: ClassCreateParams) {
-    return await PrismaSingleton.instance.class.create({
+    return await this.prisma.class.create({
       data: { name: params.name },
     });
   }
 
-  public async updateClass(id: string, params: ClassUpdateParams) {
-    return await PrismaSingleton.instance.class.update({
+  public async updateClass(params: ClassUpdateParams) {
+    const { id, ...data } = params;
+
+    return await this.prisma.class.update({
       where: { id },
-      data: { name: params.name },
+      data: data,
     });
   }
 
-  public async deleteClass(id: string) {
-    return await PrismaSingleton.instance.class.delete({
-      where: { id },
+  public async isTeacherFromClass(userId: string, classId: string) {
+    const teacher = await this.prisma.teacher.findFirst({
+      where: {
+        userId,
+        classes: {
+          some: {
+            id: classId,
+          },
+        },
+      },
     });
+    return teacher !== null;
   }
 }

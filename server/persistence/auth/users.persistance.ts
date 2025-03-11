@@ -35,6 +35,10 @@ export async function getUserById(id: string): Promise<User | null> {
     where: {
       id: id,
     },
+    include: {
+      teacher: true,
+      student: true,
+    },
   });
 }
 
