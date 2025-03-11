@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const ClassFilterSchema = z.object({
-  name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
   teacherId: z.string().uuid().optional(),
   studentId: z.string().uuid().optional(),
   id: z.string().uuid().optional(),

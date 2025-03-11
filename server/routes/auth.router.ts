@@ -14,6 +14,13 @@ const teacherPrefix = "/teacher";
 type UserDto = Omit<User, "password">;
 
 /**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication endpoints for user login, registration, and logout
+ */
+
+/**
  * Handles a register request.
  *
  * @remarks
@@ -138,6 +145,61 @@ export async function verifyCookie(cookie: string): Promise<boolean> {
 }
 
 // STUDENT
+/**
+ * @swagger
+ * /api/auth/student/login:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Student login
+ *     description: Logs in a student and sets a session cookie upon successful authentication.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - password
+ *     responses:
+ *       200:
+ *         description: Successful login, returns user data (excluding password) and sets a session cookie.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *         headers:
+ *           Set-Cookie:
+ *             description: The session cookie containing user session information.
+ *             schema:
+ *               type: string
+ *               example: "DWENGO_SESSION=someunreadablesessionid"
+ *       500:
+ *         description: Server error
+ *     cookies:
+ *       DWENGO_SESSION:
+ *         description: A session cookie with the user ID and hash of the user data, set upon successful login.
+ *         type: string
+ */
+
 router.post(studentPrefix + "/login", async (req: Request, res: Response) => {
   return login(req, res);
 });

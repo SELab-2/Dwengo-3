@@ -1,6 +1,5 @@
 import cookieParser from "cookie-parser";
 import * as http2 from "node:http2";
-
 import { router as auth, verifyCookie } from "./routes/auth.router";
 import express, { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
@@ -9,13 +8,25 @@ import { ZodError } from "zod";
 import { LearningPathController } from "./routes/learningPath.routes";
 import { LearningPathNodeController } from "./routes/learningPathNode.routes";
 import { LearningPathNodeTransitionController } from "./routes/learningPathNodeTransition.routes";
+import { AnnouncementController } from "./routes/announcement.routes";
 import { LearningObjectController } from "./routes/learningObject.routes";
 import { AssignmentController } from "./routes/assignment.routes";
 import { AssignmentSubmissionController } from "./routes/assignmentSubmission.routes";
+import swaggerUi from "swagger-ui-express";
+import * as swaggerDocument from "./swagger.json";
+import swaggerJsdoc from "swagger-jsdoc";
 
 dotenv.config({ path: "../.env" });
 const app: Express = express();
 const port = process.env.PORT || 3001;
+
+const options = {
+  swaggerDefinition: swaggerDocument, // Use the imported JSON configuration
+  apis: ["./routes/*.ts"], // Specify where to find the JSDoc comments
+};
+
+const specs = swaggerJsdoc(options);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // cookie validating middleware
 app.use(
@@ -72,12 +83,15 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router,
 );
+
 apiRouter.use("/learningobject", new LearningObjectController().router);
+apiRouter.use("/announcement", new AnnouncementController().router);
 apiRouter.use("/assignment", new AssignmentController().router);
 apiRouter.use(
   "/assignmentSubmission",
   new AssignmentSubmissionController().router,
 );
+
 apiRouter.use("/auth", auth);
 
 app.listen(port, () => {

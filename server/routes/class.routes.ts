@@ -32,6 +32,60 @@ export class ClassController {
   };
 
   private initializeRoutes() {
+    /**
+     * @swagger
+     * /api/class:
+     *   get:
+     *     tags: [Class]
+     *     summary: Get list of classes
+     *     description: Fetches a list of classes filtered by optional query parameters such as teacherId, studentId, or class ID.
+     *     parameters:
+     *       - name: teacherId
+     *         in: query
+     *         description: Filter by teacher ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: studentId
+     *         in: query
+     *         description: Filter by student ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: id
+     *         in: query
+     *         description: Filter by class ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *     responses:
+     *       200:
+     *         description: Successfully fetched list of classes
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   id:
+     *                     type: string
+     *                     description: Unique identifier for the class
+     *                   name:
+     *                     type: string
+     *                     description: Name of the class
+     *                   teacherId:
+     *                     type: string
+     *                     description: ID of the teacher associated with the class
+     *                   studentCount:
+     *                     type: integer
+     *                     description: Number of students in the class
+     *       500:
+     *         description: Server error
+     */
     this.router.get("/", this.getClasses);
     this.router.put("/", this.createClass);
     this.router.patch("/", this.updateClass);
