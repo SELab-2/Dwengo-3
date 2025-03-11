@@ -7,7 +7,6 @@ import {
 import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
 import { searchAndPaginate } from "../util/pagination/pagination.util";
-import { Prisma, PrismaClient } from "@prisma/client";
 
 export class ClassPersistence {
   private prisma;
