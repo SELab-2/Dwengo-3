@@ -1,5 +1,4 @@
 import cookieParser from "cookie-parser";
-import { ClassRole, PrismaClient } from "@prisma/client";
 import * as http2 from "node:http2";
 
 import { router as auth, verifyCookie } from "./routes/auth.router";
@@ -51,7 +50,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error("[ERROR]", err);
 
   // If the error is a ZodError, it means that the request did not pass the validation
-  let statusCode = err instanceof ZodError ? 400 : 500;
+  const statusCode = err instanceof ZodError ? 400 : 500;
 
   if (process.env.NODE_ENV === "production") {
     res.status(statusCode).send("Something broke!");

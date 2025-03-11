@@ -29,7 +29,7 @@ export async function loginUser(loginRequest: LoginRequest): Promise<User> {
   return user;
 }
 
-export async function deleteUser(id: string): Promise<Boolean> {
+export async function deleteUser(id: string): Promise<boolean> {
   const user: User | null = await persistence.deleteUser(id);
   return user !== null;
 }

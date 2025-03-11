@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { LearningObjectDomain } from "../domain/learningObject.domain";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class LearningObjectController {
   public router: Router;
@@ -12,7 +13,12 @@ export class LearningObjectController {
   }
 
   private createLearningObject = async (req: Request, res: Response) => {
-    res.json(await this.learningObjectDomain.createLearningObject(req.body));
+    res.json(
+      await this.learningObjectDomain.createLearningObject(
+        req.body,
+        await getUserFromReq(req),
+      ),
+    );
   };
 
   private getLearningObjects = async (req: Request, res: Response) => {
@@ -20,17 +26,28 @@ export class LearningObjectController {
   };
 
   private updateLearningObject = async (req: Request, res: Response) => {
-    res.json(await this.learningObjectDomain.updateLearningObject(req.params.id, req.body));
+    res.json(
+      await this.learningObjectDomain.updateLearningObject(
+        req.params.id,
+        req.body,
+        await getUserFromReq(req),
+      ),
+    );
   };
 
   private deleteLearningObject = async (req: Request, res: Response) => {
-    res.json(await this.learningObjectDomain.deleteLearningObject(req.params.id));
+    res.json(
+      await this.learningObjectDomain.deleteLearningObject(
+        req.params.id,
+        await getUserFromReq(req),
+      ),
+    );
   };
 
   private initializeRoutes() {
     this.router.post("/", this.createLearningObject);
     this.router.get("/", this.getLearningObjects);
     this.router.patch("/:id", this.updateLearningObject);
-    this.router.delete("/:id", this.deleteLearningObject);   
+    this.router.delete("/:id", this.deleteLearningObject);
   }
 }

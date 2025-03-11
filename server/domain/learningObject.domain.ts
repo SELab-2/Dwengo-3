@@ -9,6 +9,7 @@ import {
   LearningObjectUpdateParams,
   LearningObjectUpdateSchema,
 } from "../util/types/learningObject.types";
+import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
 
 export class LearningObjectDomain {
   private learningObjectPersistence;
@@ -20,7 +21,13 @@ export class LearningObjectDomain {
       new LearningObjectKeywordPersistence();
   }
 
-  public async createLearningObject(query: LearningObjectCreateParams) {
+  public async createLearningObject(
+    query: LearningObjectCreateParams,
+    user: UserEntity,
+  ) {
+    if (user.role != ClassRoleEnum.TEACHER) {
+      return;
+    }
     const parseResult = LearningObjectCreateSchema.safeParse(query);
     if (!parseResult.success) {
       throw parseResult.error;
@@ -50,7 +57,13 @@ export class LearningObjectDomain {
   public async updateLearningObject(
     id: string,
     body: LearningObjectUpdateParams,
+    user: UserEntity,
   ) {
+    /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
+    if (learningObject.owner != user.username) {
+      return
+    } */
+
     const parseResult = LearningObjectUpdateSchema.safeParse(body);
     if (!parseResult.success) {
       throw parseResult.error;
@@ -64,7 +77,11 @@ export class LearningObjectDomain {
     // TODO: Update keywords
   }
 
-  public async deleteLearningObject(id: string) {
+  public async deleteLearningObject(id: string, user: UserEntity) {
+    /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
+    if (learningObject.owner != user.username) {
+      return
+    } */
     return this.learningObjectPersistence.deleteLearningObject(id);
   }
 }

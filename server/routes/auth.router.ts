@@ -104,7 +104,7 @@ export function generateCookie(
   email: string,
   password: string,
 ): string {
-  let cookie: string = userId + "?";
+  const cookie: string = userId + "?";
   const hash = crypto
     .createHash("sha512")
     .update(userId + email + password)
