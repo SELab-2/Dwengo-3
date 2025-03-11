@@ -5,5 +5,14 @@
     "version": "1.0.0",
     "description": "API documentation for Express with Swagger UI"
   },
-  "apis": ["./routes/*.ts"]
+  "apis": ["./routes/*.ts"],
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "DWENGO_SESSION"
+      }
+    }
+  }
 }
