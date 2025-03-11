@@ -107,7 +107,7 @@
         }
       },
 
-      "LearningPathNodeTransition": {
+      "LearningPathNodeTransitionCreate": {
         "type": "object",
         "properties": {
           "fromNodeId": {
@@ -127,6 +127,17 @@
           }
         },
         "required": ["fromNodeId", "toNodeId"]
+      },
+      "LearningPathNodeTransitionGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning path node transition.",
+            "example": "550e8400-e29b-41d4-a716-446655440004"
+          }
+        }
       }
     }
   }
