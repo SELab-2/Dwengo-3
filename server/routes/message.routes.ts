@@ -14,7 +14,7 @@ export class MessageController {
     private initializeRoutes() {
         this.router.get('/', this.getMessages.bind(this));
         this.router.put('/', this.createMessage.bind(this));
-        this.router.patch('/', this.updateMessage.bind(this));
+        //this.router.patch('/', this.updateMessage.bind(this));
         this.router.delete('/:id', this.deleteMessage.bind(this));
     }
 
