@@ -124,6 +124,36 @@ export class LearningObjectController {
      */
     this.router.get("/", this.getLearningObjects);
     this.router.patch("/:id", this.updateLearningObject);
+    /**
+     * @swagger
+     * /api/learningObject/{id}:
+     *   delete:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningObject
+     *     summary: Delete a learning object
+     *     description: Deletes a specific learning object by its unique identifier.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the learning object to delete.
+     *     responses:
+     *       204:
+     *         description: Learning object deleted successfully.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       403:
+     *         description: Forbidden, user does not have permission to delete the learning object.
+     *       404:
+     *         description: Learning object not found.
+     *       500:
+     *         description: Internal server error.
+     */
     this.router.delete("/:id", this.deleteLearningObject);
   }
 }
