@@ -36,16 +36,23 @@ export class LearningObjectDomain {
 
     const { learningObjectsKeywords, ...dataWithoutKeywords } =
       parseResult.data;
+
+    const dataToUpdate = {
+      ...dataWithoutKeywords,
+      createdAt: new Date(), // Automatically set createdAt to the current date/time
+      updatedAt: new Date(), // Automatically set updatedAt to the current date/time
+    };
+
     const learningObject =
-      await this.learningObjectPersistence.createLearningObject(
-        dataWithoutKeywords,
+      await this.learningObjectPersistence.createLearningObject(dataToUpdate);
+
+    if (learningObjectsKeywords) {
+      await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
+        learningObject.id,
+        learningObjectsKeywords,
       );
-    learningObjectsKeywords?.map(({ keyword }) =>
-      this.learningObjectKeywordPersistence.createLearningObjectKeyword({
-        loId: learningObject.id,
-        keyword: keyword,
-      }),
-    );
+    }
+
     return learningObject;
   }
 
@@ -70,22 +77,29 @@ export class LearningObjectDomain {
     body: LearningObjectUpdateParams,
     user: UserEntity,
   ) {
-    /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
-    if (learningObject.owner != user.userId) {
-      throw new Error("You can only update your own learning object");
-    } */
-
+    // TODO: Check if user is owner of learning object once there is an owner attribute
+    // Validate the request body using Zod schema
     const parseResult = LearningObjectUpdateSchema.safeParse(body);
     if (!parseResult.success) {
       throw parseResult.error;
     }
+
     const { learningObjectsKeywords, ...dataWithoutKeywords } =
       parseResult.data;
-    await this.learningObjectPersistence.updateLearningObject(
-      id,
-      dataWithoutKeywords,
-    );
-    // TODO: Update keywords
+
+    const dataToUpdate = {
+      ...dataWithoutKeywords,
+      updatedAt: new Date(), // Automatically set updatedAt to the current date/time
+    };
+
+    await this.learningObjectPersistence.updateLearningObject(id, dataToUpdate);
+
+    if (learningObjectsKeywords) {
+      await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
+        id,
+        learningObjectsKeywords,
+      );
+    }
   }
 
   public async deleteLearningObject(id: string, user: UserEntity) {
