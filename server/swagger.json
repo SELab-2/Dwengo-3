@@ -449,6 +449,48 @@
           }
         },
         "required": ["keyword"]
+      },
+      "AnnouncementCreate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          },
+          "classId": {
+            "type": "string",
+            "description": "The ID of the class this announcement is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "teacherId": {
+            "type": "string",
+            "description": "The ID of the teacher who created the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          }
+        },
+        "required": ["title", "content", "classId", "teacherId"]
+      },
+      "AnnouncementGet": {},
+      "AnnouncementUpdate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          }
+        }
       }
     }
   }
