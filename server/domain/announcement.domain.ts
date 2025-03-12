@@ -29,10 +29,40 @@ export class AnnouncementDomain {
             throw filterResult.error;
         }
 
-        // TODO 
-        
+        // check if classId is used, user belongs to class
+        if (query.classId) {
+            this.checkUserBelongsToClass(user, query.classId)
+        }
 
-        return this.announcementPersistence.getAnnouncements(
+        // check if teacherId is used, it can not get other teacher announcements
+        if (query.teacherId) {
+            this.checkUserIsTeacher(user)
+            if (query.teacherId !== user.teacher?.id) {
+                throw new Error("Can not get announcements of other teacher.");
+            }
+        }
+
+        // check if studentId is used, it can not get other student announcements
+        if (query.studentId) {
+            this.checkUserIsStudent(user)
+            if (query.studentId !== user.student?.id) {
+                throw new Error("Can not get announcements of other user.");
+            }
+        }
+
+        // check if id is used, announcement belongs to class of user
+        if (query.id) {
+            const res = await this.announcementPersistence.getAnnouncements(
+                { id: query.id },
+                paginationParseResult.data
+            );
+            if (res.announcements.length !== 0) {
+                const resClassId = res.announcements[0].classId
+                this.checkUserBelongsToClass(user, resClassId)
+            }
+        }
+
+        this.announcementPersistence.getAnnouncements(
             filterResult.data,
             paginationParseResult.data
         );
@@ -47,7 +77,8 @@ export class AnnouncementDomain {
             throw parseResult.error;
         }
 
-        this.checkTeacherBelongsToClass(user, query.classId);
+        this.checkUserIsTeacher(user);
+        this.checkUserBelongsToClass(user, query.classId);
 
         return this.announcementPersistence.createAnnouncement(parseResult.data);
     }
@@ -61,23 +92,35 @@ export class AnnouncementDomain {
             throw parseResult.error;
         }
 
-        this.checkTeacherBelongsToClass(user, query.id);
+        this.checkUserIsTeacher(user);
+        this.checkUserBelongsToClass(user, query.id);
 
         return this.announcementPersistence.updateAnnouncement(parseResult.data);
     }
 
-    private async checkTeacherBelongsToClass(
+    private async checkUserIsTeacher(user: UserEntity) {
+        if (user.role !== ClassRoleEnum.TEACHER) {
+            throw new Error("User is not a teacher.");
+        }
+    }
+
+    private async checkUserIsStudent(user: UserEntity) {
+        if (user.role !== ClassRoleEnum.STUDENT) {
+            throw new Error("User is not a student.");
+        }
+    }
+
+    private async checkUserBelongsToClass(
         user: UserEntity,
         classId: string,
     ) {
-        // Check if user is a teacher
-        if (user.role !== ClassRoleEnum.TEACHER) {
-            throw new Error("User must be a teacher to create an announcement.");
-        }
-
-        // Check if classId belongs to teacher
         const classById = await this.classPersistence.getClassById(classId);
-        const exists = classById?.teachers.some(teacher => teacher.id === user.teacher?.id);
+        let exists
+        if (user.role === ClassRoleEnum.TEACHER) {
+            exists = classById?.teachers.some(teacher => teacher.id === user.teacher?.id);
+        } else if (user.role === ClassRoleEnum.STUDENT) {
+            exists = classById?.students.some(student => student.id === user.student?.id);
+        }
         if (exists) {
             throw new Error("User does not belong to the class.");
         }
