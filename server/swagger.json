@@ -527,6 +527,36 @@
             "example": "This is an important announcement."
           }
         }
+      },
+      "ClassJoinRequestCreate": {
+        "type": "object",
+        "properties": {
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the class to join. Must be a valid UUID.",
+            "example": "e5c03d9c-d123-4a34-b88c-ff33f222b0f9"
+          }
+        },
+        "required": ["classId"]
+      },
+      "ClassJoinRequestPost": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the class join request.",
+            "example": "a1b2c3d4-e5f6-7890-gh12-i34j56k78l90"
+          },
+          "decision": {
+            "type": "string",
+            "enum": ["accept", "deny"],
+            "description": "The decision for the class join request, either accept or deny.",
+            "example": "accept"
+          }
+        },
+        "required": ["requestId", "decision"]
       }
     }
   }

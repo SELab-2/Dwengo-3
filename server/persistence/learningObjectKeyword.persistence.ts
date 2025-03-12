@@ -1,4 +1,4 @@
-import { PrismaClient, LearningObject } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
 
 export class LearningObjectKeywordPersistence {
@@ -7,26 +7,26 @@ export class LearningObjectKeywordPersistence {
     this.prisma = PrismaSingleton.instance;
   }
 
-  public async createLearningObjectKeyword(data: {
-    loId: string;
-    keyword: string;
-  }) {
-    return await this.prisma.learningObjectKeyword.create({
-      data: data,
+  public async updateLearningObjectKeywords(
+    loId: string,
+    newKeywords: {
+      keyword: string;
+    }[],
+  ) {
+    // Remove old keywords first
+    await this.prisma.learningObjectKeyword.deleteMany({
+      where: { loId: loId },
     });
-  }
 
-  public async deleteLearningObjectKeyword(data: {
-    loId: string;
-    keyword: string;
-  }) {
-    return await this.prisma.learningObjectKeyword.delete({
-      where: {
-        loId_keyword: {
-          loId: data.loId,
-          keyword: data.keyword,
-        },
-      },
+    // Add new keywords
+    const newKeywordEntries = newKeywords.map((keyword) => ({
+      loId: loId,
+      keyword: keyword.keyword,
+    }));
+
+    // Create new keyword records in the database
+    await this.prisma.learningObjectKeyword.createMany({
+      data: newKeywordEntries,
     });
   }
 }
