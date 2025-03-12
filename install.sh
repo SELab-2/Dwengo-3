@@ -12,7 +12,8 @@ cd ../db || exit
 npm install
 
 cd ../server || exit
-dotenv -e ../.env -- npx prisma generate
+dotenv -e ../.env -- npx prisma generate --auto-approve
 
 cd ../db || exit
-dotenv -e ../.env -- npx prisma migrate dev
+dotenv -e ../.env -- npx prisma migrate dev --auto-approve
+
