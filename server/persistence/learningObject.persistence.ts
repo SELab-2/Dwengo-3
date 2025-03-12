@@ -85,12 +85,5 @@ export class LearningObjectPersistence {
     return await this.prisma.learningObject.delete({
       where: { id: id },
     });
-
-    // return await this.prisma.$transaction([
-    //   this.prisma.learningObjectKeyword.deleteMany({
-    //     where: { loId: id },
-    //   }),
-
-    // ]);
   }
 }
