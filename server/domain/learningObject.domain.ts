@@ -1,4 +1,3 @@
-import { parse } from "path";
 import { LearningObjectPersistence } from "../persistence/learningObject.persistence";
 import { LearningObjectKeywordPersistence } from "../persistence/learningObjectKeyword.persistence";
 import {
@@ -9,6 +8,7 @@ import {
   LearningObjectUpdateParams,
   LearningObjectUpdateSchema,
 } from "../util/types/learningObject.types";
+import { PaginationFilterSchema } from "../util/types/pagination.types";
 import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
 
 export class LearningObjectDomain {
@@ -28,10 +28,12 @@ export class LearningObjectDomain {
     if (user.role != ClassRoleEnum.TEACHER) {
       throw new Error("User must be a teacher to create a learning object");
     }
+
     const parseResult = LearningObjectCreateSchema.safeParse(query);
     if (!parseResult.success) {
       throw parseResult.error;
     }
+
     const { learningObjectsKeywords, ...dataWithoutKeywords } =
       parseResult.data;
     const learningObject =
@@ -48,11 +50,19 @@ export class LearningObjectDomain {
   }
 
   public async getLearningObjects(query: LearningObjectFilterParams) {
+    const paginationResult = PaginationFilterSchema.safeParse(query);
+    if (!paginationResult.success) {
+      throw paginationResult.error;
+    }
+
     const parseResult = LearningObjectFilterSchema.safeParse(query);
     if (!parseResult.success) {
       throw parseResult.error;
     }
-    return this.learningObjectPersistence.getLearningObjects(parseResult.data);
+    return this.learningObjectPersistence.getLearningObjects(
+      paginationResult.data,
+      parseResult.data,
+    );
   }
 
   public async updateLearningObject(
