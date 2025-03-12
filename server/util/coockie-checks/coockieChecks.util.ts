@@ -47,12 +47,17 @@ export const checkIfUserIsInGroup = async (user: UserEntity, groupId: Uuid | und
     const groupData = await groupPersistence.getGroupById(groupId);
     if (!groupData) throw new Error("Group not found.");
 
-    if (user.role === ClassRole.TEACHER && groupData.assignment.teacherId !== user.teacher!.id) {
-        throw new Error("Can't fetch groups you're not a teacher of.");
+    if (user.role === ClassRole.TEACHER) {
+        const isTeacherOfThisGroup = groupData.assignment.class.teachers.some(
+          (teacher) => teacher.id === user.id
+        );
+        if (!isTeacherOfThisGroup) {
+            throw new Error("Can't fetch groups you're not a teacher of.");
+        }
     }
     if (user.role === ClassRole.STUDENT) {
         const isStudentOfThisGroup = groupData.students.some(
-            (student) => student.userId === user.id,
+            (student) => student.id === user.id,
         );
         if (!isStudentOfThisGroup) {
             throw new Error("Can't fetch groups you're not a student of.");
@@ -88,7 +93,8 @@ export const checkIfUsersAreInSameGroup = async (users: Uuid[], groupId: Uuid, g
     throw new Error("Group not found");
   }
   const groupStudendtIds = new Set(groupData.students.map(student => student.userId));
-  const check = users.every(user => groupStudendtIds.has(user) || groupData.assignment.teacher.userId == user);
+  const teacherIds = new Set(groupData.assignment.class.teachers.map(teacher => teacher.userId)); //Teachers can see all groups of the class
+  const check = users.every(user => groupStudendtIds.has(user) || teacherIds.has(user));
   if (!check) {
     throw new Error("All users must belong to the same group");
   }
