@@ -72,11 +72,23 @@ export class LearningObjectPersistence {
     });
   }
 
-  public async deleteLearningObject(id: string) {
-    return await this.prisma.learningNodeTransition.delete({
-      where: {
-        id: id,
+  public async getLearningObjectById(id: string) {
+    return await this.prisma.learningObject.findUnique({
+      where: { id: id },
+      include: {
+        learningPathNodes: true,
       },
     });
+  }
+
+  public async deleteLearningObject(id: string) {
+    return await this.prisma.$transaction([
+      this.prisma.learningObjectKeyword.deleteMany({
+        where: { loId: id },
+      }),
+      this.prisma.learningObject.delete({
+        where: { id: id },
+      }),
+    ]);
   }
 }

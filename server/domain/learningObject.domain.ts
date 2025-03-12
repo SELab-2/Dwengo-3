@@ -89,10 +89,22 @@ export class LearningObjectDomain {
   }
 
   public async deleteLearningObject(id: string, user: UserEntity) {
-    /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
-    if (learningObject.owner != user.userId) {
-      throw new Error("You can only delete your own learning object");
-    } */
+    // TODO: Check if user is owner of learning object once there is an owner attribute
+    const learningObject =
+      await this.learningObjectPersistence.getLearningObjectById(id);
+
+    if (!learningObject) {
+      throw new Error("Learning object not found");
+    }
+
+    // If the LearningObject is linked to any LearningPathNode, prevent deletion
+    if (learningObject.learningPathNodes.length > 0) {
+      throw new Error(
+        "Cannot delete a learning object linked to a learning path.",
+      );
+    }
+
+    // Proceed with deletion
     return this.learningObjectPersistence.deleteLearningObject(id);
   }
 }
