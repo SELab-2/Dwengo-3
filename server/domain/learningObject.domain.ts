@@ -38,12 +38,14 @@ export class LearningObjectDomain {
       await this.learningObjectPersistence.createLearningObject(
         dataWithoutKeywords,
       );
-    learningObjectsKeywords?.map(({ keyword }) =>
-      this.learningObjectKeywordPersistence.createLearningObjectKeyword({
-        loId: learningObject.id,
-        keyword: keyword,
-      }),
-    );
+    const keywordPromises = learningObjectsKeywords?.map(({ keyword }) =>
+        this.learningObjectKeywordPersistence.createLearningObjectKeyword({
+          loId: learningObject.id,
+          keyword: keyword,
+        })
+    ) || [];
+    const keywords = await Promise.all(keywordPromises);
+    learningObject.learningObjectsKeywords.push(...keywords);
     return learningObject;
   }
 
