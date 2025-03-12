@@ -48,7 +48,7 @@ export class MessagePersistence {
                 },
                 sender: {
                     connect: {
-                        id: params.senderId
+                        id: params.senderId!
                     }
                 },
                 content: params.content

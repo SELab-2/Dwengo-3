@@ -11,7 +11,7 @@ export const MessageFilterSchema = z.object({
 export const MessageCreateSchema = z.object({
     discussionId: z.string().uuid(),
     content: z.string(),
-    senderId: z.string(),
+    senderId: z.string().optional(),
 });
 
 export const MessageUpdateSchema = z.object({

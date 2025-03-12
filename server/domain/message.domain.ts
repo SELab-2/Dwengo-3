@@ -2,7 +2,7 @@ import { ClassRole, Message } from "@prisma/client";
 import { MessagePersistence } from "../persistence/message.persistence";
 import { queryWithPaginationParser } from "../util/pagination/queryWithPaginationParser.util";
 import { MessageCreateSchema, MessageFilterSchema, MessageIdSchema, MessageUpdateSchema } from "../util/types/message.types";
-import { UserEntity } from "../util/types/user.types";
+import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
 import { DiscussionDomain } from "./discussion.domain";
 import { PaginationFilterSchema } from "../util/types/pagination.types";
 
@@ -34,12 +34,13 @@ export class MessageDomain {
             throw parseResult.error;
         }
         const data = parseResult.data;
-        if (
-            (user.role === ClassRole.TEACHER && user.student!.userId !== data.senderId) ||
-            (user.role === ClassRole.STUDENT && user.teacher!.userId !== data.senderId)) {
-            throw new Error("User ID doesn't correspond with the provided senderId.");
-        }
         await this.discussionDomain.getDiscussions({id: data.discussionId}, user); //this checks if user is part of the discussion
+        if (user.role === ClassRole.TEACHER) {
+            data.senderId = user.teacher!.userId;
+        }
+        else if (user.role == ClassRole.STUDENT) {
+            data.senderId = user.student!.userId;
+        }
         return this.messagePersistence.createMessage(data);
     }
 
