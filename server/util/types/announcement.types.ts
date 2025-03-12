@@ -2,11 +2,10 @@ import { z } from "zod";
 
 
 export const AnnouncementFilterSchema = z.object({
-    //TODO specify that the length of these must be greater than 0
-    classId: z.string().optional(),
-    teacherId: z.string().optional(),
-    studentId: z.string().optional(),
-    id: z.string().optional(),
+    classId: z.string().uuid().optional(),
+    teacherId: z.string().uuid().optional(),
+    studentId: z.string().uuid().optional(),
+    id: z.string().uuid().optional(),
 }).refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one filter must be provided.",
     path: [],
