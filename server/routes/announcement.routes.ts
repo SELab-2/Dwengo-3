@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { AnnouncementDomain } from "../domain/announcement.domain";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class AnnouncementController {
     public router: Router;
@@ -12,15 +13,30 @@ export class AnnouncementController {
     }
 
     private getAnnouncements = async (req: Request, res: Response) => {
-        res.json(await this.announcementDomain.getAnnouncements(req.query));
+        res.json(
+            await this.announcementDomain.getAnnouncements(
+                req.query,
+                await getUserFromReq(req),
+            )
+        );
     };
 
     private createAnnouncement = async (req: Request, res: Response) => {
-        res.json(await this.announcementDomain.createAnnouncement(req.body));
+        res.json(
+            await this.announcementDomain.createAnnouncement(
+                req.body,
+                await getUserFromReq(req),
+            )
+        );
     }
 
     private updateAnnouncement = async (req: Request, res: Response) => {
-        res.json(await this.announcementDomain.updateAnnouncement(req.body));
+        res.json(
+            await this.announcementDomain.updateAnnouncement(
+                req.body,
+                await getUserFromReq(req),
+            )
+        );
     }
 
     private initializeRoutes() {
