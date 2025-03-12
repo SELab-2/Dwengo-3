@@ -7,6 +7,7 @@ import {
 import { Prisma } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
 import { searchAndPaginate } from "../util/pagination/pagination.util";
+import { UserEntity } from "../util/types/user.types";
 
 export class ClassPersistence {
   private prisma;
@@ -50,9 +51,16 @@ export class ClassPersistence {
       },
     });
   }
-  public async createClass(params: ClassCreateParams) {
+  public async createClass(params: ClassCreateParams, creator: UserEntity) {
     return await this.prisma.class.create({
-      data: { name: params.name },
+      data: {
+        name: params.name,
+        teachers: {
+          connect: {
+            id: creator.teacher?.id,
+          },
+        },
+      },
     });
   }
 
