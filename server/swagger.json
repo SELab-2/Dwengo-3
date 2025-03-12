@@ -449,6 +449,102 @@
           }
         },
         "required": ["keyword"]
+      },
+
+      "Discussion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the discussion.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "groupId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the group associated with the discussions.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          }
+        }
+      },
+
+      "DiscussionCreate": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "description": "The ID of the group associated with the discussion.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          },
+          "members": {
+            "type": "array",
+            "description": "The IDs of the members participating in the discussion.",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": ["550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440001"]
+            }
+        },
+        "required": ["groupId", "members"]
+      },
+
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The unique identifier for the message.",
+            "example": "1"
+          },
+          "discussionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the discussion associated with the messages.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "senderId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the sender of the message.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the message.",
+            "example": "Hello, how are you?"
+          }
+        }
+      },
+
+      "MessageCreate": {
+        "type": "object",
+        "properties": {
+          "discussionId": {
+            "type": "string",
+            "description": "The ID of the discussion associated with the message.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "senderId": {
+            "type": "string",
+            "description": "The ID of the sender of the message.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the message.",
+            "example": "Hello, how are you?"
+          }
+        },
+        "required": ["discussionId", "senderId", "content"]
+      },
+
+      "MesssageDelete": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The ID of the message to be deleted.",
+        "example": 1
       }
     }
   }
