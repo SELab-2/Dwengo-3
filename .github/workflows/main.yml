@@ -3,7 +3,7 @@ name: Deploy on push to main
 on:
   push:
     branches:
-      - dev
+      - main
 
 run-name: ${{ github.actor }} has pushed an update to ${{ github.ref }} branch 🚀
 
@@ -14,11 +14,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies and migrate the database
-        run: ./install.sh migrate deploy
+      - name: Install dependencies for all projects
+        run: ./install.sh
+
+      - name: Generate the client and migrate the database
+        run: ./prisma.sh migrate deploy
 
       - name: Build client
         run: cd client && npm run build
 
-      - name: Restart application
-        run: pm2 restart all
+      - name: Restart applications
+        run: pm2 restart client server
