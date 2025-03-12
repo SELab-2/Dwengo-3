@@ -19,7 +19,7 @@ export const SubmissionFilterSchema = z
     path: [],
   });
 
-export const SubmissionUpdateAndCreateSchema = z
+export const SubmissionCreateSchema = z
   .object({
     groupId: z.string().uuid(),
     nodeId: z.string().uuid(),
@@ -40,8 +40,26 @@ export const SubmissionUpdateAndCreateSchema = z
     },
   );
 
+export const SubmissionUpdateSchema = z.object({
+  id: z.string().uuid(),
+  submissionType: z.nativeEnum(SubmissionType),
+    submission: z.union([
+      FileSubmissionSchema.optional(),
+      MultipleChoiceSubSchema.optional(),
+    ]),
+  })
+  .refine(
+    (data) =>
+      data.submissionType === SubmissionType.MULTIPLE_CHOICE &&
+      data.submission === undefined,
+    {
+      message:
+        "Multiple choice submission is required when submissionType is MULTIPLE_CHOICE",
+      path: [],
+    },
+  );
+
 export type AssignmentSubFilterParams = z.infer<typeof SubmissionFilterSchema>;
-export type AssignmentSubUpdataAndCreateParams = z.infer<
-  typeof SubmissionUpdateAndCreateSchema
->;
+export type AssignmentSubCreateParams = z.infer<typeof SubmissionCreateSchema>;
+export type AssignmentSubUpdateParams = z.infer<typeof SubmissionUpdateSchema>;
 export type FileSubmission = z.infer<typeof FileSubmissionSchema>;
