@@ -1,5 +1,5 @@
 import { AnnouncementPersistence } from "../persistence/announcement.persistence";
-import { ClassPersistence } from "../persistence/class.persistence";
+import { ClassDomain } from "./class.domain";
 import {
   AnnouncementByFilterParams,
   AnnouncementCreateParams,
@@ -13,11 +13,11 @@ import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
 
 export class AnnouncementDomain {
   private announcementPersistence;
-  private classPersistence;
+  private classDomain;
 
   constructor() {
     this.announcementPersistence = new AnnouncementPersistence();
-    this.classPersistence = new ClassPersistence();
+    this.classDomain = new ClassDomain();
   }
 
   public async getAnnouncements(
@@ -36,7 +36,7 @@ export class AnnouncementDomain {
 
     // check if classId is used, user belongs to class
     if (query.classId) {
-      this.checkUserBelongsToClass(user, query.classId);
+      this.classDomain.checkUserBelongsToClass(user, query.classId);
     }
 
     // check if teacherId is used, it can not get other teacher announcements
@@ -63,7 +63,7 @@ export class AnnouncementDomain {
       );
       if (res.announcements.length !== 0) {
         const resClassId = res.announcements[0].classId;
-        this.checkUserBelongsToClass(user, resClassId);
+        this.classDomain.checkUserBelongsToClass(user, resClassId);
       }
     }
 
@@ -83,7 +83,7 @@ export class AnnouncementDomain {
     }
 
     this.checkUserIsTeacher(user);
-    this.checkUserBelongsToClass(user, query.classId);
+    this.classDomain.checkUserBelongsToClass(user, query.classId);
 
     return this.announcementPersistence.createAnnouncement(parseResult.data);
   }
@@ -98,7 +98,7 @@ export class AnnouncementDomain {
     }
 
     this.checkUserIsTeacher(user);
-    this.checkUserBelongsToClass(user, query.id);
+    this.classDomain.checkUserBelongsToClass(user, query.id);
 
     return this.announcementPersistence.updateAnnouncement(parseResult.data);
   }
@@ -112,25 +112,6 @@ export class AnnouncementDomain {
   private async checkUserIsStudent(user: UserEntity) {
     if (user.role !== ClassRoleEnum.STUDENT) {
       throw new Error("User is not a student.");
-    }
-  }
-
-  private async checkUserBelongsToClass(user: UserEntity, classId: string) {
-    const classById = await this.classPersistence.getClassById(classId);
-    let exists = false;
-    if (user.role === ClassRoleEnum.TEACHER) {
-      exists =
-        classById?.teachers.some(
-          (teacher) => teacher.id === user.teacher?.id,
-        ) || false;
-    } else if (user.role === ClassRoleEnum.STUDENT) {
-      exists =
-        classById?.students.some(
-          (student) => student.id === user.student?.id,
-        ) || false;
-    }
-    if (exists) {
-      throw new Error("User does not belong to the class.");
     }
   }
 }
