@@ -76,6 +76,52 @@ export class LearningObjectController {
      *         description: Internal server error.
      */
     this.router.post("/", this.createLearningObject);
+    /**
+     * @swagger
+     * /api/learningObject:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningObject
+     *     summary: Get learning objects
+     *     description: Retrieve a list of learning objects based on the provided filters.
+     *     parameters:
+     *       - in: query
+     *         name: keywords
+     *         schema:
+     *           type: array
+     *           items:
+     *             type: string
+     *         description: Keywords to filter learning objects by.
+     *       - in: query
+     *         name: targetAges
+     *         schema:
+     *           type: array
+     *           items:
+     *             type: integer
+     *         description: Target age groups to filter learning objects by.
+     *       - in: query
+     *         name: id
+     *         schema:
+     *           type: string
+     *         description: The unique identifier of the learning object to filter by.
+     *     responses:
+     *       200:
+     *         description: A list of learning objects matching the filters.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/LearningObjectGet'
+     *       400:
+     *         description: Bad request due to invalid input.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       500:
+     *         description: Internal server error.
+     */
     this.router.get("/", this.getLearningObjects);
     this.router.patch("/:id", this.updateLearningObject);
     this.router.delete("/:id", this.deleteLearningObject);
