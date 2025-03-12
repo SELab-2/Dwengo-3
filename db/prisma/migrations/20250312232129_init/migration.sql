@@ -17,6 +17,7 @@ CREATE TABLE "LearningObject" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "contentType" "ContentTypeEnum",
+    "contentLocation" TEXT,
     "targetAges" INTEGER[],
     "teacherExclusive" BOOLEAN NOT NULL DEFAULT false,
     "skosConcepts" TEXT[],
@@ -32,6 +33,7 @@ CREATE TABLE "LearningObject" (
     "content" TEXT NOT NULL,
     "multipleChoice" JSON,
     "canUploadSubmission" BOOLEAN NOT NULL DEFAULT false,
+    "keywords" TEXT[],
 
     CONSTRAINT "LearningObject_pkey" PRIMARY KEY ("id")
 );
@@ -47,8 +49,8 @@ CREATE TABLE "LearningObjectKeyword" (
 -- CreateTable
 CREATE TABLE "LearningPathNode" (
     "id" TEXT NOT NULL,
-    "lpId" TEXT NOT NULL,
-    "loId" TEXT NOT NULL,
+    "learningPathId" TEXT NOT NULL,
+    "learningObjectId" TEXT NOT NULL,
     "instruction" TEXT,
     "startNode" BOOLEAN NOT NULL DEFAULT false,
 
@@ -59,7 +61,7 @@ CREATE TABLE "LearningPathNode" (
 CREATE TABLE "LearningNodeTransition" (
     "id" TEXT NOT NULL,
     "fromNodeId" TEXT NOT NULL,
-    "nextNodeId" TEXT,
+    "toNodeId" TEXT,
     "condition" TEXT,
 
     CONSTRAINT "LearningNodeTransition_pkey" PRIMARY KEY ("id")
@@ -73,6 +75,7 @@ CREATE TABLE "LearningPath" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "image" TEXT,
+    "ownerId" TEXT,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -221,6 +224,9 @@ CREATE TABLE "_DiscussionToUser" (
 CREATE UNIQUE INDEX "LearningObject_hruid_version_language_key" ON "LearningObject"("hruid", "version", "language");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "LearningPath_hruid_language_key" ON "LearningPath"("hruid", "language");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
@@ -248,19 +254,22 @@ CREATE INDEX "_GroupToStudent_B_index" ON "_GroupToStudent"("B");
 CREATE INDEX "_DiscussionToUser_B_index" ON "_DiscussionToUser"("B");
 
 -- AddForeignKey
-ALTER TABLE "LearningObjectKeyword" ADD CONSTRAINT "LearningObjectKeyword_loId_fkey" FOREIGN KEY ("loId") REFERENCES "LearningObject"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningObjectKeyword" ADD CONSTRAINT "LearningObjectKeyword_loId_fkey" FOREIGN KEY ("loId") REFERENCES "LearningObject"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_loId_fkey" FOREIGN KEY ("loId") REFERENCES "LearningObject"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_learningObjectId_fkey" FOREIGN KEY ("learningObjectId") REFERENCES "LearningObject"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_lpId_fkey" FOREIGN KEY ("lpId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_learningPathId_fkey" FOREIGN KEY ("learningPathId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_nextNodeId_fkey" FOREIGN KEY ("nextNodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_toNodeId_fkey" FOREIGN KEY ("toNodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_fromNodeId_fkey" FOREIGN KEY ("fromNodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "LearningPath" ADD CONSTRAINT "LearningPath_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "Student" ADD CONSTRAINT "Student_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

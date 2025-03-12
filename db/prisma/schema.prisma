@@ -20,32 +20,33 @@ enum ContentTypeEnum {
 }
 
 model LearningObject {
-  id                  String             @id @default(uuid())
-  hruid               String
-  uuid                String // uuid of existing learning objects
-  version             Int
-  language            String
-  title               String
-  description         String?
-  contentType         ContentTypeEnum?
-  contentLocation     String? // contains relevant info if contentType == EXTERN
-  targetAges          Int[]
-  teacherExclusive    Boolean            @default(false)
-  skosConcepts        String[]
-  educationalGoals    Json[]             @db.Json
-  copyright           String?
-  licence             String?
-  difficulty          Decimal?           @db.Decimal
-  estimatedTime       Decimal?           @db.Decimal
-  returnValue         Json?              @db.Json
-  available           Boolean            @default(true)
-  createdAt           DateTime?          @default(now()) @db.Timestamp
-  updatedAt           DateTime?          @default(now()) @db.Timestamp
-  content             String
-  multipleChoice      Json?              @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
-  canUploadSubmission Boolean            @default(false)
-  keywords            String[]
-  learningPathNodes   LearningPathNode[]
+  id                    String                  @id @default(uuid())
+  hruid                 String
+  uuid                  String // uuid of existing learning objects
+  version               Int
+  language              String
+  title                 String
+  description           String?
+  contentType           ContentTypeEnum?
+  contentLocation       String? // contains relevant info if contentType == EXTERN
+  targetAges            Int[]
+  teacherExclusive      Boolean                 @default(false)
+  skosConcepts          String[]
+  educationalGoals      Json[]                  @db.Json
+  copyright             String?
+  licence               String?
+  difficulty            Decimal?                @db.Decimal
+  estimatedTime         Decimal?                @db.Decimal
+  returnValue           Json?                   @db.Json
+  available             Boolean                 @default(true)
+  createdAt             DateTime?               @default(now()) @db.Timestamp
+  updatedAt             DateTime?               @default(now()) @db.Timestamp
+  content               String
+  multipleChoice        Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
+  canUploadSubmission   Boolean                 @default(false)
+  keywords              String[]
+  learningPathNodes     LearningPathNode[]
+  LearningObjectKeyword LearningObjectKeyword[]
 
   @@unique([hruid, version, language])
 }
@@ -116,6 +117,7 @@ model User {
   classJoinRequests ClassJoinRequest[]
   messages          Message[]
   discussions       Discussion[]
+  LearningPath      LearningPath[]
 }
 
 model Student {
