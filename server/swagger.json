@@ -68,7 +68,6 @@
           }
         }
       },
-
       "LearningPathNodeCreate": {
         "type": "object",
         "properties": {
@@ -106,7 +105,6 @@
           }
         }
       },
-
       "LearningPathNodeTransitionCreate": {
         "type": "object",
         "properties": {
@@ -138,6 +136,319 @@
             "example": "550e8400-e29b-41d4-a716-446655440004"
           }
         }
+      },
+      "LearningObjectCreate": {
+        "type": "object",
+        "properties": {
+          "hruid": {
+            "type": "string",
+            "description": "The human-readable identifier for the learning object. This is only unique in combination with a version and language.",
+            "example": "intro-to-programming"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning object.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "version": {
+            "type": "integer",
+            "description": "The version of the learning object.",
+            "example": 1
+          },
+          "language": {
+            "type": "string",
+            "description": "The language of the learning object.",
+            "example": "en"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the learning object.",
+            "example": "Introduction to Programming"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the learning object.",
+            "example": "A beginner-friendly learning object for programming."
+          },
+          "contentType": {
+            "type": "string",
+            "enum": [
+              "TEXT_PLAIN",
+              "TEXT_MARKDOWN",
+              "IMAGE_IMAGE_BLOCK",
+              "IMAGE_IMAGE",
+              "AUDIO_MPEG",
+              "APPLICATION_PDF",
+              "EXTERN",
+              "BLOCKLY"
+            ],
+            "description": "The type of content in the learning object.",
+            "example": "TEXT_MARKDOWN"
+          },
+          "targetAges": {
+            "type": "array",
+            "description": "The target age groups for the learning object.",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": [12, 14]
+          },
+          "teacherExclusive": {
+            "type": "boolean",
+            "description": "Indicates whether the learning object is exclusive to teachers.",
+            "example": false
+          },
+          "skosConcepts": {
+            "type": "array",
+            "description": "List of SKOS concept url's associated with the learning object.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["https//example.com"]
+          },
+          "educationalGoals": {
+            "type": "array",
+            "description": "List of educational goals associated with the learning object.",
+            "items": {
+              "type": "object"
+            },
+            "example": [{ "goal": "Understand variables" }]
+          },
+          "copyright": {
+            "type": "string",
+            "description": "The copyright information for the learning object.",
+            "example": "© 2023 Dwengo"
+          },
+          "licence": {
+            "type": "string",
+            "description": "The license under which the learning object is distributed.",
+            "example": "MIT"
+          },
+          "difficulty": {
+            "type": "number",
+            "description": "The difficulty level of the learning object.",
+            "example": 3
+          },
+          "estimatedTime": {
+            "type": "number",
+            "description": "The estimated time required to complete the learning object.",
+            "example": 60
+          },
+          "returnValue": {
+            "type": "object",
+            "description": "Callback url for something (i have no idea)",
+            "example": { "callback": "https://example.com" }
+          },
+          "available": {
+            "type": "boolean",
+            "description": "Indicates whether the learning object is available.",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning object was created.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning object was last updated.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the learning object.",
+            "example": "This is the content of the learning object."
+          },
+          "multipleChoice": {
+            "type": "object",
+            "description": "The multiple-choice questions for the learning object (JSON object).",
+            "example": {
+              "question": "What is 2 + 2?",
+              "options": ["2", "4", "6"],
+              "answer": "4"
+            }
+          },
+          "canUploadSubmission": {
+            "type": "boolean",
+            "description": "Indicates whether submissions can be uploaded for the learning object.",
+            "example": false
+          },
+          "learningObjectsKeywords": {
+            "type": "array",
+            "description": "List of keywords associated with the learning object.",
+            "items": {
+              "$ref": "#/components/schemas/LearningObjectKeyword"
+            }
+          }
+        },
+        "required": ["hruid", "uuid", "version", "language", "title", "content"]
+      },
+      "LearningObjectGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning object.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "hruid": {
+            "type": "string",
+            "description": "The human-readable identifier for the learning object. This is only unique in combination with a version and language.",
+            "example": "intro-to-programming"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning object. (artefact from previous api, need to delete)",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "version": {
+            "type": "integer",
+            "description": "The version of the learning object.",
+            "example": 1
+          },
+          "language": {
+            "type": "string",
+            "description": "The language of the learning object.",
+            "example": "en"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the learning object.",
+            "example": "Introduction to Programming"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the learning object.",
+            "example": "A beginner-friendly learning object for programming."
+          },
+          "contentType": {
+            "type": "string",
+            "enum": [
+              "TEXT_PLAIN",
+              "TEXT_MARKDOWN",
+              "IMAGE_IMAGE_BLOCK",
+              "IMAGE_IMAGE",
+              "AUDIO_MPEG",
+              "APPLICATION_PDF",
+              "EXTERN",
+              "BLOCKLY"
+            ],
+            "description": "The type of content in the learning object.",
+            "example": "TEXT_MARKDOWN"
+          },
+          "targetAges": {
+            "type": "array",
+            "description": "The target age groups for the learning object.",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": [12, 14]
+          },
+          "teacherExclusive": {
+            "type": "boolean",
+            "description": "Indicates whether the learning object is exclusive to teachers.",
+            "example": false
+          },
+          "skosConcepts": {
+            "type": "array",
+            "description": "List of SKOS concept url's associated with the learning object.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["https//example.com"]
+          },
+          "educationalGoals": {
+            "type": "array",
+            "description": "List of educational goals associated with the learning object.",
+            "items": {
+              "type": "object"
+            },
+            "example": [{ "goal": "Understand variables" }]
+          },
+          "copyright": {
+            "type": "string",
+            "description": "The copyright information for the learning object.",
+            "example": "© 2023 Dwengo"
+          },
+          "licence": {
+            "type": "string",
+            "description": "The license under which the learning object is distributed.",
+            "example": "MIT"
+          },
+          "estimatedTime": {
+            "type": "number",
+            "description": "The estimated time required to complete the learning object.",
+            "example": 60
+          },
+          "returnValue": {
+            "type": "object",
+            "description": "Callback url for something (i have no idea)",
+            "example": { "callback": "https://example.com" }
+          },
+          "available": {
+            "type": "boolean",
+            "description": "Indicates whether the learning object is available.",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning object was created.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning object was last updated.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the learning object.",
+            "example": "This is the content of the learning object."
+          },
+          "multipleChoice": {
+            "type": "object",
+            "description": "The multiple-choice questions for the learning object (JSON object).",
+            "example": {
+              "question": "What is 2 + 2?",
+              "options": ["2", "4", "6"],
+              "answer": "4"
+            }
+          },
+          "canUploadSubmission": {
+            "type": "boolean",
+            "description": "Indicates whether submissions can be uploaded for the learning object.",
+            "example": false
+          },
+          "keywords": {
+            "type": "array",
+            "description": "List of keywords associated with the learning object.",
+            "items": {
+              "$ref": "#/components/schemas/LearningObjectKeyword"
+            }
+          }
+        }
+      },
+      "LearningObjectUpdate": {},
+
+      "LearningObjectKeyword": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "description": "A keyword associated with the learning object.",
+            "example": "programming"
+          }
+        },
+        "required": ["keyword"]
       }
     }
   }

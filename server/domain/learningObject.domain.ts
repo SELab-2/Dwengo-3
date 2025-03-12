@@ -44,6 +44,7 @@ export class LearningObjectDomain {
         keyword: keyword,
       }),
     );
+    return learningObject;
   }
 
   public async getLearningObjects(query: LearningObjectFilterParams) {
