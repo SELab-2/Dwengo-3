@@ -45,7 +45,97 @@ export class AssignmentSubmissionController {
   }
 
   private initializeRoutes(): void {
+    /**
+     * @swagger
+     * /submissions:
+     *   get:
+     *    tags:
+     *     - Submission
+     *     summary: Retrieve assignment submissions
+     *     operationId: getAssignmentSubmission
+     *     parameters:
+     *       - name: groupId
+     *         in: query
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: Optional UUID of the group to filter submissions
+     *       - name: nodeId
+     *         in: query
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: Optional UUID of the node to filter submissions
+     *       - name: id
+     *         in: query
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: Optional UUID of the submission
+     *     responses:
+     *       200:
+     *         description: Successful retrieval of submissions
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   id:
+     *                     type: string
+     *                     format: uuid
+     *                   groupId:
+     *                     type: string
+     *                     format: uuid
+     *                     nullable: true
+     *                   nodeId:
+     *                     type: string
+     *                     format: uuid
+     *                     nullable: true
+     *       400:
+     *         description: Bad request due to missing filter parameters
+     *       500:
+     *         description: Internal server error
+     */
     this.router.get("/", this.getAssignmentSubmission.bind(this));
+    /**
+     * @swagger
+     * /submission:
+     *   put:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Submission
+     *     summary: Create or update a submission
+     *     description: Create or update a submission for an assignment. Supports file uploads and multiple-choice submissions.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/SubmissionCreate'
+     *     responses:
+     *       200:
+     *         description: Submission created or updated successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/SubmissionGet'
+     *       400:
+     *         description: Bad request due to invalid input or missing required fields.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       403:
+     *         description: Forbidden, user does not have permission to create or update the submission.
+     *       404:
+     *         description: Resource not found (e.g., group or node does not exist).
+     *       500:
+     *         description: Internal server error.
+     */
     this.router.put(
       "/",
       this.upload.single("file"),

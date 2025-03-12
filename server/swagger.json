@@ -515,7 +515,53 @@
             "format": "uuid"
           }
         }
-      }
+      },
+      "SubmissionCreate": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the group associated with the submission."
+          },
+          "nodeId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the node associated with the submission."
+          },
+          "submissionType": {
+            "type": "string",
+            "enum": ["FILE", "MULTIPLE_CHOICE"],
+            "description": "The type of submission."
+          },
+          "submission": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "fileName": {
+                    "type": "string",
+                    "description": "The name of the file."
+                  },
+                  "filePath": {
+                    "type": "string",
+                    "description": "The path to the file."
+                  }
+                },
+                "required": ["fileName", "filePath"],
+                "additionalProperties": false
+              },
+              {
+                "type": "string",
+                "description": "The multiple-choice submission value."
+              }
+            ],
+            "description": "The submission data, which can be either a file or a multiple-choice answer."
+          }
+        },
+        "required": ["groupId", "nodeId", "submissionType"]
+      },
+      "SubmissionGet": {}
     }
   }
 }
