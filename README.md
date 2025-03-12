@@ -67,9 +67,9 @@ Replace `<your_password>` with the password you set when running the `docker` co
 ---
 
 ## 4. Install dependencies & Prisma
-Install dependencies for both the server and client and generate the Prisma client:
+Install dependencies for both the server and client, generate the Prisma client and apply the migrations:
 ```bash
-./install.sh
+./install.sh migrate dev
 ```
 
 ---
