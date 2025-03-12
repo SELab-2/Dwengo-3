@@ -4,7 +4,7 @@ import { PrismaSingleton } from "./prismaSingleton";
 
 export class LearningPathNodeTransitionPersistence {
   public async createLearningPathNodeTransition(
-    data: LearningPathNodeTransitionCreateParams
+    data: LearningPathNodeTransitionCreateParams,
   ) {
     // Create a transition and connect it from previous to next node
 
