@@ -50,7 +50,8 @@ export class AssignmentDomain {
       throw parseResult.error;
     }
     const data = parseResult.data;
-    checkIfUsersAreInSameClass(data.groups, data.classId, data.teacherId, this.classPersistance);
+    data.teacherId = user.teacher!.id;
+    checkIfUsersAreInSameClass(data.groups, data.classId, data.teacherId!, this.classPersistance);
     return this.assignmentPersistence.createAssignment(data);
   }
 }

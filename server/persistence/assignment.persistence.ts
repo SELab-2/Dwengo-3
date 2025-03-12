@@ -87,7 +87,7 @@ export class AssignmentPersistence {
         },
         teacher: {
           connect: {
-            id: params.teacherId,
+            id: params.teacherId!,
           },
         },
         learningPath: {
