@@ -48,6 +48,10 @@ export async function getUserById(id: string): Promise<FullUserType | null> {
 
 export async function getUserByEmail(
   email: string,
+  include: {
+    teacher: true;
+    student: true;
+  },
 ): Promise<FullUserType | null> {
   return prisma.user.findFirst({
     where: {
