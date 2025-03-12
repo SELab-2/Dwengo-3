@@ -40,7 +40,7 @@ model LearningObject {
   returnValue             Json?                   @db.Json
   available               Boolean                 @default(true)
   createdAt               DateTime?               @default(now()) @db.Timestamp
-  updatedAt               DateTime?               @default(now()) @db.Timestamp
+  updatedAt               DateTime?               @updatedAt @db.Timestamp
   content                 String
   multipleChoice          Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
   canUploadSubmission     Boolean                 @default(false)
@@ -89,7 +89,7 @@ model LearningPath {
   description       String?
   image             String?
   createdAt         DateTime?          @default(now()) @db.Timestamp
-  updatedAt         DateTime?          @default(now()) @db.Timestamp
+  updatedAt         DateTime?          @updatedAt @db.Timestamp
   learningPathNodes LearningPathNode[]
   assignments       Assignment[]
   // TODO add creator id 

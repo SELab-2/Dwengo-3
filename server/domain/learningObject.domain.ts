@@ -39,8 +39,6 @@ export class LearningObjectDomain {
 
     const dataToUpdate = {
       ...dataWithoutKeywords,
-      createdAt: new Date(), // Automatically set createdAt to the current date/time
-      updatedAt: new Date(), // Automatically set updatedAt to the current date/time
     };
 
     const learningObject =
@@ -89,7 +87,6 @@ export class LearningObjectDomain {
 
     const dataToUpdate = {
       ...dataWithoutKeywords,
-      updatedAt: new Date(), // Automatically set updatedAt to the current date/time
     };
 
     await this.learningObjectPersistence.updateLearningObject(id, dataToUpdate);
