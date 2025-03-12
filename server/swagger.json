@@ -438,7 +438,6 @@
         }
       },
       "LearningObjectUpdate": {},
-
       "LearningObjectKeyword": {
         "type": "object",
         "properties": {
@@ -449,6 +448,73 @@
           }
         },
         "required": ["keyword"]
+      },
+      "AssignmentCreate": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "minItems": 1
+            },
+            "minItems": 1
+          },
+          "classId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "teacherId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "learningPathId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": ["groups", "classId", "teacherId", "learningPathId"],
+        "additionalProperties": false
+      },
+      "AssignmentGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "lpId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the learning path associated with this assignment."
+          },
+          "teacherId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "classId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          },
+          "learningPathId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
       }
     }
   }
