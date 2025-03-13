@@ -437,7 +437,111 @@
           }
         }
       },
-      "LearningObjectUpdate": {},
+      "LearningObjectUpdate": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Version must be a positive integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the learning object.",
+            "example": "Introduction to Algebra"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the learning object.",
+            "example": "This module introduces algebraic concepts."
+          },
+          "contentType": {
+            "type": "string",
+            "description": "The type of content.",
+            "example": "video"
+          },
+          "targetAges": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "The target age groups.",
+            "example": [10, 12, 14]
+          },
+          "teacherExclusive": {
+            "type": "boolean",
+            "description": "Indicates if the content is exclusive to teachers.",
+            "example": false
+          },
+          "skosConcepts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "SKOS concepts related to the learning object.",
+            "example": ["Algebra", "Mathematics"]
+          },
+          "educationalGoals": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "The educational goals linked to this learning object."
+          },
+          "copyright": {
+            "type": "string",
+            "description": "Copyright information for the learning object.",
+            "example": "© 2025 Learning Corp."
+          },
+          "licence": {
+            "type": "string",
+            "description": "The licensing information.",
+            "example": "CC BY-NC-SA 4.0"
+          },
+          "difficulty": {
+            "type": "integer",
+            "description": "Difficulty level of the learning object.",
+            "example": 3
+          },
+          "estimatedTime": {
+            "type": "number",
+            "description": "Estimated time to complete the learning object in hours.",
+            "example": 1.5
+          },
+          "returnValue": {
+            "type": "object",
+            "description": "The expected return value after completing the learning object."
+          },
+          "available": {
+            "type": "boolean",
+            "description": "Indicates if the learning object is currently available.",
+            "example": true
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the learning object.",
+            "example": "Algebraic equations introduction..."
+          },
+          "multipleChoice": {
+            "type": "object",
+            "description": "Multiple-choice questions associated with the learning object."
+          },
+          "canUploadSubmission": {
+            "type": "boolean",
+            "description": "Indicates if users can upload submissions.",
+            "example": true
+          },
+          "learningObjectsKeywords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearningObjectKeyword"
+            },
+            "description": "Keywords associated with the learning object."
+          }
+        }
+      },
 
       "LearningObjectKeyword": {
         "type": "object",
@@ -449,6 +553,114 @@
           }
         },
         "required": ["keyword"]
+      },
+      "AnnouncementCreate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          },
+          "classId": {
+            "type": "string",
+            "description": "The ID of the class this announcement is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "teacherId": {
+            "type": "string",
+            "description": "The ID of the teacher who created the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          }
+        },
+        "required": ["title", "content", "classId", "teacherId"]
+      },
+      "AnnouncementGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          },
+          "classId": {
+            "type": "string",
+            "description": "The ID of the class this announcement is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "teacherId": {
+            "type": "string",
+            "description": "The ID of the teacher who created the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          }
+        }
+      },
+      "AnnouncementUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          }
+        }
+      },
+      "ClassJoinRequestCreate": {
+        "type": "object",
+        "properties": {
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the class to join. Must be a valid UUID.",
+            "example": "e5c03d9c-d123-4a34-b88c-ff33f222b0f9"
+          }
+        },
+        "required": ["classId"]
+      },
+      "ClassJoinRequestPost": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the class join request.",
+            "example": "a1b2c3d4-e5f6-7890-gh12-i34j56k78l90"
+          },
+          "decision": {
+            "type": "string",
+            "enum": ["accept", "deny"],
+            "description": "The decision for the class join request, either accept or deny.",
+            "example": "accept"
+          }
+        },
+        "required": ["requestId", "decision"]
       }
     }
   }

@@ -1,4 +1,3 @@
-import { parse } from "path";
 import { LearningObjectPersistence } from "../persistence/learningObject.persistence";
 import { LearningObjectKeywordPersistence } from "../persistence/learningObjectKeyword.persistence";
 import {
@@ -9,6 +8,7 @@ import {
   LearningObjectUpdateParams,
   LearningObjectUpdateSchema,
 } from "../util/types/learningObject.types";
+import { PaginationFilterSchema } from "../util/types/pagination.types";
 import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
 
 export class LearningObjectDomain {
@@ -28,31 +28,47 @@ export class LearningObjectDomain {
     if (user.role != ClassRoleEnum.TEACHER) {
       throw new Error("User must be a teacher to create a learning object");
     }
+
     const parseResult = LearningObjectCreateSchema.safeParse(query);
     if (!parseResult.success) {
       throw parseResult.error;
     }
+
     const { learningObjectsKeywords, ...dataWithoutKeywords } =
       parseResult.data;
+
+    const dataToUpdate = {
+      ...dataWithoutKeywords,
+    };
+
     const learningObject =
-      await this.learningObjectPersistence.createLearningObject(
-        dataWithoutKeywords,
+      await this.learningObjectPersistence.createLearningObject(dataToUpdate);
+
+    if (learningObjectsKeywords) {
+      const keywords = await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
+        learningObject.id,
+        learningObjectsKeywords,
       );
-    learningObjectsKeywords?.map(({ keyword }) =>
-      this.learningObjectKeywordPersistence.createLearningObjectKeyword({
-        loId: learningObject.id,
-        keyword: keyword,
-      }),
-    );
+      learningObject.learningObjectsKeywords.push(...keywords);
+    }
+
     return learningObject;
   }
 
   public async getLearningObjects(query: LearningObjectFilterParams) {
+    const paginationResult = PaginationFilterSchema.safeParse(query);
+    if (!paginationResult.success) {
+      throw paginationResult.error;
+    }
+
     const parseResult = LearningObjectFilterSchema.safeParse(query);
     if (!parseResult.success) {
       throw parseResult.error;
     }
-    return this.learningObjectPersistence.getLearningObjects(parseResult.data);
+    return this.learningObjectPersistence.getLearningObjects(
+      paginationResult.data,
+      parseResult.data,
+    );
   }
 
   public async updateLearningObject(
@@ -60,29 +76,47 @@ export class LearningObjectDomain {
     body: LearningObjectUpdateParams,
     user: UserEntity,
   ) {
-    /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
-    if (learningObject.owner != user.userId) {
-      throw new Error("You can only update your own learning object");
-    } */
-
+    // TODO: Check if user is owner of learning object once there is an owner attribute
+    // Validate the request body using Zod schema
     const parseResult = LearningObjectUpdateSchema.safeParse(body);
     if (!parseResult.success) {
       throw parseResult.error;
     }
+
     const { learningObjectsKeywords, ...dataWithoutKeywords } =
       parseResult.data;
-    await this.learningObjectPersistence.updateLearningObject(
-      id,
-      dataWithoutKeywords,
-    );
-    // TODO: Update keywords
+
+    const dataToUpdate = {
+      ...dataWithoutKeywords,
+    };
+
+    await this.learningObjectPersistence.updateLearningObject(id, dataToUpdate);
+
+    if (learningObjectsKeywords) {
+      await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
+        id,
+        learningObjectsKeywords,
+      );
+    }
   }
 
   public async deleteLearningObject(id: string, user: UserEntity) {
-    /* const learningObject = this.learningObjectPersistence.getLearningObjects({id: id});
-    if (learningObject.owner != user.userId) {
-      throw new Error("You can only delete your own learning object");
-    } */
+    // TODO: Check if user is owner of learning object once there is an owner attribute
+    const learningObject =
+      await this.learningObjectPersistence.getLearningObjectById(id);
+
+    if (!learningObject) {
+      throw new Error("Learning object not found");
+    }
+
+    // If the LearningObject is linked to any LearningPathNode, prevent deletion
+    if (learningObject.learningPathNodes.length > 0) {
+      throw new Error(
+        "Cannot delete a learning object linked to a learning path.",
+      );
+    }
+
+    // Proceed with deletion
     return this.learningObjectPersistence.deleteLearningObject(id);
   }
 }

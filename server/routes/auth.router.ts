@@ -5,13 +5,11 @@ import { getUserById } from "../persistence/auth/users.persistance";
 import { User } from "@prisma/client";
 import crypto from "crypto";
 import * as http2 from "node:http2";
+import { UserDto, UserEntity } from "../util/types/user.types";
 
 export const router: Router = express.Router();
 const studentPrefix = "/student";
 const teacherPrefix = "/teacher";
-
-// do not return the password of the user to the client.
-type UserDto = Omit<User, "password">;
 
 /**
  * @swagger
@@ -33,13 +31,22 @@ type UserDto = Omit<User, "password">;
  * @param res - The response.
  */
 async function register(req: Request, res: Response): Promise<void> {
-  const user: User = await registerUser(req.body);
+  const user: UserEntity = await registerUser(req.body);
   const cookie = generateCookie(user.id, user.email, user.password);
   res.cookie("DWENGO_SESSION", cookie, {
     maxAge: 6 * 60 * 60 * 1000,
     httpOnly: true,
   }); // 6 hours
-  res.status(http2.constants.HTTP_STATUS_OK).send(user as UserDto);
+  res.status(http2.constants.HTTP_STATUS_OK).send({
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    surname: user.surname,
+    name: user.name,
+    role: user.role,
+    student: user.student,
+    teacher: user.teacher,
+  } as UserDto);
 }
 
 /**
@@ -69,13 +76,22 @@ async function login(req: Request, res: Response): Promise<void> {
   }
 
   // password should not be sent to the client
-  const user: User = await loginUser(loginRequest.data as LoginRequest);
+  const user: UserEntity = await loginUser(loginRequest.data as LoginRequest);
   const cookie = generateCookie(user.id, user.email, user.password);
   res.cookie("DWENGO_SESSION", cookie, {
     maxAge: 6 * 60 * 60 * 1000,
     httpOnly: true,
   }); // 6 hours
-  res.status(http2.constants.HTTP_STATUS_OK).send(user);
+  res.status(http2.constants.HTTP_STATUS_OK).send({
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    surname: user.surname,
+    name: user.name,
+    role: user.role,
+    student: user.student,
+    teacher: user.teacher,
+  } as UserDto);
 }
 
 /**
@@ -116,6 +132,7 @@ export function generateCookie(
     .createHash("sha512")
     .update(userId + email + password)
     .digest("base64");
+  console.log(cookie + hash);
   return cookie + hash;
 }
 
@@ -135,6 +152,7 @@ export async function verifyCookie(cookie: string): Promise<boolean> {
   const [id, hash] = cookie.split("?");
   if (id === undefined || hash === undefined) return false;
 
+  // todo: cleanup in backend rewrite/cleanup
   const user: User | null = await getUserById(id);
   if (user === null) return false;
 
