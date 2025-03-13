@@ -17,6 +17,8 @@ import { AssignmentSubmissionController } from "./routes/assignmentSubmission.ro
 import swaggerUi from "swagger-ui-express";
 import * as swaggerDocument from "./swagger.json";
 import swaggerJsdoc from "swagger-jsdoc";
+import { StudentController } from "./routes/student.routes";
+import { TeacherController } from "./routes/teacher.routes";
 
 dotenv.config({ path: "../.env" });
 const app: Express = express();
@@ -74,6 +76,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 const apiRouter = express.Router();
 app.use("/api", apiRouter);
+
+apiRouter.use("/student", new StudentController().router);
+apiRouter.use("/teacher", new TeacherController().router);
 
 apiRouter.use("/class", new ClassController().router);
 apiRouter.use("/learningPath", new LearningPathController().router);

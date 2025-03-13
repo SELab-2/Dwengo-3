@@ -140,7 +140,7 @@ export class StudentDomain {
 
       // Check if the student is in the teacher's class
       const isStudentInTeacherClass = await this.isStudentInTeacherClass(
-        userExists.student.id,
+        userExists.student!.id,
         teacher.id,
       );
 
