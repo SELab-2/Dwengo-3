@@ -12,10 +12,6 @@ export class StudentController {
     this.initializeRoutes();
   }
 
-  private createStudent = async (req: Request, res: Response) => {
-    res.json(await this.studentDomain.createStudent(req.body));
-  };
-
   private getStudents = async (req: Request, res: Response) => {
     res.json(
       await this.studentDomain.getStudents(
@@ -47,71 +43,64 @@ export class StudentController {
     /**
      * @swagger
      * /api/student:
-     *   post:
-     *     security:
-     *       - cookieAuth: []
-     *     tags: [Student]
-     *     summary: Create a student
-     *     description: Create a student for the current user
-     *     parameters:
-     *       - name: userId
-     *         in: body
-     *         description: The ID of the user to create the student for
-     *         required: true
-     *         schema:
-     *           type: string
-     *           format: uuid
-     *     responses:
-     *       200:
-     *         description: Succesfully created the student
-     *       401:
-     *         description: Unauthorized, user not authenticated
-     *       500:
-     *         description: Server error
-     */
-    this.router.post("/", this.createStudent);
-
-    /**
-     * @swagger
-     * /api/student:
      *   get:
      *     security:
      *       - cookieAuth: []
      *     tags: [Student]
      *     summary: Get list of students
      *     description: Fetches a list of students filtered by optional query parameters.
-     *     parameters:
-     *       - name: id
-     *         in: body
-     *         description: The ID of the student to get
-     *         required: false
-     *         schema:
-     *           type: string
-     *           format: uuid
-     *       - name: userId
-     *         in: body
-     *         description: The userId of the student to get
-     *         required: false
-     *         schema:
-     *           type: string
-     *           format: uuid
-     *       - name: classId
-     *         in: body
-     *         description: The classId of the students to get
-     *         required: false
-     *         schema:
-     *           type: string
-     *           format: uuid
-     *       - name: groupId
-     *         in: body
-     *         description: The groupId of the students to get
-     *         required: false
-     *         schema:
-     *           type: string
-     *           format: uuid
+     *     requestBody:
+     *       description: Optional filters for the query
+     *       required: false
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               id:
+     *                 type: string
+     *                 format: uuid
+     *               userId:
+     *                 type: string
+     *                 format: uuid
+     *               classId:
+     *                 type: string
+     *                 format: uuid
+     *               groupId:
+     *                 type: string
+     *                 format: uuid
      *     responses:
      *       200:
      *         description: Succesfully fetched the list of students
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 students:
+     *                   type: array
+     *                   items:
+     *                     schema:
+     *                       type: object
+     *                       properties:
+     *                         id:
+     *                           type: string
+     *                           format: uuid
+     *                         userId:
+     *                           type: string
+     *                           format: uuid
+     *                         classes:
+     *                           type: array
+     *                           items:
+     *                             type: string
+     *                             format: uuid
+     *                         groups:
+     *                           type: array
+     *                           items:
+     *                             type: string
+     *                             format: uuid
+     *                 totalPages:
+     *                   type: number
      *       401:
      *         description: Unauthorized, user not authenticated
      *       500:
@@ -128,31 +117,52 @@ export class StudentController {
      *     tags: [Student]
      *     summary: Update a student
      *     description: Updates a students classes and groups
-     *     parameters:
-     *       - name: id
-     *         in: body
-     *         description: The ID of the student to update
-     *         required: true
-     *         schema:
-     *           type: string
-     *           format: uuid
-     *       - name: classes
-     *         in: body
-     *         description: The classes the student needs to be in
-     *         required: false
-     *         schema:
-     *           type: [string]
-     *           format: [uuid]
-     *       - name: groups
-     *         in: body
-     *         description: The groups the student needs to be in
-     *         required: false
-     *         schema:
-     *           type: [string]
-     *           format: [uuid]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               id:
+     *                 type: string
+     *                 format: uuid
+     *               classes:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                   format: uuid
+     *               groups:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                   format: uuid
+     *             required:
+     *               - id
      *     responses:
      *       200:
      *         description: Succesfully updated the student
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: string
+     *                   format: uuid
+     *                 userId:
+     *                   type: string
+     *                   format: uuid
+     *                 classes:
+     *                   type: array
+     *                   items:
+     *                     type: string
+     *                     format: uuid
+     *                 groups:
+     *                   type: array
+     *                   items:
+     *                     type: string
+     *                     format: uuid
      *       401:
      *         description: Unauthorized, user not authenticated
      *       500:
@@ -169,14 +179,18 @@ export class StudentController {
      *     tags: [Student]
      *     summary: Delete a student
      *     description: Deletes a student
-     *     parameters:
-     *       - name: id
-     *         in: body
-     *         description: The ID of the student to delete
-     *         required: true
-     *         schema:
-     *           type: string
-     *           format: uuid
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               id:
+     *                 type: string
+     *                 format: uuid
+     *             required:
+     *               - id
      *     responses:
      *       200:
      *         description: Succesfully deleted the student
