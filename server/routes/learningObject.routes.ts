@@ -70,7 +70,7 @@ export class LearningObjectController {
      *               $ref: '#/components/schemas/LearningObjectGet'
      *       400:
      *         description: Bad request due to invalid input.
-     *       401:
+     *       403:
      *         description: Unauthorized, user not authenticated.
      *       500:
      *         description: Internal server error.
@@ -117,12 +117,50 @@ export class LearningObjectController {
      *                 $ref: '#/components/schemas/LearningObjectGet'
      *       400:
      *         description: Bad request due to invalid input.
-     *       401:
+     *       403:
      *         description: Unauthorized, user not authenticated.
      *       500:
      *         description: Internal server error.
      */
     this.router.get("/", this.getLearningObjects);
+    /**
+     * @swagger
+     * /api/learningObject/{id}:
+     *   patch:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningObject
+     *     summary: Update a learning object
+     *     description: Update an existing learning object with the provided data.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the learning object to delete.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/LearningObjectUpdate'
+     *     responses:
+     *       200:
+     *         description: Learning object updated successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningObjectGet'
+     *       400:
+     *         description: Bad request due to invalid input.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       500:
+     *         description: Internal server error.
+     */
     this.router.patch("/:id", this.updateLearningObject);
     /**
      * @swagger
@@ -145,10 +183,8 @@ export class LearningObjectController {
      *     responses:
      *       204:
      *         description: Learning object deleted successfully.
-     *       401:
-     *         description: Unauthorized, user not authenticated.
      *       403:
-     *         description: Forbidden, user does not have permission to delete the learning object.
+     *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: Learning object not found.
      *       500:
