@@ -29,7 +29,7 @@ CREATE TABLE "LearningObject" (
     "returnValue" JSON,
     "available" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP,
     "content" TEXT NOT NULL,
     "multipleChoice" JSON,
     "canUploadSubmission" BOOLEAN NOT NULL DEFAULT false,
@@ -76,7 +76,7 @@ CREATE TABLE "LearningPath" (
     "image" TEXT,
     "ownerId" TEXT,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP,
 
     CONSTRAINT "LearningPath_pkey" PRIMARY KEY ("id")
 );
