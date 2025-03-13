@@ -5,7 +5,6 @@ import {
 } from "../util/types/learningPathNodeTransition.types";
 import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
 
-
 export class LearningPathNodeTransitionDomain {
   private learningPathNodeTransitionPersistence;
 

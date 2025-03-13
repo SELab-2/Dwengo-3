@@ -76,7 +76,7 @@
             "description": "The ID of the learning path this node belongs to.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
           },
-          "loId": {
+          "learningObjectId": {
             "type": "string",
             "description": "The ID of the learning object associated with this node.",
             "example": "550e8400-e29b-41d4-a716-446655440002"
@@ -92,7 +92,7 @@
             "example": false
           }
         },
-        "required": ["lpId, loId", "startNode"]
+        "required": ["learningPathId, learningObjectId", "startNode"]
       },
       "LearningPathNodeGet": {
         "type": "object",
@@ -277,7 +277,7 @@
             "description": "Indicates whether submissions can be uploaded for the learning object.",
             "example": false
           },
-          "learningObjectsKeywords": {
+          "keywords": {
             "type": "array",
             "description": "List of keywords associated with the learning object.",
             "items": {
@@ -533,7 +533,7 @@
             "description": "Indicates if users can upload submissions.",
             "example": true
           },
-          "learningObjectsKeywords": {
+          "keywords": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/LearningObjectKeyword"

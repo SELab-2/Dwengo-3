@@ -14,7 +14,7 @@ import {
   LearningPath,
   LearningPathNode,
   LearningObject,
-  Chat,
+  Discussion,
   Group,
 } from "@prisma/client";
 import * as fs from "fs";
@@ -60,7 +60,7 @@ async function main() {
       students: { id: string }[];
     })[];
     classJoinRequests: ClassJoinRequest[];
-    chats: (Chat & {
+    chats: (Discussion & {
       messages: { id: string }[];
       members: { id: string }[];
     })[];
@@ -117,10 +117,14 @@ async function main() {
       where: { id: classgroup.id },
       data: {
         students: {
-          connect: classgroup.students.map((student) => ({ id: student.id })),
+          connect: classgroup.students.map((student: any) => ({
+            id: student.id,
+          })),
         },
         teachers: {
-          connect: classgroup.teachers.map((teacher) => ({ id: teacher.id })),
+          connect: classgroup.teachers.map((teacher: any) => ({
+            id: teacher.id,
+          })),
         },
       },
     });
@@ -142,12 +146,14 @@ async function main() {
 
   // Insert all assignments into the database
   await prisma.assignment.createMany({
-    data: data.assignments.map(({ id, lpId, teacherId, classId }) => ({
-      id,
-      lpId,
-      teacherId,
-      classId,
-    })),
+    data: data.assignments.map(
+      ({ id, learningPathId, teacherId, classId }) => ({
+        id,
+        learningPathId,
+        teacherId,
+        classId,
+      }),
+    ),
   });
 
   // Insert all learning objects into the database
@@ -168,10 +174,10 @@ async function main() {
   // Insert all learningPathNodes into the database
   await prisma.learningPathNode.createMany({
     data: data.learningPathNodes.map(
-      ({ id, lpId, loId, instruction, startNode }) => ({
+      ({ id, learningPathId, learningObjectId, instruction, startNode }) => ({
         id,
-        lpId,
-        loId,
+        learningPathId,
+        learningObjectId,
         instruction,
         startNode,
       }),
@@ -203,7 +209,7 @@ async function main() {
   });
 
   // Insert all chats into the database
-  await prisma.chat.createMany({
+  await prisma.discussion.createMany({
     data: data.chats.map(({ id, groupId }) => ({ id, groupId })),
   });
 
@@ -224,7 +230,7 @@ async function main() {
         where: { id: group.id },
         data: {
           students: {
-            connect: group.students.map((student) => ({ id: student.id })),
+            connect: group.students.map((student: any) => ({ id: student.id })),
           },
         },
       });
@@ -235,7 +241,7 @@ async function main() {
         where: { id: group.id },
         data: {
           assignmentSubmissions: {
-            connect: group.assignmentSubmissions.map((submission) => ({
+            connect: group.assignmentSubmissions.map((submission: any) => ({
               id: submission.id,
             })),
           },
@@ -251,7 +257,7 @@ async function main() {
         where: { id: node.id },
         data: {
           groups: {
-            connect: node.groups.map((group) => ({ id: group.id })),
+            connect: node.groups.map((group: any) => ({ id: group.id })),
           },
         },
       });
@@ -262,7 +268,7 @@ async function main() {
         where: { id: node.id },
         data: {
           assignmentSubmissions: {
-            connect: node.assignmentSubmissions.map((submission) => ({
+            connect: node.assignmentSubmissions.map((submission: any) => ({
               id: submission.id,
             })),
           },
@@ -278,7 +284,7 @@ async function main() {
         where: { id: assignment.id },
         data: {
           groups: {
-            connect: assignment.groups.map((group) => ({ id: group.id })),
+            connect: assignment.groups.map((group: any) => ({ id: group.id })),
           },
         },
       });
@@ -292,7 +298,7 @@ async function main() {
         where: { id: learningObject.id },
         data: {
           learningPathNodes: {
-            connect: learningObject.learningPathNodes.map((node) => ({
+            connect: learningObject.learningPathNodes.map((node: any) => ({
               id: node.id,
             })),
           },
@@ -304,11 +310,11 @@ async function main() {
   // Link the chats to their respective members
   for (const chat of data.chats) {
     if (chat.members.length > 0) {
-      await prisma.chat.update({
+      await prisma.discussion.update({
         where: { id: chat.id },
         data: {
           members: {
-            connect: chat.members.map((member) => ({ id: member.id })),
+            connect: chat.members.map((member: any) => ({ id: member.id })),
           },
         },
       });

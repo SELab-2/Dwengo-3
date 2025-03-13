@@ -40,7 +40,7 @@ export const LearningObjectCreateSchema = z.object({
   content: z.string().min(1, "Content is required"),
   multipleChoice: z.any().optional(), // JSON object
   canUploadSubmission: z.boolean().default(false),
-  learningObjectsKeywords: z.array(learningObjectKeywordSchema).optional(),
+  keywords: z.array(learningObjectKeywordSchema).optional(),
 });
 
 export type LearningObjectCreateParams = z.infer<
@@ -49,7 +49,7 @@ export type LearningObjectCreateParams = z.infer<
 
 export type LearningObjectWithoutKeywords = Omit<
   LearningObjectCreateParams,
-  "learningObjectsKeywords"
+  "keywords"
 >;
 
 export const LearningObjectUpdateSchema = z.object({

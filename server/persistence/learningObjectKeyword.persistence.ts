@@ -8,19 +8,19 @@ export class LearningObjectKeywordPersistence {
   }
 
   public async updateLearningObjectKeywords(
-    loId: string,
+    learningObjectId: string,
     newKeywords: {
       keyword: string;
     }[],
   ) {
     // Remove old keywords first
     await this.prisma.learningObjectKeyword.deleteMany({
-      where: { loId: loId },
+      where: { learningObjectId: learningObjectId },
     });
 
     // Add new keywords
     const newKeywordEntries = newKeywords.map((keyword) => ({
-      loId: loId,
+      learningObjectId: learningObjectId,
       keyword: keyword.keyword,
     }));
 

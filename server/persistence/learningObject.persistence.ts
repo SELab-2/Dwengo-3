@@ -23,7 +23,7 @@ export class LearningObjectPersistence {
       AND: [
         filters.keywords && filters.keywords.length > 0
           ? {
-              learningObjectsKeywords: {
+              keywords: {
                 some: {
                   keyword: {
                     in: filters.keywords, // Match any of the keywords
@@ -50,7 +50,7 @@ export class LearningObjectPersistence {
       where,
       paginationParams,
       {
-        learningObjectsKeywords: true,
+        keywords: true,
       },
     );
   }
@@ -59,8 +59,8 @@ export class LearningObjectPersistence {
     const learningObject = await this.prisma.learningObject.create({
       data: data,
       include: {
-        learningObjectsKeywords: true
-      }
+        keywords: true,
+      },
     });
     return learningObject;
   }
