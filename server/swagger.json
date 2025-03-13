@@ -458,8 +458,18 @@
           },
           "contentType": {
             "type": "string",
+            "enum": [
+              "TEXT_PLAIN",
+              "TEXT_MARKDOWN",
+              "IMAGE_IMAGE_BLOCK",
+              "IMAGE_IMAGE",
+              "AUDIO_MPEG",
+              "APPLICATION_PDF",
+              "EXTERN",
+              "BLOCKLY"
+            ],
             "description": "The type of content.",
-            "example": "video"
+            "example": "AUDIO_MPEG"
           },
           "targetAges": {
             "type": "array",
