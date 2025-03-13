@@ -9,6 +9,7 @@ import {
   TeacherIdSchema,
 } from "../util/types/announcement.types";
 import { PaginationFilterSchema } from "../util/types/pagination.types";
+import { UserEntity } from "../util/types/user.types";
 
 export class AnnouncementDomain {
   private announcementPersistence;
@@ -35,7 +36,10 @@ export class AnnouncementDomain {
     );
   }
 
-  public async createAnnouncement(query: AnnouncementCreateDomainParams) {
+  public async createAnnouncement(
+    query: AnnouncementCreateDomainParams,
+    user: UserEntity,
+  ) {
     // TODO check if this is allowed by using cookies
 
     const parseResult = AnnouncementCreateDomainSchema.safeParse(query);
@@ -43,7 +47,7 @@ export class AnnouncementDomain {
       throw parseResult.error;
     }
 
-    const teacherIdParseResult = TeacherIdSchema.safeParse(query);
+    const teacherIdParseResult = TeacherIdSchema.safeParse(user.teacher?.id);
     if (!teacherIdParseResult.success) {
       throw teacherIdParseResult.error;
     }
