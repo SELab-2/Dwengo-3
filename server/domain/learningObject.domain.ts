@@ -45,10 +45,11 @@ export class LearningObjectDomain {
       await this.learningObjectPersistence.createLearningObject(dataToUpdate);
 
     if (learningObjectsKeywords) {
-      await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
+      const keywords = await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
         learningObject.id,
         learningObjectsKeywords,
       );
+      learningObject.learningObjectsKeywords.push(...keywords);
     }
 
     return learningObject;

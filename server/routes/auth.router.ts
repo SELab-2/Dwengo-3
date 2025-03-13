@@ -132,6 +132,7 @@ export function generateCookie(
     .createHash("sha512")
     .update(userId + email + password)
     .digest("base64");
+  console.log(cookie + hash);
   return cookie + hash;
 }
 
