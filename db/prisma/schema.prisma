@@ -18,53 +18,53 @@ enum ContentTypeEnum {
   BLOCKLY           @map("blockly")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model LearningObject {
-  id                      String                  @id @default(uuid())
-  hruid                   String
-  uuid                    String // uuid of existing learning objects
-  version                 Int
-  language                String
-  title                   String
-  description             String?
-  contentType             ContentTypeEnum?
-  targetAges              Int[]
-  teacherExclusive        Boolean                 @default(false)
-  skosConcepts            String[]
-  educationalGoals        Json[]                  @db.Json
-  copyright               String?
-  licence                 String?
-  difficulty              Decimal?                @db.Decimal
-  estimatedTime           Decimal?                @db.Decimal
-  returnValue             Json?                   @db.Json
-  available               Boolean                 @default(true)
-  createdAt               DateTime?               @default(now()) @db.Timestamp
-  updatedAt               DateTime?               @default(now()) @db.Timestamp
-  content                 String
-  multipleChoice          Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
-  canUploadSubmission     Boolean                 @default(false)
-  learningObjectsKeywords LearningObjectKeyword[]
-  learningPathNodes       LearningPathNode[]
+  id                  String                  @id @default(uuid())
+  hruid               String
+  uuid                String // uuid of existing learning objects
+  version             Int
+  language            String
+  title               String
+  description         String?
+  contentType         ContentTypeEnum?
+  contentLocation     String? // contains relevant info if contentType == EXTERN
+  targetAges          Int[]
+  teacherExclusive    Boolean                 @default(false)
+  skosConcepts        String[]
+  educationalGoals    Json[]                  @db.Json
+  copyright           String?
+  licence             String?
+  difficulty          Decimal?                @db.Decimal
+  estimatedTime       Decimal?                @db.Decimal
+  returnValue         Json?                   @db.Json
+  available           Boolean                 @default(true)
+  createdAt           DateTime?               @default(now()) @db.Timestamp
+  updatedAt           DateTime?               @updatedAt @db.Timestamp
+  content             String
+  multipleChoice      Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
+  canUploadSubmission Boolean                 @default(false)
+  learningPathNodes   LearningPathNode[]
+  keywords            LearningObjectKeyword[]
 
   @@unique([hruid, version, language])
 }
 
 model LearningObjectKeyword {
-  loId           String
-  keyword        String
-  learningObject LearningObject @relation(fields: [loId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learningObjectId String
+  keyword          String
+  learningObject   LearningObject @relation(fields: [learningObjectId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([loId, keyword])
+  @@id([learningObjectId, keyword])
 }
 
 model LearningPathNode {
   id                              String                   @id @default(uuid())
-  lpId                            String
-  loId                            String
+  learningPathId                  String
+  learningObjectId                String
   instruction                     String?
   startNode                       Boolean                  @default(false)
-  learningObject                  LearningObject           @relation(fields: [loId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  learningPath                    LearningPath             @relation(fields: [lpId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learningObject                  LearningObject           @relation(fields: [learningObjectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learningPath                    LearningPath             @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   learningPathOutgoingTransitions LearningNodeTransition[] @relation("outgoing_transitions")
   learningPathIncomingTransitions LearningNodeTransition[] @relation("incoming_transitions")
   groups                          Group[]
@@ -72,12 +72,12 @@ model LearningPathNode {
 }
 
 model LearningNodeTransition {
-  id         String           @id @default(uuid())
+  id         String            @id @default(uuid())
   fromNodeId String
-  nextNodeId String
+  toNodeId   String?
   condition  String? //If condition is null => default transition; else: "answer == 0" or "true==true"
-  nextNode   LearningPathNode @relation("incoming_transitions", fields: [nextNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  fromNode   LearningPathNode @relation("outgoing_transitions", fields: [fromNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  toNode     LearningPathNode? @relation("incoming_transitions", fields: [toNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fromNode   LearningPathNode  @relation("outgoing_transitions", fields: [fromNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model LearningPath {
@@ -87,10 +87,14 @@ model LearningPath {
   title             String
   description       String?
   image             String?
+  ownerId           String?
   createdAt         DateTime?          @default(now()) @db.Timestamp
-  updatedAt         DateTime?          @default(now()) @db.Timestamp
+  updatedAt         DateTime?          @updatedAt @db.Timestamp
+  owner             User?              @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   learningPathNodes LearningPathNode[]
   assignments       Assignment[]
+
+  @@unique([hruid, language])
 }
 
 enum ClassRole {
@@ -100,14 +104,18 @@ enum ClassRole {
 
 model User {
   id                String             @id @default(uuid())
-  name              String
+  username          String
+  email             String             @unique
+  password          String
   surname           String
+  name              String
   role              ClassRole
   student           Student?
   teacher           Teacher?
   classJoinRequests ClassJoinRequest[]
   messages          Message[]
-  chats             Chat[]
+  discussions       Discussion[]
+  LearningPath      LearningPath[]
 }
 
 model Student {
@@ -124,14 +132,18 @@ model Teacher {
   classes    Class[]
   assignment Assignment[]
   user       User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  Announcement Announcement[]
 }
 
 model Class {
   id                String             @id @default(uuid())
+  name              String             @default("New class")
   students          Student[]
   teachers          Teacher[]
   assignment        Assignment[]
   classJoinRequests ClassJoinRequest[]
+  Announcement      Announcement[]
 }
 
 model ClassJoinRequest {
@@ -144,24 +156,24 @@ model ClassJoinRequest {
 
 model Group {
   id                    String                 @id @default(uuid())
-  nodeId                String
+  nodeId                String?
   assignmentId          String
-  chat                  Chat?
+  discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
-  node                  LearningPathNode       @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  node                  LearningPathNode?      @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }
 
 model Assignment {
-  id           String       @id @default(uuid())
-  lpId         String
-  teacherId    String
-  classId      String
-  groups       Group[]
-  class        Class        @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  teacher      Teacher      @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  learningPath LearningPath @relation(fields: [lpId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id             String       @id @default(uuid())
+  learningPathId String
+  teacherId      String
+  classId        String
+  groups         Group[]
+  class          Class        @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  teacher        Teacher      @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learningPath   LearningPath @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum SubmissionType {
@@ -170,20 +182,21 @@ enum SubmissionType {
 }
 
 model AssignmentSubmission {
-  id                   String           @id @default(uuid())
-  groupId              String
-  nodeId               String
-  submissionType       SubmissionType
-  fileOriginalName     String?
-  fileName             String?
-  multipleChoiceAnswer Int? // index of the multiple choice answer
-  node                 LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  group                Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id             String           @id @default(uuid())
+  groupId        String
+  nodeId         String
+  submissionType SubmissionType?
+  submission     Json?
+  //fileOriginalName     String?
+  //fileName             String?
+  //multipleChoiceAnswer Int? // index of the multiple choice answer
+  node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  group          Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([groupId, nodeId])
 }
 
-model Chat {
+model Discussion {
   id       String    @id @default(uuid())
   groupId  String    @unique
   messages Message[]
@@ -192,11 +205,21 @@ model Chat {
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
+  content      String
+  senderId     String
+  discussionId String
+  sender       User       @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt    DateTime   @default(now()) @db.Timestamp
+}
+
+model Announcement {
+  id        String  @id @default(uuid())
+  title     String
   content   String
-  senderId  String
-  chatId    String
-  sender    User     @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  createdAt DateTime @default(now()) @db.Timestamp
+  classId   String
+  class     Class   @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
