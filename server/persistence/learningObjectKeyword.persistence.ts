@@ -28,5 +28,6 @@ export class LearningObjectKeywordPersistence {
     await this.prisma.learningObjectKeyword.createMany({
       data: newKeywordEntries,
     });
+    return newKeywordEntries;
   }
 }

@@ -1,13 +1,10 @@
 import { ClassRole, Student, Teacher, User } from "@prisma/client";
 import { PrismaSingleton } from "../prismaSingleton";
+import { FullUserType } from "../../util/types/user.types";
 
-type FullUserType = User & {
-  student?: Student | null;
-  teacher?: Teacher | null;
-};
 const prisma = PrismaSingleton.instance;
 
-export async function saveUser(user: Omit<User, "id">): Promise<User> {
+export async function saveUser(user: Omit<User, "id">): Promise<FullUserType> {
   const data: any = {
     ...user,
   };
@@ -48,14 +45,14 @@ export async function getUserById(id: string): Promise<FullUserType | null> {
 
 export async function getUserByEmail(
   email: string,
-  include: {
-    teacher: true;
-    student: true;
-  },
 ): Promise<FullUserType | null> {
   return prisma.user.findFirst({
     where: {
       email: email,
+    },
+    include: {
+      teacher: true,
+      student: true,
     },
   });
 }

@@ -58,6 +58,9 @@ export class LearningObjectPersistence {
   public async createLearningObject(data: LearningObjectWithoutKeywords) {
     const learningObject = await this.prisma.learningObject.create({
       data: data,
+      include: {
+        learningObjectsKeywords: true
+      }
     });
     return learningObject;
   }
