@@ -52,11 +52,11 @@ model LearningObject {
 }
 
 model LearningObjectKeyword {
-  loId           String
-  keyword        String
-  learningObject LearningObject @relation(fields: [loId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  learningObjectId String
+  keyword          String
+  learningObject   LearningObject @relation(fields: [learningObjectId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([loId, keyword])
+  @@id([learningObjectId, keyword])
 }
 
 model LearningPathNode {
@@ -168,14 +168,14 @@ model Group {
 }
 
 model Assignment {
-  id           String       @id @default(uuid())
-  lpId         String
-  teacherId    String
-  classId      String
-  groups       Group[]
-  class        Class        @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  teacher      Teacher      @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  learningPath LearningPath @relation(fields: [lpId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id             String       @id @default(uuid())
+  learningPathId String
+  teacherId      String
+  classId        String
+  groups         Group[]
+  class          Class        @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  teacher        Teacher      @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learningPath   LearningPath @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum SubmissionType {
