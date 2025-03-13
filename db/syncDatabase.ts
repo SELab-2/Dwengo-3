@@ -67,7 +67,6 @@ async function fullSyncLearningObjects(prisma: PrismaClient) {
         estimatedTime: remote.estimated_time,
         returnValue: remote.return_value,
         available: remote.available,
-        updatedAt: new Date(Date.now()),
         content: rawContent,
       },
       create: {
@@ -144,7 +143,6 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
         title: path.title,
         description: path.description,
         image: path.image,
-        updatedAt: new Date(Date.now()),
       },
       create: {
         id: path._id,

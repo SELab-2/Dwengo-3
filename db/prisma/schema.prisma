@@ -39,7 +39,7 @@ model LearningObject {
   returnValue         Json?                   @db.Json
   available           Boolean                 @default(true)
   createdAt           DateTime?               @default(now()) @db.Timestamp
-  updatedAt           DateTime?               @default(now()) @db.Timestamp
+  updatedAt           DateTime?               @updatedAt @db.Timestamp
   content             String
   multipleChoice      Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
   canUploadSubmission Boolean                 @default(false)
@@ -89,7 +89,7 @@ model LearningPath {
   image             String?
   ownerId           String?
   createdAt         DateTime?          @default(now()) @db.Timestamp
-  updatedAt         DateTime?          @default(now()) @db.Timestamp
+  updatedAt         DateTime?          @updatedAt @db.Timestamp
   owner             User?              @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   learningPathNodes LearningPathNode[]
   assignments       Assignment[]
