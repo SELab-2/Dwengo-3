@@ -26,7 +26,7 @@ export class AnnouncementController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /announcement:
+     * /api/announcement:
      *   put:
      *     security:
      *       - cookieAuth: []
@@ -59,7 +59,7 @@ export class AnnouncementController {
     this.router.put("/", this.createAnnouncement);
     /**
      * @swagger
-     * /announcement:
+     * /api/announcement:
      *   get:
      *     security:
      *       - cookieAuth: []
@@ -107,7 +107,7 @@ export class AnnouncementController {
     this.router.get("/", this.getAnnouncements);
     /**
      * @swagger
-     * /announcement:
+     * /api/announcement:
      *   patch:
      *     security:
      *       - cookieAuth: []

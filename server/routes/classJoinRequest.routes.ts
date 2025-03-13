@@ -42,7 +42,7 @@ export class ClassJoinRequestController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /class/studentRequest:
+     * /api/class/studentRequest:
      *   put:
      *     security:
      *       - cookieAuth: []
@@ -69,7 +69,7 @@ export class ClassJoinRequestController {
     this.router.put("/studentRequest", this.createJoinRequest);
     /**
      * @swagger
-     * /class/teacherRequest:
+     * /api/class/teacherRequest:
      *   put:
      *     security:
      *       - cookieAuth: []
@@ -96,7 +96,7 @@ export class ClassJoinRequestController {
     this.router.put("/teacherRequest", this.createJoinRequest);
     /**
      * @swagger
-     * /class/studentRequest:
+     * /api/class/studentRequest:
      *   get:
      *     security:
      *       - cookieAuth: []
@@ -134,7 +134,7 @@ export class ClassJoinRequestController {
     this.router.get("/studentRequest", this.getJoinRequests);
     /**
      * @swagger
-     * /class/teacherRequest:
+     * /api/class/teacherRequest:
      *   get:
      *     security:
      *       - cookieAuth: []
@@ -172,7 +172,7 @@ export class ClassJoinRequestController {
     this.router.get("/teacherRequest", this.getJoinRequests);
     /**
      * @swagger
-     * /class/studentRequest:
+     * /api/class/studentRequest:
      *   post:
      *     security:
      *       - cookieAuth: []
@@ -199,7 +199,7 @@ export class ClassJoinRequestController {
     this.router.post("/studentRequest", this.handleJoinRequest);
     /**
      * @swagger
-     * /class/teacherRequest:
+     * /api/class/teacherRequest:
      *   post:
      *     security:
      *       - cookieAuth: []

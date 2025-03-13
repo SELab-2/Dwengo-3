@@ -165,7 +165,7 @@ export async function verifyCookie(cookie: string): Promise<boolean> {
 // STUDENT
 /**
  * @swagger
- * /auth/student/login:
+ * /api/auth/student/login:
  *   post:
  *     tags: [Auth]
  *     summary: Student login
@@ -196,6 +196,8 @@ export async function verifyCookie(cookie: string): Promise<boolean> {
  *                   type: string
  *                 username:
  *                   type: string
+ *                 email:
+ *                   type: string
  *                 surname:
  *                   type: string
  *                 name:
@@ -221,7 +223,7 @@ router.post(studentPrefix + "/login", async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /auth/student/logout:
+ * /api/auth/student/logout:
  *   post:
  *     tags: [Auth]
  *     summary: Log out a student
@@ -251,7 +253,7 @@ router.post(studentPrefix + "/logout", (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /auth/student/register:
+ * /api/auth/student/register:
  *   put:
  *     tags: [Auth]
  *     summary: Registers a new student and sets session cookie on successful registration.
@@ -325,7 +327,7 @@ router.put(studentPrefix + "/register", async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /auth/teacher/login:
+ * /api/auth/teacher/login:
  *   post:
  *     tags: [Auth]
  *     summary: Teacher login
@@ -385,7 +387,7 @@ router.post(teacherPrefix + "/login", async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /auth/teacher/logout:
+ * /api/auth/teacher/logout:
  *   post:
  *     tags: [Auth]
  *     summary: Log out a teacher
@@ -415,7 +417,7 @@ router.post(teacherPrefix + "/logout", (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /auth/teacher/register:
+ * /api/auth/teacher/register:
  *   put:
  *     tags: [Auth]
  *     summary: Registers a new teacher and sets session cookie on successful registration.
