@@ -78,13 +78,13 @@ export class AssignmentSubmissionController {
     );
   }
 
-  /*curl -X PATCH localhost:3001/api/assignmentSubmission 
+  /*curl -X PATCH localhost:3001/assignmentSubmission
      -F "file=@test.txt" 
      -F "groupId=6208ebc5-7a01-4c2c-b8cb-12d1db33d530" 
      -F "nodeId=4aa49f79-564b-4cf3-863f-421d0606e914"
      -F "submissionType=FILE"
 
-     curl -X PATCH localhost:3001/api/assignmentSubmission 
+     curl -X PATCH localhost:3001/assignmentSubmission
      -H "Content-Type: application/json" 
      -d '{
      "groupId":"6208ebc5-7a01-4c2c-b8cb-12d1db33d530", 

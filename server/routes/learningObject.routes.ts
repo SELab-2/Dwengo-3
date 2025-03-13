@@ -47,7 +47,7 @@ export class LearningObjectController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /api/learningObject:
+     * /learningObject:
      *   post:
      *     security:
      *       - cookieAuth: []
@@ -78,7 +78,7 @@ export class LearningObjectController {
     this.router.post("/", this.createLearningObject);
     /**
      * @swagger
-     * /api/learningObject:
+     * /learningObject:
      *   get:
      *     security:
      *       - cookieAuth: []
@@ -125,7 +125,7 @@ export class LearningObjectController {
     this.router.get("/", this.getLearningObjects);
     /**
      * @swagger
-     * /api/learningObject/{id}:
+     * /learningObject/{id}:
      *   patch:
      *     security:
      *       - cookieAuth: []
@@ -164,7 +164,7 @@ export class LearningObjectController {
     this.router.patch("/:id", this.updateLearningObject);
     /**
      * @swagger
-     * /api/learningObject/{id}:
+     * /learningObject/{id}:
      *   delete:
      *     security:
      *       - cookieAuth: []

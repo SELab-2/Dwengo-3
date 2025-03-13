@@ -34,7 +34,7 @@ export class ClassController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /api/class:
+     * /class:
      *   get:
      *     security:
      *       - cookieAuth: []
@@ -75,7 +75,7 @@ export class ClassController {
 
     /**
      * @swagger
-     * /api/class:
+     * /class:
      *   put:
      *     security:
      *       - cookieAuth: []
@@ -106,7 +106,7 @@ export class ClassController {
 
     /**
      * @swagger
-     * /api/class:
+     * /class:
      *   patch:
      *     security:
      *       - cookieAuth: []

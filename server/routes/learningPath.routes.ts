@@ -30,7 +30,7 @@ export class LearningPathController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /api/learningPath:
+     * /learningPath:
      *   get:
      *     security:
      *       - cookieAuth: []
@@ -82,7 +82,7 @@ export class LearningPathController {
     this.router.get("/", this.getLearningPaths);
     /**
      * @swagger
-     * /api/learningPath:
+     * /learningPath:
      *   post:
      *     security:
      *       - cookieAuth: []

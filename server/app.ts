@@ -40,10 +40,8 @@ app.use(
     } else {
       const path = req.path;
       if (
-        !path.startsWith("/api/auth") ||
-        !["student", "teacher"].some((role) =>
-          path.startsWith(`/api/auth/${role}`),
-        )
+        !path.startsWith("/auth") ||
+        !["student", "teacher"].some((role) => path.startsWith(`/auth/${role}`))
       ) {
         res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
         return;
@@ -73,7 +71,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 const apiRouter = express.Router();
-app.use("/api", apiRouter);
+app.use("/", apiRouter);
 
 apiRouter.use("/class", new ClassController().router);
 apiRouter.use("/learningPath", new LearningPathController().router);
