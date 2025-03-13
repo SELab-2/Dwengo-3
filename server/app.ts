@@ -28,7 +28,7 @@ const options = {
 };
 
 const specs = swaggerJsdoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // cookie validating middleware
 app.use(
