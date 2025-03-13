@@ -40,10 +40,10 @@ CREATE TABLE "LearningObject" (
 
 -- CreateTable
 CREATE TABLE "LearningObjectKeyword" (
-    "loId" TEXT NOT NULL,
+    "learningObjectId" TEXT NOT NULL,
     "keyword" TEXT NOT NULL,
 
-    CONSTRAINT "LearningObjectKeyword_pkey" PRIMARY KEY ("loId","keyword")
+    CONSTRAINT "LearningObjectKeyword_pkey" PRIMARY KEY ("learningObjectId","keyword")
 );
 
 -- CreateTable
@@ -140,7 +140,7 @@ CREATE TABLE "Group" (
 -- CreateTable
 CREATE TABLE "Assignment" (
     "id" TEXT NOT NULL,
-    "lpId" TEXT NOT NULL,
+    "learningPathId" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
     "classId" TEXT NOT NULL,
 
@@ -254,7 +254,7 @@ CREATE INDEX "_GroupToStudent_B_index" ON "_GroupToStudent"("B");
 CREATE INDEX "_DiscussionToUser_B_index" ON "_DiscussionToUser"("B");
 
 -- AddForeignKey
-ALTER TABLE "LearningObjectKeyword" ADD CONSTRAINT "LearningObjectKeyword_loId_fkey" FOREIGN KEY ("loId") REFERENCES "LearningObject"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "LearningObjectKeyword" ADD CONSTRAINT "LearningObjectKeyword_learningObjectId_fkey" FOREIGN KEY ("learningObjectId") REFERENCES "LearningObject"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_learningObjectId_fkey" FOREIGN KEY ("learningObjectId") REFERENCES "LearningObject"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -296,7 +296,7 @@ ALTER TABLE "Assignment" ADD CONSTRAINT "Assignment_classId_fkey" FOREIGN KEY ("
 ALTER TABLE "Assignment" ADD CONSTRAINT "Assignment_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "Teacher"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "Assignment" ADD CONSTRAINT "Assignment_lpId_fkey" FOREIGN KEY ("lpId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "Assignment" ADD CONSTRAINT "Assignment_learningPathId_fkey" FOREIGN KEY ("learningPathId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_nodeId_fkey" FOREIGN KEY ("nodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
