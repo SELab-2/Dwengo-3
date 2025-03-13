@@ -40,9 +40,10 @@ export const SubmissionCreateSchema = z
     },
   );
 
-export const SubmissionUpdateSchema = z.object({
-  id: z.string().uuid(),
-  submissionType: z.nativeEnum(SubmissionType),
+export const SubmissionUpdateSchema = z
+  .object({
+    id: z.string().uuid(),
+    submissionType: z.nativeEnum(SubmissionType),
     submission: z.union([
       FileSubmissionSchema.optional(),
       MultipleChoiceSubSchema.optional(),

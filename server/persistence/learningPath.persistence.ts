@@ -24,7 +24,7 @@ export class LearningPathPersistence {
               learningPathNodes: {
                 some: {
                   learningObject: {
-                    learningObjectsKeywords: {
+                    keywords: {
                       some: {
                         keyword: {
                           in: filters.keywords,
