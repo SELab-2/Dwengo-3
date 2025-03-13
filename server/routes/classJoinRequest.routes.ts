@@ -47,7 +47,7 @@ export class ClassJoinRequestController {
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Create a new class join request as a student
      *     description: Creates a new class join request with the provided data.
      *     requestBody:
@@ -74,7 +74,7 @@ export class ClassJoinRequestController {
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Create a new class join request as a teacher
      *     description: Creates a new class join request with the provided data.
      *     requestBody:
@@ -101,7 +101,7 @@ export class ClassJoinRequestController {
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Get all student class join requests
      *     description: Get all class join requests where the user who is trying to join is a student.
      *     parameters:
@@ -139,7 +139,7 @@ export class ClassJoinRequestController {
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Get all teacher class join requests
      *     description: Get all class join requests where the user who is trying to join is a teacher.
      *     parameters:
@@ -177,7 +177,7 @@ export class ClassJoinRequestController {
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Accept or deny a class join request from a student
      *     description: Accept or deny a class join request coming from an user who is a student.
      *     requestBody:
@@ -204,7 +204,7 @@ export class ClassJoinRequestController {
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Accept or deny a class join request from a teacher
      *     description: Accept or deny a class join request coming from an user who is a teacher.
      *     requestBody:

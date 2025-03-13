@@ -71,7 +71,7 @@
       "LearningPathNodeCreate": {
         "type": "object",
         "properties": {
-          "lpId": {
+          "learningPathId": {
             "type": "string",
             "description": "The ID of the learning path this node belongs to.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
