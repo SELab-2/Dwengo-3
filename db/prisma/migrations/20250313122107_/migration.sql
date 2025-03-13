@@ -33,7 +33,6 @@ CREATE TABLE "LearningObject" (
     "content" TEXT NOT NULL,
     "multipleChoice" JSON,
     "canUploadSubmission" BOOLEAN NOT NULL DEFAULT false,
-    "keywords" TEXT[],
 
     CONSTRAINT "LearningObject_pkey" PRIMARY KEY ("id")
 );
