@@ -5,6 +5,8 @@ import {
   LearningObjectUpdateWithoutKeywords,
   LearningObjectWithoutKeywords,
 } from "../util/types/learningObject.types";
+import { PaginationParams } from "../util/types/pagination.types";
+import { searchAndPaginate } from "../util/pagination/pagination.util";
 
 export class LearningObjectPersistence {
   private prisma: PrismaClient;
@@ -13,8 +15,11 @@ export class LearningObjectPersistence {
     this.prisma = PrismaSingleton.instance;
   }
 
-  public async getLearningObjects(filters: LearningObjectFilterParams) {
-    const whereClause: Prisma.LearningObjectWhereInput = {
+  public async getLearningObjects(
+    paginationParams: PaginationParams,
+    filters: LearningObjectFilterParams,
+  ) {
+    const where: Prisma.LearningObjectWhereInput = {
       AND: [
         filters.keywords && filters.keywords.length > 0
           ? {
@@ -40,12 +45,14 @@ export class LearningObjectPersistence {
       ].filter(Boolean), // Remove empty objects from the AND array
     };
 
-    return await this.prisma.learningObject.findMany({
-      where: whereClause,
-      include: {
+    return searchAndPaginate(
+      this.prisma.learningObject,
+      where,
+      paginationParams,
+      {
         learningObjectsKeywords: true,
       },
-    });
+    );
   }
 
   public async createLearningObject(data: LearningObjectWithoutKeywords) {
@@ -68,11 +75,18 @@ export class LearningObjectPersistence {
     });
   }
 
-  public async deleteLearningObject(id: string) {
-    return await this.prisma.learningNodeTransition.delete({
-      where: {
-        id: id,
+  public async getLearningObjectById(id: string) {
+    return await this.prisma.learningObject.findUnique({
+      where: { id: id },
+      include: {
+        learningPathNodes: true,
       },
+    });
+  }
+
+  public async deleteLearningObject(id: string) {
+    return await this.prisma.learningObject.delete({
+      where: { id: id },
     });
   }
 }

@@ -3,12 +3,17 @@ import crypto from "crypto";
 import { LoginRequest, RegisterRequest } from "../util/types/RequestTypes";
 import * as persistence from "../persistence/auth/users.persistance";
 import { ClassRole, User } from "@prisma/client";
-import { UserEntity, UserSchema } from "../util/types/user.types";
+import {
+  ClassRoleEnum,
+  FullUserType,
+  UserEntity,
+  UserSchema,
+} from "../util/types/user.types";
 
 export async function registerUser(
   registerRequest: RegisterRequest,
-): Promise<User> {
-  return await persistence.saveUser({
+): Promise<UserEntity> {
+  const user = await persistence.saveUser({
     username: registerRequest.username,
     email: registerRequest.email,
     password: crypto
@@ -19,14 +24,43 @@ export async function registerUser(
     surname: registerRequest.surname,
     role: registerRequest.role as ClassRole,
   });
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    password: user.password,
+    name: user.name,
+    surname: user.surname,
+    role:
+      user.role === ClassRole.TEACHER
+        ? ClassRoleEnum.TEACHER
+        : ClassRoleEnum.STUDENT,
+    teacher: user.teacher,
+    student: user.student,
+  };
 }
 
-export async function loginUser(loginRequest: LoginRequest): Promise<User> {
-  const user: User | null = await persistence.getUserByEmail(
+export async function loginUser(
+  loginRequest: LoginRequest,
+): Promise<UserEntity> {
+  const user: FullUserType | null = await persistence.getUserByEmail(
     loginRequest.email,
   );
   if (user === null) throw new Error("User not found");
-  return user;
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    password: user.password,
+    name: user.name,
+    surname: user.surname,
+    role:
+      user.role === ClassRole.TEACHER
+        ? ClassRoleEnum.TEACHER
+        : ClassRoleEnum.STUDENT,
+    teacher: user.teacher,
+    student: user.student,
+  };
 }
 
 export async function deleteUser(id: string): Promise<boolean> {

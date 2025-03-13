@@ -449,6 +449,114 @@
           }
         },
         "required": ["keyword"]
+      },
+      "AnnouncementCreate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          },
+          "classId": {
+            "type": "string",
+            "description": "The ID of the class this announcement is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "teacherId": {
+            "type": "string",
+            "description": "The ID of the teacher who created the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          }
+        },
+        "required": ["title", "content", "classId", "teacherId"]
+      },
+      "AnnouncementGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          },
+          "classId": {
+            "type": "string",
+            "description": "The ID of the class this announcement is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "teacherId": {
+            "type": "string",
+            "description": "The ID of the teacher who created the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440001"
+          }
+        }
+      },
+      "AnnouncementUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          }
+        }
+      },
+      "ClassJoinRequestCreate": {
+        "type": "object",
+        "properties": {
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the class to join. Must be a valid UUID.",
+            "example": "e5c03d9c-d123-4a34-b88c-ff33f222b0f9"
+          }
+        },
+        "required": ["classId"]
+      },
+      "ClassJoinRequestPost": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the class join request.",
+            "example": "a1b2c3d4-e5f6-7890-gh12-i34j56k78l90"
+          },
+          "decision": {
+            "type": "string",
+            "enum": ["accept", "deny"],
+            "description": "The decision for the class join request, either accept or deny.",
+            "example": "accept"
+          }
+        },
+        "required": ["requestId", "decision"]
       }
     }
   }

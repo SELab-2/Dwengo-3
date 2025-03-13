@@ -37,8 +37,6 @@ export const LearningObjectCreateSchema = z.object({
   estimatedTime: z.number().optional(),
   returnValue: z.any().optional(), // JSON object
   available: z.boolean().default(true),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
   content: z.string().min(1, "Content is required"),
   multipleChoice: z.any().optional(), // JSON object
   canUploadSubmission: z.boolean().default(false),
@@ -54,7 +52,30 @@ export type LearningObjectWithoutKeywords = Omit<
   "learningObjectsKeywords"
 >;
 
-export const LearningObjectUpdateSchema = LearningObjectCreateSchema.partial();
+export const LearningObjectUpdateSchema = z.object({
+  version: z
+    .number()
+    .int()
+    .min(1, "Version must be a positive integer")
+    .optional(),
+  title: z.string().min(1, "Title is required").optional(),
+  description: z.string().optional(),
+  contentType: ContentTypeEnum.optional(),
+  targetAges: z.array(z.number().int().nonnegative()).optional(),
+  teacherExclusive: z.boolean().optional(),
+  skosConcepts: z.array(z.string()).optional(),
+  educationalGoals: z.array(z.any()).optional(),
+  copyright: z.string().optional(),
+  licence: z.string().optional(),
+  difficulty: z.number().optional(),
+  estimatedTime: z.number().optional(),
+  returnValue: z.any().optional(),
+  available: z.boolean().optional(),
+  content: z.string().min(1, "Content is required").optional(),
+  multipleChoice: z.any().optional(),
+  canUploadSubmission: z.boolean().optional(),
+  learningObjectsKeywords: z.array(learningObjectKeywordSchema).optional(),
+});
 
 export type LearningObjectUpdateParams = z.infer<
   typeof LearningObjectUpdateSchema
