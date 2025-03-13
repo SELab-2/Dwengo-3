@@ -13,7 +13,7 @@ export class AssignmentController {
 
   private initializeRoutes(): void {
     this.router.get("/", this.getAssignments.bind(this));
-    this.router.post("/", this.createAssignment.bind(this));
+    this.router.put("/", this.createAssignment.bind(this));
   }
 
   private async getAssignments(req: Request, res: Response): Promise<void> {

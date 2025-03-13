@@ -48,7 +48,7 @@ export class LearningObjectController {
     /**
      * @swagger
      * /learningObject:
-     *   post:
+     *   put:
      *     security:
      *       - cookieAuth: []
      *     tags:
@@ -75,7 +75,7 @@ export class LearningObjectController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.post("/", this.createLearningObject);
+    this.router.put("/", this.createLearningObject);
     /**
      * @swagger
      * /learningObject:
