@@ -34,9 +34,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(
   cookieParser(),
   async (req: Request, res: Response, next: NextFunction) => {
-    console.debug("Cookie:", req.cookies["DWENGO_SESSION"]);
     const verified = await verifyCookie(req.cookies["DWENGO_SESSION"]);
-    console.log(verified);
     if (verified) {
       next();
     } else {
@@ -47,7 +45,6 @@ app.use(
           path.startsWith(`/api/auth/${role}`),
         )
       ) {
-        console.debug(`unauthorized: ${path}`);
         res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
         return;
       }
