@@ -18,7 +18,7 @@ export class LearningPathNodeTransitionPersistence {
               id: fromNodeId,
             },
           },
-          nextNode: {
+          toNode: {
             connect: {
               id: toNodeId,
             },

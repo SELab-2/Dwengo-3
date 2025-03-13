@@ -34,8 +34,7 @@ export class LearningObjectDomain {
       throw parseResult.error;
     }
 
-    const { learningObjectsKeywords, ...dataWithoutKeywords } =
-      parseResult.data;
+    const { keywords, ...dataWithoutKeywords } = parseResult.data;
 
     const dataToUpdate = {
       ...dataWithoutKeywords,
@@ -44,12 +43,13 @@ export class LearningObjectDomain {
     const learningObject =
       await this.learningObjectPersistence.createLearningObject(dataToUpdate);
 
-    if (learningObjectsKeywords) {
-      const keywords = await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
-        learningObject.id,
-        learningObjectsKeywords,
-      );
-      learningObject.learningObjectsKeywords.push(...keywords);
+    if (keywords) {
+      const k =
+        await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
+          learningObject.id,
+          keywords,
+        );
+      learningObject.keywords.push(...k);
     }
 
     return learningObject;

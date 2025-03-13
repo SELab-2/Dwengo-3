@@ -1,6 +1,7 @@
 # Dwengo-3
 
 ## Rolverdeling
+
 Projectleider: Martijn </br>
 Technische lead: Sviatoslav </br>
 Testen: Rico </br>
@@ -9,10 +10,10 @@ Communicatie klant: Jona </br>
 Backend verantwoordelijke: Robin </br>
 Systeembeheerder: Jasper </br>
 
-
 # Project overview
 
 ## Tech stack
+
 **Frontend**: React, we hebben allemaal al ervaring met React. </br>
 **Backend**: Prisma, ExpressJS, Docker, idem</br>
 **Databank**: PostgreSQL, idem. Ook omdat het relationeel gedeelte sterk zal worden gebruikt
@@ -25,13 +26,17 @@ To inspect the scheme, please use [UGent VPN](vpn.ugent.be)
 # Installation guide
 
 ## Prerequisites
+
 Ensure you have the following installed on your system:
+
 - [Docker](https://docs.docker.com/get-docker/)
 - [Node.js (v18+)](https://nodejs.org/en/download)
 - [dotenv-cli](https://www.npmjs.com/package/dotenv-cli)
+
 ---
 
 ## 1. Clone the repository
+
 ```bash
 git clone git@github.com:SELab-2/Dwengo-3.git
 cd Dwengo-3
@@ -40,7 +45,9 @@ cd Dwengo-3
 ---
 
 ## 2. Set up PostgreSQL with Docker
+
 Run the following command to start a PostgreSQL database container:
+
 ```bash
 read -sp "Postgres password: " password && echo \
               && sudo docker run --name docker_db \
@@ -51,6 +58,7 @@ read -sp "Postgres password: " password && echo \
 ```
 
 Confirm the database is running:
+
 ```bash
 sudo docker ps -a
 ```
@@ -58,33 +66,58 @@ sudo docker ps -a
 ---
 
 ## 3. Configure the environment
+
 Create a `.env` file in the root directory and add the following:
+
 ```
 DATABASE_URL="postgresql://postgres:<your_password>@172.17.0.1:5432/dwengo_db"
 ```
+
 Replace `<your_password>` with the password you set when running the `docker` command.
 
 ---
 
 ## 4. Install dependencies & Prisma
-Install dependencies for both the server and client and generate the Prisma client:
+
+Install dependencies for both the server and client, generate the Prisma client and apply the migrations:
+
 ```bash
 ./install.sh
+./prisma.sh migrate dev
 ```
 
----
+Change `dev` to `deploy` to apply the migrations to the production database.
 
 ---
 
-## 5. Run the development servers
+---
+
+## 5. Synchronize the database
+
+Run the following command to synchronize your local database with Dwengo database:
+
+```bash
+cd db
+npm run start:sync
+```
+
+Add the script to pm2 for automatic synchronization at midnight
+
+---
+
+---
+
+## 6. Run the development servers
 
 - **Start the server:**
+
 ```bash
 cd server
 npm run start
 ```
 
 - **Start the client:**
+
 ```bash
 cd client
 npm run start
@@ -98,26 +131,33 @@ You can change the ports in the `.env` file, if the ports are not configured the
 ---
 
 ## 7. Verifying setup
+
 - Ensure the database container is running:
+
 ```bash
 sudo docker ps -a
 ```
+
 - Confirm the Prisma client is generated:
+
 ```bash
 ls db/node_modules/.prisma
 ```
+
 - Check the server and client logs for errors.
 
 ---
 
 ## Troubleshooting
+
 - **Database connection errors:**
   Ensure your `.env` file has the correct database URL and the Docker container is running.
 
 - **Prisma errors:**
   Run this to re-generate the client:
+
   ```bash
-  npx prisma generate
+  ./prisma.sh migrate dev
   ```
 
 - **Port conflicts:**

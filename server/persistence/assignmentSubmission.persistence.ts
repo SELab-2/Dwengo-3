@@ -63,7 +63,7 @@ export class AssignmentSubmissionPersistence {
   ): Promise<AssignmentSubmission> {
     return PrismaSingleton.instance.assignmentSubmission.update({
       where: {
-        id: params.id
+        id: params.id,
       },
       data: {
         submissionType: params.submissionType,
