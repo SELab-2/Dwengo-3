@@ -49,7 +49,7 @@ export class StudentController {
      * /api/student:
      *   post:
      *     security:
-     *      - cookieAuth: []
+     *       - cookieAuth: []
      *     tags: [Student]
      *     summary: Create a student
      *     description: Create a student for the current user
@@ -58,9 +58,9 @@ export class StudentController {
      *         in: body
      *         description: The ID of the user to create the student for
      *         required: true
-     *        schema:
-     *         type: string
-     *         format: uuid
+     *         schema:
+     *           type: string
+     *           format: uuid
      *     responses:
      *       200:
      *         description: Succesfully created the student
@@ -85,30 +85,30 @@ export class StudentController {
      *         in: body
      *         description: The ID of the student to get
      *         required: false
-     *        schema:
-     *         type: string
-     *         format: uuid
+     *         schema:
+     *           type: string
+     *           format: uuid
      *       - name: userId
      *         in: body
      *         description: The userId of the student to get
      *         required: false
-     *        schema:
-     *         type: string
-     *         format: uuid
+     *         schema:
+     *           type: string
+     *           format: uuid
      *       - name: classId
      *         in: body
      *         description: The classId of the students to get
      *         required: false
-     *        schema:
-     *         type: string
-     *         format: uuid
+     *         schema:
+     *           type: string
+     *           format: uuid
      *       - name: groupId
      *         in: body
      *         description: The groupId of the students to get
      *         required: false
-     *        schema:
-     *         type: string
-     *         format: uuid
+     *         schema:
+     *           type: string
+     *           format: uuid
      *     responses:
      *       200:
      *         description: Succesfully fetched the list of students
@@ -133,23 +133,23 @@ export class StudentController {
      *         in: body
      *         description: The ID of the student to update
      *         required: true
-     *        schema:
-     *         type: string
-     *         format: uuid
+     *         schema:
+     *           type: string
+     *           format: uuid
      *       - name: classes
      *         in: body
      *         description: The classes the student needs to be in
      *         required: false
-     *        schema:
-     *         type: [string]
-     *         format: [uuid]
+     *         schema:
+     *           type: [string]
+     *           format: [uuid]
      *       - name: groups
      *         in: body
      *         description: The groups the student needs to be in
      *         required: false
-     *        schema:
-     *         type: [string]
-     *         format: [uuid]
+     *         schema:
+     *           type: [string]
+     *           format: [uuid]
      *     responses:
      *       200:
      *         description: Succesfully updated the student
@@ -174,9 +174,9 @@ export class StudentController {
      *         in: body
      *         description: The ID of the student to delete
      *         required: true
-     *        schema:
-     *         type: string
-     *         format: uuid
+     *         schema:
+     *           type: string
+     *           format: uuid
      *     responses:
      *       200:
      *         description: Succesfully deleted the student
