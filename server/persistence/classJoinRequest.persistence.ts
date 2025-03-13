@@ -1,4 +1,4 @@
-import { PrismaSingleton } from "../prismaSingleton";
+import { PrismaSingleton } from "./prismaSingleton";
 import { PaginationParams } from "../util/types/pagination.types";
 import {
   ClassJoinRequestCreateParams,
