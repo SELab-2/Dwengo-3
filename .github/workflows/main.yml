@@ -38,9 +38,10 @@ jobs:
         run: cd client && npm ci && npm run build
 
       - name: Deploy client with rsync
-        run: rsync -a client/build/ /var/www/html/
+        run: rsync -a --delete --exclude=schemaspy client/build/ /var/www/html/
 
       - name: Swagger docs up and running
         run: |
           cd /home/selab2/dwengo;
+          sleep 5;
           ./test-swagger-running.sh;
