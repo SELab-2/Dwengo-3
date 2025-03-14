@@ -20,7 +20,10 @@ export class MessagePersistence {
     paginationParams: PaginationParams,
   ): Promise<{ data: Message[]; totalPages: number }> {
     const whereclause: Prisma.MessageWhereInput = {
-      AND: [filters.discussionId ? { discussionId: filters.discussionId } : {}],
+      AND: [
+        filters.discussionId ? { discussionId: filters.discussionId } : {},
+        filters.id ? { id: filters.id } : {},
+      ],
     };
     const [messages, totalCount] = await this.prisma.$transaction([
       this.prisma.message.findMany({
@@ -50,7 +53,7 @@ export class MessagePersistence {
         },
         sender: {
           connect: {
-            id: params.senderId,
+            id: params.senderId!,
           },
         },
         content: params.content,
