@@ -14,7 +14,7 @@ Systeembeheerder: Jasper </br>
 
 ## Tech stack
 
-**Frontend**: React, we hebben allemaal al ervaring met React. </br>
+**Frontend**: React, we hebben allemaal al ervaring met React </br>
 **Backend**: Prisma, ExpressJS, Docker, idem</br>
 **Databank**: PostgreSQL, idem. Ook omdat het relationeel gedeelte sterk zal worden gebruikt
 
