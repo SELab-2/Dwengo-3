@@ -1,11 +1,23 @@
 import { describe, test, beforeAll, afterAll, expect } from "vitest";
 import { PrismaSingleton } from "../prismaSingleton";
-import dummy_data from "../../util/db-scripts/data.json";
 
 describe("class persistence test", () => {
   beforeAll(async () => {
     await PrismaSingleton.instance.class.createMany({
-      data: dummy_data.classes.slice(0, 3),
+      data: [
+        {
+          id: "class-1",
+          name: "Math",
+        },
+        {
+          id: "class-2",
+          name: "Physics",
+        },
+        {
+          id: "class-3",
+          name: "Biology",
+        },
+      ],
     });
   });
 
@@ -20,7 +32,7 @@ describe("class persistence test", () => {
       const req = PrismaSingleton.instance.class.findUnique({
         where: { id },
       });
-      await expect(req).resolves.toStrictEqual({ id: id });
+      await expect(req).resolves.toStrictEqual({ id: id, name: "Math" });
     });
 
     test("request with unexisting id responds with null", async () => {
