@@ -3,8 +3,7 @@
 set -uo pipefail -o noclobber
 
 if [ "$1" == "production" ]; then
-  cd client && npm ci --omit=dev
-  cd ../server && npm ci --omit=dev
+  cd server && npm ci --omit=dev
   cd ../db && npm ci --omit=dev
 else
   cd client && npm install
