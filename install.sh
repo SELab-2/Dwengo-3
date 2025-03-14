@@ -2,12 +2,13 @@
 
 set -uo pipefail -o noclobber
 
-cd client || exit
-npm install
-
-cd ../server || exit
-npm install
-
-cd ../db || exit
-npm install
+if [ "$1" == "production" ]; then
+  cd client && npm ci --omit=dev
+  cd ../server && npm ci --omit=dev
+  cd ../db && npm ci --omit=dev
+else
+  cd client && npm install
+  cd ../server && npm install
+  cd ../db && npm install
+fi
 
