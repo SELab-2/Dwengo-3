@@ -24,8 +24,6 @@ jobs:
           ./install.sh production;
 
       - name: Generate the client and migrate the database
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           cd /home/selab2/dwengo;
           ./prisma.sh migrate deploy;
