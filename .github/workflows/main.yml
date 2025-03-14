@@ -12,23 +12,35 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        run:
+          cd /home/selab2/dwengo
+          git fetch origin
+          git reset --hard origin/main
+          git clean -fd
 
       - name: Install dependencies for all projects
-        run: ./install.sh production
+        run:
+          cd /home/selab2/dwengo
+          ./install.sh production
 
       - name: Generate the client and migrate the database
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: ./prisma.sh migrate deploy
+        run:
+          cd /home/selab2/dwengo
+          ./prisma.sh migrate deploy
 
       - name: Build client
-        run: cd client && npm run build
+        run:
+          cd /home/selab2/dwengo
+          cd client && npm run build
 
       - name: Restart applications
-        run: pm2 restart client server
+        run:
+          pm2 restart client || cd /home/selab2/dwengo/client; pm2 start npm --name "client" -- start
+          pm2 restart server || cd /home/selab2/dwengo/server; pm2 start npm --name "server" -- start
 
-      - name: Wait for Express to restart
+      - name: Wait for Express to start listening...
         run: sleep 5
 
       - name: Swagger docs up and running
