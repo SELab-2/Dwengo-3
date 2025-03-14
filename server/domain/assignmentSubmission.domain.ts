@@ -63,28 +63,17 @@ export class AssignmentSubmissionDomain {
     req: Request,
     user: UserEntity,
   ): Promise<AssignmentSubmission> {
-    return this.assignmentSubmissionPersistence.createAssignmentSubmission(
-      this.checkSubmissionRequest(req, user),
-    );
-  }
+    if (user.role !== ClassRole.STUDENT) {
+      throw new Error("Only students can create submissions");
+    }
 
-  public async updateAssignmentSubmission(
-    req: Request,
-    user: UserEntity,
-  ): Promise<AssignmentSubmission> {
-    return this.assignmentSubmissionPersistence.updateAssignmentSubmission(
-      this.checkSubmissionRequest(req, user),
-    );
-  }
-
-  private parseSubmissionRequest<
-    T extends ZodObject<any> | ZodEffects<ZodObject<any>>,
-  >(req: Request, schema: T): z.infer<typeof schema> {
-    const parseResult = schema.safeParse(req.body);
+    const parseResult = SubmissionCreateSchema.safeParse(req.body);
     if (!parseResult.success) {
       throw parseResult.error;
     }
-    if (parseResult.data.submissionType === SubmissionType.FILE) {
+
+    const data = parseResult.data;
+    if (data.submissionType === SubmissionType.FILE) {
       if (!req.file) {
         throw new Error(
           "File submission is required when submissionType is FILE",
@@ -94,19 +83,44 @@ export class AssignmentSubmissionDomain {
         fileName: req.file!.originalname,
         filePath: req.file!.path,
       };
-      parseResult.data.submission = fileSubmission;
+      data.submission = fileSubmission;
     }
-    return parseResult.data;
+
+    checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
+    return this.assignmentSubmissionPersistence.createAssignmentSubmission(
+      data,
+    );
   }
-  private checkSubmissionRequest(
+
+  public async updateAssignmentSubmission(
     req: Request,
     user: UserEntity,
-  ): AssignmentSubUpdataAndCreateParams {
+  ): Promise<AssignmentSubmission> {
     if (user.role !== ClassRole.STUDENT) {
-      throw new Error("Only students can create or update submissions");
+      throw new Error("Only students can create submissions");
     }
-    const data = this.parseSubmissionRequest(req);
-    checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
-    return data;
+
+    const parseResult = SubmissionUpdateSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      throw parseResult.error;
+    }
+
+    const data = parseResult.data;
+    if (data.submissionType === SubmissionType.FILE) {
+      if (!req.file) {
+        throw new Error(
+          "File submission is required when submissionType is FILE",
+        );
+      }
+      const fileSubmission: FileSubmission = {
+        fileName: req.file!.originalname,
+        filePath: req.file!.path,
+      };
+      data.submission = fileSubmission;
+    }
+
+    return this.assignmentSubmissionPersistence.updateAssignmentSubmission(
+      data,
+    );
   }
 }
