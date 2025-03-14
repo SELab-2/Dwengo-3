@@ -19,29 +19,19 @@ jobs:
           git clean -fd;
 
       - name: Install dependencies
-        run: |
-          cd /home/selab2/dwengo;
-          ./install.sh production;
+        run: cd /home/selab2/dwengo && ./install.sh production
 
       - name: Generate the prisma client and apply migrations
-        run: |
-          cd /home/selab2/dwengo;
-          ./prisma.sh migrate deploy;
+        run: cd /home/selab2/dwengo && ./prisma.sh migrate deploy
 
       - name: Restart the API server
         run: pm2 restart server || (cd /home/selab2/dwengo/server; pm2 start npm --name "server" -- start);
 
-      - name: Checkout code locally for React client build
-        uses: actions/checkout@v4
-
       - name: Build React client
-        run: cd client && npm ci && npm run build
+        run: cd /home/selab2/dwengo/client && npm run build
 
       - name: Deploy client with rsync
-        run: rsync -a --delete --exclude=schemaspy client/build/ /var/www/html/
+        run: rsync -a --delete --exclude=schemaspy /home/selab2/dwengo/client/build/ /var/www/html/
 
       - name: Swagger docs up and running
-        run: |
-          cd /home/selab2/dwengo;
-          sleep 5;
-          ./test-swagger-running.sh;
+        run: cd /home/selab2/dwengo && sleep 5 && ./test-swagger-running.sh;
