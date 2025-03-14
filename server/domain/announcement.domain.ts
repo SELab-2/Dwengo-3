@@ -74,22 +74,25 @@ export class AnnouncementDomain {
   }
 
   public async createAnnouncement(
-    query: AnnouncementCreateParams,
+    query: AnnouncementCreateDomainParams,
     user: UserEntity,
   ) {
-    const parseResult = AnnouncementCreateSchema.safeParse(query);
+    const parseResult = AnnouncementCreateDomainSchema.safeParse(query);
     if (!parseResult.success) {
       throw parseResult.error;
     }
 
     this.checkUserIsTeacher(user);
     this.classDomain.checkUserBelongsToClass(user, query.classId);
-    
+
     const teacherIdParseResult = TeacherIdSchema.safeParse(user.teacher?.id);
     if (!teacherIdParseResult.success) {
       throw teacherIdParseResult.error;
     }
-    return this.announcementPersistence.createAnnouncement(parseResult.data);
+    return this.announcementPersistence.createAnnouncement({
+      ...parseResult.data,
+      teacherId: teacherIdParseResult.data,
+    });
   }
 
   public async updateAnnouncement(
@@ -106,7 +109,7 @@ export class AnnouncementDomain {
 
     return this.announcementPersistence.updateAnnouncement(parseResult.data);
   }
-  
+
   private async checkUserIsTeacher(user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
       throw new Error("User is not a teacher.");
