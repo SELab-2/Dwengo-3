@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { AnnouncementDomain } from "../domain/announcement.domain";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class AnnouncementController {
   public router: Router;
@@ -16,7 +17,12 @@ export class AnnouncementController {
   };
 
   private createAnnouncement = async (req: Request, res: Response) => {
-    res.json(await this.announcementDomain.createAnnouncement(req.body));
+    res.json(
+      await this.announcementDomain.createAnnouncement(
+        req.body,
+        await getUserFromReq(req),
+      ),
+    );
   };
 
   private updateAnnouncement = async (req: Request, res: Response) => {
@@ -24,8 +30,121 @@ export class AnnouncementController {
   };
 
   private initializeRoutes() {
+    /**
+     * @swagger
+     * /api/announcement:
+     *   put:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Announcement
+     *     summary: Create or update an announcement
+     *     description: Creates a new announcement
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/AnnouncementCreate'
+     *     responses:
+     *       200:
+     *         description: Announcement created successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/AnnouncementGet'
+     *       400:
+     *         description: Bad request due to invalid input.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       403:
+     *         description: Forbidden, user does not have permission to create the announcement.
+     *       500:
+     *         description: Internal server error.
+     */
     this.router.put("/", this.createAnnouncement);
+    /**
+     * @swagger
+     * /api/announcement:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Announcement
+     *     summary: Get announcements
+     *     description: Retrieve a list of announcements based on the provided filters. At least one filter must be provided.
+     *     parameters:
+     *       - in: query
+     *         name: classId
+     *         schema:
+     *           type: string
+     *         description: Filter announcements by class ID.
+     *       - in: query
+     *         name: teacherId
+     *         schema:
+     *           type: string
+     *         description: Filter announcements by teacher ID.
+     *       - in: query
+     *         name: studentId
+     *         schema:
+     *           type: string
+     *         description: Filter announcements by student ID.
+     *       - in: query
+     *         name: id
+     *         schema:
+     *           type: string
+     *         description: Filter announcements by their unique ID.
+     *     responses:
+     *       200:
+     *         description: A list of announcements matching the filters.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 $ref: '#/components/schemas/AnnouncementGet'
+     *       400:
+     *         description: Bad request due to invalid input or no filters provided.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       500:
+     *         description: Internal server error.
+     */
     this.router.get("/", this.getAnnouncements);
+    /**
+     * @swagger
+     * /api/announcement:
+     *   patch:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Announcement
+     *     summary: Update an announcement
+     *     description: Updates an existing announcement with the provided data.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/AnnouncementUpdate'
+     *     responses:
+     *       200:
+     *         description: Announcement updated successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/AnnouncementGet'
+     *       400:
+     *         description: Bad request due to invalid input.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       403:
+     *         description: Forbidden, user does not have permission to update the announcement.
+     *       404:
+     *         description: Announcement not found.
+     *       500:
+     *         description: Internal server error.
+     */
     this.router.patch("/", this.updateAnnouncement);
   }
 }

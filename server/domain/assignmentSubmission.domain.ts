@@ -4,13 +4,14 @@ import { Request } from "express";
 import { PaginationFilterSchema } from "../util/types/pagination.types";
 import {
   SubmissionFilterSchema,
-  SubmissionUpdateAndCreateSchema,
   FileSubmission,
-  AssignmentSubUpdataAndCreateParams,
+  SubmissionCreateSchema,
+  SubmissionUpdateSchema,
 } from "../util/types/assignmentSubmission.types";
 import { UserEntity } from "../util/types/user.types";
 import { checkIfUserIsInGroup, compareUserIdWithFilterId } from "../util/coockie-checks/coockieChecks.util";
 import { GroupPersistence } from "../persistence/group.persistence";
+import { z, ZodEffects, ZodObject } from "zod";
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
@@ -60,10 +61,10 @@ export class AssignmentSubmissionDomain {
     );
   }
 
-  private parseSubmissionRequest(
-    req: Request,
-  ): AssignmentSubUpdataAndCreateParams {
-    const parseResult = SubmissionUpdateAndCreateSchema.safeParse(req.body);
+  private parseSubmissionRequest<
+    T extends ZodObject<any> | ZodEffects<ZodObject<any>>,
+  >(req: Request, schema: T): z.infer<typeof schema> {
+    const parseResult = schema.safeParse(req.body);
     if (!parseResult.success) {
       throw parseResult.error;
     }

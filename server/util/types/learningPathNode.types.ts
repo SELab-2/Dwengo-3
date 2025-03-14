@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const LearningPathNodeCreateSchema = z.object({
-  lpId: z.string(),
-  loId: z.string(),
+  learningPathId: z.string(),
+  learningObjectId: z.string(),
   instruction: z.string().optional(),
   startNode: z.boolean(),
 });

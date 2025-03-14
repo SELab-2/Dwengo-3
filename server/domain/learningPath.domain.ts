@@ -16,6 +16,10 @@ export class LearningPathDomain {
   }
 
   public async getLearningPaths(query: LearningPathByFilterParams) {
+    if (typeof query.keywords === "string") {
+      query.keywords = [query.keywords];
+    }
+
     const paginationParseResult = PaginationFilterSchema.safeParse(query);
     if (!paginationParseResult.success) {
       throw paginationParseResult.error;

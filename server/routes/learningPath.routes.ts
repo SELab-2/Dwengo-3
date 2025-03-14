@@ -71,7 +71,7 @@ export class LearningPathController {
      *             schema:
      *               type: array
      *               items:
-     *                 $ref: '#/components/schemas/LearningPath'
+     *                 $ref: '#/components/schemas/LearningPathGet'
      *       400:
      *         description: Bad request due to invalid parameters
      *       401:

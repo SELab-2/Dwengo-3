@@ -1,13 +1,15 @@
 import { AnnouncementPersistence } from "../persistence/announcement.persistence";
 import {
   AnnouncementByFilterParams,
-  AnnouncementCreateParams,
-  AnnouncementCreateSchema,
+  AnnouncementCreateDomainParams,
+  AnnouncementCreateDomainSchema,
   AnnouncementFilterSchema,
   AnnouncementUpdateParams,
   AnnouncementUpdateSchema,
+  TeacherIdSchema,
 } from "../util/types/announcement.types";
 import { PaginationFilterSchema } from "../util/types/pagination.types";
+import { UserEntity } from "../util/types/user.types";
 
 export class AnnouncementDomain {
   private announcementPersistence;
@@ -34,14 +36,26 @@ export class AnnouncementDomain {
     );
   }
 
-  public async createAnnouncement(query: AnnouncementCreateParams) {
+  public async createAnnouncement(
+    query: AnnouncementCreateDomainParams,
+    user: UserEntity,
+  ) {
     // TODO check if this is allowed by using cookies
 
-    const parseResult = AnnouncementCreateSchema.safeParse(query);
+    const parseResult = AnnouncementCreateDomainSchema.safeParse(query);
     if (!parseResult.success) {
       throw parseResult.error;
     }
-    return this.announcementPersistence.createAnnouncement(parseResult.data);
+
+    const teacherIdParseResult = TeacherIdSchema.safeParse(user.teacher?.id);
+    if (!teacherIdParseResult.success) {
+      throw teacherIdParseResult.error;
+    }
+
+    return this.announcementPersistence.createAnnouncement({
+      ...parseResult.data,
+      teacherId: teacherIdParseResult.data,
+    });
   }
 
   public async updateAnnouncement(query: AnnouncementUpdateParams) {

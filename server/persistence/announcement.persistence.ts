@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import {
   AnnouncementByFilterParams,
-  AnnouncementCreateParams,
+  AnnouncementCreatePersistenceParams,
   AnnouncementUpdateParams,
 } from "../util/types/announcement.types";
 import { PaginationParams } from "../util/types/pagination.types";
@@ -55,7 +55,7 @@ export class AnnouncementPersistence {
   }
 
   public async createAnnouncement(
-    announcementCreateParams: AnnouncementCreateParams,
+    announcementCreateParams: AnnouncementCreatePersistenceParams,
   ) {
     const { classId, teacherId, ...data } = announcementCreateParams;
     const announcement = await PrismaSingleton.instance.announcement.create({

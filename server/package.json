@@ -4,7 +4,6 @@
   "description": "Dwengo leerplatform",
   "main": "app.ts",
   "scripts": {
-    "prisma-generate": "npx prisma generate --schema ../db/prisma/schema.prisma",
     "start": "nodemon app.ts",
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",
     "readData": "ts-node util/db-scripts/readData.ts",
@@ -40,7 +39,6 @@
     "eslint-plugin-prettier": "^5.2.3",
     "globals": "^16.0.0",
     "nodemon": "^3.1.9",
-    "prisma": "^6.4.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
@@ -49,16 +47,12 @@
     "typescript-eslint": "^8.26.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.4.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
     "express": "^5",
     "multer": "^1.4.5-lts.1",
     "zod": "^3.24.2"
-  },
-  "prisma": {
-    "schema": "../db/prisma/schema.prisma"
   },
   "husky": {
     "hooks": {

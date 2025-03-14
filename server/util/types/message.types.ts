@@ -15,8 +15,8 @@ export const MessageCreateSchema = z.object({
 });
 
 export const MessageUpdateSchema = z.object({
-    id: z.number().positive().safe(),
-    content: z.string()
+  id: z.number().positive().safe(),
+  content: z.string(),
 });
 
 export const MessageIdSchema = z.number().positive().safe();

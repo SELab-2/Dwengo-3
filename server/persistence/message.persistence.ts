@@ -1,14 +1,19 @@
 import { Message, Prisma, PrismaClient } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
-import { MessageCreateParams, MessageFilterParams, MessageId, MessageUpdateParams } from "../util/types/message.types";
+import {
+  MessageCreateParams,
+  MessageFilterParams,
+  MessageId,
+  MessageUpdateParams,
+} from "../util/types/message.types";
 import { PaginationParams } from "../util/types/pagination.types";
 
 export class MessagePersistence {
-    private prisma: PrismaClient;
+  private prisma: PrismaClient;
 
-    public constructor() {
-        this.prisma = PrismaSingleton.instance;
-    }
+  public constructor() {
+    this.prisma = PrismaSingleton.instance;
+  }
 
     public async getMessages(
         filters: MessageFilterParams,
@@ -56,23 +61,22 @@ export class MessagePersistence {
         });
     }
 
-    public async updateMessage(params: MessageUpdateParams): Promise<Message> {
-        return this.prisma.message.update({
-            where: {
-                id: params.id
-            },
-            data: {
-                content: params.content
-            }
+  public async updateMessage(params: MessageUpdateParams): Promise<Message> {
+    return this.prisma.message.update({
+      where: {
+        id: params.id,
+      },
+      data: {
+        content: params.content,
+      },
+    });
+  }
 
-        });
-    }
-
-    public async deleteMessage(id: MessageId): Promise<Message> {
-        return this.prisma.message.delete({
-            where: {
-                id: id
-            }
-        });
-    } 
+  public async deleteMessage(id: MessageId): Promise<Message> {
+    return this.prisma.message.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
 }

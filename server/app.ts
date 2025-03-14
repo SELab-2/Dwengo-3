@@ -28,26 +28,21 @@ const options = {
 };
 
 const specs = swaggerJsdoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // cookie validating middleware
 app.use(
   cookieParser(),
   async (req: Request, res: Response, next: NextFunction) => {
-    console.debug("Cookie:", req.cookies["DWENGO_SESSION"]);
     const verified = await verifyCookie(req.cookies["DWENGO_SESSION"]);
-    console.log(verified);
     if (verified) {
       next();
     } else {
       const path = req.path;
       if (
-        !path.startsWith("/api/auth") ||
-        !["student", "teacher"].some((role) =>
-          path.startsWith(`/api/auth/${role}`),
-        )
+        !path.startsWith("/auth") ||
+        !["student", "teacher"].some((role) => path.startsWith(`/auth/${role}`))
       ) {
-        console.debug(`unauthorized: ${path}`);
         res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
         return;
       }
@@ -76,7 +71,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 const apiRouter = express.Router();
-app.use("/api", apiRouter);
+app.use("/", apiRouter);
 
 apiRouter.use("/class", new ClassController().router);
 apiRouter.use("/learningPath", new LearningPathController().router);

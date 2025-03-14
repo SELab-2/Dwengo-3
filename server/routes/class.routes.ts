@@ -37,7 +37,7 @@ export class ClassController {
      * /api/class:
      *   get:
      *     security:
-     *     - cookieAuth: []
+     *       - cookieAuth: []
      *     tags: [Class]
      *     summary: Get list of classes
      *     description: Fetches a list of classes filtered by optional query parameters such as teacherId, studentId, or class ID.
@@ -66,30 +66,77 @@ export class ClassController {
      *     responses:
      *       200:
      *         description: Successfully fetched list of classes
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: array
-     *               items:
-     *                 type: object
-     *                 properties:
-     *                   id:
-     *                     type: string
-     *                     description: Unique identifier for the class
-     *                   name:
-     *                     type: string
-     *                     description: Name of the class
-     *                   teacherId:
-     *                     type: string
-     *                     description: ID of the teacher associated with the class
-     *                   studentCount:
-     *                     type: integer
-     *                     description: Number of students in the class
+     *       401:
+     *         description: Unauthorized, user not authenticated
      *       500:
      *         description: Server error
      */
     this.router.get("/", this.getClasses);
+
+    /**
+     * @swagger
+     * /api/class:
+     *   put:
+     *     security:
+     *       - cookieAuth: []
+     *     tags: [Class]
+     *     summary: Create a new class
+     *     description: Allows a teacher to create a new class.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               name:
+     *                 type: string
+     *                 description: Name of the class
+     *     responses:
+     *       200:
+     *         description: Class successfully created
+     *       400:
+     *         description: Bad request due to invalid parameters
+     *       401:
+     *         description: Unauthorized, user not authenticated
+     *       500:
+     *         description: Server error
+     */
     this.router.put("/", this.createClass);
+
+    /**
+     * @swagger
+     * /api/class:
+     *   patch:
+     *     security:
+     *       - cookieAuth: []
+     *     tags: [Class]
+     *     summary: Update a class
+     *     description: Allows a teacher of the class to update its details.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               id:
+     *                 type: string
+     *                 format: uuid
+     *                 description: Unique identifier for the class
+     *               name:
+     *                 type: string
+     *                 description: Updated name of the class (optional)
+     *     responses:
+     *       200:
+     *         description: Class successfully updated
+     *       400:
+     *         description: Bad request due to invalid parameters
+     *       401:
+     *         description: Unauthorized, user not authenticated
+     *       500:
+     *         description: Server error
+     */
     this.router.patch("/", this.updateClass);
     this.router.use("/", new ClassJoinRequestController().router);
   }
