@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { AssignmentSubmissionDomain } from "../domain/assignmentSubmission.domain";
 import multer, { Multer } from "multer";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class AssignmentSubmissionController {
   public router: Router;
@@ -65,6 +66,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.getAssignmentSubmissions(
         req.query,
+        await getUserFromReq(req),
       ),
     );
   }
@@ -74,17 +76,20 @@ export class AssignmentSubmissionController {
     res: Response,
   ): Promise<void> {
     res.json(
-      await this.assignmentSubmissionsDomain.createAssignmentSubmission(req),
+      await this.assignmentSubmissionsDomain.createAssignmentSubmission(
+        req,
+        await getUserFromReq(req),
+      ),
     );
   }
 
-  /*curl -X PATCH localhost:3001/api/assignmentSubmission 
+  /*curl -X PATCH localhost:3001/assignmentSubmission
      -F "file=@test.txt" 
      -F "groupId=6208ebc5-7a01-4c2c-b8cb-12d1db33d530" 
      -F "nodeId=4aa49f79-564b-4cf3-863f-421d0606e914"
      -F "submissionType=FILE"
 
-     curl -X PATCH localhost:3001/api/assignmentSubmission 
+     curl -X PATCH localhost:3001/assignmentSubmission
      -H "Content-Type: application/json" 
      -d '{
      "groupId":"6208ebc5-7a01-4c2c-b8cb-12d1db33d530", 
@@ -96,7 +101,10 @@ export class AssignmentSubmissionController {
     res: Response,
   ): Promise<void> {
     res.json(
-      await this.assignmentSubmissionsDomain.updateAssignmentSubmission(req),
+      await this.assignmentSubmissionsDomain.updateAssignmentSubmission(
+        req,
+        await getUserFromReq(req),
+      ),
     );
   }
 }

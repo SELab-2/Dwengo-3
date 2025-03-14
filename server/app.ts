@@ -8,7 +8,10 @@ import { ZodError } from "zod";
 import { LearningPathController } from "./routes/learningPath.routes";
 import { LearningPathNodeController } from "./routes/learningPathNode.routes";
 import { LearningPathNodeTransitionController } from "./routes/learningPathNodeTransition.routes";
+import { DiscussionController } from "./routes/discussion.routes";
+import { MessageController } from "./routes/message.routes";
 import { AnnouncementController } from "./routes/announcement.routes";
+import { LearningObjectController } from "./routes/learningObject.routes";
 import { AssignmentController } from "./routes/assignment.routes";
 import { AssignmentSubmissionController } from "./routes/assignmentSubmission.routes";
 import swaggerUi from "swagger-ui-express";
@@ -25,26 +28,21 @@ const options = {
 };
 
 const specs = swaggerJsdoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // cookie validating middleware
 app.use(
   cookieParser(),
   async (req: Request, res: Response, next: NextFunction) => {
-    console.debug("Cookie:", req.cookies["DWENGO_SESSION"]);
     const verified = await verifyCookie(req.cookies["DWENGO_SESSION"]);
-    console.log(verified);
     if (verified) {
       next();
     } else {
       const path = req.path;
       if (
-        !path.startsWith("/api/auth") ||
-        !["student", "teacher"].some((role) =>
-          path.startsWith(`/api/auth/${role}`),
-        )
+        !path.startsWith("/auth") ||
+        !["student", "teacher"].some((role) => path.startsWith(`/auth/${role}`))
       ) {
-        console.debug(`unauthorized: ${path}`);
         res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
         return;
       }
@@ -73,7 +71,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 const apiRouter = express.Router();
-app.use("/api", apiRouter);
+app.use("/", apiRouter);
 
 apiRouter.use("/class", new ClassController().router);
 apiRouter.use("/learningPath", new LearningPathController().router);
@@ -82,7 +80,7 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router,
 );
-
+apiRouter.use("/learningobject", new LearningObjectController().router);
 apiRouter.use("/announcement", new AnnouncementController().router);
 apiRouter.use("/assignment", new AssignmentController().router);
 apiRouter.use(
@@ -91,6 +89,8 @@ apiRouter.use(
 );
 
 apiRouter.use("/auth", auth);
+apiRouter.use("/discussion", new DiscussionController().router);
+apiRouter.use("/message", new MessageController().router);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);

@@ -98,7 +98,7 @@ export class ClassDomain {
       throw createParamsResult.error;
     }
 
-    return this.classPersistance.createClass(createParamsResult.data);
+    return this.classPersistance.createClass(createParamsResult.data, user);
   }
 
   public async updateClass(body: unknown, user: UserEntity) {

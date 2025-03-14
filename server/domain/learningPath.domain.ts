@@ -16,6 +16,10 @@ export class LearningPathDomain {
   }
 
   public async getLearningPaths(query: LearningPathByFilterParams) {
+    if (typeof query.keywords === "string") {
+      query.keywords = [query.keywords];
+    }
+
     const paginationParseResult = PaginationFilterSchema.safeParse(query);
     if (!paginationParseResult.success) {
       throw paginationParseResult.error;
@@ -33,10 +37,10 @@ export class LearningPathDomain {
   }
 
   public async createLearningPath(
-    query: LearningPathCreateParams,
+    body: LearningPathCreateParams,
     user: UserEntity,
   ) {
-    const parseResult = LearningPathCreateSchema.safeParse(query);
+    const parseResult = LearningPathCreateSchema.safeParse(body);
     if (!parseResult.success) {
       throw parseResult.error;
     }

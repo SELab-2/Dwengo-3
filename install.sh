@@ -11,8 +11,3 @@ npm install
 cd ../db || exit
 npm install
 
-cd ../server || exit
-dotenv -e ../.env -- npx prisma generate
-
-cd ../db || exit
-dotenv -e ../.env -- npx prisma migrate dev

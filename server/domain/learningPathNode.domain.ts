@@ -13,10 +13,10 @@ export class LearningPathNodeDomain {
   }
 
   public async createLearningPathNode(
-    query: LearningPathNodeCreateParams,
+    body: LearningPathNodeCreateParams,
     user: UserEntity,
   ) {
-    const parseResult = LearningPathNodeCreateSchema.safeParse(query);
+    const parseResult = LearningPathNodeCreateSchema.safeParse(body);
     if (!parseResult.success) {
       throw parseResult.error;
     }

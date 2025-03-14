@@ -4,22 +4,22 @@ import { PrismaSingleton } from "./prismaSingleton";
 
 export class LearningPathNodePersistence {
   public async createLearningPathNode(
-    learningPathNode: LearningPathNodeCreateParams
+    learningPathNode: LearningPathNodeCreateParams,
   ) {
     // create a learningPathNode without transitions and connect it to the learningPath
-    const { lpId, loId, ...data } = learningPathNode;
+    const { learningPathId, learningObjectId, ...data } = learningPathNode;
     const createdLearningPathNode =
       await PrismaSingleton.instance.learningPathNode.create({
         data: {
           ...data,
           learningPath: {
             connect: {
-              id: lpId,
+              id: learningPathId,
             },
           },
           learningObject: {
             connect: {
-              id: loId,
+              id: learningObjectId,
             },
           },
         },

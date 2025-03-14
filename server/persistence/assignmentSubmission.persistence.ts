@@ -1,7 +1,8 @@
 import { AssignmentSubmission, Prisma, PrismaClient } from "@prisma/client";
 import {
+  AssignmentSubCreateParams,
   AssignmentSubFilterParams,
-  AssignmentSubUpdataAndCreateParams,
+  AssignmentSubUpdateParams,
 } from "../util/types/assignmentSubmission.types";
 import { PaginationParams } from "../util/types/pagination.types";
 import { PrismaSingleton } from "./prismaSingleton";
@@ -37,7 +38,7 @@ export class AssignmentSubmissionPersistence {
   }
 
   public async createAssignmentSubmission(
-    params: AssignmentSubUpdataAndCreateParams,
+    params: AssignmentSubCreateParams,
   ): Promise<AssignmentSubmission> {
     return PrismaSingleton.instance.assignmentSubmission.create({
       data: {
@@ -58,14 +59,11 @@ export class AssignmentSubmissionPersistence {
   }
 
   public async updateAssignmentSubmission(
-    params: AssignmentSubUpdataAndCreateParams,
+    params: AssignmentSubUpdateParams,
   ): Promise<AssignmentSubmission> {
     return PrismaSingleton.instance.assignmentSubmission.update({
       where: {
-        groupId_nodeId: {
-          groupId: params.groupId,
-          nodeId: params.nodeId,
-        },
+        id: params.id,
       },
       data: {
         submissionType: params.submissionType,

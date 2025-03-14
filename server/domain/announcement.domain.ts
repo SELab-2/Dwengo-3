@@ -2,11 +2,12 @@ import { AnnouncementPersistence } from "../persistence/announcement.persistence
 import { ClassDomain } from "./class.domain";
 import {
   AnnouncementByFilterParams,
-  AnnouncementCreateParams,
-  AnnouncementCreateSchema,
+  AnnouncementCreateDomainParams,
+  AnnouncementCreateDomainSchema,
   AnnouncementFilterSchema,
   AnnouncementUpdateParams,
   AnnouncementUpdateSchema,
+  TeacherIdSchema,
 } from "../util/types/announcement.types";
 import { PaginationFilterSchema } from "../util/types/pagination.types";
 import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
@@ -66,8 +67,7 @@ export class AnnouncementDomain {
         this.classDomain.checkUserBelongsToClass(user, resClassId);
       }
     }
-
-    this.announcementPersistence.getAnnouncements(
+    return this.announcementPersistence.getAnnouncements(
       filterResult.data,
       paginationParseResult.data,
     );
@@ -84,7 +84,11 @@ export class AnnouncementDomain {
 
     this.checkUserIsTeacher(user);
     this.classDomain.checkUserBelongsToClass(user, query.classId);
-
+    
+    const teacherIdParseResult = TeacherIdSchema.safeParse(user.teacher?.id);
+    if (!teacherIdParseResult.success) {
+      throw teacherIdParseResult.error;
+    }
     return this.announcementPersistence.createAnnouncement(parseResult.data);
   }
 
@@ -102,7 +106,7 @@ export class AnnouncementDomain {
 
     return this.announcementPersistence.updateAnnouncement(parseResult.data);
   }
-
+  
   private async checkUserIsTeacher(user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
       throw new Error("User is not a teacher.");
