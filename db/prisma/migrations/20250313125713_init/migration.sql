@@ -1,13 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `learning_objects` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `learning_objects_keyword` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `learning_path_nodes` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `learning_path_transitions` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `learning_paths` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "ContentTypeEnum" AS ENUM ('text/plain', 'text/markdown', 'image/image-block', 'image/image', 'audio/mpeg', 'application/pdf', 'extern', 'blockly');
 
@@ -16,39 +6,6 @@ CREATE TYPE "ClassRole" AS ENUM ('TEACHER', 'STUDENT');
 
 -- CreateEnum
 CREATE TYPE "SubmissionType" AS ENUM ('MULTIPLE_CHOICE', 'FILE');
-
--- DropForeignKey
-ALTER TABLE "learning_objects_keyword" DROP CONSTRAINT "learning_objects_keyword_lo_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "learning_path_nodes" DROP CONSTRAINT "learning_path_nodes_lo_hruid_fkey";
-
--- DropForeignKey
-ALTER TABLE "learning_path_nodes" DROP CONSTRAINT "learning_path_nodes_lp_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "learning_path_transitions" DROP CONSTRAINT "learning_path_transitions_from_node_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "learning_path_transitions" DROP CONSTRAINT "learning_path_transitions_to_lo_hruid_fkey";
-
--- DropTable
-DROP TABLE "learning_objects";
-
--- DropTable
-DROP TABLE "learning_objects_keyword";
-
--- DropTable
-DROP TABLE "learning_path_nodes";
-
--- DropTable
-DROP TABLE "learning_path_transitions";
-
--- DropTable
-DROP TABLE "learning_paths";
-
--- DropEnum
-DROP TYPE "content_type_enum";
 
 -- CreateTable
 CREATE TABLE "LearningObject" (
@@ -60,6 +17,7 @@ CREATE TABLE "LearningObject" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "contentType" "ContentTypeEnum",
+    "contentLocation" TEXT,
     "targetAges" INTEGER[],
     "teacherExclusive" BOOLEAN NOT NULL DEFAULT false,
     "skosConcepts" TEXT[],
@@ -71,7 +29,7 @@ CREATE TABLE "LearningObject" (
     "returnValue" JSON,
     "available" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP,
     "content" TEXT NOT NULL,
     "multipleChoice" JSON,
     "canUploadSubmission" BOOLEAN NOT NULL DEFAULT false,
@@ -81,17 +39,17 @@ CREATE TABLE "LearningObject" (
 
 -- CreateTable
 CREATE TABLE "LearningObjectKeyword" (
-    "loId" TEXT NOT NULL,
+    "learningObjectId" TEXT NOT NULL,
     "keyword" TEXT NOT NULL,
 
-    CONSTRAINT "LearningObjectKeyword_pkey" PRIMARY KEY ("loId","keyword")
+    CONSTRAINT "LearningObjectKeyword_pkey" PRIMARY KEY ("learningObjectId","keyword")
 );
 
 -- CreateTable
 CREATE TABLE "LearningPathNode" (
     "id" TEXT NOT NULL,
-    "lpId" TEXT NOT NULL,
-    "loId" TEXT NOT NULL,
+    "learningPathId" TEXT NOT NULL,
+    "learningObjectId" TEXT NOT NULL,
     "instruction" TEXT,
     "startNode" BOOLEAN NOT NULL DEFAULT false,
 
@@ -102,7 +60,7 @@ CREATE TABLE "LearningPathNode" (
 CREATE TABLE "LearningNodeTransition" (
     "id" TEXT NOT NULL,
     "fromNodeId" TEXT NOT NULL,
-    "nextNodeId" TEXT NOT NULL,
+    "toNodeId" TEXT,
     "condition" TEXT,
 
     CONSTRAINT "LearningNodeTransition_pkey" PRIMARY KEY ("id")
@@ -116,8 +74,9 @@ CREATE TABLE "LearningPath" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "image" TEXT,
+    "ownerId" TEXT,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP,
 
     CONSTRAINT "LearningPath_pkey" PRIMARY KEY ("id")
 );
@@ -125,8 +84,11 @@ CREATE TABLE "LearningPath" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "surname" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "role" "ClassRole" NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -151,6 +113,7 @@ CREATE TABLE "Teacher" (
 -- CreateTable
 CREATE TABLE "Class" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL DEFAULT 'New class',
 
     CONSTRAINT "Class_pkey" PRIMARY KEY ("id")
 );
@@ -167,7 +130,7 @@ CREATE TABLE "ClassJoinRequest" (
 -- CreateTable
 CREATE TABLE "Group" (
     "id" TEXT NOT NULL,
-    "nodeId" TEXT NOT NULL,
+    "nodeId" TEXT,
     "assignmentId" TEXT NOT NULL,
 
     CONSTRAINT "Group_pkey" PRIMARY KEY ("id")
@@ -176,7 +139,7 @@ CREATE TABLE "Group" (
 -- CreateTable
 CREATE TABLE "Assignment" (
     "id" TEXT NOT NULL,
-    "lpId" TEXT NOT NULL,
+    "learningPathId" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
     "classId" TEXT NOT NULL,
 
@@ -188,20 +151,18 @@ CREATE TABLE "AssignmentSubmission" (
     "id" TEXT NOT NULL,
     "groupId" TEXT NOT NULL,
     "nodeId" TEXT NOT NULL,
-    "submissionType" "SubmissionType" NOT NULL,
-    "fileOriginalName" TEXT,
-    "fileName" TEXT,
-    "multipleChoiceAnswer" INTEGER,
+    "submissionType" "SubmissionType",
+    "submission" JSONB,
 
     CONSTRAINT "AssignmentSubmission_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Chat" (
+CREATE TABLE "Discussion" (
     "id" TEXT NOT NULL,
     "groupId" TEXT NOT NULL,
 
-    CONSTRAINT "Chat_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Discussion_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -209,10 +170,21 @@ CREATE TABLE "Message" (
     "id" SERIAL NOT NULL,
     "content" TEXT NOT NULL,
     "senderId" TEXT NOT NULL,
-    "chatId" TEXT NOT NULL,
+    "discussionId" TEXT NOT NULL,
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Message_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Announcement" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "classId" TEXT NOT NULL,
+    "teacherId" TEXT NOT NULL,
+
+    CONSTRAINT "Announcement_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -240,15 +212,21 @@ CREATE TABLE "_GroupToStudent" (
 );
 
 -- CreateTable
-CREATE TABLE "_ChatToUser" (
+CREATE TABLE "_DiscussionToUser" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
 
-    CONSTRAINT "_ChatToUser_AB_pkey" PRIMARY KEY ("A","B")
+    CONSTRAINT "_DiscussionToUser_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "LearningObject_hruid_version_language_key" ON "LearningObject"("hruid", "version", "language");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "LearningPath_hruid_language_key" ON "LearningPath"("hruid", "language");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_userId_key" ON "Student"("userId");
@@ -260,7 +238,7 @@ CREATE UNIQUE INDEX "Teacher_userId_key" ON "Teacher"("userId");
 CREATE UNIQUE INDEX "AssignmentSubmission_groupId_nodeId_key" ON "AssignmentSubmission"("groupId", "nodeId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Chat_groupId_key" ON "Chat"("groupId");
+CREATE UNIQUE INDEX "Discussion_groupId_key" ON "Discussion"("groupId");
 
 -- CreateIndex
 CREATE INDEX "_ClassToStudent_B_index" ON "_ClassToStudent"("B");
@@ -272,22 +250,25 @@ CREATE INDEX "_ClassToTeacher_B_index" ON "_ClassToTeacher"("B");
 CREATE INDEX "_GroupToStudent_B_index" ON "_GroupToStudent"("B");
 
 -- CreateIndex
-CREATE INDEX "_ChatToUser_B_index" ON "_ChatToUser"("B");
+CREATE INDEX "_DiscussionToUser_B_index" ON "_DiscussionToUser"("B");
 
 -- AddForeignKey
-ALTER TABLE "LearningObjectKeyword" ADD CONSTRAINT "LearningObjectKeyword_loId_fkey" FOREIGN KEY ("loId") REFERENCES "LearningObject"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningObjectKeyword" ADD CONSTRAINT "LearningObjectKeyword_learningObjectId_fkey" FOREIGN KEY ("learningObjectId") REFERENCES "LearningObject"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_loId_fkey" FOREIGN KEY ("loId") REFERENCES "LearningObject"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_learningObjectId_fkey" FOREIGN KEY ("learningObjectId") REFERENCES "LearningObject"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_lpId_fkey" FOREIGN KEY ("lpId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_learningPathId_fkey" FOREIGN KEY ("learningPathId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_nextNodeId_fkey" FOREIGN KEY ("nextNodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_toNodeId_fkey" FOREIGN KEY ("toNodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_fromNodeId_fkey" FOREIGN KEY ("fromNodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "LearningPath" ADD CONSTRAINT "LearningPath_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "Student" ADD CONSTRAINT "Student_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -314,7 +295,7 @@ ALTER TABLE "Assignment" ADD CONSTRAINT "Assignment_classId_fkey" FOREIGN KEY ("
 ALTER TABLE "Assignment" ADD CONSTRAINT "Assignment_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "Teacher"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "Assignment" ADD CONSTRAINT "Assignment_lpId_fkey" FOREIGN KEY ("lpId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "Assignment" ADD CONSTRAINT "Assignment_learningPathId_fkey" FOREIGN KEY ("learningPathId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_nodeId_fkey" FOREIGN KEY ("nodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -323,13 +304,19 @@ ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_nodeId_f
 ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Group"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "Chat" ADD CONSTRAINT "Chat_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Group"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "Discussion" ADD CONSTRAINT "Discussion_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Group"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_chatId_fkey" FOREIGN KEY ("chatId") REFERENCES "Chat"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Message" ADD CONSTRAINT "Message_discussionId_fkey" FOREIGN KEY ("discussionId") REFERENCES "Discussion"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "Announcement" ADD CONSTRAINT "Announcement_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "Announcement" ADD CONSTRAINT "Announcement_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "Teacher"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "_ClassToStudent" ADD CONSTRAINT "_ClassToStudent_A_fkey" FOREIGN KEY ("A") REFERENCES "Class"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -350,7 +337,7 @@ ALTER TABLE "_GroupToStudent" ADD CONSTRAINT "_GroupToStudent_A_fkey" FOREIGN KE
 ALTER TABLE "_GroupToStudent" ADD CONSTRAINT "_GroupToStudent_B_fkey" FOREIGN KEY ("B") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_ChatToUser" ADD CONSTRAINT "_ChatToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Chat"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_DiscussionToUser" ADD CONSTRAINT "_DiscussionToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Discussion"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_ChatToUser" ADD CONSTRAINT "_ChatToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_DiscussionToUser" ADD CONSTRAINT "_DiscussionToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
