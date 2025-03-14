@@ -23,15 +23,19 @@ jobs:
           cd /home/selab2/dwengo;
           ./install.sh production;
 
-      - name: Generate the client and migrate the database
+      - name: Generate the prisma client and apply the migrations
         run: |
           cd /home/selab2/dwengo;
           ./prisma.sh migrate deploy;
 
-      - name: Build client
-        run: |
-          cd /home/selab2/dwengo;
-          cd client && npm run build;
+      - name: Checkout code locally for client build
+        uses: actions/checkout@v4
+
+      - name: Build React client
+        run: cd client && npm ci && npm run build
+
+      - name: Copy client build to server
+        run: cp -r client/build/* /var/www/html
 
       - name: Restart applications
         run: |
@@ -42,6 +46,6 @@ jobs:
         run: sleep 5;
 
       - name: Swagger docs up and running
-        run:  |
+        run: |
           cd /home/selab2/dwengo;
           ./test-swagger-running.sh;
