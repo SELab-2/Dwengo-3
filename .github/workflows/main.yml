@@ -27,3 +27,6 @@ jobs:
 
       - name: Restart applications
         run: pm2 restart client server
+
+      - name: Swagger docs up and running
+        run: ./test-swagger-running.sh
