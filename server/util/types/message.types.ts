@@ -1,17 +1,19 @@
 import { z } from "zod";
 
-export const MessageFilterSchema = z.object({
+export const MessageFilterSchema = z
+  .object({
     discussionId: z.string().uuid().optional(),
-    id: z.number().positive().safe().optional()
-}).refine((data) => Object.values(data).some((value) => value !== undefined), {
+    id: z.number().positive().safe().optional(),
+  })
+  .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one filter must be provided.",
-    path: [], 
-});
+    path: [],
+  });
 
 export const MessageCreateSchema = z.object({
-    discussionId: z.string().uuid(),
-    content: z.string(),
-    senderId: z.string().optional(),
+  discussionId: z.string().uuid(),
+  content: z.string(),
+  senderId: z.string().optional(),
 });
 
 export const MessageUpdateSchema = z.object({

@@ -66,7 +66,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.getAssignmentSubmissions(
         req.query,
-        await getUserFromReq(req)
+        await getUserFromReq(req),
       ),
     );
   }
@@ -76,7 +76,10 @@ export class AssignmentSubmissionController {
     res: Response,
   ): Promise<void> {
     res.json(
-      await this.assignmentSubmissionsDomain.createAssignmentSubmission(req, await getUserFromReq(req)),
+      await this.assignmentSubmissionsDomain.createAssignmentSubmission(
+        req,
+        await getUserFromReq(req),
+      ),
     );
   }
 
@@ -98,7 +101,10 @@ export class AssignmentSubmissionController {
     res: Response,
   ): Promise<void> {
     res.json(
-      await this.assignmentSubmissionsDomain.updateAssignmentSubmission(req, await getUserFromReq(req)),
+      await this.assignmentSubmissionsDomain.updateAssignmentSubmission(
+        req,
+        await getUserFromReq(req),
+      ),
     );
   }
 }

@@ -17,11 +17,21 @@ export class DiscussionController {
     this.router.put("/", this.createDiscussion.bind(this));
   }
 
-    private async getDiscussions(req: Request, res: Response): Promise<void> {
-        res.json(await this.discussionDomain.getDiscussions(req.query, await getUserFromReq(req)));
-    }
+  private async getDiscussions(req: Request, res: Response): Promise<void> {
+    res.json(
+      await this.discussionDomain.getDiscussions(
+        req.query,
+        await getUserFromReq(req),
+      ),
+    );
+  }
 
-    private async createDiscussion(req: Request, res: Response): Promise<void> {
-        res.json(await this.discussionDomain.createDiscussion(req.body, await getUserFromReq(req)));
-    }
+  private async createDiscussion(req: Request, res: Response): Promise<void> {
+    res.json(
+      await this.discussionDomain.createDiscussion(
+        req.body,
+        await getUserFromReq(req),
+      ),
+    );
+  }
 }

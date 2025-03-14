@@ -1,7 +1,4 @@
-import {
-  Assignment,
-  Prisma,
-} from "@prisma/client";
+import { Assignment, Prisma } from "@prisma/client";
 import {
   AssignmentCreateParams,
   AssignmentFilterParams,
@@ -110,7 +107,7 @@ export class AssignmentPersistence {
             students: {
               connect: group.map((student: Uuid) => ({ id: student })),
             },
-          }
+          },
         }),
       ),
     );

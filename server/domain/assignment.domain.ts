@@ -1,9 +1,17 @@
 import { Assignment, ClassRole } from "@prisma/client";
 import { AssignmentPersistence } from "../persistence/assignment.persistence";
-import { AssignmentFilterSchema, AssignmentCreateSchema } from "../util/types/assignment.types";
+import {
+  AssignmentFilterSchema,
+  AssignmentCreateSchema,
+} from "../util/types/assignment.types";
 import { PaginationFilterSchema } from "../util/types/pagination.types";
 import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
-import { checkIfUserIsInClass, checkIfUserIsInGroup, checkIfUsersAreInSameClass, compareUserIdWithFilterId } from "../util/coockie-checks/coockieChecks.util";
+import {
+  checkIfUserIsInClass,
+  checkIfUserIsInGroup,
+  checkIfUsersAreInSameClass,
+  compareUserIdWithFilterId,
+} from "../util/coockie-checks/coockieChecks.util";
 import { ClassPersistence } from "../persistence/class.persistence";
 import { GroupPersistence } from "../persistence/group.persistence";
 
@@ -20,7 +28,7 @@ export class AssignmentDomain {
 
   public async getAssignments(
     query: any,
-    user: UserEntity
+    user: UserEntity,
   ): Promise<{ data: Assignment[]; totalPages: number }> {
     const paginationParseResult = PaginationFilterSchema.safeParse(query);
     if (!paginationParseResult.success) {
@@ -34,14 +42,24 @@ export class AssignmentDomain {
     compareUserIdWithFilterId(user, filters.studentId, filters.teacherId);
     checkIfUserIsInClass(user, filters.classId, this.classPersistance);
     checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
-    const assignments = await this.assignmentPersistence.getAssignments(filters, paginationParseResult.data);
+    const assignments = await this.assignmentPersistence.getAssignments(
+      filters,
+      paginationParseResult.data,
+    );
     if (filters.id && assignments.data.length === 1) {
-      checkIfUserIsInClass(user, assignments.data[0].classId, this.classPersistance);
+      checkIfUserIsInClass(
+        user,
+        assignments.data[0].classId,
+        this.classPersistance,
+      );
     }
     return assignments;
   }
 
-  public async createAssigment(query: any, user: UserEntity): Promise<Assignment> {
+  public async createAssigment(
+    query: any,
+    user: UserEntity,
+  ): Promise<Assignment> {
     if (user.role !== ClassRole.TEACHER) {
       throw new Error("Only teachers can create assigments");
     }
@@ -51,7 +69,12 @@ export class AssignmentDomain {
     }
     const data = parseResult.data;
     data.teacherId = user.teacher!.id;
-    checkIfUsersAreInSameClass(data.groups, data.classId, data.teacherId!, this.classPersistance);
+    checkIfUsersAreInSameClass(
+      data.groups,
+      data.classId,
+      data.teacherId!,
+      this.classPersistance,
+    );
     return this.assignmentPersistence.createAssignment(data);
   }
 }
