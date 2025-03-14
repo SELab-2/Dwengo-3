@@ -18,6 +18,8 @@ jobs:
         run: ./install.sh
 
       - name: Generate the client and migrate the database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: ./prisma.sh migrate deploy
 
       - name: Build client
