@@ -25,7 +25,6 @@ export class ClassPersistence {
         filters.studentId
           ? { students: { some: { id: filters.studentId } } }
           : {},
-        filters.id ? { id: filters.id } : {},
       ],
     };
   }
@@ -43,14 +42,49 @@ export class ClassPersistence {
   }
 
   public async getClassById(id: string) {
-    return await this.prisma.class.findUnique({
+    const classData = await this.prisma.class.findUnique({
       where: { id },
       include: {
-        students: true,
-        teachers: true,
+        students: {
+          select: {
+            id: true,
+            userId: true,
+            user: {
+              select: {
+                name: true,
+                surname: true,
+              },
+            },
+          },
+        },
+        teachers: {
+          select: {
+            id: true,
+            userId: true,
+            user: {
+              select: {
+                name: true,
+                surname: true,
+              },
+            },
+          },
+        },
+        assignment: {
+          select: {
+            id: true,
+            learningPathId: true,
+          },
+        },
       },
     });
+
+    if (!classData) {
+      throw new Error("Class with id: ${id} was not found");
+    }
+
+    return classData;
   }
+
   public async createClass(params: ClassCreateParams, creator: UserEntity) {
     return await this.prisma.class.create({
       data: {

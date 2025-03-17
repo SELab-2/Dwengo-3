@@ -3,7 +3,6 @@ import { z } from "zod";
 export const ClassFilterSchema = z.object({
   teacherId: z.string().uuid().optional(),
   studentId: z.string().uuid().optional(),
-  id: z.string().uuid().optional(),
 });
 
 export type ClassFilterParams = z.infer<typeof ClassFilterSchema>;
