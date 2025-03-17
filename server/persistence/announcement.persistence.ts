@@ -97,7 +97,7 @@ export class AnnouncementPersistence {
     );
 
     if (!announcement) {
-      throw new Error("Announcement with id: ${id} was not found");
+      throw new Error(`Announcement with id: ${id} was not found`);
     }
 
     return announcement;

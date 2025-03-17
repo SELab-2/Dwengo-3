@@ -72,14 +72,19 @@ export class ClassPersistence {
         assignment: {
           select: {
             id: true,
-            learningPathId: true,
+            learningPath: {
+              select: {
+                id: true,
+                title: true,
+              },
+            },
           },
         },
       },
     });
 
     if (!classData) {
-      throw new Error("Class with id: ${id} was not found");
+      throw new Error(`Class with id: ${id} was not found`);
     }
 
     return classData;

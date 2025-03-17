@@ -53,7 +53,6 @@ export class StudentPersistence {
   ) {
     const whereClause: Prisma.StudentWhereInput = {
       AND: [
-        filters.id ? { id: filters.id } : {},
         filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
         filters.groupId ? { groups: { some: { id: filters.groupId } } } : {},
@@ -77,22 +76,37 @@ export class StudentPersistence {
    * @param include - Optional `include` clause for related models.
    * @returns The student data.
    */
-  public async getStudentById(
-    id: string,
-    include: StudentIncludeParams = {
-      classes: true,
-      groups: true,
-      user: true,
-    },
-  ) {
-    return await this.prisma.student.findUnique({
+  public async getStudentById(id: string) {
+    const student = await this.prisma.student.findUnique({
       where: { id },
       include: {
-        classes: include.classes,
-        groups: include.groups,
-        user: include.user,
+        classes: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        groups: {
+          select: {
+            id: true,
+            assignmentId: true,
+            node: true,
+          },
+        },
+        user: {
+          select: {
+            name: true,
+            surname: true,
+          },
+        },
       },
     });
+
+    if (!student) {
+      throw new Error(`Student with id: ${id} was not found`);
+    }
+
+    return student;
   }
 
   /**

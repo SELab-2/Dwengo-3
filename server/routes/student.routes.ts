@@ -21,6 +21,15 @@ export class StudentController {
     );
   };
 
+  private getStudentById = async (req: Request, res: Response) => {
+    res.json(
+      await this.studentDomain.getStudentById(
+        req.params.id,
+        await getUserFromReq(req),
+      ),
+    );
+  };
+
   private updateStudent = async (req: Request, res: Response) => {
     res.json(
       await this.studentDomain.updateStudent(
@@ -56,10 +65,6 @@ export class StudentController {
      *         application/json:
      *           schema:
      *             type: object
-     *             properties:
-     *               id:
-     *                 type: string
-     *                 format: uuid
      *               userId:
      *                 type: string
      *                 format: uuid
@@ -107,7 +112,35 @@ export class StudentController {
      *         description: Server error
      */
     this.router.get("/", this.getStudents);
-
+    /**
+     * @swagger
+     * /api/student/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Student
+     *     summary: Get a student by studentID
+     *     description: Gets the content of a specific student selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the student.
+     *     responses:
+     *       200:
+     *         description: Student fetched succesfully.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Student not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    this.router.get("/:id", this.getStudentById);
     /**
      * @swagger
      * /api/student:

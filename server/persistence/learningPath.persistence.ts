@@ -90,7 +90,7 @@ export class LearningPathPersistence {
     });
 
     if (!learningPath) {
-      throw new Error("LearningPath with id: ${id} was not found");
+      throw new Error(`LearningPath with id: ${id} was not found`);
     }
 
     return learningPath;

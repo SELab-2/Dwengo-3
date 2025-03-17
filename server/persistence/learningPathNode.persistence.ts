@@ -37,7 +37,7 @@ export class LearningPathNodePersistence {
       });
 
     if (!learningPathNode) {
-      throw new Error("LearningPathNode with id: ${id} was not found");
+      throw new Error(`LearningPathNode with id: ${id} was not found`);
     }
 
     return learningPathNode;

@@ -74,7 +74,7 @@ export class TeacherPersistence {
    * @returns The teacher data.
    */
   public async getTeacherById(teacherId: string) {
-    return await this.prisma.teacher.findUnique({
+    const teacher = await this.prisma.teacher.findUnique({
       where: { id: teacherId },
       include: {
         user: {
@@ -91,6 +91,12 @@ export class TeacherPersistence {
         },
       },
     });
+
+    if (!teacher) {
+      throw new Error(`Teacher with id: ${teacherId} was not found`);
+    }
+
+    return teacher;
   }
 
   /**

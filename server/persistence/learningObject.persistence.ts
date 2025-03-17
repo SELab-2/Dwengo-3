@@ -101,7 +101,7 @@ export class LearningObjectPersistence {
     });
 
     if (!learningObject) {
-      throw new Error("LearningObject with id: ${id} not found");
+      throw new Error(`LearningObject with id: ${id} not found`);
     }
 
     return learningObject;
