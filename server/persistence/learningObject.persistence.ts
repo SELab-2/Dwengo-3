@@ -40,8 +40,6 @@ export class LearningObjectPersistence {
               },
             }
           : {},
-
-        filters.id ? { id: filters.id } : {},
       ].filter(Boolean), // Remove empty objects from the AND array
     };
 
@@ -86,12 +84,27 @@ export class LearningObjectPersistence {
   }
 
   public async getLearningObjectById(id: string) {
-    return await this.prisma.learningObject.findUnique({
+    const learningObject = await this.prisma.learningObject.findUnique({
       where: { id: id },
       include: {
-        learningPathNodes: true,
+        keywords: {
+          select: {
+            keyword: true,
+          },
+        },
+        learningPathNodes: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
+
+    if (!learningObject) {
+      throw new Error("LearningObject with id: ${id} not found");
+    }
+
+    return learningObject;
   }
 
   public async deleteLearningObject(id: string) {

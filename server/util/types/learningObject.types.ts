@@ -92,7 +92,6 @@ export const LearningObjectFilterSchema = z.object({
     .array(z.string())
     .transform((val) => val.map(Number))
     .optional(),
-  id: z.string().optional(),
 });
 
 export type LearningObjectFilterParams = z.infer<

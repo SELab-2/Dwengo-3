@@ -25,6 +25,12 @@ export class LearningObjectController {
     res.json(await this.learningObjectDomain.getLearningObjects(req.query));
   };
 
+  private getLearningObjectById = async (req: Request, res: Response) => {
+    res.json(
+      await this.learningObjectDomain.getLearningObjectById(req.params.id),
+    );
+  };
+
   private updateLearningObject = async (req: Request, res: Response) => {
     res.json(
       await this.learningObjectDomain.updateLearningObject(
@@ -101,12 +107,7 @@ export class LearningObjectController {
      *           type: array
      *           items:
      *             type: integer
-     *         description: Target age groups to filter learning objects by.
-     *       - in: query
-     *         name: id
-     *         schema:
-     *           type: string
-     *         description: The unique identifier of the learning object to filter by.
+     *         description: Target age groups to filter learning objects by
      *     responses:
      *       200:
      *         description: A list of learning objects matching the filters.
@@ -124,6 +125,35 @@ export class LearningObjectController {
      *         description: Internal server error.
      */
     this.router.get("/", this.getLearningObjects);
+    /**
+     * @swagger
+     * /api/learningObject/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningObject
+     *     summary: Get a learning object by ID
+     *     description: Gets the content of a specific learning object selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the learning object.
+     *     responses:
+     *       200:
+     *         description: Learning object fetched succesfully.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Learning object not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    this.router.get("/:id", this.getLearningObjectById);
     /**
      * @swagger
      * /api/learningObject/{id}:
