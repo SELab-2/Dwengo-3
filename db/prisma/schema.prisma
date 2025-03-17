@@ -58,26 +58,23 @@ model LearningObjectKeyword {
 }
 
 model LearningPathNode {
-  id                              String                   @id @default(uuid())
-  learningPathId                  String
-  learningObjectId                String
-  instruction                     String?
-  startNode                       Boolean                  @default(false)
-  learningObject                  LearningObject           @relation(fields: [learningObjectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  learningPath                    LearningPath             @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  learningPathOutgoingTransitions LearningNodeTransition[] @relation("outgoing_transitions")
-  learningPathIncomingTransitions LearningNodeTransition[] @relation("incoming_transitions")
-  groups                          Group[]
-  assignmentSubmissions           AssignmentSubmission[]
+  id                    String                   @id @default(uuid())
+  learningPathId        String
+  learningObjectId      String
+  instruction           String?
+  index                 Int
+  learningObject        LearningObject           @relation(fields: [learningObjectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learningPath          LearningPath             @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  transitions           LearningNodeTransition[]
+  assignmentSubmissions AssignmentSubmission[]
 }
 
 model LearningNodeTransition {
-  id         String            @id @default(uuid())
-  fromNodeId String
-  toNodeId   String?
-  condition  String? //If condition is null => default transition; else: "answer == 0" or "true==true"
-  toNode     LearningPathNode? @relation("incoming_transitions", fields: [toNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  fromNode   LearningPathNode  @relation("outgoing_transitions", fields: [fromNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                 String           @id @default(uuid())
+  learningPathNodeId String
+  condition          String? // Condition is null => default transition; condition must have following form: "answer == 0" or "true==true"
+  toNodeIndex        Int
+  learningPathNode   LearningPathNode @relation(fields: [learningPathNodeId], references: [id])
 }
 
 model LearningPath {
@@ -93,6 +90,7 @@ model LearningPath {
   owner             User?              @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   learningPathNodes LearningPathNode[]
   assignments       Assignment[]
+  favorite          Favorite[]
 
   @@unique([hruid, language])
 }
@@ -116,6 +114,7 @@ model User {
   messages          Message[]
   discussions       Discussion[]
   LearningPath      LearningPath[]
+  favorite          Favorite[]
 }
 
 model Student {
@@ -160,7 +159,7 @@ model Group {
   assignmentId          String
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
-  node                  LearningPathNode?      @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  progress              String[]               @default([])
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }
@@ -194,6 +193,15 @@ model AssignmentSubmission {
   group          Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([groupId, nodeId])
+}
+
+model Favorite {
+  id             String       @id @default(uuid())
+  userId         String
+  learningPathId String
+  progress       String[]     @default([])
+  learningPath   LearningPath @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user           User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Discussion {
