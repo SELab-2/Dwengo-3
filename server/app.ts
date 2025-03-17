@@ -28,26 +28,28 @@ const options = {
 };
 
 const specs = swaggerJsdoc(options);
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
+if (process.env.NODE_ENV === "development") {
+  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(specs));
+} else {
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
+}
 
 // cookie validating middleware
 app.use(
   cookieParser(),
   async (req: Request, res: Response, next: NextFunction) => {
     const verified = await verifyCookie(req.cookies["DWENGO_SESSION"]);
-    if (verified) {
-      next();
-    } else {
+    if (!verified) {
       const path = req.path;
-      if (
-        !path.startsWith("/auth") ||
-        !["student", "teacher"].some((role) => path.startsWith(`/auth/${role}`))
-      ) {
+
+      // TODO: MOET HERSCHREVEN WORDEN!!!
+      if (path.indexOf("/auth") == -1) {
+        // TODO: redirect to login page, but only when header is set to redirect
         res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send("unauthorized");
         return;
       }
-      next();
     }
+    next();
   },
 );
 app.use(express.json());
@@ -71,7 +73,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 const apiRouter = express.Router();
-app.use("/", apiRouter);
+if (process.env.NODE_ENV === "development") {
+  app.use("/api", apiRouter);
+} else {
+  app.use("/", apiRouter);
+}
 
 apiRouter.use("/class", new ClassController().router);
 apiRouter.use("/learningPath", new LearningPathController().router);
@@ -80,7 +86,7 @@ apiRouter.use(
   "/learningPathNodeTransition",
   new LearningPathNodeTransitionController().router,
 );
-apiRouter.use("/learningobject", new LearningObjectController().router);
+apiRouter.use("/learningObject", new LearningObjectController().router);
 apiRouter.use("/announcement", new AnnouncementController().router);
 apiRouter.use("/assignment", new AssignmentController().router);
 apiRouter.use(

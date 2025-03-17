@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { AssignmentSubmissionDomain } from "../domain/assignmentSubmission.domain";
 import multer, { Multer } from "multer";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class AssignmentSubmissionController {
   public router: Router;
@@ -65,6 +66,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.getAssignmentSubmissions(
         req.query,
+        await getUserFromReq(req),
       ),
     );
   }
@@ -74,7 +76,10 @@ export class AssignmentSubmissionController {
     res: Response,
   ): Promise<void> {
     res.json(
-      await this.assignmentSubmissionsDomain.createAssignmentSubmission(req),
+      await this.assignmentSubmissionsDomain.createAssignmentSubmission(
+        req,
+        await getUserFromReq(req),
+      ),
     );
   }
 
@@ -96,7 +101,10 @@ export class AssignmentSubmissionController {
     res: Response,
   ): Promise<void> {
     res.json(
-      await this.assignmentSubmissionsDomain.updateAssignmentSubmission(req),
+      await this.assignmentSubmissionsDomain.updateAssignmentSubmission(
+        req,
+        await getUserFromReq(req),
+      ),
     );
   }
 }

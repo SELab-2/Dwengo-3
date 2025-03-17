@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { AnnouncementDomain } from "../domain/announcement.domain";
+import { getUserFromReq } from "../domain/user.domain";
 
 export class AnnouncementController {
   public router: Router;
@@ -16,7 +17,12 @@ export class AnnouncementController {
   };
 
   private createAnnouncement = async (req: Request, res: Response) => {
-    res.json(await this.announcementDomain.createAnnouncement(req.body));
+    res.json(
+      await this.announcementDomain.createAnnouncement(
+        req.body,
+        await getUserFromReq(req),
+      ),
+    );
   };
 
   private updateAnnouncement = async (req: Request, res: Response) => {
@@ -26,7 +32,7 @@ export class AnnouncementController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /announcement:
+     * /api/announcement:
      *   put:
      *     security:
      *       - cookieAuth: []
@@ -59,7 +65,7 @@ export class AnnouncementController {
     this.router.put("/", this.createAnnouncement);
     /**
      * @swagger
-     * /announcement:
+     * /api/announcement:
      *   get:
      *     security:
      *       - cookieAuth: []
@@ -107,7 +113,7 @@ export class AnnouncementController {
     this.router.get("/", this.getAnnouncements);
     /**
      * @swagger
-     * /announcement:
+     * /api/announcement:
      *   patch:
      *     security:
      *       - cookieAuth: []

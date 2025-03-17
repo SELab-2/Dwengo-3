@@ -56,6 +56,10 @@ export class LearningObjectDomain {
   }
 
   public async getLearningObjects(query: LearningObjectFilterParams) {
+    if (typeof query.keywords === "string") {
+      query.keywords = [query.keywords];
+    }
+
     const paginationResult = PaginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
       throw paginationResult.error;

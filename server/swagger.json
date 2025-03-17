@@ -71,7 +71,7 @@
       "LearningPathNodeCreate": {
         "type": "object",
         "properties": {
-          "lpId": {
+          "learningPathId": {
             "type": "string",
             "description": "The ID of the learning path this node belongs to.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
@@ -458,8 +458,18 @@
           },
           "contentType": {
             "type": "string",
+            "enum": [
+              "TEXT_PLAIN",
+              "TEXT_MARKDOWN",
+              "IMAGE_IMAGE_BLOCK",
+              "IMAGE_IMAGE",
+              "AUDIO_MPEG",
+              "APPLICATION_PDF",
+              "EXTERN",
+              "BLOCKLY"
+            ],
             "description": "The type of content.",
-            "example": "video"
+            "example": "AUDIO_MPEG"
           },
           "targetAges": {
             "type": "array",

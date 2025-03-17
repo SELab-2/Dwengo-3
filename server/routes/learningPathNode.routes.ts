@@ -24,7 +24,7 @@ export class LearningPathNodeController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /learningPathNode:
+     * /api/learningPathNode:
      *   put:
      *     security:
      *       - cookieAuth: []

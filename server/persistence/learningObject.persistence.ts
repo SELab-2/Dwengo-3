@@ -50,7 +50,12 @@ export class LearningObjectPersistence {
       where,
       paginationParams,
       {
-        keywords: true,
+        // TODO: geef gewoon een array van keywords mee ipv object met keyword property
+        keywords: {
+          select: {
+            keyword: true,
+          },
+        },
       },
     );
   }
@@ -59,7 +64,12 @@ export class LearningObjectPersistence {
     const learningObject = await this.prisma.learningObject.create({
       data: data,
       include: {
-        keywords: true,
+        keywords: {
+          select: {
+            // TODO: analoog met hierboven
+            keyword: true,
+          },
+        },
       },
     });
     return learningObject;

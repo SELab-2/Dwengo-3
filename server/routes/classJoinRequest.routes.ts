@@ -42,12 +42,12 @@ export class ClassJoinRequestController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /class/studentRequest:
+     * /api/class/studentRequest:
      *   put:
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Create a new class join request as a student
      *     description: Creates a new class join request with the provided data.
      *     requestBody:
@@ -69,12 +69,12 @@ export class ClassJoinRequestController {
     this.router.put("/studentRequest", this.createJoinRequest);
     /**
      * @swagger
-     * /class/teacherRequest:
+     * /api/class/teacherRequest:
      *   put:
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Create a new class join request as a teacher
      *     description: Creates a new class join request with the provided data.
      *     requestBody:
@@ -96,12 +96,12 @@ export class ClassJoinRequestController {
     this.router.put("/teacherRequest", this.createJoinRequest);
     /**
      * @swagger
-     * /class/studentRequest:
+     * /api/class/studentRequest:
      *   get:
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Get all student class join requests
      *     description: Get all class join requests where the user who is trying to join is a student.
      *     parameters:
@@ -134,12 +134,12 @@ export class ClassJoinRequestController {
     this.router.get("/studentRequest", this.getJoinRequests);
     /**
      * @swagger
-     * /class/teacherRequest:
+     * /api/class/teacherRequest:
      *   get:
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Get all teacher class join requests
      *     description: Get all class join requests where the user who is trying to join is a teacher.
      *     parameters:
@@ -172,12 +172,12 @@ export class ClassJoinRequestController {
     this.router.get("/teacherRequest", this.getJoinRequests);
     /**
      * @swagger
-     * /class/studentRequest:
+     * /api/class/studentRequest:
      *   post:
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Accept or deny a class join request from a student
      *     description: Accept or deny a class join request coming from an user who is a student.
      *     requestBody:
@@ -199,12 +199,12 @@ export class ClassJoinRequestController {
     this.router.post("/studentRequest", this.handleJoinRequest);
     /**
      * @swagger
-     * /class/teacherRequest:
+     * /api/class/teacherRequest:
      *   post:
      *     security:
      *       - cookieAuth: []
      *     tags:
-     *       - classJoinRequest
+     *       - ClassJoinRequest
      *     summary: Accept or deny a class join request from a teacher
      *     description: Accept or deny a class join request coming from an user who is a teacher.
      *     requestBody:

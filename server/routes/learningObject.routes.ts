@@ -47,8 +47,9 @@ export class LearningObjectController {
   private initializeRoutes() {
     /**
      * @swagger
-     * /learningObject:
+     * /api/learningObject:
      *   put:
+
      *     security:
      *       - cookieAuth: []
      *     tags:
@@ -78,7 +79,7 @@ export class LearningObjectController {
     this.router.put("/", this.createLearningObject);
     /**
      * @swagger
-     * /learningObject:
+     * /api/learningObject:
      *   get:
      *     security:
      *       - cookieAuth: []
@@ -125,7 +126,7 @@ export class LearningObjectController {
     this.router.get("/", this.getLearningObjects);
     /**
      * @swagger
-     * /learningObject/{id}:
+     * /api/learningObject/{id}:
      *   patch:
      *     security:
      *       - cookieAuth: []
@@ -164,7 +165,7 @@ export class LearningObjectController {
     this.router.patch("/:id", this.updateLearningObject);
     /**
      * @swagger
-     * /learningObject/{id}:
+     * /api/learningObject/{id}:
      *   delete:
      *     security:
      *       - cookieAuth: []
@@ -179,7 +180,7 @@ export class LearningObjectController {
      *         schema:
      *           type: string
      *           format: uuid
-     *         description: The unique identifier of the learning object to delete.
+     *         description: The unique identifier of the learning object to update.
      *     responses:
      *       204:
      *         description: Learning object deleted successfully.

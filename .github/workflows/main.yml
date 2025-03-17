@@ -12,16 +12,26 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        run: |
+          cd /home/selab2/dwengo;
+          git fetch origin;
+          git reset --hard origin/main;
+          git clean -fd;
 
-      - name: Install dependencies for all projects
-        run: ./install.sh
+      - name: Install dependencies
+        run: cd /home/selab2/dwengo && ./install.sh production
 
-      - name: Generate the client and migrate the database
-        run: ./prisma.sh migrate deploy
+      - name: Generate the prisma client and apply migrations
+        run: cd /home/selab2/dwengo && ./prisma.sh migrate deploy
 
-      - name: Build client
-        run: cd client && npm run build
+      - name: Restart the API server
+        run: pm2 restart server || (cd /home/selab2/dwengo/server; pm2 start npm --name "server" -- start);
 
-      - name: Restart applications
-        run: pm2 restart client server
+      - name: Build React client
+        run: cd /home/selab2/dwengo/client && npm run build
+
+      - name: Deploy client with rsync
+        run: rsync -a --delete --exclude=schemaspy /home/selab2/dwengo/client/build/ /var/www/html/
+
+      - name: Swagger docs up and running
+        run: cd /home/selab2/dwengo && sleep 5 && ./test-swagger-running.sh;
