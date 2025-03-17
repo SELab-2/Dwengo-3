@@ -48,7 +48,6 @@ export class TeacherPersistence {
   ) {
     const whereClause = {
       AND: [
-        filters.id ? { id: filters.id } : {},
         filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
         filters.assignmentId
@@ -74,20 +73,22 @@ export class TeacherPersistence {
    * @param include - Optional `include` clause for related models.
    * @returns The teacher data.
    */
-  public async getTeacherById(
-    teacherId: string,
-    include: TeacherIncludeParams = {
-      classes: true,
-      assignments: true,
-      user: true,
-    },
-  ) {
+  public async getTeacherById(teacherId: string) {
     return await this.prisma.teacher.findUnique({
       where: { id: teacherId },
       include: {
-        classes: include.classes,
-        assignment: include.assignments,
-        user: include.user,
+        user: {
+          select: {
+            name: true,
+            surname: true,
+          },
+        },
+        classes: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
   }

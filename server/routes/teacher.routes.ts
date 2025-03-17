@@ -21,6 +21,10 @@ export class TeacherController {
     );
   };
 
+  private getTeacherById = async (req: Request, res: Response) => {
+    res.json(await this.teacherDomain.getTeacherById(req.params.id));
+  };
+
   private updateTeacher = async (req: Request, res: Response) => {
     res.json(
       await this.teacherDomain.updateTeacher(
@@ -56,9 +60,6 @@ export class TeacherController {
      *           schema:
      *             type: object
      *             properties:
-     *               id:
-     *                 type: string
-     *                 format: uuid
      *               userId:
      *                 type: string
      *                 format: uuid
@@ -68,16 +69,6 @@ export class TeacherController {
      *               assignmentId:
      *                 type: string
      *                 format: uuid
-     *               page:
-     *                 type: number
-     *               pageSize:
-     *                 type: number
-     *               classes:
-     *                 type: boolean
-     *               groups:
-     *                 type: boolean
-     *               user:
-     *                 type: boolean
      *     responses:
      *       200:
      *         description: A list of teachers
@@ -115,7 +106,35 @@ export class TeacherController {
      *         description: Server Error
      */
     this.router.get("/", this.getTeachers);
-
+    /**
+     * @swagger
+     * /api/teacher/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Teacher
+     *     summary: Get a teacher by TeacherID
+     *     description: Gets the content of a specific teacher selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the teacher.
+     *     responses:
+     *       200:
+     *         description: Teacher fetched succesfully.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Teacher not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    this.router.get("/:id", this.getTeacherById);
     /**
      * @swagger
      * /api/teacher:
