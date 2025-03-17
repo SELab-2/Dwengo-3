@@ -65,6 +65,7 @@ export class StudentController {
      *         application/json:
      *           schema:
      *             type: object
+     *             properties:
      *               userId:
      *                 type: string
      *                 format: uuid
@@ -140,6 +141,7 @@ export class StudentController {
      *       500:
      *         description: Internal server error.
      */
+
     this.router.get("/:id", this.getStudentById);
     /**
      * @swagger
