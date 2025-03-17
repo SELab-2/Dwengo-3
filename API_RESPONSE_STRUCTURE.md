@@ -194,7 +194,7 @@ Dit model heeft zo weinig velden dat er eigenlijk geen "short" schema gemaakt mo
 Er bestaat momenteel nog geen endpoint van groups
 
 - `id`
-- `nodeIndex` (de index van de verst gemaakte node)
+- `[nodeIndex]` (de index van de reeds gemaakte nodes)
 - `assignment (short)`
 - `Discussion (short)` (indien aanwezig)
 - `[Student (short)]`
