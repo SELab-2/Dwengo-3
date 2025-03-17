@@ -109,7 +109,7 @@ export class TeacherPersistence {
       user: true,
     },
   ) {
-    return await this.prisma.teacher.findFirst({
+    return await this.prisma.teacher.findUnique({
       where: { userId },
       include: {
         classes: include.classes,

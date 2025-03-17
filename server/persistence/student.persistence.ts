@@ -111,7 +111,7 @@ export class StudentPersistence {
       user: true,
     },
   ) {
-    return await this.prisma.student.findFirst({
+    return await this.prisma.student.findUnique({
       where: { userId },
       include: {
         classes: include.classes,
