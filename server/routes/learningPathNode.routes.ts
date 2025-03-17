@@ -25,7 +25,7 @@ export class LearningPathNodeController {
     /**
      * @swagger
      * /api/learningPathNode:
-     *   post:
+     *   put:
      *     security:
      *       - cookieAuth: []
      *     tags:
@@ -52,6 +52,6 @@ export class LearningPathNodeController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.post("/", this.createLearningPathNode);
+    this.router.put("/", this.createLearningPathNode);
   }
 }
