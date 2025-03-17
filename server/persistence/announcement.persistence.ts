@@ -36,8 +36,23 @@ export class AnnouncementPersistence {
         PrismaSingleton.instance.announcement.findMany({
           where: whereClause,
           include: {
-            class: true,
-            teacher: true,
+            teacher: {
+              select: {
+                id: true,
+                user: {
+                  select: {
+                    name: true,
+                    surname: true,
+                  },
+                },
+              },
+            },
+            class: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
           skip: paginationParams.skip,
           take: paginationParams.pageSize,

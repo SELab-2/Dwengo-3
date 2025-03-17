@@ -49,7 +49,7 @@ export class ClassController {
      *       - cookieAuth: []
      *     tags: [Class]
      *     summary: Get list of classes
-     *     description: Fetches a list of classes filtered by optional query parameters such as teacherId, studentId, or class ID.
+     *     description: Fetches a list of classes filtered by optional query parameters such as teacher ID or student ID
      *     parameters:
      *       - name: teacherId
      *         in: query

@@ -65,6 +65,62 @@
             "format": "uuid",
             "description": "The unique identifier for the learning path.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "hruid": {
+            "type": "string",
+            "description": "The human-readable identifier for the learning path",
+            "example": "intro-to-programming"
+          },
+          "language": {
+            "type": "string",
+            "description": "The language of the learning path.",
+            "example": "en"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the learning path.",
+            "example": "Introduction to Programming"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the learning path.",
+            "example": "A beginner-friendly learning path for programming."
+          },
+          "image": {
+            "type": "string",
+            "description": "The image associated with the learning path in bytes."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the teacher who created the learning path",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning path was created.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning path was last updated.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "learningPathNodes": {
+            "type": "array",
+            "description": "The learningPathNodes present in the learning path",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "The id of the learningPathNode",
+                  "example": "550e8400-e29b-41d4-a716-446655440000"
+                }
+              }
+            }
           }
         }
       },

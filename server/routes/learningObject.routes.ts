@@ -146,6 +146,10 @@ export class LearningObjectController {
      *     responses:
      *       200:
      *         description: Learning object fetched succesfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningObjectGet'
      *       403:
      *         description: Unauthorized, user not authenticated.
      *       404:

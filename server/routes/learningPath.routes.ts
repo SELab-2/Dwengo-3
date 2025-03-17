@@ -99,6 +99,10 @@ export class LearningPathController {
      *     responses:
      *       200:
      *         description: Learning path fetched succesfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningPathGet'
      *       403:
      *         description: Unauthorized, user not authenticated.
      *       404:
