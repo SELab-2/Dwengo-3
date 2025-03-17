@@ -119,4 +119,23 @@ export class ClassDomain {
 
     return this.classPersistance.updateClass(updateParamsResult.data);
   }
+
+  public async checkUserBelongsToClass(user: UserEntity, classId: string) {
+    const classById = await this.classPersistance.getClassById(classId);
+    let exists = false;
+    if (user.role === ClassRoleEnum.TEACHER) {
+      exists =
+        classById?.teachers.some(
+          (teacher) => teacher.id === user.teacher?.id,
+        ) || false;
+    } else if (user.role === ClassRoleEnum.STUDENT) {
+      exists =
+        classById?.students.some(
+          (student) => student.id === user.student?.id,
+        ) || false;
+    }
+    if (exists) {
+      throw new Error("User does not belong to the class.");
+    }
+  }
 }

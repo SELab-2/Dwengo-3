@@ -13,7 +13,12 @@ export class AnnouncementController {
   }
 
   private getAnnouncements = async (req: Request, res: Response) => {
-    res.json(await this.announcementDomain.getAnnouncements(req.query));
+    res.json(
+      await this.announcementDomain.getAnnouncements(
+        req.query,
+        await getUserFromReq(req),
+      ),
+    );
   };
 
   private createAnnouncement = async (req: Request, res: Response) => {
@@ -26,7 +31,12 @@ export class AnnouncementController {
   };
 
   private updateAnnouncement = async (req: Request, res: Response) => {
-    res.json(await this.announcementDomain.updateAnnouncement(req.body));
+    res.json(
+      await this.announcementDomain.updateAnnouncement(
+        req.body,
+        await getUserFromReq(req),
+      ),
+    );
   };
 
   private initializeRoutes() {
