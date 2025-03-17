@@ -67,6 +67,8 @@ model LearningPathNode {
   learningPath          LearningPath             @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   transitions           LearningNodeTransition[]
   assignmentSubmissions AssignmentSubmission[]
+
+  @@unique([learningPathId, index])
 }
 
 model LearningNodeTransition {
@@ -159,7 +161,7 @@ model Group {
   assignmentId          String
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
-  progress              String[]               @default([])
+  progress              Int[]                  @default([]) // indeces of completed nodes
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }
@@ -199,7 +201,7 @@ model Favorite {
   id             String       @id @default(uuid())
   userId         String
   learningPathId String
-  progress       String[]     @default([])
+  progress       Int[]        @default([]) // indeces of completed nodes
   learningPath   LearningPath @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user           User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
