@@ -55,22 +55,19 @@ export class AnnouncementDomain {
         throw new Error("Can not get announcements of other user.");
       }
     }
-
-    // check if id is used, announcement belongs to class of user
-    if (query.id) {
-      const res = await this.announcementPersistence.getAnnouncements(
-        { id: query.id },
-        paginationParseResult.data,
-      );
-      if (res.announcements.length !== 0) {
-        const resClassId = res.announcements[0].classId;
-        this.classDomain.checkUserBelongsToClass(user, resClassId);
-      }
-    }
     return this.announcementPersistence.getAnnouncements(
       filterResult.data,
       paginationParseResult.data,
     );
+  }
+
+  public async getAnnouncementById(id: string, user: UserEntity) {
+    const announcement =
+      await this.announcementPersistence.getAnnouncementById(id);
+
+    const classId = announcement.classId;
+    this.classDomain.checkUserBelongsToClass(user, classId);
+    return announcement;
   }
 
   public async createAnnouncement(

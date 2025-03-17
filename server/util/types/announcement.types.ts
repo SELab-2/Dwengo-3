@@ -5,7 +5,6 @@ export const AnnouncementFilterSchema = z
     classId: z.string().uuid().optional(),
     teacherId: z.string().uuid().optional(),
     studentId: z.string().uuid().optional(),
-    id: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one filter must be provided.",

@@ -21,6 +21,15 @@ export class AnnouncementController {
     );
   };
 
+  private getAnnouncementById = async (req: Request, res: Response) => {
+    res.json(
+      await this.announcementDomain.getAnnouncementById(
+        req.params.id,
+        await getUserFromReq(req),
+      ),
+    );
+  };
+
   private createAnnouncement = async (req: Request, res: Response) => {
     res.json(
       await this.announcementDomain.createAnnouncement(
@@ -99,11 +108,6 @@ export class AnnouncementController {
      *         schema:
      *           type: string
      *         description: Filter announcements by student ID.
-     *       - in: query
-     *         name: id
-     *         schema:
-     *           type: string
-     *         description: Filter announcements by their unique ID.
      *     responses:
      *       200:
      *         description: A list of announcements matching the filters.
@@ -121,6 +125,35 @@ export class AnnouncementController {
      *         description: Internal server error.
      */
     this.router.get("/", this.getAnnouncements);
+    /**
+     * @swagger
+     * /api/announcement/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Announcement
+     *     summary: Get an announcement by ID
+     *     description: Gets the content of a specific announcement selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the announcement.
+     *     responses:
+     *       200:
+     *         description: Announcement fetched succesfully.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Announcement not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    this.router.get("/:id", this.getAnnouncementById);
     /**
      * @swagger
      * /api/announcement:

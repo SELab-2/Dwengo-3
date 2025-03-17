@@ -18,7 +18,6 @@ export class AnnouncementPersistence {
       AND: [
         filters.classId ? { classId: filters.classId } : {},
         filters.teacherId ? { teacherId: filters.teacherId } : {},
-        filters.id ? { id: filters.id } : {},
         filters.studentId
           ? {
               class: {
@@ -52,6 +51,41 @@ export class AnnouncementPersistence {
       announcements,
       totalPages: Math.ceil(totalCount / paginationParams.pageSize),
     };
+  }
+
+  public async getAnnouncementById(id: string) {
+    const announcement = await PrismaSingleton.instance.announcement.findUnique(
+      {
+        where: {
+          id: id,
+        },
+        include: {
+          teacher: {
+            select: {
+              id: true,
+              user: {
+                select: {
+                  name: true,
+                  surname: true,
+                },
+              },
+            },
+          },
+          class: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    );
+
+    if (!announcement) {
+      throw new Error("Announcement with id: ${id} was not found");
+    }
+
+    return announcement;
   }
 
   public async createAnnouncement(
