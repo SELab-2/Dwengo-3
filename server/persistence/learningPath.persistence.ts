@@ -50,7 +50,6 @@ export class LearningPathPersistence {
               },
             }
           : {},
-        filters.id ? { id: filters.id } : {},
       ],
     };
   }
@@ -74,6 +73,27 @@ export class LearningPathPersistence {
         },
       },
     );
+  }
+
+  public async getLearningPathById(id: string) {
+    const learningPath = await this.prisma.learningPath.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        learningPathNodes: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!learningPath) {
+      throw new Error("LearningPath with id: ${id} was not found");
+    }
+
+    return learningPath;
   }
 
   public async createLearningPath(data: LearningPathCreateParams) {

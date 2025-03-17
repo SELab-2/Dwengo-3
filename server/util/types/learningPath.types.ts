@@ -6,7 +6,6 @@ export const LearningPathFilterSchema = z.object({
     .array(z.string())
     .transform((val) => val.map(Number))
     .optional(),
-  id: z.string().optional(),
 });
 
 export const LearningPathCreateSchema = z.object({

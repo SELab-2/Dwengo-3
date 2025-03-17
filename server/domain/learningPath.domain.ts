@@ -36,6 +36,10 @@ export class LearningPathDomain {
     );
   }
 
+  public async getLearningPathById(id: string) {
+    return this.learningPathPersistence.getLearningPathById(id);
+  }
+
   public async createLearningPath(
     body: LearningPathCreateParams,
     user: UserEntity,
