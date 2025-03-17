@@ -26,4 +26,20 @@ export class LearningPathNodePersistence {
       });
     return createdLearningPathNode;
   }
+
+  public async getLearningPathNodeById(id: string) {
+    const learningPathNode =
+      await PrismaSingleton.instance.learningPathNode.findUnique({
+        where: { id: id },
+        include: {
+          learningPathOutgoingTransitions: true,
+        },
+      });
+
+    if (!learningPathNode) {
+      throw new Error("LearningPathNode with id: ${id} was not found");
+    }
+
+    return learningPathNode;
+  }
 }

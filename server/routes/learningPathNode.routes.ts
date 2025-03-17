@@ -21,6 +21,12 @@ export class LearningPathNodeController {
     );
   };
 
+  private getLearningPathNodeById = async (req: Request, res: Response) => {
+    res.json(
+      await this.learningPathNodeDomain.getLearningPathNodeById(req.params.id),
+    );
+  };
+
   private initializeRoutes() {
     /**
      * @swagger
@@ -53,5 +59,34 @@ export class LearningPathNodeController {
      *         description: Internal server error.
      */
     this.router.put("/", this.createLearningPathNode);
+    /**
+     * @swagger
+     * /api/learningPathNode/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningPathNode
+     *     summary: Get a learningPathNode by ID
+     *     description: Gets the content of a specific learningPathNode selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the learningPathNode.
+     *     responses:
+     *       200:
+     *         description: LearningPathNode fetched succesfully.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: LearningPathNode not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    this.router.get("/:id", this.getLearningPathNodeById);
   }
 }
