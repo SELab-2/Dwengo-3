@@ -85,11 +85,6 @@
             "type": "string",
             "description": "Optional instructions for this learning path node.",
             "example": "Complete the exercises in this section."
-          },
-          "startNode": {
-            "type": "boolean",
-            "description": "Indicates whether this node is the starting point of the learning path.",
-            "example": false
           }
         },
         "required": ["learningPathId, learningObjectId", "startNode"]
@@ -108,15 +103,15 @@
       "LearningPathNodeTransitionCreate": {
         "type": "object",
         "properties": {
-          "fromNodeId": {
+          "learningPathNodeId": {
             "type": "string",
             "description": "The ID of the learning path node this transition starts from.",
             "example": "550e8400-e29b-41d4-a716-446655440002"
           },
-          "toNodeId": {
-            "type": "string",
-            "description": "The ID of the learning path node this transition leads to.",
-            "example": "550e8400-e29b-41d4-a716-446655440003"
+          "toNodeIndex": {
+            "type": "integer",
+            "description": "The index of the learningPathNode this transitions should lead to.",
+            "example": "2"
           },
           "condition": {
             "type": "string",
