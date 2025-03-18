@@ -4,6 +4,7 @@ node_modules
 .idea/
 .vscode/
 db/schemaspy/result/
+db/schemaspy/schemaspy.properties
 
 ./package.json
 ./package-lock.json

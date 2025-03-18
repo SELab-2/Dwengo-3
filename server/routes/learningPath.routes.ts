@@ -83,7 +83,7 @@ export class LearningPathController {
     /**
      * @swagger
      * /api/learningPath:
-     *   post:
+     *   put:
      *     security:
      *       - cookieAuth: []
      *     tags:
@@ -104,6 +104,6 @@ export class LearningPathController {
      *             schema:
      *               $ref: '#/components/schemas/LearningPathGet'
      */
-    this.router.post("/", this.createLearningPath);
+    this.router.put("/", this.createLearningPath);
   }
 }

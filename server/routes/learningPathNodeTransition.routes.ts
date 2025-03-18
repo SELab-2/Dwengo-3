@@ -29,7 +29,7 @@ export class LearningPathNodeTransitionController {
     /**
      * @swagger
      * /api/learningPathNodeTransition:
-     *   post:
+     *   put:
      *     security:
      *       - cookieAuth: []
      *     tags:
@@ -56,6 +56,6 @@ export class LearningPathNodeTransitionController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.post("/", this.createLearningPathNodeTransition);
+    this.router.put("/", this.createLearningPathNodeTransition);
   }
 }

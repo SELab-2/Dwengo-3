@@ -4,9 +4,11 @@
   "description": "Dwengo leerplatform",
   "main": "app.ts",
   "scripts": {
-    "start": "nodemon app.ts",
+    "start": "nodemon app.ts", // or you could replace with ts-node if preferred
+    "start:dev": "ts-node app.ts",
+    "debug": "nodemon app.ts", // keep both if needed
     "test:unit": "vitest -c util/test-files/vitest.config.unit.ts",
-    "test:int": "./util/test-files/integration_test.sh",
+    "test:int": "./util/test-files/integration_test.sh"
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",
     "readData": "ts-node util/db-scripts/readData.ts",
     "deleteData": "ts-node util/db-scripts/deleteData.ts"

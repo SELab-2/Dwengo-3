@@ -21,11 +21,15 @@ export class LearningPathNodeDomain {
       throw parseResult.error;
     }
 
+    // TODO: CHECK if teacher is owner of the path!!!
     if (user.role !== ClassRoleEnum.TEACHER) {
       throw new Error("User must be a teacher to create a learning path.");
     }
     return this.learningPathNodePersistence.createLearningPathNode(
       parseResult.data,
+      await this.learningPathNodePersistence.getLearningPathNodeCount(
+        parseResult.data,
+      ),
     );
   }
 }
