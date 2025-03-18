@@ -94,6 +94,8 @@ export class AssignmentPersistence {
         },
       },
     });
+
+    // TODO: the following should be in group.persistence.ts, and should be called from assignment.domain.ts
     //create groups for the assignment
     await PrismaSingleton.instance.$transaction(
       params.groups.map((group: Uuid[]) =>
