@@ -1,10 +1,9 @@
 import cookieParser from 'cookie-parser';
 import * as http2 from 'node:http2';
 import { router as auth, verifyCookie } from './routes/auth.router';
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { ClassController } from './routes/class.routes';
-import { ZodError } from 'zod';
 import { LearningPathController } from './routes/learningPath.routes';
 import { LearningPathNodeController } from './routes/learningPathNode.routes';
 import { LearningPathNodeTransitionController } from './routes/learningPathNodeTransition.routes';
@@ -19,6 +18,7 @@ import * as swaggerDocument from './swagger.json';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { StudentController } from './routes/student.routes';
 import { TeacherController } from './routes/teacher.routes';
+import { errorHandling } from './errorHandling';
 
 dotenv.config({ path: '../.env' });
 
@@ -55,41 +55,7 @@ app.use(cookieParser(), async (req: Request, res: Response, next: NextFunction) 
 app.use(express.json());
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error('[ERROR]', {
-    message: err.message,
-    stack: err.stack,
-    path: req.path,
-    method: req.method,
-    body: req.body,
-    query: req.query,
-    params: req.params,
-  });
-
-  // Determine the status code based on the error type
-  let statusCode = 500;
-  let errorMessage = 'Internal Server Error';
-
-  if (err instanceof ZodError) {
-    statusCode = 400;
-    errorMessage = 'Validation Error';
-  }
-
-  // Send a more informative response in development
-  if (process.env.NODE_ENV === 'production') {
-    res.status(statusCode).send(errorMessage);
-  } else {
-    res.status(statusCode).json({
-      message: err.message,
-      stack: err.stack,
-      path: req.path,
-      method: req.method,
-      body: req.body,
-      query: req.query,
-      params: req.params,
-    });
-  }
-});
+app.use(errorHandling);
 
 const apiRouter = express.Router();
 if (process.env.NODE_ENV === 'development') {
