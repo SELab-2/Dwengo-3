@@ -83,6 +83,8 @@ Dit kan bijvoorbeeld gebruikt worden wanneer er een lijst van leerobjecten wordt
 - `title`
 - `keywords [string]` (hier kan op gefilterd worden )
 - `targetAges [int]` (ook hier kan op gefiltered worden)
+- `image` (deze kan getoond worden in het overzicht van leerpaden)
+- `description`
 
 ---
 
@@ -139,14 +141,14 @@ Dit wordt gebruikt wanneer een learningPathNode via id wordt opgevraagd. Dit kan
 - `learningObjectId` (het leerobject kan door een van de react components worden opgevraagd via id)
 - `instruction`
 - `index` (de index van deze learningPathNode in het learningPath)
-- `[transitions (detail)]` (**TODO** bespreek dit)
+- `[transitions (detail)]`
 
 ## learningPathNode (short)
 
 Dit wordt gebruikt wanneer je bv een leerpad in detail opvraagt.
 
 - `id`
-- `[LearningObject (short)]` (**TODO**)
+- `[LearningObject (short)]`
 
 ---
 
@@ -162,10 +164,8 @@ Dit wordt gebruikt wanneer je bv een leerpad in detail opvraagt.
 ## User (detail) (deze endpoint is er momenteel nog niet)
 
 - `id`
-- `username`
 - `email`
-- `surname`
-- `name`
+- `Student (short) | Teacher (short)`
 - `role`
 - `[Class (short)]`
 - `[LearningPath (short)]` (Favorites)
@@ -175,7 +175,9 @@ Dit wordt gebruikt wanneer je bv een leerpad in detail opvraagt.
 Dit wordt vb gebruikt wanneer men de members van een discussion wil opvragen
 
 - `id` (userId)
-- `username` | `surname`, `name` (**TODO**)
+- `surname`
+- `name`
+- `role`
 
 ---
 
@@ -237,8 +239,7 @@ Vb alle assignments in een klas opvragen
 
 **TODO** hier valt nog over te discussieren
 
-- `id`
-- `learningPathNode (short)`
+- `id` (voor verdere info kan je verder klikken naar de detail page)
 
 ---
 
@@ -247,7 +248,7 @@ Vb alle assignments in een klas opvragen
 Discussion opgevraagd via id
 
 - `id`
-  **TODO** (onderwerp??)
+- `onderwerp` (title van learningPath)
 - `[Message (detail)]`
 - `Group (short)`
 - `[User (short)]`
