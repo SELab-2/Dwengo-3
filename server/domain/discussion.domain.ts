@@ -1,16 +1,16 @@
-import { Discussion } from "@prisma/client";
-import { DiscussionPersistence } from "../persistence/discussion.persistence";
-import { queryWithPaginationParser } from "../util/pagination/queryWithPaginationParser.util";
+import { Discussion } from '@prisma/client';
+import { DiscussionPersistence } from '../persistence/discussion.persistence';
+import { queryWithPaginationParser } from '../util/pagination/queryWithPaginationParser.util';
 import {
   DiscussionCreateSchema,
   DiscussionFilterSchema,
-} from "../util/types/discussion.types";
-import { UserEntity } from "../util/types/user.types";
+} from '../util/types/discussion.types';
+import { UserEntity } from '../util/types/user.types';
 import {
   checkIfUserIsInGroup,
   checkIfUsersAreInSameGroup,
-} from "../util/coockie-checks/coockieChecks.util";
-import { GroupPersistence } from "../persistence/group.persistence";
+} from '../util/coockie-checks/coockieChecks.util';
+import { GroupPersistence } from '../persistence/group.persistence';
 
 export class DiscussionDomain {
   private discussionPersistence: DiscussionPersistence;

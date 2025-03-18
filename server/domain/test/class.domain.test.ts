@@ -1,7 +1,7 @@
-import { ClassDomain } from "../class.domain";
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { ClassCreateParams } from "../../util/types/class.types";
-import { ZodError } from "zod";
+import { ClassDomain } from '../class.domain';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { ClassCreateParams } from '../../util/types/class.types';
+import { ZodError } from 'zod';
 
 // Persistence mock
 const { mockClassPeristence } = vi.hoisted(() => {
@@ -15,7 +15,7 @@ const { mockClassPeristence } = vi.hoisted(() => {
     },
   };
 });
-vi.mock("../../persistence/class.persistence", () => {
+vi.mock('../../persistence/class.persistence', () => {
   return {
     ClassPersistence: vi.fn().mockImplementation(() => {
       return mockClassPeristence;
@@ -27,27 +27,27 @@ vi.mock("../../persistence/class.persistence", () => {
 const classDomain: ClassDomain = new ClassDomain();
 
 const mockCreateClass = (body: any) => {
-  return { id: "id", name: body.name };
+  return { id: 'id', name: body.name };
 };
 
 // Tests
-describe("class domain test", () => {
+describe('class domain test', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
-  describe("create class", () => {
+  describe('create class', () => {
     beforeEach(() => {
       mockClassPeristence.createClass.mockImplementation(mockCreateClass);
     });
-    test("responds as expected on valid input", async () => {
-      const body: any = { name: "name" };
+    test('responds as expected on valid input', async () => {
+      const body: any = { name: 'name' };
       await expect(classDomain.createClass(body)).resolves.toStrictEqual(
         mockCreateClass(body),
       );
     });
-    test("throws error on invalid input", async () => {
-      const body: any = { name: "" };
+    test('throws error on invalid input', async () => {
+      const body: any = { name: '' };
       await expect(classDomain.createClass(body)).rejects.toThrow(ZodError);
     });
   });

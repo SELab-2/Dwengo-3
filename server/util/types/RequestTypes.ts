@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { ClassRole } from "@prisma/client";
+import { z } from 'zod';
+import { ClassRole } from '@prisma/client';
 
 export const LoginSchema = z
   .object({
@@ -11,7 +11,7 @@ export const LoginSchema = z
 export const RegisterSchema = z
   .object({
     username: z.string().nonempty(),
-    email: z.string().email("invalid email"),
+    email: z.string().email('invalid email'),
     password: z.string().nonempty(),
     surname: z.string().nonempty(),
     name: z.string().nonempty(),

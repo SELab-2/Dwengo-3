@@ -1,5 +1,5 @@
-import { SubmissionType } from "@prisma/client";
-import { z } from "zod";
+import { SubmissionType } from '@prisma/client';
+import { z } from 'zod';
 
 const FileSubmissionSchema = z.object({
   fileName: z.string(),
@@ -15,7 +15,7 @@ export const SubmissionFilterSchema = z
     id: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: "At least one filter must be provided.",
+    message: 'At least one filter must be provided.',
     path: [],
   });
 
@@ -35,7 +35,7 @@ export const SubmissionCreateSchema = z
       data.submission === undefined,
     {
       message:
-        "Multiple choice submission is required when submissionType is MULTIPLE_CHOICE",
+        'Multiple choice submission is required when submissionType is MULTIPLE_CHOICE',
       path: [],
     },
   );
@@ -55,7 +55,7 @@ export const SubmissionUpdateSchema = z
       data.submission === undefined,
     {
       message:
-        "Multiple choice submission is required when submissionType is MULTIPLE_CHOICE",
+        'Multiple choice submission is required when submissionType is MULTIPLE_CHOICE',
       path: [],
     },
   );

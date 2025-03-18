@@ -1,12 +1,12 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
-import { PaginationParams } from "../util/types/pagination.types";
-import { searchAndPaginate } from "../util/pagination/pagination.util";
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
+import { PaginationParams } from '../util/types/pagination.types';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
 import {
   StudentFilterParams,
   StudentIncludeParams,
   StudentUpdateParams,
-} from "../util/types/student.types";
+} from '../util/types/student.types';
 
 /**
  * Persistence class for Student model.

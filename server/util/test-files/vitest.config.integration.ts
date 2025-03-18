@@ -1,7 +1,7 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    include: ["./persistence/**/*.test.ts"],
+    include: ['./persistence/**/*.test.ts'],
   },
 });

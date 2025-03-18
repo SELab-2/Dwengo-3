@@ -1,6 +1,6 @@
-import { Router, Request, Response } from "express";
-import { LearningPathNodeTransitionDomain } from "../domain/learningPathNodeTransition.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Router, Request, Response } from 'express';
+import { LearningPathNodeTransitionDomain } from '../domain/learningPathNodeTransition.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class LearningPathNodeTransitionController {
   public router: Router;
@@ -56,6 +56,6 @@ export class LearningPathNodeTransitionController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.put("/", this.createLearningPathNodeTransition);
+    this.router.put('/', this.createLearningPathNodeTransition);
   }
 }

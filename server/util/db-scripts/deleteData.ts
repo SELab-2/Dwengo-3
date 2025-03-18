@@ -1,8 +1,8 @@
-import * as dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
+import * as dotenv from 'dotenv';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: '../.env' });
 
 /**
  * Deletes all data from the database in the correct order

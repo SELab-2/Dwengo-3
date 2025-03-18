@@ -1,12 +1,12 @@
-import { PrismaSingleton } from "./prismaSingleton";
-import { PaginationParams } from "../util/types/pagination.types";
+import { PrismaSingleton } from './prismaSingleton';
+import { PaginationParams } from '../util/types/pagination.types';
 import {
   ClassJoinRequestCreateParams,
   ClassJoinRequestDecisionParams,
   ClassJoinRequestFilterParams,
-} from "../util/types/classJoinRequest.types";
-import { Prisma } from "@prisma/client";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
+} from '../util/types/classJoinRequest.types';
+import { Prisma } from '@prisma/client';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 
 export class ClassJoinRequestPersistence {
   public async createClassJoinRequest(
@@ -44,9 +44,9 @@ export class ClassJoinRequestPersistence {
     // We need to do this to not expose the Prisma.EnumClassRoleFilter<"User"> type to the domain layer.
     let filterByRole: Prisma.UserWhereInput = {};
     if (user.role === ClassRoleEnum.STUDENT) {
-      filterByRole = { role: "STUDENT" };
+      filterByRole = { role: 'STUDENT' };
     } else {
-      filterByRole = { role: "TEACHER" };
+      filterByRole = { role: 'TEACHER' };
     }
 
     const where: Prisma.ClassJoinRequestWhereInput = {

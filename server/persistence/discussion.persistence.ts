@@ -1,10 +1,10 @@
-import { Discussion, PrismaClient, Prisma } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
+import { Discussion, PrismaClient, Prisma } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
 import {
   DiscussionCreateParams,
   DiscussionFilterParams,
-} from "../util/types/discussion.types";
-import { PaginationParams } from "../util/types/pagination.types";
+} from '../util/types/discussion.types';
+import { PaginationParams } from '../util/types/pagination.types';
 
 export class DiscussionPersistence {
   private prisma: PrismaClient;

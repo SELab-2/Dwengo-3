@@ -1,5 +1,5 @@
-import { PrismaSingleton } from "../../persistence/prismaSingleton";
-import { PaginationParams } from "../types/pagination.types";
+import { PrismaSingleton } from '../../persistence/prismaSingleton';
+import { PaginationParams } from '../types/pagination.types';
 
 /**
  * Generic pagination function for Prisma models.

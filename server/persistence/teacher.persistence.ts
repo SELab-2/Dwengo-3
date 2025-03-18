@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
-import { PaginationParams } from "../util/types/pagination.types";
+import { PrismaClient } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
+import { PaginationParams } from '../util/types/pagination.types';
 import {
   TeacherFilterParams,
   TeacherIncludeParams,
   TeacherUpdateParams,
-} from "../util/types/teacher.types";
-import { searchAndPaginate } from "../util/pagination/pagination.util";
+} from '../util/types/teacher.types';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 export class TeacherPersistence {
   private prisma: PrismaClient;

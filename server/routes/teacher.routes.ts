@@ -1,6 +1,6 @@
-import { Router, Request, Response } from "express";
-import { TeacherDomain } from "../domain/teacher.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Router, Request, Response } from 'express';
+import { TeacherDomain } from '../domain/teacher.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class TeacherController {
   public router: Router;
@@ -114,7 +114,7 @@ export class TeacherController {
      *       500:
      *         description: Server Error
      */
-    this.router.get("/", this.getTeachers);
+    this.router.get('/', this.getTeachers);
 
     /**
      * @swagger
@@ -176,7 +176,7 @@ export class TeacherController {
      *       500:
      *         description: Server Error
      */
-    this.router.put("/", this.updateTeacher);
+    this.router.put('/', this.updateTeacher);
 
     /**
      * @swagger
@@ -207,6 +207,6 @@ export class TeacherController {
      *       500:
      *         description: Server Error
      */
-    this.router.delete("/", this.deleteTeacher);
+    this.router.delete('/', this.deleteTeacher);
   }
 }

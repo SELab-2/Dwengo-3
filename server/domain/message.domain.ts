@@ -1,15 +1,15 @@
-import { ClassRole, Message } from "@prisma/client";
-import { MessagePersistence } from "../persistence/message.persistence";
-import { queryWithPaginationParser } from "../util/pagination/queryWithPaginationParser.util";
+import { ClassRole, Message } from '@prisma/client';
+import { MessagePersistence } from '../persistence/message.persistence';
+import { queryWithPaginationParser } from '../util/pagination/queryWithPaginationParser.util';
 import {
   MessageCreateSchema,
   MessageFilterSchema,
   MessageIdSchema,
   MessageUpdateSchema,
-} from "../util/types/message.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
-import { DiscussionDomain } from "./discussion.domain";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
+} from '../util/types/message.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { DiscussionDomain } from './discussion.domain';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
 
 export class MessageDomain {
   private messagePersistence: MessagePersistence;
@@ -81,7 +81,7 @@ export class MessageDomain {
       )
     ).data;
     if (message.length !== 1) {
-      throw new Error("message not found");
+      throw new Error('message not found');
     }
     if (
       (user.role === ClassRole.TEACHER &&
@@ -89,7 +89,7 @@ export class MessageDomain {
       (user.role === ClassRole.STUDENT &&
         user.teacher!.userId !== message[0].senderId)
     ) {
-      throw new Error("You can only delete your own messages");
+      throw new Error('You can only delete your own messages');
     }
     return this.messagePersistence.deleteMessage(parseResult.data);
   }

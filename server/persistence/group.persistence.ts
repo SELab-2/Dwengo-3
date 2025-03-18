@@ -5,9 +5,9 @@ import {
   PrismaClient,
   Student,
   Teacher,
-} from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
-import { Uuid } from "../util/types/assignment.types";
+} from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
+import { Uuid } from '../util/types/assignment.types';
 
 export class GroupPersistence {
   private prisma: PrismaClient;

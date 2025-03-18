@@ -1,4 +1,4 @@
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 import {
   PrismaClient,
   LearningObjectKeyword,
@@ -16,18 +16,18 @@ import {
   LearningObject,
   Discussion,
   Group,
-} from "@prisma/client";
-import * as fs from "fs";
-import * as path from "path";
+} from '@prisma/client';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient();
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: '../.env' });
 
 /**
  * Inserts all data from a JSON file into the database in the correct order
  */
 async function main() {
-  const dataPath = path.join(__dirname, "data.json");
+  const dataPath = path.join(__dirname, 'data.json');
 
   // Read the data from the JSON file according to this schema
   const data: {
@@ -65,7 +65,7 @@ async function main() {
       members: { id: string }[];
     })[];
     messages: Message[];
-  } = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+  } = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
 
   // Insert all users into the database
   await prisma.user.createMany({

@@ -1,6 +1,6 @@
-import { Request, Response, Router } from "express";
-import { ClassJoinRequestDomain } from "../domain/classJoinRequest.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Request, Response, Router } from 'express';
+import { ClassJoinRequestDomain } from '../domain/classJoinRequest.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class ClassJoinRequestController {
   public router: Router;
@@ -66,7 +66,7 @@ export class ClassJoinRequestController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.put("/studentRequest", this.createJoinRequest);
+    this.router.put('/studentRequest', this.createJoinRequest);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -93,7 +93,7 @@ export class ClassJoinRequestController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.put("/teacherRequest", this.createJoinRequest);
+    this.router.put('/teacherRequest', this.createJoinRequest);
     /**
      * @swagger
      * /api/class/studentRequest:
@@ -131,7 +131,7 @@ export class ClassJoinRequestController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.get("/studentRequest", this.getJoinRequests);
+    this.router.get('/studentRequest', this.getJoinRequests);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -169,7 +169,7 @@ export class ClassJoinRequestController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.get("/teacherRequest", this.getJoinRequests);
+    this.router.get('/teacherRequest', this.getJoinRequests);
     /**
      * @swagger
      * /api/class/studentRequest:
@@ -196,7 +196,7 @@ export class ClassJoinRequestController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.post("/studentRequest", this.handleJoinRequest);
+    this.router.post('/studentRequest', this.handleJoinRequest);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -223,6 +223,6 @@ export class ClassJoinRequestController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.post("/teacherRequest", this.handleJoinRequest);
+    this.router.post('/teacherRequest', this.handleJoinRequest);
   }
 }
