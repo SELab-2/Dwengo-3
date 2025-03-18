@@ -1,49 +1,49 @@
-import { PrismaClient, ContentTypeEnum } from "@prisma/client";
-import axios from "axios";
-import cliProgress from "cli-progress";
+import { PrismaClient, ContentTypeEnum } from '@prisma/client'
+import axios from 'axios'
+import cliProgress from 'cli-progress'
 
-const contentTypeMap: Map<string, any> = new Map();
-contentTypeMap.set("text/plain", ContentTypeEnum.TEXT_PLAIN);
-contentTypeMap.set("text/markdown", ContentTypeEnum.TEXT_MARKDOWN);
-contentTypeMap.set("image/image-block", ContentTypeEnum.IMAGE_IMAGE_BLOCK);
-contentTypeMap.set("image/image", ContentTypeEnum.IMAGE_IMAGE);
-contentTypeMap.set("audio/mpeg", ContentTypeEnum.AUDIO_MPEG);
-contentTypeMap.set("application/pdf", ContentTypeEnum.APPLICATION_PDF);
-contentTypeMap.set("extern", ContentTypeEnum.EXTERN);
-contentTypeMap.set("blockly", ContentTypeEnum.BLOCKLY);
+const contentTypeMap: Map<string, any> = new Map()
+contentTypeMap.set('text/plain', ContentTypeEnum.TEXT_PLAIN)
+contentTypeMap.set('text/markdown', ContentTypeEnum.TEXT_MARKDOWN)
+contentTypeMap.set('image/image-block', ContentTypeEnum.IMAGE_IMAGE_BLOCK)
+contentTypeMap.set('image/image', ContentTypeEnum.IMAGE_IMAGE)
+contentTypeMap.set('audio/mpeg', ContentTypeEnum.AUDIO_MPEG)
+contentTypeMap.set('application/pdf', ContentTypeEnum.APPLICATION_PDF)
+contentTypeMap.set('extern', ContentTypeEnum.EXTERN)
+contentTypeMap.set('blockly', ContentTypeEnum.BLOCKLY)
 
 const API_URLS = {
   learningObjectsMeta:
-    "https://dwengo.org/backend/api/learningObject/search?all=",
+    'https://dwengo.org/backend/api/learningObject/search?all=',
   learningObjectsContentById:
-    "https://dwengo.org/backend/api/learningObject/getRaw", // append hruid, version, language
-  learningPaths: "https://dwengo.org/backend/api/learningPath/search?all=",
-};
+    'https://dwengo.org/backend/api/learningObject/getRaw', // append hruid, version, language
+  learningPaths: 'https://dwengo.org/backend/api/learningPath/search?all=',
+}
 
 async function fetchRemoteData(url: string) {
   try {
-    const response = await axios.get(url);
-    return response.data;
+    const response = await axios.get(url)
+    return response.data
   } catch (error) {
-    console.error(`Failed to fetch data from ${url}`, error);
-    return [];
+    console.error(`Failed to fetch data from ${url}`, error)
+    return []
   }
 }
 
 async function fullSyncLearningObjects(prisma: PrismaClient) {
-  const remoteObjects = await fetchRemoteData(API_URLS.learningObjectsMeta);
+  const remoteObjects = await fetchRemoteData(API_URLS.learningObjectsMeta)
 
   // Initialize the progress bar
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
-  );
-  progressBar.start(remoteObjects.length, 0);
+    cliProgress.Presets.shades_classic
+  )
+  progressBar.start(remoteObjects.length, 0)
 
   for (const [index, remote] of remoteObjects.entries()) {
     const rawContent = await fetchRemoteData(
-      `${API_URLS.learningObjectsContentById}?hruid=${remote.hruid}&version=${remote.version}&language=${remote.language}`,
-    );
+      `${API_URLS.learningObjectsContentById}?hruid=${remote.hruid}&version=${remote.version}&language=${remote.language}`
+    )
 
     const data = await prisma.learningObject.upsert({
       where: {
@@ -93,7 +93,7 @@ async function fullSyncLearningObjects(prisma: PrismaClient) {
       select: {
         id: true,
       },
-    });
+    })
 
     for (const keyword of remote.keywords) {
       await prisma.learningObjectKeyword.upsert({
@@ -110,26 +110,26 @@ async function fullSyncLearningObjects(prisma: PrismaClient) {
           learningObjectId: data.id,
           keyword: keyword,
         },
-      });
+      })
     }
 
     // Update the progress bar
-    progressBar.update(index + 1);
+    progressBar.update(index + 1)
   }
 
   // Stop the progress bar
-  progressBar.stop();
+  progressBar.stop()
 }
 
 async function fullSyncLearningPaths(prisma: PrismaClient) {
-  const remotePaths = await fetchRemoteData(API_URLS.learningPaths);
+  const remotePaths = await fetchRemoteData(API_URLS.learningPaths)
 
   // Initialize the progress bar
   const progressBar = new cliProgress.SingleBar(
     {},
-    cliProgress.Presets.shades_classic,
-  );
-  progressBar.start(remotePaths.length, 0);
+    cliProgress.Presets.shades_classic
+  )
+  progressBar.start(remotePaths.length, 0)
 
   for (const [index, path] of remotePaths.entries()) {
     await prisma.learningPath.upsert({
@@ -152,7 +152,7 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
         description: path.description,
         image: path.image,
       },
-    });
+    })
 
     for (const node of path.nodes) {
       const learningObject = await prisma.learningObject.findUnique({
@@ -164,7 +164,7 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
           },
         },
         select: { id: true },
-      });
+      })
 
       await prisma.learningPathNode.upsert({
         where: { id: node._id },
@@ -181,7 +181,7 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
           startNode: node.start_node,
           instruction: node.instruction,
         },
-      });
+      })
     }
     for (const [node_index, node] of path.nodes.entries()) {
       for (const transition of node.transitions) {
@@ -196,16 +196,16 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
           include: {
             learningPathNodes: true,
           },
-        });
+        })
 
         let toNode = await learningObject?.learningPathNodes.find(
-          (node: any) => node.learningPathId === path._id,
-        );
+          (node: any) => node.learningPathId === path._id
+        )
 
         if (!toNode) {
           // KANKER API geeft transitions naar nodes die niet bestaan
           // Ik los dit op door gewoon naar de volgende node te verwijzen 🤬
-          toNode = path.nodes[node_index + (1 % path.nodes.length)];
+          toNode = path.nodes[node_index + (1 % path.nodes.length)]
         }
 
         await prisma.learningNodeTransition.upsert({
@@ -213,37 +213,37 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
           update: {
             fromNodeId: node._id,
             toNodeId: toNode!.id,
-            condition: transition.default ? null : "true==true",
+            condition: transition.default ? null : 'true==true',
           },
           create: {
             id: transition._id,
             fromNodeId: node._id,
             toNodeId: toNode!.id,
-            condition: transition.default ? null : "true==true",
+            condition: transition.default ? null : 'true==true',
           },
-        });
+        })
       }
     }
     // Update the progress bar
-    progressBar.update(index + 1);
+    progressBar.update(index + 1)
   }
 
   // Stop the progress bar
-  progressBar.stop();
+  progressBar.stop()
 }
 
 async function syncDatabases(prisma: PrismaClient) {
   try {
-    console.log("Starting LearningObjects synchronization...");
-    await fullSyncLearningObjects(prisma);
-    console.log("LearningObjects synchronization completed successfully!");
+    console.log('Starting LearningObjects synchronization...')
+    await fullSyncLearningObjects(prisma)
+    console.log('LearningObjects synchronization completed successfully!')
 
-    console.log("Starting LearningPaths synchronization...");
-    await fullSyncLearningPaths(prisma);
-    console.log("LearningPaths synchronization completed successfully!");
+    console.log('Starting LearningPaths synchronization...')
+    await fullSyncLearningPaths(prisma)
+    console.log('LearningPaths synchronization completed successfully!')
   } catch (error) {
-    console.error("Error syncing databases:", error);
+    console.error('Error syncing databases:', error)
   }
 }
 
-export { syncDatabases };
+export { syncDatabases }
