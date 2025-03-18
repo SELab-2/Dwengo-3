@@ -29,19 +29,10 @@ export class TeacherDomain {
    * @param query - The query to validate.
    * @returns The parsed query data.
    */
-  private validateQuery<T extends z.ZodSchema<any>>(
-    schema: T,
-    query: unknown,
-  ): z.infer<T> {
+  private validateQuery<T extends z.ZodSchema<any>>(schema: T, query: unknown): z.infer<T> {
     // TODO: move this to a util function
-
-    const result = schema.safeParse(query);
-
-    if (!result.success) {
-      throw result.error;
-    }
-
-    return result.data;
+    // TODO: Er zijn meerdere plekken waar dit voorkomt, mss op een centrale plek zetten?
+    return schema.parse(query);
   }
 
   /**
@@ -79,11 +70,7 @@ export class TeacherDomain {
     const { userId } = this.validateQuery(TeacherCreateSchema, body);
 
     // Check if the user exists
-    const user = await this.validateObject(
-      getUserById,
-      userId,
-      'User does not exist',
-    );
+    const user = await this.validateObject(getUserById, userId, 'User does not exist');
 
     // Check if the user is already a teacher or student
     if (user.teacher || user.student) {
@@ -103,11 +90,7 @@ export class TeacherDomain {
     // TODO: validation
 
     // Fetch the teachers
-    return await this.teacherPersistence.getTeachers(
-      paginationData,
-      filterData,
-      includeData,
-    );
+    return await this.teacherPersistence.getTeachers(paginationData, filterData, includeData);
   }
 
   public async updateTeacher(body: unknown, user: UserEntity) {
@@ -142,19 +125,13 @@ export class TeacherDomain {
   public async sameClass(classes1: Class[], classes2: Class[]) {
     // TODO: move this to class domain
 
-    return classes1.some((c1: Class) =>
-      classes2.some((c2: Class) => c1.id === c2.id),
-    );
+    return classes1.some((c1: Class) => classes2.some((c2: Class) => c1.id === c2.id));
   }
 
   public async getClassesByUserId(userId: string) {
     // TODO: move this to class domain
 
-    const user = await this.validateObject(
-      getUserById,
-      userId,
-      'User does not exist',
-    );
+    const user = await this.validateObject(getUserById, userId, 'User does not exist');
 
     if (user.teacher) {
       return await this.classPersistence.getClasses(

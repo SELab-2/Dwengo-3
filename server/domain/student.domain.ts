@@ -44,8 +44,7 @@ export class StudentDomain {
     }
 
     // Check if the user already has a student record
-    const existingStudent =
-      await this.studentPersistence.getStudentByUserId(userId);
+    const existingStudent = await this.studentPersistence.getStudentByUserId(userId);
 
     if (existingStudent) {
       throw new Error('A student is already linked to this user.');
@@ -61,17 +60,8 @@ export class StudentDomain {
    * @param query - The query to validate.
    * @returns The parsed query data.
    */
-  private validateQuery<T extends z.ZodSchema<any>>(
-    schema: T,
-    query: unknown,
-  ): z.infer<T> {
-    const result = schema.safeParse(query);
-
-    if (!result.success) {
-      throw result.error;
-    }
-
-    return result.data;
+  private validateQuery<T extends z.ZodSchema<any>>(schema: T, query: unknown): z.infer<T> {
+    return schema.parse(query);
   }
 
   /**
@@ -80,16 +70,11 @@ export class StudentDomain {
    * @param query - The query to filter and paginate the students.
    * @param teacher - The teacher making the request.
    */
-  private async validateGetStudentsAsTeacher(
-    query: StudentFilterParams,
-    teacher: Teacher,
-  ) {
+  private async validateGetStudentsAsTeacher(query: StudentFilterParams, teacher: Teacher) {
     // A teacher can fetch students of a class they're a teacher of
     if (query.classId) {
       // Check if the class exists
-      const classExists = await this.classPersistence.getClassById(
-        query.classId,
-      );
+      const classExists = await this.classPersistence.getClassById(query.classId);
 
       if (!classExists) {
         throw new Error('Class not found.');
@@ -102,19 +87,14 @@ export class StudentDomain {
       );
 
       if (!isTeacherOfClass) {
-        throw new Error(
-          "Can't fetch students of a class you're not a teacher of.",
-        );
+        throw new Error("Can't fetch students of a class you're not a teacher of.");
       }
     }
 
     // A teacher can fetch students they're a teacher of
     if (query.id) {
       // Check if the student is in one of the teacher's classes
-      const isStudentInTeacherClass = await this.isStudentInTeacherClass(
-        query.id,
-        teacher.id,
-      );
+      const isStudentInTeacherClass = await this.isStudentInTeacherClass(query.id, teacher.id);
 
       if (!isStudentInTeacherClass) {
         throw new Error("Can't fetch students you're not a teacher of.");
@@ -131,10 +111,7 @@ export class StudentDomain {
       }
 
       // Check if the user is a student
-      if (
-        userExists.role !== ClassRoleEnum.STUDENT ||
-        userExists.student === null
-      ) {
+      if (userExists.role !== ClassRoleEnum.STUDENT || userExists.student === null) {
         throw new Error('User is not a student.');
       }
 
@@ -162,10 +139,7 @@ export class StudentDomain {
   ) {
     // A student can fetch students in their own groups
     if (query.groupId) {
-      const isStudentInGroup = await this.isStudentInGroup(
-        query.groupId,
-        student.id,
-      );
+      const isStudentInGroup = await this.isStudentInGroup(query.groupId, student.id);
 
       if (!isStudentInGroup) {
         throw new Error("Can't fetch students of a group you're not in.");
@@ -175,9 +149,7 @@ export class StudentDomain {
     // A student can fetch their own student record
     if (query.id) {
       // Check if the student exists
-      const studentExists = await this.studentPersistence.getStudentById(
-        query.id,
-      );
+      const studentExists = await this.studentPersistence.getStudentById(query.id);
 
       if (!studentExists) {
         throw new Error('Student not found.');
@@ -196,9 +168,7 @@ export class StudentDomain {
     // A student can fetch their own student record
     if (query.userId) {
       // Check if the student exists
-      const studentExists = await this.studentPersistence.getStudentByUserId(
-        query.userId,
-      );
+      const studentExists = await this.studentPersistence.getStudentByUserId(query.userId);
 
       if (!studentExists) {
         throw new Error('Student not found.');
@@ -257,11 +227,7 @@ export class StudentDomain {
       await this.validateGetStudentsAsStudent(filters, student);
     }
 
-    return await this.studentPersistence.getStudents(
-      pagination,
-      filters,
-      include,
-    );
+    return await this.studentPersistence.getStudents(pagination, filters, include);
   }
 
   /**
@@ -351,17 +317,14 @@ export class StudentDomain {
     );
 
     // Check if the student exists
-    const studentExists =
-      await this.studentPersistence.getStudentById(studentId);
+    const studentExists = await this.studentPersistence.getStudentById(studentId);
 
     if (!studentExists) {
       throw new Error('Student not found.');
     }
 
     // Check if the student is in the group
-    return students.data.some(
-      (student: { id: string }) => student.id === studentId,
-    );
+    return students.data.some((student: { id: string }) => student.id === studentId);
   }
 
   private async isStudentInTeacherClass(studentId: string, teacherId: string) {
@@ -381,9 +344,7 @@ export class StudentDomain {
     );
 
     return classes.data.some((classData: { students: { id: string }[] }) =>
-      classData.students.some(
-        (student: { id: string }) => student.id === studentId,
-      ),
+      classData.students.some((student: { id: string }) => student.id === studentId),
     );
   }
 }

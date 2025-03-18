@@ -1,37 +1,27 @@
 import { ClassPersistence } from '../persistence/class.persistence';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
-import {
-  ClassFilterSchema,
-  ClassCreateSchema,
-  ClassUpdateSchema,
-} from '../util/types/class.types';
+import { ClassCreateSchema, ClassFilterSchema, ClassUpdateSchema } from '../util/types/class.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 
 export class ClassDomain {
-  private classPersistance;
+  private classPersistence;
 
   constructor() {
-    this.classPersistance = new ClassPersistence();
+    this.classPersistence = new ClassPersistence();
   }
 
   public async getClasses(query: unknown, user: UserEntity) {
     // Validate and parse pagination query parameters
-    const paginationResult = PaginationFilterSchema.safeParse(query);
-    if (!paginationResult.success) {
-      throw paginationResult.error;
-    }
+    const pagination = PaginationFilterSchema.parse(query);
 
     // Validate and parse class filters
-    const filtersResult = ClassFilterSchema.safeParse(query);
-    if (!filtersResult.success) {
-      throw filtersResult.error;
-    }
+    const filters = ClassFilterSchema.parse(query);
 
-    const { id, studentId, teacherId } = filtersResult.data;
+    const { id, studentId, teacherId } = filters;
 
     if (id) {
       // Class Id is given => fetch class and check if user is a teacher or student
-      const classData = await this.classPersistance.getClassById(id);
+      const classData = await this.classPersistence.getClassById(id);
 
       if (!classData) {
         throw new Error('Class not found.');
@@ -60,28 +50,17 @@ export class ClassDomain {
       return { data: [classData], totalPages: 1 };
     } else {
       if (!studentId && !teacherId) {
-        throw new Error(
-          'Either studentId, teacherId or classId must be provided.',
-        );
+        throw new Error('Either studentId, teacherId or classId must be provided.');
       }
 
       if (
-        (studentId &&
-          user.role === ClassRoleEnum.STUDENT &&
-          user.student?.id !== studentId) ||
-        (teacherId &&
-          user.role === ClassRoleEnum.TEACHER &&
-          user.teacher?.id !== teacherId)
+        (studentId && user.role === ClassRoleEnum.STUDENT && user.student?.id !== studentId) ||
+        (teacherId && user.role === ClassRoleEnum.TEACHER && user.teacher?.id !== teacherId)
       ) {
-        throw new Error(
-          'User ID does correspond with the provided studentId or teacherId.',
-        );
+        throw new Error('User ID does correspond with the provided studentId or teacherId.');
       }
 
-      const { data, totalPages } = await this.classPersistance.getClasses(
-        paginationResult.data,
-        filtersResult.data,
-      );
+      const { data, totalPages } = await this.classPersistence.getClasses(pagination, filters);
 
       return { data, totalPages };
     }
@@ -93,46 +72,29 @@ export class ClassDomain {
     }
 
     // Validate and parse class create parameters
-    const createParamsResult = ClassCreateSchema.safeParse(body);
-    if (!createParamsResult.success) {
-      throw createParamsResult.error;
-    }
+    const createParams = ClassCreateSchema.parse(body);
 
-    return this.classPersistance.createClass(createParamsResult.data, user);
+    return this.classPersistence.createClass(createParams, user);
   }
 
   public async updateClass(body: unknown, user: UserEntity) {
     // Validate and parse class update parameters
-    const updateParamsResult = ClassUpdateSchema.safeParse(body);
-    if (!updateParamsResult.success) {
-      throw updateParamsResult.error;
-    }
+    const updateParams = ClassUpdateSchema.parse(body);
 
-    if (
-      !this.classPersistance.isTeacherFromClass(
-        user.id,
-        updateParamsResult.data.id,
-      )
-    ) {
+    if (!(await this.classPersistence.isTeacherFromClass(user.id, updateParams.id))) {
       throw new Error('User must be a teacher of the class to update it.');
     }
 
-    return this.classPersistance.updateClass(updateParamsResult.data);
+    return this.classPersistence.updateClass(updateParams);
   }
 
   public async checkUserBelongsToClass(user: UserEntity, classId: string) {
-    const classById = await this.classPersistance.getClassById(classId);
+    const classById = await this.classPersistence.getClassById(classId);
     let exists = false;
     if (user.role === ClassRoleEnum.TEACHER) {
-      exists =
-        classById?.teachers.some(
-          (teacher) => teacher.id === user.teacher?.id,
-        ) || false;
+      exists = classById?.teachers.some((teacher) => teacher.id === user.teacher?.id) || false;
     } else if (user.role === ClassRoleEnum.STUDENT) {
-      exists =
-        classById?.students.some(
-          (student) => student.id === user.student?.id,
-        ) || false;
+      exists = classById?.students.some((student) => student.id === user.student?.id) || false;
     }
     if (exists) {
       throw new Error('User does not belong to the class.');

@@ -1,11 +1,8 @@
 import { Assignment, ClassRole } from '@prisma/client';
 import { AssignmentPersistence } from '../persistence/assignment.persistence';
-import {
-  AssignmentFilterSchema,
-  AssignmentCreateSchema,
-} from '../util/types/assignment.types';
+import { AssignmentCreateSchema, AssignmentFilterSchema } from '../util/types/assignment.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import {
   checkIfUserIsInClass,
   checkIfUserIsInGroup,
@@ -17,12 +14,12 @@ import { GroupPersistence } from '../persistence/group.persistence';
 
 export class AssignmentDomain {
   private assignmentPersistence: AssignmentPersistence;
-  private classPersistance: ClassPersistence;
+  private classPersistence: ClassPersistence;
   private groupPersistence: GroupPersistence;
 
   public constructor() {
     this.assignmentPersistence = new AssignmentPersistence();
-    this.classPersistance = new ClassPersistence();
+    this.classPersistence = new ClassPersistence();
     this.groupPersistence = new GroupPersistence();
   }
 
@@ -30,50 +27,31 @@ export class AssignmentDomain {
     query: any,
     user: UserEntity,
   ): Promise<{ data: Assignment[]; totalPages: number }> {
-    const paginationParseResult = PaginationFilterSchema.safeParse(query);
-    if (!paginationParseResult.success) {
-      throw paginationParseResult.error;
-    }
-    const filtersResults = AssignmentFilterSchema.safeParse(query);
-    if (!filtersResults.success) {
-      throw filtersResults.error;
-    }
-    const filters = filtersResults.data;
-    compareUserIdWithFilterId(user, filters.studentId, filters.teacherId);
-    checkIfUserIsInClass(user, filters.classId, this.classPersistance);
-    checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
-    const assignments = await this.assignmentPersistence.getAssignments(
-      filters,
-      paginationParseResult.data,
-    );
+    const pagination = PaginationFilterSchema.parse(query);
+    const filters = AssignmentFilterSchema.parse(query);
+
+    await compareUserIdWithFilterId(user, filters.studentId, filters.teacherId);
+    await checkIfUserIsInClass(user, filters.classId, this.classPersistence);
+    await checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
+    const assignments = await this.assignmentPersistence.getAssignments(filters, pagination);
     if (filters.id && assignments.data.length === 1) {
-      checkIfUserIsInClass(
-        user,
-        assignments.data[0].classId,
-        this.classPersistance,
-      );
+      await checkIfUserIsInClass(user, assignments.data[0].classId, this.classPersistence);
     }
     return assignments;
   }
 
-  public async createAssigment(
-    query: any,
-    user: UserEntity,
-  ): Promise<Assignment> {
+  public async createAssigment(query: any, user: UserEntity): Promise<Assignment> {
     if (user.role !== ClassRole.TEACHER) {
       throw new Error('Only teachers can create assigments');
     }
-    const parseResult = AssignmentCreateSchema.safeParse(query);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
-    const data = parseResult.data;
+    const data = AssignmentCreateSchema.parse(query);
+
     data.teacherId = user.teacher!.id;
-    checkIfUsersAreInSameClass(
+    await checkIfUsersAreInSameClass(
       data.groups,
       data.classId,
       data.teacherId!,
-      this.classPersistance,
+      this.classPersistence,
     );
     return this.assignmentPersistence.createAssignment(data);
   }

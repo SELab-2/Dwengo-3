@@ -38,39 +38,55 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // cookie validating middleware
-app.use(
-  cookieParser(),
-  async (req: Request, res: Response, next: NextFunction) => {
-    const verified = await verifyCookie(req.cookies['DWENGO_SESSION']);
-    if (!verified) {
-      const path = req.path;
+app.use(cookieParser(), async (req: Request, res: Response, next: NextFunction) => {
+  const verified = await verifyCookie(req.cookies['DWENGO_SESSION']);
+  if (!verified) {
+    const path = req.path;
 
-      // TODO: MOET HERSCHREVEN WORDEN!!!
-      if (path.indexOf('/auth') == -1) {
-        // TODO: redirect to login page, but only when header is set to redirect
-        res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send('unauthorized');
-        return;
-      }
+    // TODO: MOET HERSCHREVEN WORDEN!!!
+    if (path.indexOf('/auth') == -1) {
+      // TODO: redirect to login page, but only when header is set to redirect
+      res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send('unauthorized');
+      return;
     }
-    next();
-  },
-);
+  }
+  next();
+});
 app.use(express.json());
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  // TODO: Maybe make some error logging mechanism?
-  console.error('[ERROR]', err);
+  console.error('[ERROR]', {
+    message: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method,
+    body: req.body,
+    query: req.query,
+    params: req.params,
+  });
 
-  // If the error is a ZodError, it means that the request did not pass the validation
-  const statusCode = err instanceof ZodError ? 400 : 500;
+  // Determine the status code based on the error type
+  let statusCode = 500;
+  let errorMessage = 'Internal Server Error';
 
+  if (err instanceof ZodError) {
+    statusCode = 400;
+    errorMessage = 'Validation Error';
+  }
+
+  // Send a more informative response in development
   if (process.env.NODE_ENV === 'production') {
-    res.status(statusCode).send('Something broke!');
+    res.status(statusCode).send(errorMessage);
   } else {
     res.status(statusCode).json({
-      message: err.message || 'Internal Server Error',
+      message: err.message,
       stack: err.stack,
+      path: req.path,
+      method: req.method,
+      body: req.body,
+      query: req.query,
+      params: req.params,
     });
   }
 });
@@ -88,17 +104,11 @@ apiRouter.use('/teacher', new TeacherController().router);
 apiRouter.use('/class', new ClassController().router);
 apiRouter.use('/learningPath', new LearningPathController().router);
 apiRouter.use('/learningPathNode', new LearningPathNodeController().router);
-apiRouter.use(
-  '/learningPathNodeTransition',
-  new LearningPathNodeTransitionController().router,
-);
+apiRouter.use('/learningPathNodeTransition', new LearningPathNodeTransitionController().router);
 apiRouter.use('/learningObject', new LearningObjectController().router);
 apiRouter.use('/announcement', new AnnouncementController().router);
 apiRouter.use('/assignment', new AssignmentController().router);
-apiRouter.use(
-  '/assignmentSubmission',
-  new AssignmentSubmissionController().router,
-);
+apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().router);
 
 apiRouter.use('/auth', auth);
 apiRouter.use('/discussion', new DiscussionController().router);

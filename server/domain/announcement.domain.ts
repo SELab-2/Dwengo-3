@@ -21,28 +21,18 @@ export class AnnouncementDomain {
     this.classDomain = new ClassDomain();
   }
 
-  public async getAnnouncements(
-    query: AnnouncementByFilterParams,
-    user: UserEntity,
-  ) {
-    const paginationParseResult = PaginationFilterSchema.safeParse(query);
-    if (!paginationParseResult.success) {
-      throw paginationParseResult.error;
-    }
-
-    const filterResult = AnnouncementFilterSchema.safeParse(query);
-    if (!filterResult.success) {
-      throw filterResult.error;
-    }
+  public async getAnnouncements(query: AnnouncementByFilterParams, user: UserEntity) {
+    const pagination = PaginationFilterSchema.parse(query);
+    const filter = AnnouncementFilterSchema.parse(query);
 
     // check if classId is used, user belongs to class
     if (query.classId) {
-      this.classDomain.checkUserBelongsToClass(user, query.classId);
+      await this.classDomain.checkUserBelongsToClass(user, query.classId);
     }
 
     // check if teacherId is used, it can not get other teacher announcements
     if (query.teacherId) {
-      this.checkUserIsTeacher(user);
+      await this.checkUserIsTeacher(user);
       if (query.teacherId !== user.teacher?.id) {
         throw new Error('Can not get announcements of other teacher.');
       }
@@ -50,7 +40,7 @@ export class AnnouncementDomain {
 
     // check if studentId is used, it can not get other student announcements
     if (query.studentId) {
-      this.checkUserIsStudent(user);
+      await this.checkUserIsStudent(user);
       if (query.studentId !== user.student?.id) {
         throw new Error('Can not get announcements of other user.');
       }
@@ -58,56 +48,36 @@ export class AnnouncementDomain {
 
     // check if id is used, announcement belongs to class of user
     if (query.id) {
-      const res = await this.announcementPersistence.getAnnouncements(
-        { id: query.id },
-        paginationParseResult.data,
-      );
+      const res = await this.announcementPersistence.getAnnouncements({ id: query.id }, pagination);
       if (res.announcements.length !== 0) {
         const resClassId = res.announcements[0].classId;
-        this.classDomain.checkUserBelongsToClass(user, resClassId);
+        await this.classDomain.checkUserBelongsToClass(user, resClassId);
       }
     }
-    return this.announcementPersistence.getAnnouncements(
-      filterResult.data,
-      paginationParseResult.data,
-    );
+    return this.announcementPersistence.getAnnouncements(filter, pagination);
   }
 
-  public async createAnnouncement(
-    query: AnnouncementCreateDomainParams,
-    user: UserEntity,
-  ) {
-    const parseResult = AnnouncementCreateDomainSchema.safeParse(query);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
+  public async createAnnouncement(query: AnnouncementCreateDomainParams, user: UserEntity) {
+    const data = AnnouncementCreateDomainSchema.parse(query);
 
-    this.checkUserIsTeacher(user);
-    this.classDomain.checkUserBelongsToClass(user, query.classId);
+    await this.checkUserIsTeacher(user);
+    await this.classDomain.checkUserBelongsToClass(user, query.classId);
 
-    const teacherIdParseResult = TeacherIdSchema.safeParse(user.teacher?.id);
-    if (!teacherIdParseResult.success) {
-      throw teacherIdParseResult.error;
-    }
+    const teacherId = TeacherIdSchema.parse(user.teacher?.id);
+
     return this.announcementPersistence.createAnnouncement({
-      ...parseResult.data,
-      teacherId: teacherIdParseResult.data,
+      ...data,
+      teacherId: teacherId,
     });
   }
 
-  public async updateAnnouncement(
-    query: AnnouncementUpdateParams,
-    user: UserEntity,
-  ) {
-    const parseResult = AnnouncementUpdateSchema.safeParse(query);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
+  public async updateAnnouncement(query: AnnouncementUpdateParams, user: UserEntity) {
+    const data = AnnouncementUpdateSchema.parse(query);
 
-    this.checkUserIsTeacher(user);
-    this.classDomain.checkUserBelongsToClass(user, query.id);
+    await this.checkUserIsTeacher(user);
+    await this.classDomain.checkUserBelongsToClass(user, query.id);
 
-    return this.announcementPersistence.updateAnnouncement(parseResult.data);
+    return this.announcementPersistence.updateAnnouncement(data);
   }
 
   private async checkUserIsTeacher(user: UserEntity) {

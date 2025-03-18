@@ -20,34 +20,18 @@ export class LearningPathDomain {
       query.keywords = [query.keywords];
     }
 
-    const paginationParseResult = PaginationFilterSchema.safeParse(query);
-    if (!paginationParseResult.success) {
-      throw paginationParseResult.error;
-    }
+    const paginationParse = PaginationFilterSchema.parse(query);
+    const filters = LearningPathFilterSchema.parse(query);
 
-    const filtersResult = LearningPathFilterSchema.safeParse(query);
-    if (!filtersResult.success) {
-      throw filtersResult.error;
-    }
-
-    return this.learningPathPersistence.getLearningPaths(
-      filtersResult.data,
-      paginationParseResult.data,
-    );
+    return this.learningPathPersistence.getLearningPaths(filters, paginationParse);
   }
 
-  public async createLearningPath(
-    body: LearningPathCreateParams,
-    user: UserEntity,
-  ) {
-    const parseResult = LearningPathCreateSchema.safeParse(body);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
+  public async createLearningPath(body: LearningPathCreateParams, user: UserEntity) {
+    const data = LearningPathCreateSchema.parse(body);
 
     if (user.role !== ClassRoleEnum.TEACHER) {
       throw new Error('User must be a teacher to create a learning path.');
     }
-    return this.learningPathPersistence.createLearningPath(parseResult.data);
+    return this.learningPathPersistence.createLearningPath(data);
   }
 }
