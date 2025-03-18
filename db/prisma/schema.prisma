@@ -19,32 +19,32 @@ enum ContentTypeEnum {
 }
 
 model LearningObject {
-  id                  String                  @id @default(uuid())
-  hruid               String
-  uuid                String // uuid of existing learning objects
-  version             Int
-  language            String
-  title               String
-  description         String?
-  contentType         ContentTypeEnum?
-  contentLocation     String? // contains relevant info if contentType == EXTERN
-  targetAges          Int[]
-  teacherExclusive    Boolean                 @default(false)
-  skosConcepts        String[]
-  educationalGoals    Json[]                  @db.Json
-  copyright           String?
-  licence             String?
-  difficulty          Decimal?                @db.Decimal
-  estimatedTime       Decimal?                @db.Decimal
-  returnValue         Json?                   @db.Json
-  available           Boolean                 @default(true)
-  createdAt           DateTime?               @default(now()) @db.Timestamp
-  updatedAt           DateTime?               @updatedAt @db.Timestamp
-  content             String
-  multipleChoice      Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
-  canUploadSubmission Boolean                 @default(false)
-  learningPathNodes   LearningPathNode[]
-  keywords            LearningObjectKeyword[]
+  id                String                  @id @default(uuid())
+  hruid             String
+  uuid              String // uuid of existing learning objects
+  version           Int
+  language          String
+  title             String
+  description       String?
+  contentType       ContentTypeEnum?
+  contentLocation   String? // contains relevant info if contentType == EXTERN
+  targetAges        Int[]
+  teacherExclusive  Boolean                 @default(false)
+  skosConcepts      String[]
+  educationalGoals  Json[]                  @db.Json
+  copyright         String?
+  licence           String?
+  difficulty        Decimal?                @db.Decimal
+  estimatedTime     Decimal?                @db.Decimal
+  returnValue       Json?                   @db.Json
+  available         Boolean                 @default(true)
+  createdAt         DateTime?               @default(now()) @db.Timestamp
+  updatedAt         DateTime?               @updatedAt @db.Timestamp
+  content           String
+  multipleChoice    Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
+  submissionType    SubmissionType          @default(READ)
+  learningPathNodes LearningPathNode[]
+  keywords          LearningObjectKeyword[]
 
   @@unique([hruid, version, language])
 }
@@ -157,6 +157,7 @@ model ClassJoinRequest {
 
 model Group {
   id                    String                 @id @default(uuid())
+  name                  String
   nodeId                String?
   assignmentId          String
   discussion            Discussion?
@@ -180,6 +181,7 @@ model Assignment {
 enum SubmissionType {
   MULTIPLE_CHOICE
   FILE
+  READ // When the submission is just reading the content
 }
 
 model AssignmentSubmission {
@@ -188,9 +190,6 @@ model AssignmentSubmission {
   nodeId         String
   submissionType SubmissionType?
   submission     Json?
-  //fileOriginalName     String?
-  //fileName             String?
-  //multipleChoiceAnswer Int? // index of the multiple choice answer
   node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   group          Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
