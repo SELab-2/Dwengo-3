@@ -21,7 +21,8 @@ import { StudentController } from "./routes/student.routes";
 import { TeacherController } from "./routes/teacher.routes";
 
 dotenv.config({ path: "../.env" });
-const app: Express = express();
+
+export const app: Express = express();
 const port = process.env.PORT || 3001;
 
 const options = {

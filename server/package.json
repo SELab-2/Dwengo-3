@@ -4,8 +4,11 @@
   "description": "Dwengo leerplatform",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node app.ts",
-    "debug": "nodemon app.ts",
+    "start": "nodemon app.ts", // or you could replace with ts-node if preferred
+    "start:dev": "ts-node app.ts",
+    "debug": "nodemon app.ts", // keep both if needed
+    "test:unit": "vitest -c util/test-files/vitest.config.unit.ts",
+    "test:int": "./util/test-files/integration_test.sh"
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",
     "readData": "ts-node util/db-scripts/readData.ts",
     "deleteData": "ts-node util/db-scripts/deleteData.ts"
@@ -35,6 +38,7 @@
     "@types/node": "^22.13.4",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "@types/supertest": "^6.0.2",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-prettier": "^5.2.3",
@@ -42,10 +46,13 @@
     "nodemon": "^3.1.9",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.26.0"
+    "typescript-eslint": "^8.26.0",
+    "vitest": "^3.0.7",
+    "vitest-mock-extended": "^3.0.1"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
