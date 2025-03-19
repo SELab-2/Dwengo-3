@@ -1,6 +1,6 @@
-import { Request, Response, Router } from "express";
-import { AnnouncementDomain } from "../domain/announcement.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Request, Response, Router } from 'express';
+import { AnnouncementDomain } from '../domain/announcement.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class AnnouncementController {
   public router: Router;
@@ -72,7 +72,7 @@ export class AnnouncementController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.put("/", this.createAnnouncement);
+    this.router.put('/', this.createAnnouncement);
     /**
      * @swagger
      * /api/announcement:
@@ -120,7 +120,7 @@ export class AnnouncementController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.get("/", this.getAnnouncements);
+    this.router.get('/', this.getAnnouncements);
     /**
      * @swagger
      * /api/announcement:
@@ -155,6 +155,6 @@ export class AnnouncementController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.patch("/", this.updateAnnouncement);
+    this.router.patch('/', this.updateAnnouncement);
   }
 }

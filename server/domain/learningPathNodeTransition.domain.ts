@@ -1,9 +1,9 @@
-import { LearningPathNodeTransitionPersistence } from "../persistence/learningPathNodeTransition.persistence";
+import { LearningPathNodeTransitionPersistence } from '../persistence/learningPathNodeTransition.persistence';
 import {
   LearningPathNodeTransitionCreateParams,
   LearningPathNodeTransitionCreateSchema,
-} from "../util/types/learningPathNodeTransition.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
+} from '../util/types/learningPathNodeTransition.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 
 export class LearningPathNodeTransitionDomain {
   private learningPathNodeTransitionPersistence;
@@ -23,7 +23,7 @@ export class LearningPathNodeTransitionDomain {
     }
 
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error("User must be a teacher to create a learning path.");
+      throw new Error('User must be a teacher to create a learning path.');
     }
     return this.learningPathNodeTransitionPersistence.createLearningPathNodeTransition(
       parseResult.data,

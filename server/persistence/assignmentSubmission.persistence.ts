@@ -1,11 +1,11 @@
-import { AssignmentSubmission, Prisma, PrismaClient } from "@prisma/client";
+import { AssignmentSubmission, Prisma, PrismaClient } from '@prisma/client';
 import {
   AssignmentSubCreateParams,
   AssignmentSubFilterParams,
   AssignmentSubUpdateParams,
-} from "../util/types/assignmentSubmission.types";
-import { PaginationParams } from "../util/types/pagination.types";
-import { PrismaSingleton } from "./prismaSingleton";
+} from '../util/types/assignmentSubmission.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { PrismaSingleton } from './prismaSingleton';
 
 export class AssignmentSubmissionPersistence {
   public async getAssignmentSubmissions(

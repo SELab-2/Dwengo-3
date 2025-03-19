@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),

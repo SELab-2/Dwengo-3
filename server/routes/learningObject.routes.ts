@@ -1,6 +1,6 @@
-import { Request, Response, Router } from "express";
-import { LearningObjectDomain } from "../domain/learningObject.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Request, Response, Router } from 'express';
+import { LearningObjectDomain } from '../domain/learningObject.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class LearningObjectController {
   public router: Router;
@@ -76,7 +76,7 @@ export class LearningObjectController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.put("/", this.createLearningObject);
+    this.router.put('/', this.createLearningObject);
     /**
      * @swagger
      * /api/learningObject:
@@ -123,7 +123,7 @@ export class LearningObjectController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.get("/", this.getLearningObjects);
+    this.router.get('/', this.getLearningObjects);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -162,7 +162,7 @@ export class LearningObjectController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.patch("/:id", this.updateLearningObject);
+    this.router.patch('/:id', this.updateLearningObject);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -191,6 +191,6 @@ export class LearningObjectController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.delete("/:id", this.deleteLearningObject);
+    this.router.delete('/:id', this.deleteLearningObject);
   }
 }

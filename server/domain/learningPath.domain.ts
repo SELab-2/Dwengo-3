@@ -1,12 +1,12 @@
-import { LearningPathPersistence } from "../persistence/learningPath.persistence";
+import { LearningPathPersistence } from '../persistence/learningPath.persistence';
 import {
   LearningPathByFilterParams,
   LearningPathCreateParams,
   LearningPathCreateSchema,
   LearningPathFilterSchema,
-} from "../util/types/learningPath.types";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
+} from '../util/types/learningPath.types';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 
 export class LearningPathDomain {
   private learningPathPersistence;
@@ -16,7 +16,7 @@ export class LearningPathDomain {
   }
 
   public async getLearningPaths(query: LearningPathByFilterParams) {
-    if (typeof query.keywords === "string") {
+    if (typeof query.keywords === 'string') {
       query.keywords = [query.keywords];
     }
 
@@ -46,7 +46,7 @@ export class LearningPathDomain {
     }
 
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error("User must be a teacher to create a learning path.");
+      throw new Error('User must be a teacher to create a learning path.');
     }
     return this.learningPathPersistence.createLearningPath(parseResult.data);
   }

@@ -1,20 +1,20 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const PaginationFilterSchema = z
   .object({
     page: z
       .string()
-      .regex(/^\d+$/, "Page must be a positive integer")
+      .regex(/^\d+$/, 'Page must be a positive integer')
       .transform(Number)
-      .refine((val) => val > 0, "Page must be greater than 0")
-      .default("1"),
+      .refine((val) => val > 0, 'Page must be greater than 0')
+      .default('1'),
 
     pageSize: z
       .string()
-      .regex(/^\d+$/, "PageSize must be a positive integer")
+      .regex(/^\d+$/, 'PageSize must be a positive integer')
       .transform(Number)
-      .refine((val) => val > 0, "PageSize must be greater than 0")
-      .default("10"),
+      .refine((val) => val > 0, 'PageSize must be greater than 0')
+      .default('10'),
   })
   .transform((data) => {
     // Transform to include skip

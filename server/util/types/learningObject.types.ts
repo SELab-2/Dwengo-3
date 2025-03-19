@@ -1,18 +1,18 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const ContentTypeEnum = z.enum([
-  "TEXT_PLAIN",
-  "TEXT_MARKDOWN",
-  "IMAGE_IMAGE_BLOCK",
-  "IMAGE_IMAGE",
-  "AUDIO_MPEG",
-  "APPLICATION_PDF",
-  "EXTERN",
-  "BLOCKLY",
+  'TEXT_PLAIN',
+  'TEXT_MARKDOWN',
+  'IMAGE_IMAGE_BLOCK',
+  'IMAGE_IMAGE',
+  'AUDIO_MPEG',
+  'APPLICATION_PDF',
+  'EXTERN',
+  'BLOCKLY',
 ]);
 
 export const learningObjectKeywordSchema = z.object({
-  keyword: z.string().min(1, "Keyword is required"),
+  keyword: z.string().min(1, 'Keyword is required'),
 });
 
 export type LearningObjectKeywordParams = z.infer<
@@ -20,11 +20,11 @@ export type LearningObjectKeywordParams = z.infer<
 >;
 
 export const LearningObjectCreateSchema = z.object({
-  hruid: z.string().min(1, "HRUID is required"),
+  hruid: z.string().min(1, 'HRUID is required'),
   uuid: z.string().uuid(),
-  version: z.number().int().min(1, "Version must be a positive integer"),
-  language: z.string().min(1, "Language is required"),
-  title: z.string().min(1, "Title is required"),
+  version: z.number().int().min(1, 'Version must be a positive integer'),
+  language: z.string().min(1, 'Language is required'),
+  title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
   contentType: ContentTypeEnum.optional(),
   targetAges: z.array(z.number().int().nonnegative()).optional(),
@@ -37,7 +37,7 @@ export const LearningObjectCreateSchema = z.object({
   estimatedTime: z.number().optional(),
   returnValue: z.any().optional(), // JSON object
   available: z.boolean().default(true),
-  content: z.string().min(1, "Content is required"),
+  content: z.string().min(1, 'Content is required'),
   multipleChoice: z.any().optional(), // JSON object
   canUploadSubmission: z.boolean().default(false),
   keywords: z.array(learningObjectKeywordSchema).optional(),
@@ -49,16 +49,16 @@ export type LearningObjectCreateParams = z.infer<
 
 export type LearningObjectWithoutKeywords = Omit<
   LearningObjectCreateParams,
-  "keywords"
+  'keywords'
 >;
 
 export const LearningObjectUpdateSchema = z.object({
   version: z
     .number()
     .int()
-    .min(1, "Version must be a positive integer")
+    .min(1, 'Version must be a positive integer')
     .optional(),
-  title: z.string().min(1, "Title is required").optional(),
+  title: z.string().min(1, 'Title is required').optional(),
   description: z.string().optional(),
   contentType: ContentTypeEnum.optional(),
   targetAges: z.array(z.number().int().nonnegative()).optional(),
@@ -71,7 +71,7 @@ export const LearningObjectUpdateSchema = z.object({
   estimatedTime: z.number().optional(),
   returnValue: z.any().optional(),
   available: z.boolean().optional(),
-  content: z.string().min(1, "Content is required").optional(),
+  content: z.string().min(1, 'Content is required').optional(),
   multipleChoice: z.any().optional(),
   canUploadSubmission: z.boolean().optional(),
   learningObjectsKeywords: z.array(learningObjectKeywordSchema).optional(),
@@ -83,7 +83,7 @@ export type LearningObjectUpdateParams = z.infer<
 
 export type LearningObjectUpdateWithoutKeywords = Omit<
   LearningObjectUpdateParams,
-  "learningObjectsKeywords"
+  'learningObjectsKeywords'
 >;
 
 export const LearningObjectFilterSchema = z.object({

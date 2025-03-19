@@ -1,11 +1,11 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from '@prisma/client';
 import {
   AnnouncementByFilterParams,
   AnnouncementCreatePersistenceParams,
   AnnouncementUpdateParams,
-} from "../util/types/announcement.types";
-import { PaginationParams } from "../util/types/pagination.types";
-import { PrismaSingleton } from "./prismaSingleton";
+} from '../util/types/announcement.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { PrismaSingleton } from './prismaSingleton';
 
 //TODO : import prisma client from singleton
 

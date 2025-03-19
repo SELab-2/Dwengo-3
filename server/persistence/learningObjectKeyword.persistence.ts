@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
+import { PrismaClient } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
 
 export class LearningObjectKeywordPersistence {
   private prisma: PrismaClient;

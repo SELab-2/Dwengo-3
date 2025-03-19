@@ -2,23 +2,23 @@ import {
   AssignmentSubmission,
   ClassRole,
   SubmissionType,
-} from "@prisma/client";
-import { AssignmentSubmissionPersistence } from "../persistence/assignmentSubmission.persistence";
-import { Request } from "express";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
+} from '@prisma/client';
+import { AssignmentSubmissionPersistence } from '../persistence/assignmentSubmission.persistence';
+import { Request } from 'express';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   SubmissionFilterSchema,
   FileSubmission,
   SubmissionCreateSchema,
   SubmissionUpdateSchema,
-} from "../util/types/assignmentSubmission.types";
-import { UserEntity } from "../util/types/user.types";
+} from '../util/types/assignmentSubmission.types';
+import { UserEntity } from '../util/types/user.types';
 import {
   checkIfUserIsInGroup,
   compareUserIdWithFilterId,
-} from "../util/coockie-checks/coockieChecks.util";
-import { GroupPersistence } from "../persistence/group.persistence";
-import { z, ZodEffects, ZodObject } from "zod";
+} from '../util/coockie-checks/coockieChecks.util';
+import { GroupPersistence } from '../persistence/group.persistence';
+import { z, ZodEffects, ZodObject } from 'zod';
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
@@ -64,7 +64,7 @@ export class AssignmentSubmissionDomain {
     user: UserEntity,
   ): Promise<AssignmentSubmission> {
     if (user.role !== ClassRole.STUDENT) {
-      throw new Error("Only students can create submissions");
+      throw new Error('Only students can create submissions');
     }
 
     const parseResult = SubmissionCreateSchema.safeParse(req.body);
@@ -76,7 +76,7 @@ export class AssignmentSubmissionDomain {
     if (data.submissionType === SubmissionType.FILE) {
       if (!req.file) {
         throw new Error(
-          "File submission is required when submissionType is FILE",
+          'File submission is required when submissionType is FILE',
         );
       }
       const fileSubmission: FileSubmission = {
@@ -97,7 +97,7 @@ export class AssignmentSubmissionDomain {
     user: UserEntity,
   ): Promise<AssignmentSubmission> {
     if (user.role !== ClassRole.STUDENT) {
-      throw new Error("Only students can create submissions");
+      throw new Error('Only students can create submissions');
     }
 
     const parseResult = SubmissionUpdateSchema.safeParse(req.body);
@@ -109,7 +109,7 @@ export class AssignmentSubmissionDomain {
     if (data.submissionType === SubmissionType.FILE) {
       if (!req.file) {
         throw new Error(
-          "File submission is required when submissionType is FILE",
+          'File submission is required when submissionType is FILE',
         );
       }
       const fileSubmission: FileSubmission = {

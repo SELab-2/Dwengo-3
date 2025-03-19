@@ -1,15 +1,15 @@
-import express, { Request, Response, Router } from "express";
-import { LoginRequest, LoginSchema } from "../util/types/RequestTypes";
-import { loginUser, registerUser } from "../domain/user.domain";
-import { getUserById } from "../persistence/auth/users.persistance";
-import { User } from "@prisma/client";
-import crypto from "crypto";
-import * as http2 from "node:http2";
-import { UserDto, UserEntity } from "../util/types/user.types";
+import express, { Request, Response, Router } from 'express';
+import { LoginRequest, LoginSchema } from '../util/types/RequestTypes';
+import { loginUser, registerUser } from '../domain/user.domain';
+import { getUserById } from '../persistence/auth/users.persistance';
+import { User } from '@prisma/client';
+import crypto from 'crypto';
+import * as http2 from 'node:http2';
+import { UserDto, UserEntity } from '../util/types/user.types';
 
 export const router: Router = express.Router();
-const studentPrefix = "/student";
-const teacherPrefix = "/teacher";
+const studentPrefix = '/student';
+const teacherPrefix = '/teacher';
 
 /**
  * @swagger
@@ -33,7 +33,7 @@ const teacherPrefix = "/teacher";
 async function register(req: Request, res: Response): Promise<void> {
   const user: UserEntity = await registerUser(req.body);
   const cookie = generateCookie(user.id, user.email, user.password);
-  res.cookie("DWENGO_SESSION", cookie, {
+  res.cookie('DWENGO_SESSION', cookie, {
     maxAge: 6 * 60 * 60 * 1000,
     httpOnly: true,
   }); // 6 hours
@@ -63,7 +63,7 @@ async function register(req: Request, res: Response): Promise<void> {
  */
 async function login(req: Request, res: Response): Promise<void> {
   if (req.body === null || req.body === undefined) {
-    res.status(http2.constants.HTTP_STATUS_BAD_REQUEST).send("Bad request");
+    res.status(http2.constants.HTTP_STATUS_BAD_REQUEST).send('Bad request');
     return;
   }
 
@@ -71,14 +71,14 @@ async function login(req: Request, res: Response): Promise<void> {
   if (!loginRequest.success) {
     res
       .status(http2.constants.HTTP_STATUS_BAD_REQUEST)
-      .send("Bad request: " + loginRequest.error.message);
+      .send('Bad request: ' + loginRequest.error.message);
     return;
   }
 
   // password should not be sent to the client
   const user: UserEntity = await loginUser(loginRequest.data as LoginRequest);
   const cookie = generateCookie(user.id, user.email, user.password);
-  res.cookie("DWENGO_SESSION", cookie, {
+  res.cookie('DWENGO_SESSION', cookie, {
     maxAge: 6 * 60 * 60 * 1000,
     httpOnly: true,
   }); // 6 hours
@@ -106,7 +106,7 @@ async function login(req: Request, res: Response): Promise<void> {
  * @param res - The response.
  */
 async function clearCookie(req: Request, res: Response): Promise<void> {
-  res.clearCookie("DWENGO_SESSION");
+  res.clearCookie('DWENGO_SESSION');
   res.status(http2.constants.HTTP_STATUS_OK).send();
 }
 
@@ -127,11 +127,11 @@ export function generateCookie(
   email: string,
   password: string,
 ): string {
-  const cookie: string = userId + "?";
+  const cookie: string = userId + '?';
   const hash = crypto
-    .createHash("sha512")
+    .createHash('sha512')
     .update(userId + email + password)
-    .digest("base64");
+    .digest('base64');
   console.log(cookie + hash);
   return cookie + hash;
 }
@@ -147,9 +147,9 @@ export function generateCookie(
  * @returns True if the cookie is valid, false otherwise.
  */
 export async function verifyCookie(cookie: string): Promise<boolean> {
-  if (cookie === undefined || cookie === null || cookie === "") return false;
+  if (cookie === undefined || cookie === null || cookie === '') return false;
 
-  const [id, hash] = cookie.split("?");
+  const [id, hash] = cookie.split('?');
   if (id === undefined || hash === undefined) return false;
 
   // todo: cleanup in backend rewrite/cleanup
@@ -158,7 +158,7 @@ export async function verifyCookie(cookie: string): Promise<boolean> {
 
   const string = user.id + user.email + user.password;
 
-  const newHash = crypto.createHash("sha512").update(string).digest("base64");
+  const newHash = crypto.createHash('sha512').update(string).digest('base64');
   return hash.trim() === newHash.trim();
 }
 
@@ -217,7 +217,7 @@ export async function verifyCookie(cookie: string): Promise<boolean> {
  *         description: A session cookie with the user ID and hash of the user data, set upon successful login.
  *         type: string
  */
-router.post(studentPrefix + "/login", async (req: Request, res: Response) => {
+router.post(studentPrefix + '/login', async (req: Request, res: Response) => {
   return login(req, res);
 });
 
@@ -247,7 +247,7 @@ router.post(studentPrefix + "/login", async (req: Request, res: Response) => {
  *                   type: string
  *                   description: The error message
  */
-router.post(studentPrefix + "/logout", (req: Request, res: Response) => {
+router.post(studentPrefix + '/logout', (req: Request, res: Response) => {
   return clearCookie(req, res);
 });
 
@@ -321,7 +321,7 @@ router.post(studentPrefix + "/logout", (req: Request, res: Response) => {
  *                   type: string
  *                   description: The error message
  */
-router.put(studentPrefix + "/register", async (req: Request, res: Response) => {
+router.put(studentPrefix + '/register', async (req: Request, res: Response) => {
   return register(req, res);
 });
 
@@ -381,7 +381,7 @@ router.put(studentPrefix + "/register", async (req: Request, res: Response) => {
  *         description: A session cookie with the user ID and hash of the user data, set upon successful login.
  *         type: string
  */
-router.post(teacherPrefix + "/login", async (req: Request, res: Response) => {
+router.post(teacherPrefix + '/login', async (req: Request, res: Response) => {
   return login(req, res);
 });
 
@@ -411,7 +411,7 @@ router.post(teacherPrefix + "/login", async (req: Request, res: Response) => {
  *                   type: string
  *                   description: The error message
  */
-router.post(teacherPrefix + "/logout", (req: Request, res: Response) => {
+router.post(teacherPrefix + '/logout', (req: Request, res: Response) => {
   return clearCookie(req, res);
 });
 
@@ -485,6 +485,6 @@ router.post(teacherPrefix + "/logout", (req: Request, res: Response) => {
  *                   type: string
  *                   description: The error message
  */
-router.put(teacherPrefix + "/register", async (req: Request, res: Response) => {
+router.put(teacherPrefix + '/register', async (req: Request, res: Response) => {
   return register(req, res);
 });

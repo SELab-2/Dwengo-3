@@ -1,8 +1,8 @@
-import { Class, ClassRole } from "@prisma/client";
-import { ClassPersistence } from "../../persistence/class.persistence";
-import { Uuid } from "../types/assignment.types";
-import { ClassRoleEnum, UserEntity } from "../types/user.types";
-import { GroupPersistence } from "../../persistence/group.persistence";
+import { Class, ClassRole } from '@prisma/client';
+import { ClassPersistence } from '../../persistence/class.persistence';
+import { Uuid } from '../types/assignment.types';
+import { ClassRoleEnum, UserEntity } from '../types/user.types';
+import { GroupPersistence } from '../../persistence/group.persistence';
 
 export const compareUserIdWithFilterId = async (
   user: UserEntity,
@@ -33,7 +33,7 @@ export const checkIfUserIsInClass = async (
   const classData = await classPersistance.getClassById(classId);
 
   if (!classData) {
-    throw new Error("Class not found.");
+    throw new Error('Class not found.');
   }
 
   if (user.role === ClassRoleEnum.TEACHER) {
@@ -64,7 +64,7 @@ export const checkIfUserIsInGroup = async (
 ): Promise<void> => {
   if (!groupId) return;
   const groupData = await groupPersistence.getGroupById(groupId);
-  if (!groupData) throw new Error("Group not found.");
+  if (!groupData) throw new Error('Group not found.');
 
   if (user.role === ClassRole.TEACHER) {
     const isTeacherOfThisGroup = groupData.assignment.class.teachers.some(
@@ -92,7 +92,7 @@ export const checkIfUsersAreInSameClass = async (
 ): Promise<void> => {
   const classData = await classPersistance.getClassById(classId);
   if (!classData) {
-    throw new Error("Class not found.");
+    throw new Error('Class not found.');
   }
   // Extract student IDs from the class
   const classStudentIds = new Set(
@@ -105,7 +105,7 @@ export const checkIfUsersAreInSameClass = async (
   );
 
   if (!check) {
-    throw new Error("All students in a group must belong to the same class.");
+    throw new Error('All students in a group must belong to the same class.');
   }
 
   if (classData.teachers.some((teacher) => teacher.id !== teacherId)) {
@@ -120,7 +120,7 @@ export const checkIfUsersAreInSameGroup = async (
 ): Promise<void> => {
   const groupData = await groupPersistence.getGroupById(groupId);
   if (!groupData) {
-    throw new Error("Group not found");
+    throw new Error('Group not found');
   }
   const groupStudendtIds = new Set(
     groupData.students.map((student) => student.userId),
@@ -132,6 +132,6 @@ export const checkIfUsersAreInSameGroup = async (
     (user) => groupStudendtIds.has(user) || teacherIds.has(user),
   );
   if (!check) {
-    throw new Error("All users must belong to the same group");
+    throw new Error('All users must belong to the same group');
   }
 };

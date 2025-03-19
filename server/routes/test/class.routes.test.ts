@@ -1,7 +1,7 @@
-import request from "supertest";
-import { describe, beforeEach, test, vi } from "vitest";
-import { app } from "../../app";
-import path from "path";
+import request from 'supertest';
+import { describe, beforeEach, test, vi } from 'vitest';
+import { app } from '../../app';
+import path from 'path';
 
 // Domain mock
 const { mockClassDomain } = vi.hoisted(() => {
@@ -15,7 +15,7 @@ const { mockClassDomain } = vi.hoisted(() => {
     },
   };
 });
-vi.mock("../../domain/class.domain", () => {
+vi.mock('../../domain/class.domain', () => {
   return {
     ClassDomain: vi.fn().mockImplementation(() => {
       return mockClassDomain;
@@ -24,27 +24,27 @@ vi.mock("../../domain/class.domain", () => {
 });
 
 // Global test variables
-const route: string = "/api/class";
+const route: string = '/api/class';
 
 // Tests
-describe("class routes test", () => {
+describe('class routes test', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
-  describe("GET /class/id", async () => {
-    test("responds on id", () => {
-      const id: string = "id";
-      const expected = { id: id, name: "name" };
+  describe('GET /class/id', async () => {
+    test('responds on id', () => {
+      const id: string = 'id';
+      const expected = { id: id, name: 'name' };
       mockClassDomain.getClassById.mockResolvedValue(expected);
       return request(app).get(path.join(route, id)).expect(200);
     });
   });
 
-  describe("POST /class", () => {
-    test("responds on payload", () => {
-      const body = { name: "name" };
-      mockClassDomain.getClassById.mockResolvedValue({ ...body, id: "id" });
+  describe('POST /class', () => {
+    test('responds on payload', () => {
+      const body = { name: 'name' };
+      mockClassDomain.getClassById.mockResolvedValue({ ...body, id: 'id' });
       return request(app).post(path.join(route)).send(body).expect(200);
     });
   });

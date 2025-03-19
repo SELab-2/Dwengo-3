@@ -1,17 +1,17 @@
-import { TeacherPersistence } from "../persistence/teacher.persistence";
-import { z } from "zod";
-import { ClassPersistence } from "../persistence/class.persistence";
-import { UserEntity } from "../util/types/user.types";
+import { TeacherPersistence } from '../persistence/teacher.persistence';
+import { z } from 'zod';
+import { ClassPersistence } from '../persistence/class.persistence';
+import { UserEntity } from '../util/types/user.types';
 import {
   TeacherCreateSchema,
   TeacherDeleteSchema,
   TeacherFilterSchema,
   TeacherIncludeSchema,
   TeacherUpdateSchema,
-} from "../util/types/teacher.types";
-import { getUserById } from "../persistence/auth/users.persistance";
-import { Class } from "@prisma/client";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
+} from '../util/types/teacher.types';
+import { getUserById } from '../persistence/auth/users.persistance';
+import { Class } from '@prisma/client';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
 
 export class TeacherDomain {
   private teacherPersistence: TeacherPersistence;
@@ -82,12 +82,12 @@ export class TeacherDomain {
     const user = await this.validateObject(
       getUserById,
       userId,
-      "User does not exist",
+      'User does not exist',
     );
 
     // Check if the user is already a teacher or student
     if (user.teacher || user.student) {
-      throw new Error("User is already a teacher or student");
+      throw new Error('User is already a teacher or student');
     }
 
     // Create the teacher
@@ -153,7 +153,7 @@ export class TeacherDomain {
     const user = await this.validateObject(
       getUserById,
       userId,
-      "User does not exist",
+      'User does not exist',
     );
 
     if (user.teacher) {
@@ -168,7 +168,7 @@ export class TeacherDomain {
       );
     } else {
       // This should not happen
-      throw new Error("User is not a teacher or student");
+      throw new Error('User is not a teacher or student');
     }
   }
 }

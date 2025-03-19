@@ -1,13 +1,13 @@
-import { PaginationParams } from "../util/types/pagination.types";
+import { PaginationParams } from '../util/types/pagination.types';
 import {
   ClassCreateParams,
   ClassFilterParams,
   ClassUpdateParams,
-} from "../util/types/class.types";
-import { Prisma } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
-import { searchAndPaginate } from "../util/pagination/pagination.util";
-import { UserEntity } from "../util/types/user.types";
+} from '../util/types/class.types';
+import { Prisma } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { UserEntity } from '../util/types/user.types';
 
 export class ClassPersistence {
   private prisma;

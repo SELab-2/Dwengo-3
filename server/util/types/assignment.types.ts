@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const AssignmentFilterSchema = z
   .object({
@@ -9,7 +9,7 @@ export const AssignmentFilterSchema = z
     id: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: "At least one filter must be provided.",
+    message: 'At least one filter must be provided.',
     path: [],
   });
 

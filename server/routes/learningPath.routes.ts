@@ -1,6 +1,6 @@
-import { Request, Response, Router } from "express";
-import { LearningPathDomain } from "../domain/learningPath.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Request, Response, Router } from 'express';
+import { LearningPathDomain } from '../domain/learningPath.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class LearningPathController {
   public router: Router;
@@ -79,7 +79,7 @@ export class LearningPathController {
      *       500:
      *         description: Internal server error
      */
-    this.router.get("/", this.getLearningPaths);
+    this.router.get('/', this.getLearningPaths);
     /**
      * @swagger
      * /api/learningPath:
@@ -104,6 +104,6 @@ export class LearningPathController {
      *             schema:
      *               $ref: '#/components/schemas/LearningPathGet'
      */
-    this.router.put("/", this.createLearningPath);
+    this.router.put('/', this.createLearningPath);
   }
 }

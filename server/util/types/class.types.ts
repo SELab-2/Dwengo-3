@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const ClassFilterSchema = z.object({
   teacherId: z.string().uuid().optional(),
@@ -9,14 +9,14 @@ export const ClassFilterSchema = z.object({
 export type ClassFilterParams = z.infer<typeof ClassFilterSchema>;
 
 export const ClassCreateSchema = z.object({
-  name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
+  name: z.string().min(1, 'Name must be a non-empty string').trim().optional(),
 });
 
 export type ClassCreateParams = z.infer<typeof ClassCreateSchema>;
 
 export const ClassUpdateSchema = z.object({
-  id: z.string().uuid("Id must be a valid UUID"),
-  name: z.string().min(1, "Name must be a non-empty string").trim().optional(),
+  id: z.string().uuid('Id must be a valid UUID'),
+  name: z.string().min(1, 'Name must be a non-empty string').trim().optional(),
 });
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;

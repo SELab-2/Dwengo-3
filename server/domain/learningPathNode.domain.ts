@@ -1,9 +1,9 @@
-import { LearningPathNodePersistence } from "../persistence/learningPathNode.persistence";
+import { LearningPathNodePersistence } from '../persistence/learningPathNode.persistence';
 import {
   LearningPathNodeCreateParams,
   LearningPathNodeCreateSchema,
-} from "../util/types/learningPathNode.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
+} from '../util/types/learningPathNode.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 
 export class LearningPathNodeDomain {
   private learningPathNodePersistence;
@@ -23,7 +23,7 @@ export class LearningPathNodeDomain {
 
     // TODO: CHECK if teacher is owner of the path!!!
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error("User must be a teacher to create a learning path.");
+      throw new Error('User must be a teacher to create a learning path.');
     }
     return this.learningPathNodePersistence.createLearningPathNode(
       parseResult.data,

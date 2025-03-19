@@ -1,12 +1,12 @@
-import { Message, Prisma, PrismaClient } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
+import { Message, Prisma, PrismaClient } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
 import {
   MessageCreateParams,
   MessageFilterParams,
   MessageId,
   MessageUpdateParams,
-} from "../util/types/message.types";
-import { PaginationParams } from "../util/types/pagination.types";
+} from '../util/types/message.types';
+import { PaginationParams } from '../util/types/pagination.types';
 
 export class MessagePersistence {
   private prisma: PrismaClient;
@@ -31,7 +31,7 @@ export class MessagePersistence {
         skip: paginationParams.skip,
         take: paginationParams.pageSize,
         include: { sender: true },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: 'desc' },
       }),
       this.prisma.message.count({
         where: whereclause,
