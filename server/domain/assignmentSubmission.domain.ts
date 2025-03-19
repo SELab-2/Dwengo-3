@@ -11,6 +11,8 @@ import {
   FileSubmission,
   SubmissionCreateSchema,
   SubmissionUpdateSchema,
+  AssignmentSubmissionShort,
+  AssignmentSubmissionDetail,
 } from "../util/types/assignmentSubmission.types";
 import { UserEntity } from "../util/types/user.types";
 import {
@@ -19,6 +21,7 @@ import {
 } from "../util/coockie-checks/coockieChecks.util";
 import { GroupPersistence } from "../persistence/group.persistence";
 import { z, ZodEffects, ZodObject } from "zod";
+import { Uuid } from "../util/types/assignment.types";
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
@@ -33,7 +36,7 @@ export class AssignmentSubmissionDomain {
   public async getAssignmentSubmissions(
     query: any,
     user: UserEntity,
-  ): Promise<{ data: AssignmentSubmission[]; totalPages: number }> {
+  ): Promise<{ data: AssignmentSubmissionShort[]; totalPages: number }> {
     const paginationParseResult = PaginationFilterSchema.safeParse(query);
     if (!paginationParseResult.success) {
       throw paginationParseResult.error;
@@ -43,26 +46,27 @@ export class AssignmentSubmissionDomain {
       throw parseResult.error;
     }
     const filters = parseResult.data;
-    checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
-    const submissions =
-      await this.assignmentSubmissionPersistence.getAssignmentSubmissions(
+    await checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
+    return this.assignmentSubmissionPersistence.getAssignmentSubmissions(
         filters,
         paginationParseResult.data,
       );
-    if (filters.id && submissions.data.length === 1) {
-      checkIfUserIsInGroup(
-        user,
-        submissions.data[0].groupId,
-        this.groupPersistence,
-      );
-    }
-    return submissions;
+  }
+
+  public async getAssignmentSubmissionById(id: Uuid, user: UserEntity) {
+    const submission = await this.assignmentSubmissionPersistence.getAssignmentSubmissionById(id);
+    await checkIfUserIsInGroup(
+      user,
+      submission.group.id,
+      this.groupPersistence,
+    );
+    return submission;
   }
 
   public async createAssignmentSubmission(
     req: Request,
     user: UserEntity,
-  ): Promise<AssignmentSubmission> {
+  ): Promise<AssignmentSubmissionDetail> {
     if (user.role !== ClassRole.STUDENT) {
       throw new Error("Only students can create submissions");
     }
@@ -95,7 +99,7 @@ export class AssignmentSubmissionDomain {
   public async updateAssignmentSubmission(
     req: Request,
     user: UserEntity,
-  ): Promise<AssignmentSubmission> {
+  ): Promise<AssignmentSubmissionDetail> {
     if (user.role !== ClassRole.STUDENT) {
       throw new Error("Only students can create submissions");
     }

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { Uuid } from "./assignment.types";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export const ContentTypeEnum = z.enum([
   "TEXT_PLAIN",
@@ -97,3 +99,10 @@ export const LearningObjectFilterSchema = z.object({
 export type LearningObjectFilterParams = z.infer<
   typeof LearningObjectFilterSchema
 >;
+export type LearningObjectShort = {
+  id: Uuid,
+  title: string,
+  language: string,
+  estimatedTime: Decimal | null,
+  targetAges: number[]
+}

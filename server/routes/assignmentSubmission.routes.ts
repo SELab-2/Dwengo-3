@@ -47,6 +47,7 @@ export class AssignmentSubmissionController {
 
   private initializeRoutes(): void {
     this.router.get("/", this.getAssignmentSubmission.bind(this));
+    this.router.get("/:id", this.getAssignmentById.bind(this))
     this.router.put(
       "/",
       this.upload.single("file"),
@@ -69,6 +70,10 @@ export class AssignmentSubmissionController {
         await getUserFromReq(req),
       ),
     );
+  }
+
+  private async getAssignmentById(req: Request, res: Response): Promise<void> {
+    res.json(await this.assignmentSubmissionsDomain.getAssignmentSubmissionById(req.params.id, await getUserFromReq(req)));
   }
 
   private async createAssignmentSubmission(
