@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { Uuid } from "./assignment.types";
+import { GroupShort } from "./group.types";
+import { UserShort } from "./user.types";
 
 export const DiscussionFilterSchema = z
   .object({
@@ -16,3 +19,11 @@ export const DiscussionCreateSchema = z.object({
 
 export type DiscussionFilterParams = z.infer<typeof DiscussionFilterSchema>;
 export type DiscussionCreateParams = z.infer<typeof DiscussionCreateSchema>;
+export type DiscussionDetail = {
+  id: Uuid,
+  group: GroupShort,
+  members: UserShort[]
+};
+export type discussionShort = {
+  id: Uuid
+};

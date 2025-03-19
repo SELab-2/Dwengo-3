@@ -10,42 +10,9 @@ import { PaginationParams } from "../util/types/pagination.types";
 import { PrismaSingleton } from "./prismaSingleton";
 import { searchAndPaginate } from "../util/pagination/pagination.util";
 import { Uuid } from "../util/types/assignment.types";
+import { assignmentSubmissionSelectShort, assignmentSubmissionSelectDetail } from "../util/selectInput/assignmentSubmission.select";
 
 export class AssignmentSubmissionPersistence {
-  private selectInputDetail: Prisma.AssignmentSubmissionSelect;
-  private selectInputShort: Prisma.AssignmentSubmissionSelect;
-
-  public constructor() {
-    this.selectInputDetail = {
-      id: true,
-      submission: true,
-      group: {
-        select: {
-          id: true,
-          nodeId: true, //TODO change to nodeIndex
-          assignmentId: true
-        }
-      },
-      node: {
-        select: {
-          id: true,
-          learningObject: {
-            select: {
-              id: true,
-              title: true,
-              language: true,
-              estimatedTime: true,
-              targetAges: true
-            }
-          }
-        }
-      }
-    };
-    this.selectInputShort = {
-      id: true
-    }
-  }
-
   public async getAssignmentSubmissions(
     filters: AssignmentSubFilterParams,
     paginationParams: PaginationParams,
@@ -56,19 +23,44 @@ export class AssignmentSubmissionPersistence {
         filters.nodeId ? { nodeId: filters.nodeId } : {},
       ],
     };
-    return searchAndPaginate(PrismaSingleton.instance.assignmentSubmission, whereClause, paginationParams, undefined, this.selectInputShort);
+    return searchAndPaginate(PrismaSingleton.instance.assignmentSubmission, whereClause, paginationParams, undefined, assignmentSubmissionSelectShort);
   }
 
-  public async getAssignmentSubmissionById(id: Uuid): Promise<AssignmentSubmissionDetail> {
-    return PrismaSingleton.instance.assignmentSubmission.findFirstOrThrow({
+  public async getAssignmentSubmissionById(id: Uuid): Promise<AssignmentSubmissionDetail>{
+    return PrismaSingleton.instance.assignmentSubmission.findUniqueOrThrow({
       where: {id: id},
-      select: this.selectInputDetail
+      select: {
+        id: true,
+        submission: true,
+        group: {
+          select: {
+            id: true,
+            nodeId: true, //TODO change to nodeIndex
+            assignmentId: true
+          }
+        },
+        node: {
+          select: {
+            id: true,
+            learningObject: {
+              select: {
+                id: true,
+                title: true,
+                language: true,
+                estimatedTime: true,
+                targetAges: true
+              }
+            }
+          }
+        }
+      }
     });
   }
 
   public async createAssignmentSubmission(
     params: AssignmentSubCreateParams,
-  ): Promise<AssignmentSubmissionDetail> {
+  ){
+    console.log(assignmentSubmissionSelectDetail);
     return PrismaSingleton.instance.assignmentSubmission.create({
       data: {
         node: {
@@ -123,7 +115,31 @@ export class AssignmentSubmissionPersistence {
         submissionType: params.submissionType,
         submission: params.submission!,
       },
-      select: this.selectInputDetail
+      select: {
+        id: true,
+        submission: true,
+        group: {
+          select: {
+            id: true,
+            nodeId: true, //TODO change to nodeIndex
+            assignmentId: true
+          }
+        },
+        node: {
+          select: {
+            id: true,
+            learningObject: {
+              select: {
+                id: true,
+                title: true,
+                language: true,
+                estimatedTime: true,
+                targetAges: true
+              }
+            }
+          }
+        }
+      }
     });
   }
 }

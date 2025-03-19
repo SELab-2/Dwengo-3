@@ -14,6 +14,7 @@ export class DiscussionController {
 
   private initializeRoutes() {
     this.router.get("/", this.getDiscussions.bind(this));
+    this.router.get("/:id", this.getDiscussionById.bind(this))
     this.router.put("/", this.createDiscussion.bind(this));
   }
 
@@ -24,6 +25,10 @@ export class DiscussionController {
         await getUserFromReq(req),
       ),
     );
+  }
+
+  private async getDiscussionById(req: Request, res: Response): Promise<void> {
+    res.json(await this.discussionDomain.getDiscussionById(req.params.id, await getUserFromReq(req)));
   }
 
   private async createDiscussion(req: Request, res: Response): Promise<void> {

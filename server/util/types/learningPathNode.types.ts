@@ -16,11 +16,5 @@ export type LearningPathNodeCreateParams = z.infer<
 
 export type LearningPathNodeShort = {
   id: Uuid,
-  learningObject: {
-    id: Uuid,
-    title: string,
-    language: string,
-    estimatedTime: Decimal | null,
-    targetAges: number[]
-  }
+  learningObject: LearningObjectShort
 };

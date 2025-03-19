@@ -9,43 +9,9 @@ import {
 import { PaginationParams } from "../util/types/pagination.types";
 import { PrismaSingleton } from "./prismaSingleton";
 import { searchAndPaginate } from "../util/pagination/pagination.util";
+import { assignmentSelectDetail, assignmentSelectShort } from "../util/selectInput/assignment.select";
 
 export class AssignmentPersistence {
-  private selectInputDetail: Prisma.AssignmentSelect;
-  private selectInputShort: Prisma.AssignmentSelect;
-  public constructor() {
-    this.selectInputDetail = {
-      id: true,
-      teacherId: true,
-      class: {
-        select: {
-          id: true,
-          name: true
-        }
-      },
-      groups: {
-        select: {
-          id: true,
-          nodeId: true, //TODO change to nodeIndex
-          assignmentId: true
-        }
-      },
-      learningPath: {
-        select: {
-          id: true,
-          title: true,
-          image: true,
-          description: true
-        }
-      }
-    };
-
-    this.selectInputShort = {
-      id: true,
-      learningPathId: true
-    }
-  }
-
   public async getAssignments(
     filters: AssignmentFilterParams,
     paginationParams: PaginationParams,
@@ -86,13 +52,13 @@ export class AssignmentPersistence {
           : {}
       ],
     };
-    return searchAndPaginate(PrismaSingleton.instance.assignment, whereClause, paginationParams, undefined, this.selectInputShort);
+    return searchAndPaginate(PrismaSingleton.instance.assignment, whereClause, paginationParams, undefined, assignmentSelectShort);
   }
 
   public async getAssignmentId(id: Uuid): Promise<AssignmentDetail> {
     return PrismaSingleton.instance.assignment.findUniqueOrThrow({
       where: {id: id},
-      select: this.selectInputDetail
+      select: assignmentSelectDetail
     }
     );
   }
@@ -119,7 +85,7 @@ export class AssignmentPersistence {
           },
         },
       },
-      select: this.selectInputDetail
+      select: assignmentSelectDetail
     });
     //create groups for the assignment
     await PrismaSingleton.instance.$transaction(

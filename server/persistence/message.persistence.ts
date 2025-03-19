@@ -2,11 +2,15 @@ import { Message, Prisma, PrismaClient } from "@prisma/client";
 import { PrismaSingleton } from "./prismaSingleton";
 import {
   MessageCreateParams,
+  MessageDetail,
   MessageFilterParams,
   MessageId,
   MessageUpdateParams,
 } from "../util/types/message.types";
 import { PaginationParams } from "../util/types/pagination.types";
+import { searchAndPaginate } from "../util/pagination/pagination.util";
+import { messageSelectDetail } from "../util/selectInput/message.select";
+import { Uuid } from "../util/types/assignment.types";
 
 export class MessagePersistence {
   private prisma: PrismaClient;
@@ -18,32 +22,23 @@ export class MessagePersistence {
   public async getMessages(
     filters: MessageFilterParams,
     paginationParams: PaginationParams,
-  ): Promise<{ data: Message[]; totalPages: number }> {
+  ): Promise<{ data: MessageDetail[]; totalPages: number }> {
     const whereclause: Prisma.MessageWhereInput = {
       AND: [
         filters.discussionId ? { discussionId: filters.discussionId } : {},
-        filters.id ? { id: filters.id } : {},
       ],
     };
-    const [messages, totalCount] = await this.prisma.$transaction([
-      this.prisma.message.findMany({
-        where: whereclause,
-        skip: paginationParams.skip,
-        take: paginationParams.pageSize,
-        include: { sender: true },
-        orderBy: { createdAt: "desc" },
-      }),
-      this.prisma.message.count({
-        where: whereclause,
-      }),
-    ]);
-    return {
-      data: messages,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(this.prisma.message, whereclause, paginationParams, undefined, messageSelectDetail)
   }
 
-  public async createMessage(params: MessageCreateParams): Promise<Message> {
+  public async getMessageById(id: MessageId): Promise<MessageDetail> {
+    return this.prisma.message.findUniqueOrThrow({
+      where: {id: id},
+      select: messageSelectDetail
+    });
+  }
+
+  public async createMessage(params: MessageCreateParams): Promise<MessageDetail> {
     return this.prisma.message.create({
       data: {
         discussion: {
@@ -58,25 +53,16 @@ export class MessagePersistence {
         },
         content: params.content,
       },
+      select: messageSelectDetail
     });
   }
 
-  public async updateMessage(params: MessageUpdateParams): Promise<Message> {
-    return this.prisma.message.update({
-      where: {
-        id: params.id,
-      },
-      data: {
-        content: params.content,
-      },
-    });
-  }
-
-  public async deleteMessage(id: MessageId): Promise<Message> {
+  public async deleteMessage(id: MessageId): Promise<MessageDetail> {
     return this.prisma.message.delete({
       where: {
         id: id,
       },
+      select: messageSelectDetail
     });
   }
 }
