@@ -187,9 +187,6 @@ model AssignmentSubmission {
   nodeId         String
   submissionType SubmissionType?
   submission     Json?
-  //fileOriginalName     String?
-  //fileName             String?
-  //multipleChoiceAnswer Int? // index of the multiple choice answer
   node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   group          Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 

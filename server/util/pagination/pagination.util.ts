@@ -14,16 +14,22 @@ export async function searchAndPaginate<
   T extends { findMany: Function; count: Function },
   WhereInput,
   IncludeInput,
+  SelectInput
 >(
   model: T,
   whereClause: WhereInput,
   paginationParams: PaginationParams,
   include?: IncludeInput,
+  select?: SelectInput
 ) {
+  if (include && select) {
+    throw new Error("Cannot use both `include` and `select` at the same time.");
+  }
   const [data, totalCount] = await PrismaSingleton.instance.$transaction([
     model.findMany({
       where: whereClause,
       include,
+      select,
       skip: paginationParams.skip,
       take: paginationParams.pageSize,
     }),

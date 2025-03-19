@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const DiscussionFilterSchema = z
   .object({
-    id: z.string().uuid().optional(),
     groupIds: z.string().uuid().array().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {

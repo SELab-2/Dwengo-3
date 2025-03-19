@@ -2,8 +2,7 @@ import { z } from "zod";
 
 export const MessageFilterSchema = z
   .object({
-    discussionId: z.string().uuid().optional(),
-    id: z.number().positive().safe().optional(),
+    discussionId: z.string().uuid().optional()
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one filter must be provided.",

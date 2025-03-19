@@ -11,8 +11,7 @@ const MultipleChoiceSubSchema = z.string();
 export const SubmissionFilterSchema = z
   .object({
     groupId: z.string().uuid().optional(),
-    nodeId: z.string().uuid().optional(),
-    id: z.string().uuid().optional(),
+    nodeId: z.string().uuid().optional()
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one filter must be provided.",

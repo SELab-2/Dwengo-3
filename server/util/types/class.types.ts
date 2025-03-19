@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Uuid } from "./assignment.types";
 
 export const ClassFilterSchema = z.object({
   teacherId: z.string().uuid().optional(),
@@ -19,3 +20,7 @@ export const ClassUpdateSchema = z.object({
 });
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
+export type ClassShort = {
+  id: Uuid,
+  name: string
+};
