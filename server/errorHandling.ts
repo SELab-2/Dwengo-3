@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
+import { APIError } from './util/types/error.types';
 
 export function errorHandling(err: Error, req: Request, res: Response, next: NextFunction) {
   console.error('[ERROR]', {
@@ -18,7 +19,10 @@ export function errorHandling(err: Error, req: Request, res: Response, next: Nex
 
   if (err instanceof ZodError) {
     statusCode = 400;
-    errorMessage = 'Validation Error';
+    errorMessage = 'Request Validation Error';
+  } else if (err instanceof APIError) {
+    statusCode = err.statusCode;
+    errorMessage = err.message;
   }
 
   // Send a more informative response in development

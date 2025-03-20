@@ -2,6 +2,7 @@ import { ClassPersistence } from '../persistence/class.persistence';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import { ClassCreateSchema, ClassFilterSchema, ClassUpdateSchema } from '../util/types/class.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
 
 export class ClassDomain {
   private classPersistence;
@@ -24,7 +25,7 @@ export class ClassDomain {
       const classData = await this.classPersistence.getClassById(id);
 
       if (!classData) {
-        throw new Error('Class not found.');
+        throw new NotFoundError(40401);
       }
 
       if (user.role === ClassRoleEnum.TEACHER) {
@@ -33,7 +34,7 @@ export class ClassDomain {
         );
 
         if (!isTeacherOfThisClass) {
-          throw new Error("Can't fetch classes you're not a teacher of.");
+          throw new BadRequestError(40001);
         }
       }
 
@@ -43,21 +44,21 @@ export class ClassDomain {
         );
 
         if (!isStudentOfThisClass) {
-          throw new Error("Can't fetch classes you're not a student of.");
+          throw new BadRequestError(40002);
         }
       }
 
       return { data: [classData], totalPages: 1 };
     } else {
       if (!studentId && !teacherId) {
-        throw new Error('Either studentId, teacherId or classId must be provided.');
+        throw new BadRequestError(40003);
       }
 
       if (
         (studentId && user.role === ClassRoleEnum.STUDENT && user.student?.id !== studentId) ||
         (teacherId && user.role === ClassRoleEnum.TEACHER && user.teacher?.id !== teacherId)
       ) {
-        throw new Error('User ID does correspond with the provided studentId or teacherId.');
+        throw new BadRequestError(40004);
       }
 
       const { data, totalPages } = await this.classPersistence.getClasses(pagination, filters);
@@ -68,7 +69,7 @@ export class ClassDomain {
 
   public async createClass(body: unknown, user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error('User must be a teacher to create a class.');
+      throw new BadRequestError(40005);
     }
 
     // Validate and parse class create parameters
@@ -82,7 +83,7 @@ export class ClassDomain {
     const updateParams = ClassUpdateSchema.parse(body);
 
     if (!(await this.classPersistence.isTeacherFromClass(user.id, updateParams.id))) {
-      throw new Error('User must be a teacher of the class to update it.');
+      throw new BadRequestError(40006);
     }
 
     return this.classPersistence.updateClass(updateParams);
@@ -97,7 +98,7 @@ export class ClassDomain {
       exists = classById?.students.some((student) => student.id === user.student?.id) || false;
     }
     if (exists) {
-      throw new Error('User does not belong to the class.');
+      throw new BadRequestError(40007);
     }
   }
 }

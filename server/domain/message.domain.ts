@@ -9,6 +9,7 @@ import {
 } from '../util/types/message.types';
 import { UserEntity } from '../util/types/user.types';
 import { DiscussionDomain } from './discussion.domain';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
 
 export class MessageDomain {
   private messagePersistence: MessagePersistence;
@@ -27,7 +28,7 @@ export class MessageDomain {
     const filters = parseResult.dataSchema;
 
     if (filters.discussionId) {
-      //this checks if user is part of the discussion
+      // this checks if user is part of the discussion
       await this.discussionDomain.getDiscussions({ id: filters.discussionId }, user);
     }
 
@@ -42,7 +43,7 @@ export class MessageDomain {
   public async createMessage(query: any, user: UserEntity): Promise<Message> {
     const data = MessageCreateSchema.parse(query);
 
-    //this checks if user is part of the discussion
+    // this checks if user is part of the discussion
     await this.discussionDomain.getDiscussions({ id: data.discussionId }, user);
 
     if (user.role === ClassRole.TEACHER) {
@@ -53,7 +54,7 @@ export class MessageDomain {
     return this.messagePersistence.createMessage(data);
   }
 
-  //We are not gonna use this, so there are no checks
+  // We are not gonna use this, so there are no checks
   public async updateMessage(query: any): Promise<Message> {
     const data = MessageUpdateSchema.parse(query);
     return this.messagePersistence.updateMessage(data);
@@ -69,14 +70,14 @@ export class MessageDomain {
     ).data;
 
     if (message.length !== 1) {
-      throw new Error('message not found');
+      throw new NotFoundError(40402);
     }
 
     if (
-      (user.role === ClassRole.TEACHER && user.student!.userId !== message[0].senderId) ||
-      (user.role === ClassRole.STUDENT && user.teacher!.userId !== message[0].senderId)
+      (user.role === ClassRole.TEACHER && user.teacher!.userId !== message[0].senderId) ||
+      (user.role === ClassRole.STUDENT && user.student!.userId !== message[0].senderId)
     ) {
-      throw new Error('You can only delete your own messages');
+      throw new BadRequestError(40008);
     }
     return this.messagePersistence.deleteMessage(parsed_id);
   }

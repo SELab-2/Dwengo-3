@@ -4,6 +4,7 @@ import {
   LearningPathNodeTransitionCreateSchema,
 } from '../util/types/learningPathNodeTransition.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { BadRequestError } from '../util/types/error.types';
 
 export class LearningPathNodeTransitionDomain {
   private learningPathNodeTransitionPersistence;
@@ -19,7 +20,7 @@ export class LearningPathNodeTransitionDomain {
     const data = LearningPathNodeTransitionCreateSchema.parse(body);
 
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error('User must be a teacher to create a learning path.');
+      throw new BadRequestError(40009);
     }
     return this.learningPathNodeTransitionPersistence.createLearningPathNodeTransition(data);
   }

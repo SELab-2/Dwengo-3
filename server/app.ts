@@ -54,9 +54,6 @@ app.use(cookieParser(), async (req: Request, res: Response, next: NextFunction) 
 });
 app.use(express.json());
 
-// Error handling middleware
-app.use(errorHandling);
-
 const apiRouter = express.Router();
 if (process.env.NODE_ENV === 'development') {
   app.use('/api', apiRouter);
@@ -79,6 +76,9 @@ apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().rout
 apiRouter.use('/auth', auth);
 apiRouter.use('/discussion', new DiscussionController().router);
 apiRouter.use('/message', new MessageController().router);
+
+// Error handling middleware
+app.use(errorHandling);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);

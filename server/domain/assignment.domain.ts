@@ -11,6 +11,7 @@ import {
 } from '../util/coockie-checks/coockieChecks.util';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { GroupPersistence } from '../persistence/group.persistence';
+import { BadRequestError } from '../util/types/error.types';
 
 export class AssignmentDomain {
   private assignmentPersistence: AssignmentPersistence;
@@ -42,7 +43,7 @@ export class AssignmentDomain {
 
   public async createAssigment(query: any, user: UserEntity): Promise<Assignment> {
     if (user.role !== ClassRole.TEACHER) {
-      throw new Error('Only teachers can create assigments');
+      throw new BadRequestError(40012);
     }
     const data = AssignmentCreateSchema.parse(query);
 

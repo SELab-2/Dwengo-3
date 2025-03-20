@@ -11,6 +11,7 @@ import {
 } from '../util/types/announcement.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { BadRequestError } from '../util/types/error.types';
 
 export class AnnouncementDomain {
   private announcementPersistence;
@@ -34,7 +35,7 @@ export class AnnouncementDomain {
     if (query.teacherId) {
       await this.checkUserIsTeacher(user);
       if (query.teacherId !== user.teacher?.id) {
-        throw new Error('Can not get announcements of other teacher.');
+        throw new BadRequestError(40010);
       }
     }
 
@@ -42,7 +43,7 @@ export class AnnouncementDomain {
     if (query.studentId) {
       await this.checkUserIsStudent(user);
       if (query.studentId !== user.student?.id) {
-        throw new Error('Can not get announcements of other user.');
+        throw new BadRequestError(40011);
       }
     }
 
@@ -82,13 +83,13 @@ export class AnnouncementDomain {
 
   private async checkUserIsTeacher(user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error('User is not a teacher.');
+      throw new BadRequestError(40012);
     }
   }
 
   private async checkUserIsStudent(user: UserEntity) {
     if (user.role !== ClassRoleEnum.STUDENT) {
-      throw new Error('User is not a student.');
+      throw new BadRequestError(40013);
     }
   }
 }

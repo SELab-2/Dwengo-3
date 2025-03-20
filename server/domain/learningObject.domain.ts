@@ -10,6 +10,7 @@ import {
 } from '../util/types/learningObject.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { BadRequestError } from '../util/types/error.types';
 
 export class LearningObjectDomain {
   private learningObjectPersistence;
@@ -22,7 +23,7 @@ export class LearningObjectDomain {
 
   public async createLearningObject(query: LearningObjectCreateParams, user: UserEntity) {
     if (user.role != ClassRoleEnum.TEACHER) {
-      throw new Error('User must be a teacher to create a learning object');
+      throw new BadRequestError(40009);
     }
 
     const { keywords, ...dataWithoutKeywords } = LearningObjectCreateSchema.parse(query);
@@ -83,12 +84,12 @@ export class LearningObjectDomain {
     const learningObject = await this.learningObjectPersistence.getLearningObjectById(id);
 
     if (!learningObject) {
-      throw new Error('Learning object not found');
+      throw new BadRequestError(40029);
     }
 
     // If the LearningObject is linked to any LearningPathNode, prevent deletion
     if (learningObject.learningPathNodes.length > 0) {
-      throw new Error('Cannot delete a learning object linked to a learning path.');
+      throw new BadRequestError(40030);
     }
 
     // Proceed with deletion

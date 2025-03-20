@@ -7,6 +7,7 @@ import {
 import { ClassJoinRequestPersistence } from '../persistence/classJoinRequest.persistence';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { ClassPersistence } from '../persistence/class.persistence';
+import { BadRequestError } from '../util/types/error.types';
 
 export class ClassJoinRequestDomain {
   private classJoinRequestPersistence: ClassJoinRequestPersistence;
@@ -26,7 +27,7 @@ export class ClassJoinRequestDomain {
         user.id,
       )
     ) {
-      throw new Error('Join request already exists.');
+      throw new BadRequestError(40014);
     }
 
     return this.classJoinRequestPersistence.createClassJoinRequest(classJoinRequestParams, user);
@@ -44,12 +45,12 @@ export class ClassJoinRequestDomain {
       // If userId is provided, it must match the teacher's own userId
       // Teachers should only be able to view join requests for their own classes.
       if (userId && userId !== user.id) {
-        throw new Error('Teachers can only view join requests of their own classes.');
+        throw new BadRequestError(40015);
       }
 
       // If classId is provided, check if the teacher is associated with that class
       if (classId && !(await this.classPersistence.isTeacherFromClass(user.id, classId))) {
-        throw new Error('Teachers can only view join requests of their own classes.');
+        throw new BadRequestError(40015);
       }
     }
 
@@ -57,12 +58,12 @@ export class ClassJoinRequestDomain {
     if (user.role === ClassRoleEnum.STUDENT) {
       // If userId is provided, it must match the student's own userId
       if (userId && userId !== user.id) {
-        throw new Error('Students can only view their own join requests.');
+        throw new BadRequestError(40017);
       }
 
       // If classId is provided, deny the request because students cannot fetch join requests for classes
       if (classId) {
-        throw new Error('Students cannot view join requests for classes.');
+        throw new BadRequestError(40018);
       }
     }
 
@@ -76,8 +77,8 @@ export class ClassJoinRequestDomain {
   public async handleJoinRequest(body: unknown, user: UserEntity) {
     const classJoinRequestDecisionParams = ClassJoinRequestDecisionSchema.parse(body);
 
-    if (user.role !== 'TEACHER') {
-      throw new Error('Only teachers can handle join requests.');
+    if (user.role !== ClassRoleEnum.TEACHER) {
+      throw new BadRequestError(40019);
     }
 
     if (
@@ -86,7 +87,7 @@ export class ClassJoinRequestDomain {
         user.id,
       ))
     ) {
-      throw new Error('Only teachers of this class can handle join requests.');
+      throw new BadRequestError(40020);
     }
 
     return this.classJoinRequestPersistence.handleJoinRequest(classJoinRequestDecisionParams);

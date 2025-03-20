@@ -10,6 +10,7 @@ import {
 import { UserEntity } from '../util/types/user.types';
 import { checkIfUserIsInGroup } from '../util/coockie-checks/coockieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
+import { BadRequestError } from '../util/types/error.types';
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
@@ -45,14 +46,14 @@ export class AssignmentSubmissionDomain {
     user: UserEntity,
   ): Promise<AssignmentSubmission> {
     if (user.role !== ClassRole.STUDENT) {
-      throw new Error('Only students can create submissions');
+      throw new BadRequestError(40033);
     }
 
     const data = SubmissionCreateSchema.parse(req.body);
 
     if (data.submissionType === SubmissionType.FILE) {
       if (!req.file) {
-        throw new Error('File submission is required when submissionType is FILE');
+        throw new BadRequestError(40034);
       }
       data.submission = {
         fileName: req.file!.originalname,
@@ -69,14 +70,14 @@ export class AssignmentSubmissionDomain {
     user: UserEntity,
   ): Promise<AssignmentSubmission> {
     if (user.role !== ClassRole.STUDENT) {
-      throw new Error('Only students can create submissions');
+      throw new BadRequestError(40033);
     }
 
     const data = SubmissionUpdateSchema.parse(req.body);
 
     if (data.submissionType === SubmissionType.FILE) {
       if (!req.file) {
-        throw new Error('File submission is required when submissionType is FILE');
+        throw new BadRequestError(40034);
       }
       data.submission = {
         fileName: req.file!.originalname,

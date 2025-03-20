@@ -54,26 +54,23 @@ export class AssignmentPersistence {
       ],
     };
 
-    const [assignments, totalcount] =
-      await PrismaSingleton.instance.$transaction([
-        PrismaSingleton.instance.assignment.findMany({
-          where: whereClause,
-          skip: paginationParams.skip,
-          take: paginationParams.pageSize,
-        }),
-        PrismaSingleton.instance.assignment.count({
-          where: whereClause,
-        }),
-      ]);
+    const [assignments, totalcount] = await PrismaSingleton.instance.$transaction([
+      PrismaSingleton.instance.assignment.findMany({
+        where: whereClause,
+        skip: paginationParams.skip,
+        take: paginationParams.pageSize,
+      }),
+      PrismaSingleton.instance.assignment.count({
+        where: whereClause,
+      }),
+    ]);
     return {
       data: assignments,
       totalPages: Math.ceil(totalcount / paginationParams.pageSize),
     };
   }
 
-  public async createAssignment(
-    params: AssignmentCreateParams,
-  ): Promise<Assignment> {
+  public async createAssignment(params: AssignmentCreateParams): Promise<Assignment> {
     //create assignment
     const assignment = await PrismaSingleton.instance.assignment.create({
       data: {
@@ -109,6 +106,7 @@ export class AssignmentPersistence {
             students: {
               connect: group.map((student: Uuid) => ({ id: student })),
             },
+            name: 'Group',
           },
         }),
       ),

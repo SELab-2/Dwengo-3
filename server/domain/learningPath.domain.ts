@@ -7,6 +7,7 @@ import {
 } from '../util/types/learningPath.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { BadRequestError } from '../util/types/error.types';
 
 export class LearningPathDomain {
   private learningPathPersistence;
@@ -30,7 +31,7 @@ export class LearningPathDomain {
     const data = LearningPathCreateSchema.parse(body);
 
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error('User must be a teacher to create a learning path.');
+      throw new BadRequestError(40009);
     }
     return this.learningPathPersistence.createLearningPath(data);
   }

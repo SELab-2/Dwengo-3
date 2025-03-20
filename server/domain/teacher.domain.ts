@@ -12,6 +12,7 @@ import {
 import { getUserById } from '../persistence/auth/users.persistance';
 import { Class } from '@prisma/client';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
 
 export class TeacherDomain {
   private teacherPersistence: TeacherPersistence;
@@ -53,7 +54,7 @@ export class TeacherDomain {
     const result = await f(input);
 
     if (!result) {
-      throw new Error(errorMessage);
+      throw new BadRequestError(40000, errorMessage);
     }
 
     return result;
@@ -69,12 +70,15 @@ export class TeacherDomain {
     // Validate the request body
     const { userId } = this.validateQuery(TeacherCreateSchema, body);
 
-    // Check if the user exists
-    const user = await this.validateObject(getUserById, userId, 'User does not exist');
+    const user = await getUserById(userId);
+
+    if (!user) {
+      throw new NotFoundError(40405);
+    }
 
     // Check if the user is already a teacher or student
     if (user.teacher || user.student) {
-      throw new Error('User is already a teacher or student');
+      throw new BadRequestError(40032);
     }
 
     // Create the teacher
@@ -131,7 +135,11 @@ export class TeacherDomain {
   public async getClassesByUserId(userId: string) {
     // TODO: move this to class domain
 
-    const user = await this.validateObject(getUserById, userId, 'User does not exist');
+    const user = await getUserById(userId);
+
+    if (!user) {
+      throw new NotFoundError(40405);
+    }
 
     if (user.teacher) {
       return await this.classPersistence.getClasses(
@@ -145,7 +153,7 @@ export class TeacherDomain {
       );
     } else {
       // This should not happen
-      throw new Error('User is not a teacher or student');
+      throw new BadRequestError(40031);
     }
   }
 }
