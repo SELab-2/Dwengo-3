@@ -1012,6 +1012,28 @@
         }
       },
 
+      "StudentUpdate": {
+        "type": "object",
+        "properties": {
+          "classes": {
+            "type": "array",
+            "description": "The classId's of the classes you want the student to be in",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "groups": {
+            "type": "array",
+            "description": "The groupIds of the groups you want the student to be in",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+
       "LearningPathGet": {
         "type": "object",
         "properties": {
