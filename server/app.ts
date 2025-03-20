@@ -1,8 +1,9 @@
-import cookieParser from 'cookie-parser';
-import * as http2 from 'node:http2';
-import { router as auth, verifyCookie } from './routes/auth.router';
-import express, { Express, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
+
+dotenv.config({ path: '../.env' });
+
+import { router as auth } from './routes/auth.router';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import { ClassController } from './routes/class.routes';
 import { ZodError } from 'zod';
 import { LearningPathController } from './routes/learningPath.routes';
@@ -19,11 +20,10 @@ import * as swaggerDocument from './swagger.json';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { StudentController } from './routes/student.routes';
 import { TeacherController } from './routes/teacher.routes';
-
-dotenv.config({ path: '../.env' });
+import passport from 'passport';
 
 export const app: Express = express();
-const port = process.env.PORT || 3001;
+const port = 3001;
 
 const options = {
   swaggerDefinition: swaggerDocument, // Use the imported JSON configuration
@@ -37,24 +37,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 }
 
-// cookie validating middleware
-app.use(
-  cookieParser(),
-  async (req: Request, res: Response, next: NextFunction) => {
-    const verified = await verifyCookie(req.cookies['DWENGO_SESSION']);
-    if (!verified) {
-      const path = req.path;
-
-      // TODO: MOET HERSCHREVEN WORDEN!!!
-      if (path.indexOf('/auth') == -1) {
-        // TODO: redirect to login page, but only when header is set to redirect
-        res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send('unauthorized');
-        return;
-      }
-    }
-    next();
-  },
-);
+app.use(passport.initialize());
 app.use(express.json());
 
 // Error handling middleware

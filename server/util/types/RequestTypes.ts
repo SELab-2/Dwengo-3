@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ClassRole } from '@prisma/client';
+import { AuthenticationProvider } from './user.types';
 
 export const LoginSchema = z
   .object({
@@ -11,6 +12,7 @@ export const LoginSchema = z
 export const RegisterSchema = z
   .object({
     username: z.string().nonempty(),
+    provider: z.nativeEnum(AuthenticationProvider),
     email: z.string().email('invalid email'),
     password: z.string().nonempty(),
     surname: z.string().nonempty(),
