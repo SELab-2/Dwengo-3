@@ -50,7 +50,8 @@ export class TeacherController {
      *   get:
      *     security:
      *       - cookieAuth: []
-     *     tags: [Teacher]
+     *     tags:
+     *       - Teacher
      *     summary: Get list of teachers
      *     description: Fetches a list of teachers filtered by optional query parameters.
      *     requestBody:
@@ -75,35 +76,16 @@ export class TeacherController {
      *         content:
      *           application/json:
      *             schema:
-     *               type: object
-     *               properties:
-     *                 data:
-     *                   type: array
-     *                   items:
-     *                     type: object
-     *                     properties:
-     *                       id:
-     *                         type: string
-     *                         format: uuid
-     *                       userId:
-     *                         type: string
-     *                         format: uuid
-     *                       classes:
-     *                         type: array
-     *                         items:
-     *                           type: string
-     *                           format: uuid
-     *                       assignment:
-     *                         type: array
-     *                         items:
-     *                           type: string
-     *                           format: uuid
-     *                 totalPages:
-     *                   type: number
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/TeacherShort'
      *       401:
      *         description: Unauthorized
-     *       500:
-     *         description: Server Error
      */
     this.router.get('/', this.getTeachers);
     /**
@@ -131,8 +113,6 @@ export class TeacherController {
      *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: Teacher not found.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/:id', this.getTeacherById);
     /**
@@ -172,59 +152,25 @@ export class TeacherController {
      *         content:
      *           application/json:
      *             schema:
-     *               type: object
-     *               properties:
-     *                 id:
-     *                   type: string
-     *                   format: uuid
-     *                 userId:
-     *                   type: string
-     *                   format: uuid
-     *                 classes:
-     *                   type: array
-     *                   items:
-     *                     type: string
-     *                     format: uuid
-     *                 assignment:
-     *                   type: array
-     *                   items:
-     *                     type: string
-     *                     format: uuid
+     *               $ref: '#/components/schemas/TeacherDetail'
      *       401:
      *         description: Unauthorized
-     *       500:
-     *         description: Server Error
      */
     this.router.put('/', this.updateTeacher);
-
     /**
      * @swagger
-     * /api/teacher:
+     * /api/teacher/{id}:
      *   delete:
      *     security:
      *       - cookieAuth: []
      *     tags: [Teacher]
      *     summary: Delete a teacher
      *     description: Delete the teacher with the given id.
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               id:
-     *                 type: string
-     *                 format: uuid
-     *             required:
-     *               - id
      *     responses:
      *       200:
      *         description: Teacher successfully deleted
      *       401:
      *         description: Unauthorized
-     *       500:
-     *         description: Server Error
      */
     this.router.delete('/', this.deleteTeacher);
   }
