@@ -50,13 +50,11 @@ export class LearningPathNodeController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningPathNodeGet'
+     *               $ref: '#/components/schemas/LearningPathNodeDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       401:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.put('/', this.createLearningPathNode);
     /**
@@ -79,13 +77,15 @@ export class LearningPathNodeController {
      *         description: The unique identifier of the learningPathNode.
      *     responses:
      *       200:
-     *         description: LearningPathNode fetched succesfully.
+     *         description: LearningPathNode fetched successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningPathNodeDetail'
      *       403:
      *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: LearningPathNode not found.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/:id', this.getLearningPathNodeById);
   }
