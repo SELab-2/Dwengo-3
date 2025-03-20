@@ -47,9 +47,10 @@ export class ClassController {
      *   get:
      *     security:
      *       - cookieAuth: []
-     *     tags: [Class]
+     *     tags:
+     *       - Class
      *     summary: Get list of classes
-     *     description: Fetches a list of classes filtered by optional query parameters such as teacher ID or student ID
+     *     description: Fetches a list of classes filtered by optional query parameters such as teacher ID or student ID.
      *     parameters:
      *       - name: teacherId
      *         in: query
@@ -68,6 +69,17 @@ export class ClassController {
      *     responses:
      *       200:
      *         description: Successfully fetched list of classes
+     *         content:
+     *           application/json:
+     *             schema:
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/ClassShort'
      *       401:
      *         description: Unauthorized, user not authenticated
      *       500:
@@ -83,7 +95,7 @@ export class ClassController {
      *     tags:
      *       - Class
      *     summary: Get a class by ID
-     *     description: Gets the content of a specific class selected by its UUID
+     *     description: Gets the content of a specific class selected by its UUID.
      *     parameters:
      *       - in: path
      *         name: id
@@ -94,13 +106,15 @@ export class ClassController {
      *         description: The unique identifier of the class.
      *     responses:
      *       200:
-     *         description: Class fetched succesfully.
+     *         description: Class fetched successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/ClassDetail'
      *       403:
      *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: Class not found.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/:id', this.getClassById);
     /**
@@ -109,7 +123,8 @@ export class ClassController {
      *   put:
      *     security:
      *       - cookieAuth: []
-     *     tags: [Class]
+     *     tags:
+     *       - Class
      *     summary: Create a new class
      *     description: Allows a teacher to create a new class.
      *     requestBody:
@@ -125,22 +140,24 @@ export class ClassController {
      *     responses:
      *       200:
      *         description: Class successfully created
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/ClassDetail'
      *       400:
      *         description: Bad request due to invalid parameters
      *       401:
      *         description: Unauthorized, user not authenticated
-     *       500:
-     *         description: Server error
      */
     this.router.put('/', this.createClass);
-
     /**
      * @swagger
-     * /api/class:
+     * /api/class/{id}:
      *   patch:
      *     security:
      *       - cookieAuth: []
-     *     tags: [Class]
+     *     tags:
+     *       - Class
      *     summary: Update a class
      *     description: Allows a teacher of the class to update its details.
      *     requestBody:
@@ -148,24 +165,18 @@ export class ClassController {
      *       content:
      *         application/json:
      *           schema:
-     *             type: object
-     *             properties:
-     *               id:
-     *                 type: string
-     *                 format: uuid
-     *                 description: Unique identifier for the class
-     *               name:
-     *                 type: string
-     *                 description: Updated name of the class (optional)
+     *            $ref: '#/components/schemas/ClassUpdate'
      *     responses:
      *       200:
      *         description: Class successfully updated
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/ClassDetail'
      *       400:
      *         description: Bad request due to invalid parameters
      *       401:
      *         description: Unauthorized, user not authenticated
-     *       500:
-     *         description: Server error
      */
     this.router.patch('/', this.updateClass);
     this.router.use('/', new ClassJoinRequestController().router);

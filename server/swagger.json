@@ -1001,6 +1001,17 @@
         }
       },
 
+      "ClassUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the class.",
+            "example": "Class 1A"
+          }
+        }
+      },
+
       "LearningPathGet": {
         "type": "object",
         "properties": {
