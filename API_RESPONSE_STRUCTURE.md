@@ -2,8 +2,6 @@
 
 In dit bestand vind u voor alle resources die door de API worden teruggegeven de verzameling van attributen die in de response te vinden zijn. Eenmaal dit is goedgekeurd is het de bedoeling dat dit in de swagger documentation komt te staan.
 
-Even een bijvraag. We geven telkens ids terug, vb bij een lijst van klassen opvragen. Moeten dit geen url's zijn naar de details van een klas om compleet REST te zijn?
-
 ---
 
 ## Class (detail)
@@ -129,7 +127,7 @@ Onderstaande attributen worden gereturned wanneer het minimale informatie vereis
 - `estimatedTime` (bij het opvragen van een leerpad wil men deze informatie misschien tonen aan de user)
 - `keywords [string]` (deze wil je namelijk zien als je filtert op strings)
 - `targetAges [int]` (deze wil je ook zien als je filtert op targetAges)
-
+- `difficulty`
 ---
 
 ## LearningPathNode (detail)
@@ -196,6 +194,7 @@ Dit model heeft zo weinig velden dat er eigenlijk geen "short" schema gemaakt mo
 Er bestaat momenteel nog geen endpoint van groups
 
 - `id`
+- `name`
 - `[nodeIndex]` (de index van de reeds gemaakte nodes)
 - `assignment (short)`
 - `Discussion (short)` (indien aanwezig)
@@ -206,6 +205,7 @@ Er bestaat momenteel nog geen endpoint van groups
 - `id`
 - `nodeIndex`
 - `assignemntId`
+- `name`
 
 ---
 
