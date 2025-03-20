@@ -1,13 +1,13 @@
-import { z } from "zod";
-import { Uuid } from "./assignment.types";
-import { UserShort } from "./user.types";
+import { z } from 'zod';
+import { Uuid } from './assignment.types';
+import { UserShort } from './user.types';
 
 export const MessageFilterSchema = z
   .object({
-    discussionId: z.string().uuid().optional()
+    discussionId: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: "At least one filter must be provided.",
+    message: 'At least one filter must be provided.',
     path: [],
   });
 
@@ -29,8 +29,8 @@ export type MessageCreateParams = z.infer<typeof MessageCreateSchema>;
 export type MessageUpdateParams = z.infer<typeof MessageUpdateSchema>;
 export type MessageId = z.infer<typeof MessageIdSchema>;
 export type MessageDetail = {
-  id: MessageId,
-  content: string,
-  sender: UserShort,
-  createdAt: Date
-}
+  id: MessageId;
+  content: string;
+  sender: UserShort;
+  createdAt: Date;
+};

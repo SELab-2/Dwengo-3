@@ -1,15 +1,18 @@
-import { Discussion, PrismaClient, Prisma } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
+import { Discussion, PrismaClient, Prisma } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
 import {
   DiscussionCreateParams,
   DiscussionDetail,
   DiscussionFilterParams,
   discussionShort,
-} from "../util/types/discussion.types";
-import { PaginationParams } from "../util/types/pagination.types";
-import { searchAndPaginate } from "../util/pagination/pagination.util";
-import { discussionSelectDetail, discussionSelectShort } from "../util/selectInput/discussion.select";
-import { Uuid } from "../util/types/assignment.types";
+} from '../util/types/discussion.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
+import {
+  discussionSelectDetail,
+  discussionSelectShort,
+} from '../util/selectInput/discussion.select';
+import { Uuid } from '../util/types/assignment.types';
 
 export class DiscussionPersistence {
   private prisma: PrismaClient;
@@ -23,17 +26,21 @@ export class DiscussionPersistence {
     paginationParams: PaginationParams,
   ): Promise<{ data: discussionShort[]; totalPages: number }> {
     const whereClause: Prisma.DiscussionWhereInput = {
-      AND: [
-        filters.groupIds ? { groupId: { in: filters.groupIds } } : {},
-      ],
+      AND: [filters.groupIds ? { groupId: { in: filters.groupIds } } : {}],
     };
-    return searchAndPaginate(this.prisma.discussion, whereClause, paginationParams, undefined, discussionSelectShort);
+    return searchAndPaginate(
+      this.prisma.discussion,
+      whereClause,
+      paginationParams,
+      undefined,
+      discussionSelectShort,
+    );
   }
 
-  public async getDiscussionById (id: Uuid): Promise<DiscussionDetail> {
+  public async getDiscussionById(id: Uuid): Promise<DiscussionDetail> {
     return this.prisma.discussion.findUniqueOrThrow({
-      where: {id: id},
-      select: discussionSelectDetail
+      where: { id: id },
+      select: discussionSelectDetail,
     });
   }
 
@@ -51,7 +58,7 @@ export class DiscussionPersistence {
           connect: params.members.map((member) => ({ id: member })),
         },
       },
-      select: discussionSelectDetail
+      select: discussionSelectDetail,
     });
   }
 }

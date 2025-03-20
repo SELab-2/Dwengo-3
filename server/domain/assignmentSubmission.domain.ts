@@ -2,10 +2,10 @@ import {
   AssignmentSubmission,
   ClassRole,
   SubmissionType,
-} from "@prisma/client";
-import { AssignmentSubmissionPersistence } from "../persistence/assignmentSubmission.persistence";
-import { Request } from "express";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
+} from '@prisma/client';
+import { AssignmentSubmissionPersistence } from '../persistence/assignmentSubmission.persistence';
+import { Request } from 'express';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   SubmissionFilterSchema,
   FileSubmission,
@@ -13,15 +13,15 @@ import {
   SubmissionUpdateSchema,
   AssignmentSubmissionShort,
   AssignmentSubmissionDetail,
-} from "../util/types/assignmentSubmission.types";
-import { UserEntity } from "../util/types/user.types";
+} from '../util/types/assignmentSubmission.types';
+import { UserEntity } from '../util/types/user.types';
 import {
   checkIfUserIsInGroup,
   compareUserIdWithFilterId,
-} from "../util/coockie-checks/coockieChecks.util";
-import { GroupPersistence } from "../persistence/group.persistence";
-import { z, ZodEffects, ZodObject } from "zod";
-import { Uuid } from "../util/types/assignment.types";
+} from '../util/coockie-checks/coockieChecks.util';
+import { GroupPersistence } from '../persistence/group.persistence';
+import { z, ZodEffects, ZodObject } from 'zod';
+import { Uuid } from '../util/types/assignment.types';
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
@@ -48,13 +48,16 @@ export class AssignmentSubmissionDomain {
     const filters = parseResult.data;
     await checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
     return this.assignmentSubmissionPersistence.getAssignmentSubmissions(
-        filters,
-        paginationParseResult.data,
-      );
+      filters,
+      paginationParseResult.data,
+    );
   }
 
   public async getAssignmentSubmissionById(id: Uuid, user: UserEntity) {
-    const submission = await this.assignmentSubmissionPersistence.getAssignmentSubmissionById(id);
+    const submission =
+      await this.assignmentSubmissionPersistence.getAssignmentSubmissionById(
+        id,
+      );
     await checkIfUserIsInGroup(
       user,
       submission.group.id,
@@ -68,7 +71,7 @@ export class AssignmentSubmissionDomain {
     user: UserEntity,
   ): Promise<AssignmentSubmissionDetail> {
     if (user.role !== ClassRole.STUDENT) {
-      throw new Error("Only students can create submissions");
+      throw new Error('Only students can create submissions');
     }
 
     const parseResult = SubmissionCreateSchema.safeParse(req.body);
@@ -80,7 +83,7 @@ export class AssignmentSubmissionDomain {
     if (data.submissionType === SubmissionType.FILE) {
       if (!req.file) {
         throw new Error(
-          "File submission is required when submissionType is FILE",
+          'File submission is required when submissionType is FILE',
         );
       }
       const fileSubmission: FileSubmission = {
@@ -101,7 +104,7 @@ export class AssignmentSubmissionDomain {
     user: UserEntity,
   ): Promise<AssignmentSubmissionDetail> {
     if (user.role !== ClassRole.STUDENT) {
-      throw new Error("Only students can create submissions");
+      throw new Error('Only students can create submissions');
     }
 
     const parseResult = SubmissionUpdateSchema.safeParse(req.body);
@@ -113,7 +116,7 @@ export class AssignmentSubmissionDomain {
     if (data.submissionType === SubmissionType.FILE) {
       if (!req.file) {
         throw new Error(
-          "File submission is required when submissionType is FILE",
+          'File submission is required when submissionType is FILE',
         );
       }
       const fileSubmission: FileSubmission = {

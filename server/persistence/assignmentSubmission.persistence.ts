@@ -1,16 +1,19 @@
-import { AssignmentSubmission, Prisma, PrismaClient } from "@prisma/client";
+import { AssignmentSubmission, Prisma, PrismaClient } from '@prisma/client';
 import {
   AssignmentSubCreateParams,
   AssignmentSubFilterParams,
   AssignmentSubmissionDetail,
   AssignmentSubmissionShort,
   AssignmentSubUpdateParams,
-} from "../util/types/assignmentSubmission.types";
-import { PaginationParams } from "../util/types/pagination.types";
-import { PrismaSingleton } from "./prismaSingleton";
-import { searchAndPaginate } from "../util/pagination/pagination.util";
-import { Uuid } from "../util/types/assignment.types";
-import { assignmentSubmissionSelectShort, assignmentSubmissionSelectDetail } from "../util/selectInput/assignmentSubmission.select";
+} from '../util/types/assignmentSubmission.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { PrismaSingleton } from './prismaSingleton';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { Uuid } from '../util/types/assignment.types';
+import {
+  assignmentSubmissionSelectShort,
+  assignmentSubmissionSelectDetail,
+} from '../util/selectInput/assignmentSubmission.select';
 
 export class AssignmentSubmissionPersistence {
   public async getAssignmentSubmissions(
@@ -23,12 +26,20 @@ export class AssignmentSubmissionPersistence {
         filters.nodeId ? { nodeId: filters.nodeId } : {},
       ],
     };
-    return searchAndPaginate(PrismaSingleton.instance.assignmentSubmission, whereClause, paginationParams, undefined, assignmentSubmissionSelectShort);
+    return searchAndPaginate(
+      PrismaSingleton.instance.assignmentSubmission,
+      whereClause,
+      paginationParams,
+      undefined,
+      assignmentSubmissionSelectShort,
+    );
   }
 
-  public async getAssignmentSubmissionById(id: Uuid): Promise<AssignmentSubmissionDetail>{
+  public async getAssignmentSubmissionById(
+    id: Uuid,
+  ): Promise<AssignmentSubmissionDetail> {
     return PrismaSingleton.instance.assignmentSubmission.findUniqueOrThrow({
-      where: {id: id},
+      where: { id: id },
       select: {
         id: true,
         submission: true,
@@ -36,8 +47,8 @@ export class AssignmentSubmissionPersistence {
           select: {
             id: true,
             nodeId: true, //TODO change to nodeIndex
-            assignmentId: true
-          }
+            assignmentId: true,
+          },
         },
         node: {
           select: {
@@ -48,18 +59,16 @@ export class AssignmentSubmissionPersistence {
                 title: true,
                 language: true,
                 estimatedTime: true,
-                targetAges: true
-              }
-            }
-          }
-        }
-      }
+                targetAges: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
-  public async createAssignmentSubmission(
-    params: AssignmentSubCreateParams,
-  ){
+  public async createAssignmentSubmission(params: AssignmentSubCreateParams) {
     console.log(assignmentSubmissionSelectDetail);
     return PrismaSingleton.instance.assignmentSubmission.create({
       data: {
@@ -83,8 +92,8 @@ export class AssignmentSubmissionPersistence {
           select: {
             id: true,
             nodeId: true, //TODO change to nodeIndex
-            assignmentId: true
-          }
+            assignmentId: true,
+          },
         },
         node: {
           select: {
@@ -95,12 +104,12 @@ export class AssignmentSubmissionPersistence {
                 title: true,
                 language: true,
                 estimatedTime: true,
-                targetAges: true
-              }
-            }
-          }
-        }
-      }
+                targetAges: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
@@ -122,8 +131,8 @@ export class AssignmentSubmissionPersistence {
           select: {
             id: true,
             nodeId: true, //TODO change to nodeIndex
-            assignmentId: true
-          }
+            assignmentId: true,
+          },
         },
         node: {
           select: {
@@ -134,12 +143,12 @@ export class AssignmentSubmissionPersistence {
                 title: true,
                 language: true,
                 estimatedTime: true,
-                targetAges: true
-              }
-            }
-          }
-        }
-      }
+                targetAges: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 }

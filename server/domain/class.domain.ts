@@ -1,12 +1,12 @@
-import { ClassPersistence } from "../persistence/class.persistence";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
+import { ClassPersistence } from '../persistence/class.persistence';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   ClassFilterSchema,
   ClassCreateSchema,
   ClassUpdateSchema,
-} from "../util/types/class.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
-import { User } from "@prisma/client";
+} from '../util/types/class.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { User } from '@prisma/client';
 
 export class ClassDomain {
   private classPersistance;
@@ -32,7 +32,7 @@ export class ClassDomain {
 
     if (!studentId && !teacherId) {
       throw new Error(
-        "Either studentId, teacherId or classId must be provided.",
+        'Either studentId, teacherId or classId must be provided.',
       );
     }
 
@@ -45,7 +45,7 @@ export class ClassDomain {
         user.teacher?.id !== teacherId)
     ) {
       throw new Error(
-        "User ID does correspond with the provided studentId or teacherId.",
+        'User ID does correspond with the provided studentId or teacherId.',
       );
     }
 
@@ -90,7 +90,7 @@ export class ClassDomain {
 
   public async createClass(body: unknown, user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error("User must be a teacher to create a class.");
+      throw new Error('User must be a teacher to create a class.');
     }
 
     // Validate and parse class create parameters
@@ -115,7 +115,7 @@ export class ClassDomain {
         updateParamsResult.data.id,
       )
     ) {
-      throw new Error("User must be a teacher of the class to update it.");
+      throw new Error('User must be a teacher of the class to update it.');
     }
 
     return this.classPersistance.updateClass(updateParamsResult.data);
@@ -136,7 +136,7 @@ export class ClassDomain {
         ) || false;
     }
     if (!exists) {
-      throw new Error("User does not belong to the class.");
+      throw new Error('User does not belong to the class.');
     }
   }
 }

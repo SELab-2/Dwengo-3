@@ -1,17 +1,17 @@
-import { z } from "zod";
-import { LearningPathShort } from "./learningPath.types";
-import { ClassShort } from "./class.types";
-import { GroupShort } from "./group.types";
+import { z } from 'zod';
+import { LearningPathShort } from './learningPath.types';
+import { ClassShort } from './class.types';
+import { GroupShort } from './group.types';
 
 export const AssignmentFilterSchema = z
   .object({
     classId: z.string().uuid().optional(),
     groupId: z.string().uuid().optional(),
     teacherId: z.string().uuid().optional(),
-    studentId: z.string().uuid().optional()
+    studentId: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: "At least one filter must be provided.",
+    message: 'At least one filter must be provided.',
     path: [],
   });
 
@@ -28,14 +28,14 @@ export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;
 export type Uuid = z.infer<typeof IdSchema>;
 export type AssignmentFilterParams = z.infer<typeof AssignmentFilterSchema>;
 export type AssignmentDetail = {
-  id: Uuid,
-  learningPath: LearningPathShort,
-  class: ClassShort,
-  groups: GroupShort[],
-  teacherId: Uuid
+  id: Uuid;
+  learningPath: LearningPathShort;
+  class: ClassShort;
+  groups: GroupShort[];
+  teacherId: Uuid;
 };
 
 export type AssignmentShort = {
-  id: Uuid,
-  learningPathId: Uuid
-}
+  id: Uuid;
+  learningPathId: Uuid;
+};

@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { Uuid } from "./assignment.types";
+import { z } from 'zod';
+import { Uuid } from './assignment.types';
 
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),
@@ -24,8 +24,8 @@ export type LearningPathByFilterParams = z.infer<
 >;
 export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
 export type LearningPathShort = {
-  id: Uuid,
-  title: string,
-  image: string | null,
-  description: string | null
+  id: Uuid;
+  title: string;
+  image: string | null;
+  description: string | null;
 };

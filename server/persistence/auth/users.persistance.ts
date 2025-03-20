@@ -1,10 +1,10 @@
-import { ClassRole, Student, Teacher, User } from "@prisma/client";
-import { PrismaSingleton } from "../prismaSingleton";
-import { FullUserType } from "../../util/types/user.types";
+import { ClassRole, Student, Teacher, User } from '@prisma/client';
+import { PrismaSingleton } from '../prismaSingleton';
+import { FullUserType } from '../../util/types/user.types';
 
 const prisma = PrismaSingleton.instance;
 
-export async function saveUser(user: Omit<User, "id">): Promise<FullUserType> {
+export async function saveUser(user: Omit<User, 'id'>): Promise<FullUserType> {
   const data: any = {
     ...user,
   };

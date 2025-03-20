@@ -1,12 +1,12 @@
-import { PaginationFilterSchema } from "../util/types/pagination.types";
+import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   ClassJoinRequestCreateScheme,
   ClassJoinRequestDecisionSchema,
   ClassJoinRequestFilterSchema,
-} from "../util/types/classJoinRequest.types";
-import { ClassJoinRequestPersistence } from "../persistence/classJoinRequest.persistence";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
-import { ClassPersistence } from "../persistence/class.persistence";
+} from '../util/types/classJoinRequest.types';
+import { ClassJoinRequestPersistence } from '../persistence/classJoinRequest.persistence';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { ClassPersistence } from '../persistence/class.persistence';
 
 export class ClassJoinRequestDomain {
   private classJoinRequestPersistance: ClassJoinRequestPersistence;
@@ -29,7 +29,7 @@ export class ClassJoinRequestDomain {
         user.id,
       )
     ) {
-      throw new Error("Join request already exists.");
+      throw new Error('Join request already exists.');
     }
 
     return this.classJoinRequestPersistance.createClassJoinRequest(
@@ -59,7 +59,7 @@ export class ClassJoinRequestDomain {
       // Teachers should only be able to view join requests for their own classes.
       if (userId && userId !== user.id) {
         throw new Error(
-          "Teachers can only view join requests of their own classes.",
+          'Teachers can only view join requests of their own classes.',
         );
       }
 
@@ -69,7 +69,7 @@ export class ClassJoinRequestDomain {
         !(await this.classPersistence.isTeacherFromClass(user.id, classId))
       ) {
         throw new Error(
-          "Teachers can only view join requests of their own classes.",
+          'Teachers can only view join requests of their own classes.',
         );
       }
     }
@@ -78,12 +78,12 @@ export class ClassJoinRequestDomain {
     if (user.role === ClassRoleEnum.STUDENT) {
       // If userId is provided, it must match the student's own userId
       if (userId && userId !== user.id) {
-        throw new Error("Students can only view their own join requests.");
+        throw new Error('Students can only view their own join requests.');
       }
 
       // If classId is provided, deny the request because students cannot fetch join requests for classes
       if (classId) {
-        throw new Error("Students cannot view join requests for classes.");
+        throw new Error('Students cannot view join requests for classes.');
       }
     }
 
@@ -101,8 +101,8 @@ export class ClassJoinRequestDomain {
       throw ClassJoinRequestDecisionParams.error;
     }
 
-    if (user.role !== "TEACHER") {
-      throw new Error("Only teachers can handle join requests.");
+    if (user.role !== 'TEACHER') {
+      throw new Error('Only teachers can handle join requests.');
     }
 
     if (
@@ -111,7 +111,7 @@ export class ClassJoinRequestDomain {
         user.id,
       )
     ) {
-      throw new Error("Only teachers of this class can handle join requests.");
+      throw new Error('Only teachers of this class can handle join requests.');
     }
 
     return this.classJoinRequestPersistance.handleJoinRequest(

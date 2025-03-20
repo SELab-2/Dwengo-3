@@ -1,4 +1,4 @@
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 import {
   PrismaClient,
   User,
@@ -16,12 +16,12 @@ import {
   ClassJoinRequest,
   Chat,
   Message,
-} from "@prisma/client";
-import * as fs from "fs";
-import * as path from "path";
+} from '@prisma/client';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient();
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: '../.env' });
 
 /**
  * Reads all data from the database and writes it to a JSON file
@@ -93,7 +93,7 @@ async function main() {
   data.messages = await prisma.message.findMany();
 
   const jsonData = JSON.stringify(data, null, 2);
-  const outputPath = path.join(__dirname, "current_data.json");
+  const outputPath = path.join(__dirname, 'current_data.json');
   fs.writeFileSync(outputPath, jsonData);
 }
 

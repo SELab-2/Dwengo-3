@@ -1,6 +1,6 @@
-import { Router, Request, Response } from "express";
-import { DiscussionDomain } from "../domain/discussion.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Router, Request, Response } from 'express';
+import { DiscussionDomain } from '../domain/discussion.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class DiscussionController {
   public router: Router;
@@ -13,9 +13,9 @@ export class DiscussionController {
   }
 
   private initializeRoutes() {
-    this.router.get("/", this.getDiscussions.bind(this));
-    this.router.get("/:id", this.getDiscussionById.bind(this))
-    this.router.put("/", this.createDiscussion.bind(this));
+    this.router.get('/', this.getDiscussions.bind(this));
+    this.router.get('/:id', this.getDiscussionById.bind(this));
+    this.router.put('/', this.createDiscussion.bind(this));
   }
 
   private async getDiscussions(req: Request, res: Response): Promise<void> {
@@ -28,7 +28,12 @@ export class DiscussionController {
   }
 
   private async getDiscussionById(req: Request, res: Response): Promise<void> {
-    res.json(await this.discussionDomain.getDiscussionById(req.params.id, await getUserFromReq(req)));
+    res.json(
+      await this.discussionDomain.getDiscussionById(
+        req.params.id,
+        await getUserFromReq(req),
+      ),
+    );
   }
 
   private async createDiscussion(req: Request, res: Response): Promise<void> {

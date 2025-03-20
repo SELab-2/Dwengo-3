@@ -1,7 +1,7 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const ClassJoinRequestCreateScheme = z.object({
-  classId: z.string().uuid("ClassId must be a valid UUID"),
+  classId: z.string().uuid('ClassId must be a valid UUID'),
 });
 
 export type ClassJoinRequestCreateParams = z.infer<
@@ -14,8 +14,8 @@ export const ClassJoinRequestFilterSchema = z
     userId: z.string().uuid().optional(),
   })
   .refine((data) => data.classId || data.userId, {
-    message: "At least one of classId or userId must be provided.",
-    path: ["classId", "userId"], // This will attach the error to both fields
+    message: 'At least one of classId or userId must be provided.',
+    path: ['classId', 'userId'], // This will attach the error to both fields
   });
 
 export type ClassJoinRequestFilterParams = z.infer<
@@ -25,12 +25,12 @@ export type ClassJoinRequestFilterParams = z.infer<
 export const ClassJoinRequestDecisionSchema = z
   .object({
     requestId: z.string().uuid(),
-    decision: z.enum(["accept", "deny"]),
+    decision: z.enum(['accept', 'deny']),
   })
   .transform((data) => {
     return {
       requestId: data.requestId,
-      acceptRequest: data.decision === "accept",
+      acceptRequest: data.decision === 'accept',
     };
   });
 

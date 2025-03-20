@@ -1,23 +1,23 @@
-import { PrismaClient, ContentTypeEnum } from "@prisma/client";
-import axios from "axios";
-import cliProgress from "cli-progress";
+import { PrismaClient, ContentTypeEnum } from '@prisma/client';
+import axios from 'axios';
+import cliProgress from 'cli-progress';
 
 const contentTypeMap: Map<string, any> = new Map();
-contentTypeMap.set("text/plain", ContentTypeEnum.TEXT_PLAIN);
-contentTypeMap.set("text/markdown", ContentTypeEnum.TEXT_MARKDOWN);
-contentTypeMap.set("image/image-block", ContentTypeEnum.IMAGE_IMAGE_BLOCK);
-contentTypeMap.set("image/image", ContentTypeEnum.IMAGE_IMAGE);
-contentTypeMap.set("audio/mpeg", ContentTypeEnum.AUDIO_MPEG);
-contentTypeMap.set("application/pdf", ContentTypeEnum.APPLICATION_PDF);
-contentTypeMap.set("extern", ContentTypeEnum.EXTERN);
-contentTypeMap.set("blockly", ContentTypeEnum.BLOCKLY);
+contentTypeMap.set('text/plain', ContentTypeEnum.TEXT_PLAIN);
+contentTypeMap.set('text/markdown', ContentTypeEnum.TEXT_MARKDOWN);
+contentTypeMap.set('image/image-block', ContentTypeEnum.IMAGE_IMAGE_BLOCK);
+contentTypeMap.set('image/image', ContentTypeEnum.IMAGE_IMAGE);
+contentTypeMap.set('audio/mpeg', ContentTypeEnum.AUDIO_MPEG);
+contentTypeMap.set('application/pdf', ContentTypeEnum.APPLICATION_PDF);
+contentTypeMap.set('extern', ContentTypeEnum.EXTERN);
+contentTypeMap.set('blockly', ContentTypeEnum.BLOCKLY);
 
 const API_URLS = {
   learningObjectsMeta:
-    "https://dwengo.org/backend/api/learningObject/search?all=",
+    'https://dwengo.org/backend/api/learningObject/search?all=',
   learningObjectsContentById:
-    "https://dwengo.org/backend/api/learningObject/getRaw", // append hruid, version, language
-  learningPaths: "https://dwengo.org/backend/api/learningPath/search?all=",
+    'https://dwengo.org/backend/api/learningObject/getRaw', // append hruid, version, language
+  learningPaths: 'https://dwengo.org/backend/api/learningPath/search?all=',
 };
 
 async function fetchRemoteData(url: string) {
@@ -213,13 +213,13 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
           update: {
             fromNodeId: node._id,
             toNodeId: toNode!.id,
-            condition: transition.default ? null : "true==true",
+            condition: transition.default ? null : 'true==true',
           },
           create: {
             id: transition._id,
             fromNodeId: node._id,
             toNodeId: toNode!.id,
-            condition: transition.default ? null : "true==true",
+            condition: transition.default ? null : 'true==true',
           },
         });
       }
@@ -234,15 +234,15 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
 
 async function syncDatabases(prisma: PrismaClient) {
   try {
-    console.log("Starting LearningObjects synchronization...");
+    console.log('Starting LearningObjects synchronization...');
     await fullSyncLearningObjects(prisma);
-    console.log("LearningObjects synchronization completed successfully!");
+    console.log('LearningObjects synchronization completed successfully!');
 
-    console.log("Starting LearningPaths synchronization...");
+    console.log('Starting LearningPaths synchronization...');
     await fullSyncLearningPaths(prisma);
-    console.log("LearningPaths synchronization completed successfully!");
+    console.log('LearningPaths synchronization completed successfully!');
   } catch (error) {
-    console.error("Error syncing databases:", error);
+    console.error('Error syncing databases:', error);
   }
 }
 

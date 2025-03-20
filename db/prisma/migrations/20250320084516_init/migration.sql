@@ -5,7 +5,7 @@ CREATE TYPE "ContentTypeEnum" AS ENUM ('text/plain', 'text/markdown', 'image/ima
 CREATE TYPE "ClassRole" AS ENUM ('TEACHER', 'STUDENT');
 
 -- CreateEnum
-CREATE TYPE "SubmissionType" AS ENUM ('MULTIPLE_CHOICE', 'FILE');
+CREATE TYPE "SubmissionType" AS ENUM ('MULTIPLE_CHOICE', 'FILE', 'READ');
 
 -- CreateTable
 CREATE TABLE "LearningObject" (
@@ -32,7 +32,7 @@ CREATE TABLE "LearningObject" (
     "updatedAt" TIMESTAMP,
     "content" TEXT NOT NULL,
     "multipleChoice" JSON,
-    "canUploadSubmission" BOOLEAN NOT NULL DEFAULT false,
+    "submissionType" "SubmissionType" NOT NULL DEFAULT 'READ',
 
     CONSTRAINT "LearningObject_pkey" PRIMARY KEY ("id")
 );
@@ -51,7 +51,7 @@ CREATE TABLE "LearningPathNode" (
     "learningPathId" TEXT NOT NULL,
     "learningObjectId" TEXT NOT NULL,
     "instruction" TEXT,
-    "startNode" BOOLEAN NOT NULL DEFAULT false,
+    "index" INTEGER NOT NULL,
 
     CONSTRAINT "LearningPathNode_pkey" PRIMARY KEY ("id")
 );
@@ -59,9 +59,9 @@ CREATE TABLE "LearningPathNode" (
 -- CreateTable
 CREATE TABLE "LearningNodeTransition" (
     "id" TEXT NOT NULL,
-    "fromNodeId" TEXT NOT NULL,
-    "toNodeId" TEXT,
+    "learningPathNodeId" TEXT NOT NULL,
     "condition" TEXT,
+    "toNodeIndex" INTEGER NOT NULL,
 
     CONSTRAINT "LearningNodeTransition_pkey" PRIMARY KEY ("id")
 );
@@ -130,8 +130,10 @@ CREATE TABLE "ClassJoinRequest" (
 -- CreateTable
 CREATE TABLE "Group" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "nodeId" TEXT,
     "assignmentId" TEXT NOT NULL,
+    "progress" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
 
     CONSTRAINT "Group_pkey" PRIMARY KEY ("id")
 );
@@ -155,6 +157,16 @@ CREATE TABLE "AssignmentSubmission" (
     "submission" JSONB NOT NULL,
 
     CONSTRAINT "AssignmentSubmission_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Favorite" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "learningPathId" TEXT NOT NULL,
+    "progress" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+
+    CONSTRAINT "Favorite_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -223,6 +235,9 @@ CREATE TABLE "_DiscussionToUser" (
 CREATE UNIQUE INDEX "LearningObject_hruid_version_language_key" ON "LearningObject"("hruid", "version", "language");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "LearningPathNode_learningPathId_index_key" ON "LearningPathNode"("learningPathId", "index");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "LearningPath_hruid_language_key" ON "LearningPath"("hruid", "language");
 
 -- CreateIndex
@@ -262,10 +277,7 @@ ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_learningObjectId
 ALTER TABLE "LearningPathNode" ADD CONSTRAINT "LearningPathNode_learningPathId_fkey" FOREIGN KEY ("learningPathId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_toNodeId_fkey" FOREIGN KEY ("toNodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_fromNodeId_fkey" FOREIGN KEY ("fromNodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_learningPathNodeId_fkey" FOREIGN KEY ("learningPathNodeId") REFERENCES "LearningPathNode"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "LearningPath" ADD CONSTRAINT "LearningPath_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -281,9 +293,6 @@ ALTER TABLE "ClassJoinRequest" ADD CONSTRAINT "ClassJoinRequest_userId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "ClassJoinRequest" ADD CONSTRAINT "ClassJoinRequest_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE "Group" ADD CONSTRAINT "Group_nodeId_fkey" FOREIGN KEY ("nodeId") REFERENCES "LearningPathNode"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "Group" ADD CONSTRAINT "Group_assignmentId_fkey" FOREIGN KEY ("assignmentId") REFERENCES "Assignment"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -302,6 +311,12 @@ ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_nodeId_f
 
 -- AddForeignKey
 ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Group"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_learningPathId_fkey" FOREIGN KEY ("learningPathId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "Discussion" ADD CONSTRAINT "Discussion_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Group"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

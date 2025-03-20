@@ -1,14 +1,14 @@
-import { ClassRole } from "@prisma/client";
-import { MessagePersistence } from "../persistence/message.persistence";
-import { queryWithPaginationParser } from "../util/pagination/queryWithPaginationParser.util";
+import { ClassRole } from '@prisma/client';
+import { MessagePersistence } from '../persistence/message.persistence';
+import { queryWithPaginationParser } from '../util/pagination/queryWithPaginationParser.util';
 import {
   MessageCreateSchema,
   MessageDetail,
   MessageFilterSchema,
   MessageIdSchema,
-} from "../util/types/message.types";
-import { UserEntity } from "../util/types/user.types";
-import { DiscussionDomain } from "./discussion.domain";
+} from '../util/types/message.types';
+import { UserEntity } from '../util/types/user.types';
+import { DiscussionDomain } from './discussion.domain';
 
 export class MessageDomain {
   private messagePersistence: MessagePersistence;
@@ -37,7 +37,10 @@ export class MessageDomain {
     );
   }
 
-  public async createMessage(query: any, user: UserEntity): Promise<MessageDetail> {
+  public async createMessage(
+    query: any,
+    user: UserEntity,
+  ): Promise<MessageDetail> {
     const parseResult = MessageCreateSchema.safeParse(query);
     if (!parseResult.success) {
       throw parseResult.error;
@@ -52,19 +55,24 @@ export class MessageDomain {
     return this.messagePersistence.createMessage(data);
   }
 
-  public async deleteMessage(id: string, user: UserEntity): Promise<MessageDetail> {
+  public async deleteMessage(
+    id: string,
+    user: UserEntity,
+  ): Promise<MessageDetail> {
     const parseResult = MessageIdSchema.safeParse(id);
     if (!parseResult.success) {
       throw parseResult.error;
     }
-    const message = await this.messagePersistence.getMessageById(parseResult.data);
+    const message = await this.messagePersistence.getMessageById(
+      parseResult.data,
+    );
     if (
       (user.role === ClassRole.TEACHER &&
         user.student!.userId !== message.sender.id) ||
       (user.role === ClassRole.STUDENT &&
         user.teacher!.userId !== message.sender.id)
     ) {
-      throw new Error("You can only delete your own messages");
+      throw new Error('You can only delete your own messages');
     }
     return this.messagePersistence.deleteMessage(parseResult.data);
   }

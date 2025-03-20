@@ -1,22 +1,22 @@
-import { Assignment, ClassRole } from "@prisma/client";
-import { AssignmentPersistence } from "../persistence/assignment.persistence";
+import { Assignment, ClassRole } from '@prisma/client';
+import { AssignmentPersistence } from '../persistence/assignment.persistence';
 import {
   AssignmentFilterSchema,
   AssignmentCreateSchema,
   AssignmentShort,
   AssignmentDetail,
   Uuid,
-} from "../util/types/assignment.types";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
+} from '../util/types/assignment.types';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import {
   checkIfUserIsInClass,
   checkIfUserIsInGroup,
   checkIfUsersAreInSameClass,
   compareUserIdWithFilterId,
-} from "../util/coockie-checks/coockieChecks.util";
-import { ClassPersistence } from "../persistence/class.persistence";
-import { GroupPersistence } from "../persistence/group.persistence";
+} from '../util/coockie-checks/coockieChecks.util';
+import { ClassPersistence } from '../persistence/class.persistence';
+import { GroupPersistence } from '../persistence/group.persistence';
 
 export class AssignmentDomain {
   private assignmentPersistence: AssignmentPersistence;
@@ -51,7 +51,10 @@ export class AssignmentDomain {
     );
   }
 
-  public async getAssignmentById(id: Uuid, user: UserEntity): Promise<AssignmentDetail> {
+  public async getAssignmentById(
+    id: Uuid,
+    user: UserEntity,
+  ): Promise<AssignmentDetail> {
     const assignment = await this.assignmentPersistence.getAssignmentId(id);
     await checkIfUserIsInClass(
       user,
@@ -66,7 +69,7 @@ export class AssignmentDomain {
     user: UserEntity,
   ): Promise<AssignmentDetail> {
     if (user.role !== ClassRole.TEACHER) {
-      throw new Error("Only teachers can create assigments");
+      throw new Error('Only teachers can create assigments');
     }
     const parseResult = AssignmentCreateSchema.safeParse(query);
     if (!parseResult.success) {

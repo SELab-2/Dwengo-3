@@ -1,15 +1,18 @@
-import { Assignment, Prisma } from "@prisma/client";
+import { Assignment, Prisma } from '@prisma/client';
 import {
   AssignmentCreateParams,
   AssignmentDetail,
   AssignmentFilterParams,
   AssignmentShort,
   Uuid,
-} from "../util/types/assignment.types";
-import { PaginationParams } from "../util/types/pagination.types";
-import { PrismaSingleton } from "./prismaSingleton";
-import { searchAndPaginate } from "../util/pagination/pagination.util";
-import { assignmentSelectDetail, assignmentSelectShort } from "../util/selectInput/assignment.select";
+} from '../util/types/assignment.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { PrismaSingleton } from './prismaSingleton';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
+import {
+  assignmentSelectDetail,
+  assignmentSelectShort,
+} from '../util/selectInput/assignment.select';
 
 export class AssignmentPersistence {
   public async getAssignments(
@@ -49,18 +52,23 @@ export class AssignmentPersistence {
                 },
               },
             }
-          : {}
+          : {},
       ],
     };
-    return searchAndPaginate(PrismaSingleton.instance.assignment, whereClause, paginationParams, undefined, assignmentSelectShort);
+    return searchAndPaginate(
+      PrismaSingleton.instance.assignment,
+      whereClause,
+      paginationParams,
+      undefined,
+      assignmentSelectShort,
+    );
   }
 
   public async getAssignmentId(id: Uuid): Promise<AssignmentDetail> {
     return PrismaSingleton.instance.assignment.findUniqueOrThrow({
-      where: {id: id},
-      select: assignmentSelectDetail
-    }
-    );
+      where: { id: id },
+      select: assignmentSelectDetail,
+    });
   }
 
   public async createAssignment(
@@ -85,13 +93,17 @@ export class AssignmentPersistence {
           },
         },
       },
-      select: assignmentSelectDetail
+      select: assignmentSelectDetail,
     });
+
+    // TODO: the following should be in group.persistence.ts, and should be called from assignment.domain.ts
+    // TODO: maybe we should name 'group' according to the language of the request.
     //create groups for the assignment
     await PrismaSingleton.instance.$transaction(
-      params.groups.map((group: Uuid[]) =>
+      params.groups.map((group: Uuid[], index: number) =>
         PrismaSingleton.instance.group.create({
           data: {
+            name: `Group ${index + 1}`,
             assignment: {
               connect: {
                 id: assignment.id,

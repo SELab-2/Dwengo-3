@@ -1,7 +1,7 @@
-import { Router, Request, Response } from "express";
-import { AssignmentSubmissionDomain } from "../domain/assignmentSubmission.domain";
-import multer, { Multer } from "multer";
-import { getUserFromReq } from "../domain/user.domain";
+import { Router, Request, Response } from 'express';
+import { AssignmentSubmissionDomain } from '../domain/assignmentSubmission.domain';
+import multer, { Multer } from 'multer';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class AssignmentSubmissionController {
   public router: Router;
@@ -14,7 +14,7 @@ export class AssignmentSubmissionController {
     this.assignmentSubmissionsDomain = new AssignmentSubmissionDomain();
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, "./submission_files/");
+        cb(null, './submission_files/');
       },
       filename: (req, file, cb) => {
         cb(null, Math.random().toString()); //TODO
@@ -26,9 +26,9 @@ export class AssignmentSubmissionController {
       //limits: {fileSize: 1024 * 1024} //bytes TODO add a max file size?
     });
     this.acceptedMimeTypes = [
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "text/plain",
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain',
     ]; //TODO add extra MimeTypes
     this.initializeRoutes();
   }
@@ -46,16 +46,16 @@ export class AssignmentSubmissionController {
   }
 
   private initializeRoutes(): void {
-    this.router.get("/", this.getAssignmentSubmission.bind(this));
-    this.router.get("/:id", this.getAssignmentById.bind(this))
+    this.router.get('/', this.getAssignmentSubmission.bind(this));
+    this.router.get('/:id', this.getAssignmentById.bind(this));
     this.router.put(
-      "/",
-      this.upload.single("file"),
+      '/',
+      this.upload.single('file'),
       this.createAssignmentSubmission.bind(this),
     );
     this.router.patch(
-      "/",
-      this.upload.single("file"),
+      '/',
+      this.upload.single('file'),
       this.updateAssignmentSubmission.bind(this),
     ); //TODO change 'file' to the correct field name
   }
@@ -73,7 +73,12 @@ export class AssignmentSubmissionController {
   }
 
   private async getAssignmentById(req: Request, res: Response): Promise<void> {
-    res.json(await this.assignmentSubmissionsDomain.getAssignmentSubmissionById(req.params.id, await getUserFromReq(req)));
+    res.json(
+      await this.assignmentSubmissionsDomain.getAssignmentSubmissionById(
+        req.params.id,
+        await getUserFromReq(req),
+      ),
+    );
   }
 
   private async createAssignmentSubmission(

@@ -1,7 +1,7 @@
-import { Request, Response, Router } from "express";
-import { ClassDomain } from "../domain/class.domain";
-import { ClassJoinRequestController } from "./classJoinRequest.routes";
-import { getUserFromReq } from "../domain/user.domain";
+import { Request, Response, Router } from 'express';
+import { ClassDomain } from '../domain/class.domain';
+import { ClassJoinRequestController } from './classJoinRequest.routes';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class ClassController {
   public router: Router;
@@ -73,7 +73,7 @@ export class ClassController {
      *       500:
      *         description: Server error
      */
-    this.router.get("/", this.getClasses);
+    this.router.get('/', this.getClasses);
     /**
      * @swagger
      * /api/class/{id}:
@@ -102,7 +102,7 @@ export class ClassController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.get("/:id", this.getClassById);
+    this.router.get('/:id', this.getClassById);
     /**
      * @swagger
      * /api/class:
@@ -132,7 +132,7 @@ export class ClassController {
      *       500:
      *         description: Server error
      */
-    this.router.put("/", this.createClass);
+    this.router.put('/', this.createClass);
 
     /**
      * @swagger
@@ -167,7 +167,7 @@ export class ClassController {
      *       500:
      *         description: Server error
      */
-    this.router.patch("/", this.updateClass);
-    this.router.use("/", new ClassJoinRequestController().router);
+    this.router.patch('/', this.updateClass);
+    this.router.use('/', new ClassJoinRequestController().router);
   }
 }

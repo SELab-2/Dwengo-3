@@ -1,5 +1,5 @@
-import { AnnouncementPersistence } from "../persistence/announcement.persistence";
-import { ClassDomain } from "./class.domain";
+import { AnnouncementPersistence } from '../persistence/announcement.persistence';
+import { ClassDomain } from './class.domain';
 import {
   AnnouncementByFilterParams,
   AnnouncementCreateDomainParams,
@@ -8,9 +8,9 @@ import {
   AnnouncementUpdateParams,
   AnnouncementUpdateSchema,
   TeacherIdSchema,
-} from "../util/types/announcement.types";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
+} from '../util/types/announcement.types';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 
 export class AnnouncementDomain {
   private announcementPersistence;
@@ -44,7 +44,7 @@ export class AnnouncementDomain {
     if (query.teacherId) {
       this.checkUserIsTeacher(user);
       if (query.teacherId !== user.teacher?.id) {
-        throw new Error("Can not get announcements of other teacher.");
+        throw new Error('Can not get announcements of other teacher.');
       }
     }
 
@@ -52,7 +52,7 @@ export class AnnouncementDomain {
     if (query.studentId) {
       this.checkUserIsStudent(user);
       if (query.studentId !== user.student?.id) {
-        throw new Error("Can not get announcements of other user.");
+        throw new Error('Can not get announcements of other user.');
       }
     }
     return this.announcementPersistence.getAnnouncements(
@@ -115,13 +115,13 @@ export class AnnouncementDomain {
 
   private async checkUserIsTeacher(user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error("User is not a teacher.");
+      throw new Error('User is not a teacher.');
     }
   }
 
   private async checkUserIsStudent(user: UserEntity) {
     if (user.role !== ClassRoleEnum.STUDENT) {
-      throw new Error("User is not a student.");
+      throw new Error('User is not a student.');
     }
   }
 }

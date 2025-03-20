@@ -19,32 +19,32 @@ enum ContentTypeEnum {
 }
 
 model LearningObject {
-  id                  String                  @id @default(uuid())
-  hruid               String
-  uuid                String // uuid of existing learning objects
-  version             Int
-  language            String
-  title               String
-  description         String?
-  contentType         ContentTypeEnum?
-  contentLocation     String? // contains relevant info if contentType == EXTERN
-  targetAges          Int[]
-  teacherExclusive    Boolean                 @default(false)
-  skosConcepts        String[]
-  educationalGoals    Json[]                  @db.Json
-  copyright           String?
-  licence             String?
-  difficulty          Decimal?                @db.Decimal
-  estimatedTime       Decimal?                @db.Decimal
-  returnValue         Json?                   @db.Json
-  available           Boolean                 @default(true)
-  createdAt           DateTime?               @default(now()) @db.Timestamp
-  updatedAt           DateTime?               @updatedAt @db.Timestamp
-  content             String
-  multipleChoice      Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
-  canUploadSubmission Boolean                 @default(false)
-  learningPathNodes   LearningPathNode[]
-  keywords            LearningObjectKeyword[]
+  id                String                  @id @default(uuid())
+  hruid             String
+  uuid              String // uuid of existing learning objects
+  version           Int
+  language          String
+  title             String
+  description       String?
+  contentType       ContentTypeEnum?
+  contentLocation   String? // contains relevant info if contentType == EXTERN
+  targetAges        Int[]
+  teacherExclusive  Boolean                 @default(false)
+  skosConcepts      String[]
+  educationalGoals  Json[]                  @db.Json
+  copyright         String?
+  licence           String?
+  difficulty        Decimal?                @db.Decimal
+  estimatedTime     Decimal?                @db.Decimal
+  returnValue       Json?                   @db.Json
+  available         Boolean                 @default(true)
+  createdAt         DateTime?               @default(now()) @db.Timestamp
+  updatedAt         DateTime?               @updatedAt @db.Timestamp
+  content           String
+  multipleChoice    Json?                   @db.Json // {question:"Here goes the question", answers:[{...}, {...}]}
+  submissionType    SubmissionType          @default(READ)
+  learningPathNodes LearningPathNode[]
+  keywords          LearningObjectKeyword[]
 
   @@unique([hruid, version, language])
 }
@@ -58,26 +58,25 @@ model LearningObjectKeyword {
 }
 
 model LearningPathNode {
-  id                              String                   @id @default(uuid())
-  learningPathId                  String
-  learningObjectId                String
-  instruction                     String?
-  startNode                       Boolean                  @default(false)
-  learningObject                  LearningObject           @relation(fields: [learningObjectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  learningPath                    LearningPath             @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  learningPathOutgoingTransitions LearningNodeTransition[] @relation("outgoing_transitions")
-  learningPathIncomingTransitions LearningNodeTransition[] @relation("incoming_transitions")
-  groups                          Group[]
-  assignmentSubmissions           AssignmentSubmission[]
+  id                    String                   @id @default(uuid())
+  learningPathId        String
+  learningObjectId      String
+  instruction           String?
+  index                 Int
+  learningObject        LearningObject           @relation(fields: [learningObjectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  learningPath          LearningPath             @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  transitions           LearningNodeTransition[]
+  assignmentSubmissions AssignmentSubmission[]
+
+  @@unique([learningPathId, index])
 }
 
 model LearningNodeTransition {
-  id         String            @id @default(uuid())
-  fromNodeId String
-  toNodeId   String?
-  condition  String? //If condition is null => default transition; else: "answer == 0" or "true==true"
-  toNode     LearningPathNode? @relation("incoming_transitions", fields: [toNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  fromNode   LearningPathNode  @relation("outgoing_transitions", fields: [fromNodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                 String           @id @default(uuid())
+  learningPathNodeId String
+  condition          String? // Condition is null => default transition; condition must have following form: "answer == 0" or "true==true"
+  toNodeIndex        Int
+  learningPathNode   LearningPathNode @relation(fields: [learningPathNodeId], references: [id])
 }
 
 model LearningPath {
@@ -93,6 +92,7 @@ model LearningPath {
   owner             User?              @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   learningPathNodes LearningPathNode[]
   assignments       Assignment[]
+  favorite          Favorite[]
 
   @@unique([hruid, language])
 }
@@ -116,6 +116,7 @@ model User {
   messages          Message[]
   discussions       Discussion[]
   LearningPath      LearningPath[]
+  favorite          Favorite[]
 }
 
 model Student {
@@ -156,11 +157,12 @@ model ClassJoinRequest {
 
 model Group {
   id                    String                 @id @default(uuid())
+  name                  String
   nodeId                String?
   assignmentId          String
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
-  node                  LearningPathNode?      @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  progress              Int[]                  @default([]) // indeces of completed nodes
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }
@@ -179,6 +181,7 @@ model Assignment {
 enum SubmissionType {
   MULTIPLE_CHOICE
   FILE
+  READ // When the submission is just reading the content
 }
 
 model AssignmentSubmission {
@@ -191,6 +194,15 @@ model AssignmentSubmission {
   group          Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([groupId, nodeId])
+}
+
+model Favorite {
+  id             String       @id @default(uuid())
+  userId         String
+  learningPathId String
+  progress       Int[]        @default([]) // indeces of completed nodes
+  learningPath   LearningPath @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user           User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Discussion {

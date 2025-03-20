@@ -1,7 +1,7 @@
-import { StudentPersistence } from "../persistence/student.persistence";
-import { z } from "zod";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
+import { StudentPersistence } from '../persistence/student.persistence';
+import { z } from 'zod';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   StudentCreateSchema,
   StudentDeleteSchema,
@@ -9,11 +9,11 @@ import {
   StudentFilterSchema,
   StudentIncludeSchema,
   StudentUpdateSchema,
-} from "../util/types/student.types";
-import { ClassPersistence } from "../persistence/class.persistence";
-import { getUserById } from "../persistence/auth/users.persistance";
-import { Student, Teacher } from "@prisma/client";
-import { TeacherPersistence } from "../persistence/teacher.persistence";
+} from '../util/types/student.types';
+import { ClassPersistence } from '../persistence/class.persistence';
+import { getUserById } from '../persistence/auth/users.persistance';
+import { Student, Teacher } from '@prisma/client';
+import { TeacherPersistence } from '../persistence/teacher.persistence';
 
 export class StudentDomain {
   private studentPersistence: StudentPersistence;
@@ -40,7 +40,7 @@ export class StudentDomain {
     const user = await getUserById(userId);
 
     if (!user) {
-      throw new Error("User not found.");
+      throw new Error('User not found.');
     }
 
     // Check if the user already has a student record
@@ -48,7 +48,7 @@ export class StudentDomain {
       await this.studentPersistence.getStudentByUserId(userId);
 
     if (existingStudent) {
-      throw new Error("A student is already linked to this user.");
+      throw new Error('A student is already linked to this user.');
     }
 
     return await this.studentPersistence.createStudent(userId);
@@ -92,7 +92,7 @@ export class StudentDomain {
       );
 
       if (!classExists) {
-        throw new Error("Class not found.");
+        throw new Error('Class not found.');
       }
 
       // Check if the teacher is a teacher of the class
@@ -114,7 +114,7 @@ export class StudentDomain {
       const userExists = await getUserById(query.userId);
 
       if (!userExists) {
-        throw new Error("User not found.");
+        throw new Error('User not found.');
       }
 
       // Check if the user is a student
@@ -122,7 +122,7 @@ export class StudentDomain {
         userExists.role !== ClassRoleEnum.STUDENT ||
         userExists.student === null
       ) {
-        throw new Error("User is not a student.");
+        throw new Error('User is not a student.');
       }
 
       // Check if the student is in the teacher's class
@@ -167,7 +167,7 @@ export class StudentDomain {
       );
 
       if (!studentExists) {
-        throw new Error("Student not found.");
+        throw new Error('Student not found.');
       }
 
       //Check if the student shares a group with the student making the request
@@ -204,7 +204,7 @@ export class StudentDomain {
 
       if (!teacher) {
         // This should never happen as the user is a teacher
-        throw new Error("Teacher not found.");
+        throw new Error('Teacher not found.');
       }
 
       await this.validateGetStudentsAsTeacher(filters, teacher);
@@ -217,7 +217,7 @@ export class StudentDomain {
 
       if (!student) {
         // This should never happen as the user is a student
-        throw new Error("Student not found.");
+        throw new Error('Student not found.');
       }
 
       await this.validateGetStudentsAsStudent(filters, student);
@@ -237,7 +237,7 @@ export class StudentDomain {
 
       if (!teacher) {
         // This should never happen as the user is a teacher
-        throw new Error("Teacher not found.");
+        throw new Error('Teacher not found.');
       }
 
       const isStudentInTeacherClass = await this.isStudentInTeacherClass(
@@ -257,7 +257,7 @@ export class StudentDomain {
 
       if (!student) {
         // This should never happen as the user is a student
-        throw new Error("Student not found.");
+        throw new Error('Student not found.');
       }
 
       // Check if the student exists
@@ -293,7 +293,7 @@ export class StudentDomain {
     const student = await this.studentPersistence.getStudentById(id);
 
     if (!student) {
-      throw new Error("Student not found.");
+      throw new Error('Student not found.');
     }
 
     // A teacher can not update a student's info
@@ -325,7 +325,7 @@ export class StudentDomain {
     const student = await this.studentPersistence.getStudentById(id);
 
     if (!student) {
-      throw new Error("Student not found.");
+      throw new Error('Student not found.');
     }
 
     // A teacher can not delete a student
@@ -367,7 +367,7 @@ export class StudentDomain {
       await this.studentPersistence.getStudentById(studentId);
 
     if (!studentExists) {
-      throw new Error("Student not found.");
+      throw new Error('Student not found.');
     }
 
     // Check if the student is in the group
@@ -383,7 +383,7 @@ export class StudentDomain {
     const student = await this.studentPersistence.getStudentById(studentId);
 
     if (!student) {
-      throw new Error("Student not found.");
+      throw new Error('Student not found.');
     }
 
     // Fetch all classes of the teacher

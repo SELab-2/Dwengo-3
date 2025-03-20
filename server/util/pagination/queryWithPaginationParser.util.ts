@@ -1,8 +1,8 @@
-import { z, ZodEffects, ZodObject } from "zod";
+import { z, ZodEffects, ZodObject } from 'zod';
 import {
   PaginationFilterSchema,
   PaginationParams,
-} from "../types/pagination.types";
+} from '../types/pagination.types';
 
 export const queryWithPaginationParser = <
   T extends ZodObject<any> | ZodEffects<ZodObject<any>>,

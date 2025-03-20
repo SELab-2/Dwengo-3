@@ -1,12 +1,12 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
 import {
   LearningObjectFilterParams,
   LearningObjectUpdateWithoutKeywords,
   LearningObjectWithoutKeywords,
-} from "../util/types/learningObject.types";
-import { PaginationParams } from "../util/types/pagination.types";
-import { searchAndPaginate } from "../util/pagination/pagination.util";
+} from '../util/types/learningObject.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 export class LearningObjectPersistence {
   private prisma: PrismaClient;

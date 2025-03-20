@@ -1,5 +1,5 @@
-import { PrismaSingleton } from "../../persistence/prismaSingleton";
-import { PaginationParams } from "../types/pagination.types";
+import { PrismaSingleton } from '../../persistence/prismaSingleton';
+import { PaginationParams } from '../types/pagination.types';
 
 /**
  * Generic pagination function for Prisma models.
@@ -14,16 +14,16 @@ export async function searchAndPaginate<
   T extends { findMany: Function; count: Function },
   WhereInput,
   IncludeInput,
-  SelectInput
+  SelectInput,
 >(
   model: T,
   whereClause: WhereInput,
   paginationParams: PaginationParams,
   include?: IncludeInput,
-  select?: SelectInput
+  select?: SelectInput,
 ) {
   if (include && select) {
-    throw new Error("Cannot use both `include` and `select` at the same time.");
+    throw new Error('Cannot use both `include` and `select` at the same time.');
   }
   const [data, totalCount] = await PrismaSingleton.instance.$transaction([
     model.findMany({

@@ -1,6 +1,6 @@
-import { Router, Request, Response } from "express";
-import { LearningPathNodeDomain } from "../domain/learningPathNode.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Router, Request, Response } from 'express';
+import { LearningPathNodeDomain } from '../domain/learningPathNode.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class LearningPathNodeController {
   public router: Router;
@@ -58,7 +58,7 @@ export class LearningPathNodeController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.put("/", this.createLearningPathNode);
+    this.router.put('/', this.createLearningPathNode);
     /**
      * @swagger
      * /api/learningPathNode/{id}:
@@ -87,6 +87,6 @@ export class LearningPathNodeController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.get("/:id", this.getLearningPathNodeById);
+    this.router.get('/:id', this.getLearningPathNodeById);
   }
 }

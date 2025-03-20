@@ -1,6 +1,6 @@
-import { Router, Request, Response } from "express";
-import { MessageDomain } from "../domain/message.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Router, Request, Response } from 'express';
+import { MessageDomain } from '../domain/message.domain';
+import { getUserFromReq } from '../domain/user.domain';
 
 export class MessageController {
   public router: Router;
@@ -13,9 +13,9 @@ export class MessageController {
   }
 
   private initializeRoutes() {
-    this.router.get("/", this.getMessages.bind(this));
-    this.router.put("/", this.createMessage.bind(this));
-    this.router.delete("/:id", this.deleteMessage.bind(this));
+    this.router.get('/', this.getMessages.bind(this));
+    this.router.put('/', this.createMessage.bind(this));
+    this.router.delete('/:id', this.deleteMessage.bind(this));
   }
 
   private async getMessages(req: Request, res: Response): Promise<void> {

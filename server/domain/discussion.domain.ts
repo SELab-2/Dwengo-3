@@ -1,19 +1,19 @@
-import { Discussion } from "@prisma/client";
-import { DiscussionPersistence } from "../persistence/discussion.persistence";
-import { queryWithPaginationParser } from "../util/pagination/queryWithPaginationParser.util";
+import { Discussion } from '@prisma/client';
+import { DiscussionPersistence } from '../persistence/discussion.persistence';
+import { queryWithPaginationParser } from '../util/pagination/queryWithPaginationParser.util';
 import {
   DiscussionCreateSchema,
   DiscussionDetail,
   DiscussionFilterSchema,
   discussionShort,
-} from "../util/types/discussion.types";
-import { UserEntity } from "../util/types/user.types";
+} from '../util/types/discussion.types';
+import { UserEntity } from '../util/types/user.types';
 import {
   checkIfUserIsInGroup,
   checkIfUsersAreInSameGroup,
-} from "../util/coockie-checks/coockieChecks.util";
-import { GroupPersistence } from "../persistence/group.persistence";
-import { Uuid } from "../util/types/assignment.types";
+} from '../util/coockie-checks/coockieChecks.util';
+import { GroupPersistence } from '../persistence/group.persistence';
+import { Uuid } from '../util/types/assignment.types';
 
 export class DiscussionDomain {
   private discussionPersistence: DiscussionPersistence;
@@ -33,9 +33,11 @@ export class DiscussionDomain {
       DiscussionFilterSchema,
     );
     const filters = parseResult.dataSchema;
-    const checks = filters.groupIds ? filters.groupIds.map((groupId) =>
-      checkIfUserIsInGroup(user, groupId, this.groupPersistence),
-    ) : [];
+    const checks = filters.groupIds
+      ? filters.groupIds.map((groupId) =>
+          checkIfUserIsInGroup(user, groupId, this.groupPersistence),
+        )
+      : [];
     await Promise.all(checks);
     return this.discussionPersistence.getDiscussions(
       filters,
@@ -43,7 +45,7 @@ export class DiscussionDomain {
     );
   }
 
-  public async getDiscussionById (id: Uuid, user: UserEntity) {
+  public async getDiscussionById(id: Uuid, user: UserEntity) {
     const discussion = await this.discussionPersistence.getDiscussionById(id);
     await checkIfUserIsInGroup(
       user,
