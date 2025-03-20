@@ -135,7 +135,7 @@ export class ClassDomain {
           (student) => student.id === user.student?.id,
         ) || false;
     }
-    if (exists) {
+    if (!exists) {
       throw new Error("User does not belong to the class.");
     }
   }

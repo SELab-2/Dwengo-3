@@ -42,6 +42,7 @@ export class AnnouncementController {
   private updateAnnouncement = async (req: Request, res: Response) => {
     res.json(
       await this.announcementDomain.updateAnnouncement(
+        req.params.id,
         req.body,
         await getUserFromReq(req),
       ),
@@ -156,7 +157,7 @@ export class AnnouncementController {
     this.router.get("/:id", this.getAnnouncementById);
     /**
      * @swagger
-     * /api/announcement:
+     * /api/announcement/{id}:
      *   patch:
      *     security:
      *       - cookieAuth: []
@@ -164,6 +165,14 @@ export class AnnouncementController {
      *       - Announcement
      *     summary: Update an announcement
      *     description: Updates an existing announcement with the provided data.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the announcement.
      *     requestBody:
      *       required: true
      *       content:
@@ -188,6 +197,6 @@ export class AnnouncementController {
      *       500:
      *         description: Internal server error.
      */
-    this.router.patch("/", this.updateAnnouncement);
+    this.router.patch("/:id", this.updateAnnouncement);
   }
 }

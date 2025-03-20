@@ -151,8 +151,8 @@ CREATE TABLE "AssignmentSubmission" (
     "id" TEXT NOT NULL,
     "groupId" TEXT NOT NULL,
     "nodeId" TEXT NOT NULL,
-    "submissionType" "SubmissionType",
-    "submission" JSONB,
+    "submissionType" "SubmissionType" NOT NULL,
+    "submission" JSONB NOT NULL,
 
     CONSTRAINT "AssignmentSubmission_pkey" PRIMARY KEY ("id")
 );

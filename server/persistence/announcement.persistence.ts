@@ -105,8 +105,9 @@ export class AnnouncementPersistence {
 
   public async createAnnouncement(
     announcementCreateParams: AnnouncementCreatePersistenceParams,
+    teacherId: string,
   ) {
-    const { classId, teacherId, ...data } = announcementCreateParams;
+    const { classId, ...data } = announcementCreateParams;
     const announcement = await PrismaSingleton.instance.announcement.create({
       data: {
         ...data,
@@ -126,14 +127,37 @@ export class AnnouncementPersistence {
   }
 
   public async updateAnnouncement(
+    id: string,
     announcementUpdateParams: AnnouncementUpdateParams,
   ) {
-    const { id, ...data } = announcementUpdateParams;
     const updatedAnnouncement =
       await PrismaSingleton.instance.announcement.update({
         where: { id: id },
-        data: data,
+        data: announcementUpdateParams,
       });
     return updatedAnnouncement;
+  }
+
+  public async checkAnnouncementIsFromTeacher(
+    announcementId: string,
+    teacherId: string,
+  ) {
+    const announcement = await PrismaSingleton.instance.announcement.findUnique(
+      {
+        where: {
+          id: announcementId,
+        },
+      },
+    );
+
+    if (!announcement) {
+      throw new Error(`Announcement with id: ${announcementId} was not found`);
+    }
+
+    if (announcement.teacherId !== teacherId) {
+      throw new Error(
+        `Announcement with id: ${announcementId} does not belong to teacher with id: ${teacherId}`,
+      );
+    }
   }
 }

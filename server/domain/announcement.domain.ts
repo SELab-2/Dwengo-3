@@ -79,6 +79,8 @@ export class AnnouncementDomain {
       throw parseResult.error;
     }
 
+    console.log(parseResult.data);
+
     this.checkUserIsTeacher(user);
     this.classDomain.checkUserBelongsToClass(user, query.classId);
 
@@ -86,13 +88,15 @@ export class AnnouncementDomain {
     if (!teacherIdParseResult.success) {
       throw teacherIdParseResult.error;
     }
-    return this.announcementPersistence.createAnnouncement({
-      ...parseResult.data,
-      teacherId: teacherIdParseResult.data,
-    });
+
+    return this.announcementPersistence.createAnnouncement(
+      parseResult.data,
+      teacherIdParseResult.data,
+    );
   }
 
   public async updateAnnouncement(
+    id: string,
     query: AnnouncementUpdateParams,
     user: UserEntity,
   ) {
@@ -102,9 +106,13 @@ export class AnnouncementDomain {
     }
 
     this.checkUserIsTeacher(user);
-    this.classDomain.checkUserBelongsToClass(user, query.id);
+    const teacherId = TeacherIdSchema.parse(user.teacher?.id);
+    this.announcementPersistence.checkAnnouncementIsFromTeacher(id, teacherId);
 
-    return this.announcementPersistence.updateAnnouncement(parseResult.data);
+    return this.announcementPersistence.updateAnnouncement(
+      id,
+      parseResult.data,
+    );
   }
 
   private async checkUserIsTeacher(user: UserEntity) {
