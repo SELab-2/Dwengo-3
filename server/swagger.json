@@ -985,6 +985,22 @@
         }
       },
 
+      "PaginatedResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "description": "The total number of pages with data from the request",
+            "example": 10
+          },
+          "data": {
+            "type": "array",
+            "description": "The data from the request. The type specific for each request",
+            "items": {}
+          }
+        }
+      },
+
       "LearningPathGet": {
         "type": "object",
         "properties": {
