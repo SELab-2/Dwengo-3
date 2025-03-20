@@ -79,8 +79,6 @@ export class AnnouncementDomain {
       throw parseResult.error;
     }
 
-    console.log(parseResult.data);
-
     this.checkUserIsTeacher(user);
     this.classDomain.checkUserBelongsToClass(user, query.classId);
 
