@@ -6,6 +6,11 @@ import {
 } from '../util/types/announcement.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
+import {
+  announcementSelectDetail,
+  announcementSelectShort,
+} from '../util/selectInput/announcement.select';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 //TODO : import prisma client from singleton
 
@@ -31,41 +36,14 @@ export class AnnouncementPersistence {
           : {},
       ],
     };
-    const [announcements, totalCount] =
-      await PrismaSingleton.instance.$transaction([
-        PrismaSingleton.instance.announcement.findMany({
-          where: whereClause,
-          include: {
-            teacher: {
-              select: {
-                id: true,
-                user: {
-                  select: {
-                    name: true,
-                    surname: true,
-                  },
-                },
-              },
-            },
-            class: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-          skip: paginationParams.skip,
-          take: paginationParams.pageSize,
-        }),
-        PrismaSingleton.instance.announcement.count({
-          where: whereClause, // TODO this is probably not efficient
-        }),
-      ]);
 
-    return {
-      announcements,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(
+      PrismaSingleton.instance.announcement,
+      whereClause,
+      paginationParams,
+      undefined,
+      announcementSelectShort,
+    );
   }
 
   public async getAnnouncementById(id: string) {
@@ -74,25 +52,7 @@ export class AnnouncementPersistence {
         where: {
           id: id,
         },
-        include: {
-          teacher: {
-            select: {
-              id: true,
-              user: {
-                select: {
-                  name: true,
-                  surname: true,
-                },
-              },
-            },
-          },
-          class: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
+        select: announcementSelectDetail,
       },
     );
 
@@ -122,6 +82,7 @@ export class AnnouncementPersistence {
           },
         },
       },
+      select: announcementSelectDetail,
     });
     return announcement;
   }
@@ -134,6 +95,7 @@ export class AnnouncementPersistence {
       await PrismaSingleton.instance.announcement.update({
         where: { id: id },
         data: announcementUpdateParams,
+        select: announcementSelectDetail,
       });
     return updatedAnnouncement;
   }

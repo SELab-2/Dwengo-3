@@ -28,6 +28,7 @@ export class DiscussionPersistence {
     const whereClause: Prisma.DiscussionWhereInput = {
       AND: [filters.groupIds ? { groupId: { in: filters.groupIds } } : {}],
     };
+
     return searchAndPaginate(
       this.prisma.discussion,
       whereClause,

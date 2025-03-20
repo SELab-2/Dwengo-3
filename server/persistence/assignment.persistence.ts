@@ -1,4 +1,4 @@
-import { Assignment, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   AssignmentCreateParams,
   AssignmentDetail,

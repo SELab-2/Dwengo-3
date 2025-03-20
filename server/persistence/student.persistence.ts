@@ -7,6 +7,7 @@ import {
   StudentIncludeParams,
   StudentUpdateParams,
 } from '../util/types/student.types';
+import { studentSelectDetail } from '../util/selectInput/student.select';
 
 /**
  * Persistence class for Student model.
@@ -35,6 +36,7 @@ export class StudentPersistence {
           },
         },
       },
+      select: studentSelectDetail,
     });
   }
 

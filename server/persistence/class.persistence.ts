@@ -8,6 +8,10 @@ import { Prisma } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { UserEntity } from '../util/types/user.types';
+import {
+  classSelectDetail,
+  classSelectShort,
+} from '../util/selectInput/class.select';
 
 export class ClassPersistence {
   private prisma;
@@ -35,52 +39,19 @@ export class ClassPersistence {
   ) {
     const where: Prisma.ClassWhereInput = this.buildWhereClause(filters);
 
-    return searchAndPaginate(this.prisma.class, where, paginationParams, {
-      students: true,
-      teachers: true,
-    });
+    return searchAndPaginate(
+      this.prisma.class,
+      where,
+      paginationParams,
+      undefined,
+      classSelectShort,
+    );
   }
 
   public async getClassById(id: string) {
     const classData = await this.prisma.class.findUnique({
       where: { id },
-      include: {
-        students: {
-          select: {
-            id: true,
-            userId: true,
-            user: {
-              select: {
-                name: true,
-                surname: true,
-              },
-            },
-          },
-        },
-        teachers: {
-          select: {
-            id: true,
-            userId: true,
-            user: {
-              select: {
-                name: true,
-                surname: true,
-              },
-            },
-          },
-        },
-        assignment: {
-          select: {
-            id: true,
-            learningPath: {
-              select: {
-                id: true,
-                title: true,
-              },
-            },
-          },
-        },
-      },
+      select: classSelectDetail,
     });
 
     if (!classData) {
@@ -100,6 +71,7 @@ export class ClassPersistence {
           },
         },
       },
+      select: classSelectDetail,
     });
   }
 
@@ -109,6 +81,7 @@ export class ClassPersistence {
     return await this.prisma.class.update({
       where: { id },
       data: data,
+      select: classSelectDetail,
     });
   }
 

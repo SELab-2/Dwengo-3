@@ -1,3 +1,4 @@
+import { learningPathNodeSelectDetail } from '../util/selectInput/learningPathNode.select';
 import { LearningPathNodeCreateParams } from '../util/types/learningPathNode.types';
 import { PrismaSingleton } from './prismaSingleton';
 
@@ -24,6 +25,7 @@ export class LearningPathNodePersistence {
             },
           },
         },
+        select: learningPathNodeSelectDetail,
       });
     return createdLearningPathNode;
   }
@@ -32,9 +34,7 @@ export class LearningPathNodePersistence {
     const learningPathNode =
       await PrismaSingleton.instance.learningPathNode.findUnique({
         where: { id: id },
-        include: {
-          transitions: true,
-        },
+        select: learningPathNodeSelectDetail,
       });
 
     if (!learningPathNode) {

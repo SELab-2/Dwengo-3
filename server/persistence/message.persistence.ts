@@ -1,16 +1,17 @@
-import { Message, Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import {
   MessageCreateParams,
   MessageDetail,
   MessageFilterParams,
   MessageId,
-  MessageUpdateParams,
 } from '../util/types/message.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { messageSelectDetail } from '../util/selectInput/message.select';
-import { Uuid } from '../util/types/assignment.types';
+import {
+  messageSelectDetail,
+  messageSelectShort,
+} from '../util/selectInput/message.select';
 
 export class MessagePersistence {
   private prisma: PrismaClient;
@@ -31,7 +32,7 @@ export class MessagePersistence {
       whereclause,
       paginationParams,
       undefined,
-      messageSelectDetail,
+      messageSelectShort,
     );
   }
 

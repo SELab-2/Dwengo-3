@@ -6,6 +6,10 @@ import {
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import {
+  learningPathSelectDetail,
+  learningPathSelectShort,
+} from '../util/selectInput/learningPath.select';
 
 export class LearningPathPersistence {
   private prisma: PrismaClient;
@@ -65,13 +69,8 @@ export class LearningPathPersistence {
       this.prisma.learningPath,
       whereClause,
       paginationParams,
-      {
-        learningPathNodes: {
-          include: {
-            learningObject: true,
-          },
-        },
-      },
+      undefined,
+      learningPathSelectShort,
     );
   }
 
@@ -80,13 +79,7 @@ export class LearningPathPersistence {
       where: {
         id: id,
       },
-      include: {
-        learningPathNodes: {
-          select: {
-            id: true,
-          },
-        },
-      },
+      select: learningPathSelectDetail,
     });
 
     if (!learningPath) {
@@ -100,6 +93,7 @@ export class LearningPathPersistence {
     // create a learningPath without any connected nodes
     const learningPath = await this.prisma.learningPath.create({
       data: data,
+      select: learningPathSelectDetail,
     });
     return learningPath;
   }
