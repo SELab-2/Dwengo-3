@@ -67,15 +67,18 @@ export class LearningPathController {
      *         content:
      *           application/json:
      *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/LearningPathGet'
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/LearningPathShort'
      *       400:
      *         description: Bad request due to invalid parameters
      *       401:
      *         description: Unauthorized, user not authenticated
-     *       500:
-     *         description: Internal server error
      */
     this.router.get('/', this.getLearningPaths);
     /**
@@ -102,13 +105,11 @@ export class LearningPathController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningPathGet'
+     *               $ref: '#/components/schemas/LearningPathDetail'
      *       403:
      *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: Learning path not found.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/:id', this.getLearningPathById);
     /**
@@ -133,7 +134,7 @@ export class LearningPathController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningPathGet'
+     *               $ref: '#/components/schemas/LearningPathDetail'
      */
     this.router.put('/', this.createLearningPath);
   }
