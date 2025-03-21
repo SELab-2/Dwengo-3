@@ -1,0 +1,17 @@
+export const en = {
+  translation: {
+    yes: 'Yes',
+    no: 'No',
+    email: 'Email address',
+    name: 'Name',
+    surname: 'Surname',
+    password: 'Password',
+    login: 'Login',
+    register: 'Register',
+    student: 'Student',
+    teacher: 'Teacher',
+    welcomeMessage: 'Welcome to the Dwengo learningplatform!',
+    registerAs: 'Register as',
+    alreadyHaveAccount: 'Already have an account?',
+  },
+};
