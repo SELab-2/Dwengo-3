@@ -48,12 +48,10 @@ export class ClassDomain {
       );
     }
 
-    const { data, totalPages } = await this.classPersistance.getClasses(
+    return await this.classPersistance.getClasses(
       paginationResult.data,
       filtersResult.data,
     );
-
-    return { data, totalPages };
   }
 
   public async getClassById(id: string, user: UserEntity) {
@@ -80,11 +78,7 @@ export class ClassDomain {
     }
 
     // Delete the userId fields from the object
-    return {
-      ...classData,
-      students: classData.students.map(({ userId, ...rest }) => rest),
-      teachers: classData.teachers.map(({ userId, ...rest }) => rest),
-    };
+    return classData;
   }
 
   public async createClass(body: unknown, user: UserEntity) {
