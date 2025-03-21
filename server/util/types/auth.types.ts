@@ -11,6 +11,7 @@ export const LoginSchema = z
 
 export const RegisterSchema = z
   .object({
+    id: z.string().optional(),
     username: z.string().nonempty(),
     provider: z.nativeEnum(AuthenticationProvider),
     email: z.string().email('invalid email'),
@@ -21,5 +22,5 @@ export const RegisterSchema = z
   })
   .required();
 
-export type LoginRequest = z.infer<typeof LoginSchema>;
-export type RegisterRequest = z.infer<typeof RegisterSchema>;
+export type LoginCredentials = z.infer<typeof LoginSchema>;
+export type RegisterCredentials = z.infer<typeof RegisterSchema>;

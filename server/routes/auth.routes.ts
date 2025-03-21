@@ -4,6 +4,7 @@ import {
   Strategy as GoogleStrategy,
   VerifyCallback,
 } from 'passport-google-oauth20';
+import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
 
 import * as userDomain from '../domain/user.domain';
@@ -15,6 +16,18 @@ import {
 } from '../util/types/user.types';
 
 export const router = express.Router();
+const apiCallbackUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3001/api/auth/callback/google'
+    : 'https://sel2-3.ugent.be/api/auth/callback/google';
+const providerMapper = {
+  [AuthenticationProvider.GOOGLE]: passport.authenticate('google', {
+    scope: ['email', 'profile'],
+  }),
+  [AuthenticationProvider.LOCAL]: passport.authenticate('local', {
+    /* todo */
+  }),
+};
 
 passport.use(
   new GoogleStrategy(
@@ -58,6 +71,26 @@ passport.use(
   ),
 );
 
+passport.use(
+  new LocalStrategy(async (email: string, password: string, done) => {
+    // todo
+  }),
+);
+
+function login(req: Request, res: Response) {
+  const provider = req.query.provider;
+  if (provider === undefined || provider === null)
+    throw new Error('Provider not found');
+
+  const role = req.path.includes('teacher')
+    ? ClassRoleEnum.TEACHER
+    : ClassRoleEnum.STUDENT;
+
+  const providerEnum = provider as AuthenticationProvider;
+
+  return providerMapper[providerEnum](req, res);
+}
+
 passport.serializeUser((user: any, done) => done(null, user.id));
 passport.deserializeUser(async (id: string, done) => {
   try {
@@ -68,14 +101,8 @@ passport.deserializeUser(async (id: string, done) => {
   }
 });
 
-router.get(
-  '/student/login',
-  passport.authenticate('google', { scope: ['email', 'profile'] }),
-);
-router.get(
-  '/teacher/login',
-  passport.authenticate('google', { scope: ['email', 'profile'] }),
-);
+router.get('/student/login', (req: Request, res: Response) => login(req, res));
+router.get('/teacher/login', (req: Request, res: Response) => login(req, res));
 
 router.get(
   '/callback/:provider',

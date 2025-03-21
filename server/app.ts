@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '../.env' });
 
-import { router as auth } from './routes/auth.router';
+import { router as auth } from './routes/auth.routes';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import { ClassController } from './routes/class.routes';
 import { ZodError } from 'zod';

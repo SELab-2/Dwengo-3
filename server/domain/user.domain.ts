@@ -1,6 +1,8 @@
 import { Request } from 'express';
-import crypto from 'crypto';
-import { LoginRequest, RegisterRequest } from '../util/types/RequestTypes';
+import {
+  LoginCredentials,
+  RegisterCredentials,
+} from '../util/types/auth.types';
 import * as persistence from '../persistence/auth/users.persistance';
 import { AuthProvider, ClassRole, User } from '@prisma/client';
 import {
@@ -10,60 +12,36 @@ import {
   UserEntity,
 } from '../util/types/user.types';
 
-/**
- * Maps the `AuthProvider` enum from the prisma client to the
- * `AuthenticationProvider` enum from the types layer.
- *
- * @throws {Error} If the provider is not recognized.
- *
- * @param {AuthProvider} provider The provider from the prisma client.
- * @returns {AuthenticationProvider} The provider from the types layer.
- */
-function fromAuthProvider(provider: AuthProvider): AuthenticationProvider {
-  switch (provider) {
-    case AuthProvider.LOCAL:
-      return AuthenticationProvider.LOCAL;
-    case AuthProvider.GOOGLE:
-      return AuthenticationProvider.GOOGLE;
-    default:
-      throw new Error('Invalid provider');
-  }
-}
+const providerMap = {
+  [AuthProvider.GOOGLE]: AuthenticationProvider.GOOGLE,
+  [AuthProvider.LOCAL]: AuthenticationProvider.LOCAL,
+};
 
-export async function registerUser(
-  registerRequest: RegisterRequest,
+const roleMap = {
+  [ClassRole.TEACHER]: ClassRoleEnum.TEACHER,
+  [ClassRole.STUDENT]: ClassRoleEnum.STUDENT,
+};
+
+export async function createUser(
+  userData: RegisterCredentials,
 ): Promise<UserEntity> {
-  const user = await persistence.saveUser({
-    username: registerRequest.username,
-    email: registerRequest.email,
-    provider: registerRequest.provider,
-    password: crypto
-      .createHash('sha512')
-      .update(registerRequest.password)
-      .digest('base64'),
-    name: registerRequest.name,
-    surname: registerRequest.surname,
-    role: registerRequest.role as ClassRole,
-  });
+  const user = await persistence.saveUser(userData);
   return {
-    id: user.id,
-    provider: fromAuthProvider(user.provider),
-    username: user.username,
     email: user.email,
-    password: user.password,
+    id: user.id,
     name: user.name,
-    surname: user.surname,
-    role:
-      user.role === ClassRole.TEACHER
-        ? ClassRoleEnum.TEACHER
-        : ClassRoleEnum.STUDENT,
-    teacher: user.teacher,
+    password: user.password,
+    provider: providerMap[user.provider],
+    role: roleMap[user.role],
     student: user.student,
+    surname: user.surname,
+    teacher: user.teacher,
+    username: user.username,
   };
 }
 
 export async function loginUser(
-  loginRequest: LoginRequest,
+  loginRequest: LoginCredentials,
 ): Promise<UserEntity> {
   const user: FullUserType | null = await persistence.getUserByEmail(
     loginRequest.email,
@@ -71,16 +49,13 @@ export async function loginUser(
   if (user === null) throw new Error('User not found');
   return {
     id: user.id,
-    provider: fromAuthProvider(user.provider),
+    provider: providerMap[user.provider],
     username: user.username,
     email: user.email,
     password: user.password,
     name: user.name,
     surname: user.surname,
-    role:
-      user.role === ClassRole.TEACHER
-        ? ClassRoleEnum.TEACHER
-        : ClassRoleEnum.STUDENT,
+    role: roleMap[user.role],
     teacher: user.teacher,
     student: user.student,
   };
