@@ -19,6 +19,15 @@ export class ClassController {
     );
   };
 
+  private getClassById = async (req: Request, res: Response) => {
+    res.json(
+      await this.classDomain.getClassById(
+        req.params.id,
+        await getUserFromReq(req),
+      ),
+    );
+  };
+
   private createClass = async (req: Request, res: Response) => {
     res.json(
       await this.classDomain.createClass(req.body, await getUserFromReq(req)),
@@ -40,7 +49,7 @@ export class ClassController {
      *       - cookieAuth: []
      *     tags: [Class]
      *     summary: Get list of classes
-     *     description: Fetches a list of classes filtered by optional query parameters such as teacherId, studentId, or class ID.
+     *     description: Fetches a list of classes filtered by optional query parameters such as teacher ID or student ID
      *     parameters:
      *       - name: teacherId
      *         in: query
@@ -56,13 +65,6 @@ export class ClassController {
      *         schema:
      *           type: string
      *           format: uuid
-     *       - name: id
-     *         in: query
-     *         description: Filter by class ID
-     *         required: false
-     *         schema:
-     *           type: string
-     *           format: uuid
      *     responses:
      *       200:
      *         description: Successfully fetched list of classes
@@ -72,7 +74,35 @@ export class ClassController {
      *         description: Server error
      */
     this.router.get('/', this.getClasses);
-
+    /**
+     * @swagger
+     * /api/class/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Class
+     *     summary: Get a class by ID
+     *     description: Gets the content of a specific class selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the class.
+     *     responses:
+     *       200:
+     *         description: Class fetched succesfully.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Class not found.
+     *       500:
+     *         description: Internal server error.
+     */
+    this.router.get('/:id', this.getClassById);
     /**
      * @swagger
      * /api/class:

@@ -7,6 +7,8 @@ import {
 } from '../util/types/classJoinRequest.types';
 import { Prisma } from '@prisma/client';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinRequest.select';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 export class ClassJoinRequestPersistence {
   public async createClassJoinRequest(
@@ -31,6 +33,7 @@ export class ClassJoinRequestPersistence {
           classId,
           userId,
         },
+        select: classJoinRequestSelectDetail,
       });
 
     return !!existingRequest;
@@ -57,22 +60,13 @@ export class ClassJoinRequestPersistence {
       ],
     };
 
-    const [classJoinRequests, totalCount] =
-      await PrismaSingleton.instance.$transaction([
-        PrismaSingleton.instance.classJoinRequest.findMany({
-          where,
-          skip: paginationParams.skip,
-          take: paginationParams.pageSize,
-        }),
-        PrismaSingleton.instance.classJoinRequest.count({
-          where,
-        }),
-      ]);
-
-    return {
-      data: classJoinRequests,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(
+      PrismaSingleton.instance.classJoinRequest,
+      where,
+      paginationParams,
+      undefined,
+      classJoinRequestSelectDetail,
+    );
   }
 
   public async handleJoinRequest(data: ClassJoinRequestDecisionParams) {

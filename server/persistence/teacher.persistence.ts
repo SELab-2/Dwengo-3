@@ -7,6 +7,7 @@ import {
   TeacherUpdateParams,
 } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { teacherSelectDetail } from '../util/selectInput/teacher.select';
 
 export class TeacherPersistence {
   private prisma: PrismaClient;
@@ -48,7 +49,6 @@ export class TeacherPersistence {
   ) {
     const whereClause = {
       AND: [
-        filters.id ? { id: filters.id } : {},
         filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
         filters.assignmentId
@@ -68,54 +68,34 @@ export class TeacherPersistence {
   /**
    * Get a teacher by their ID.
    *
-   * @remarks By default, this function includes the teacher's classes, assignments, and user.
-   *
    * @param teacherId - The ID of the teacher to get.
    * @param include - Optional `include` clause for related models.
    * @returns The teacher data.
    */
-  public async getTeacherById(
-    teacherId: string,
-    include: TeacherIncludeParams = {
-      classes: true,
-      assignments: true,
-      user: true,
-    },
-  ) {
-    return await this.prisma.teacher.findUnique({
+  public async getTeacherById(teacherId: string) {
+    const teacher = await this.prisma.teacher.findUnique({
       where: { id: teacherId },
-      include: {
-        classes: include.classes,
-        assignment: include.assignments,
-        user: include.user,
-      },
+      select: teacherSelectDetail,
     });
+
+    if (!teacher) {
+      throw new Error(`Teacher with id: ${teacherId} was not found`);
+    }
+
+    return teacher;
   }
 
   /**
    * Get a teacher by their user ID.
    *
-   * @remarks By default, this function includes the teacher's classes, assignments, and user.
-   *
    * @param userId - The ID of the user to get the teacher for.
    * @param include - Optional `include` clause for related models.
    * @returns The teacher data.
    */
-  public async getTeacherByUserId(
-    userId: string,
-    include: TeacherIncludeParams = {
-      classes: true,
-      assignments: true,
-      user: true,
-    },
-  ) {
+  public async getTeacherByUserId(userId: string) {
     return await this.prisma.teacher.findUnique({
       where: { userId },
-      include: {
-        classes: include.classes,
-        assignment: include.assignments,
-        user: include.user,
-      },
+      select: teacherSelectDetail,
     });
   }
 

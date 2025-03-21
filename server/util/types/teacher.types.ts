@@ -20,7 +20,6 @@ export type TeacherCreateParams = z.infer<typeof TeacherCreateSchema>;
  * @property assignmentId - The id of the assignment to get the teacher for
  */
 export const TeacherFilterSchema = z.object({
-  id: z.string().uuid().optional(),
   userId: z.string().uuid().optional(),
   classId: z.string().uuid().optional(),
   assignmentId: z.string().uuid().optional(),

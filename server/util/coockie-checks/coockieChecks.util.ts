@@ -63,7 +63,8 @@ export const checkIfUserIsInGroup = async (
   groupPersistence: GroupPersistence,
 ): Promise<void> => {
   if (!groupId) return;
-  const groupData = await groupPersistence.getGroupById(groupId);
+  const groupData =
+    await groupPersistence.getGroupByIdWithCustomIncludes(groupId);
   if (!groupData) throw new Error('Group not found.');
 
   if (user.role === ClassRole.TEACHER) {
@@ -118,7 +119,8 @@ export const checkIfUsersAreInSameGroup = async (
   groupId: Uuid,
   groupPersistence: GroupPersistence,
 ): Promise<void> => {
-  const groupData = await groupPersistence.getGroupById(groupId);
+  const groupData =
+    await groupPersistence.getGroupByIdWithCustomIncludes(groupId);
   if (!groupData) {
     throw new Error('Group not found');
   }
