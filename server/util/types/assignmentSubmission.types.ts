@@ -1,9 +1,10 @@
-import { SubmissionType } from '@prisma/client';
+import { Prisma, SubmissionType } from '@prisma/client';
 import { z } from 'zod';
 import { Uuid } from './assignment.types';
 import { GroupShort } from './group.types';
 import { LearningPathNodeShort } from './learningPathNode.types';
 import { JsonValue } from '@prisma/client/runtime/library';
+import { assignmentSubmissionSelectDetail } from '../selectInput/assignmentSubmission.select';
 
 const FileSubmissionSchema = z.object({
   fileName: z.string(),
@@ -67,12 +68,9 @@ export type AssignmentSubFilterParams = z.infer<typeof SubmissionFilterSchema>;
 export type AssignmentSubCreateParams = z.infer<typeof SubmissionCreateSchema>;
 export type AssignmentSubUpdateParams = z.infer<typeof SubmissionUpdateSchema>;
 export type FileSubmission = z.infer<typeof FileSubmissionSchema>;
-export type AssignmentSubmissionDetail = {
-  id: Uuid;
-  submission: JsonValue;
-  group: GroupShort;
-  node: LearningPathNodeShort;
-};
+export type AssignmentSubmissionDetail = Prisma.AssignmentSubmissionGetPayload<{
+  select: typeof assignmentSubmissionSelectDetail;
+}>;
 export type AssignmentSubmissionShort = {
   id: Uuid;
 };
