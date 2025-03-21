@@ -1,5 +1,4 @@
 import { StudentPersistence } from '../persistence/student.persistence';
-import { z } from 'zod';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
@@ -35,7 +34,7 @@ export class StudentDomain {
    */
   public async createStudent(body: unknown) {
     // Validate the body
-    const { userId } = this.validateQuery(StudentCreateSchema, body);
+    const { userId } = StudentCreateSchema.parse(body);
 
     // Check if the user exists
     const user = await getUserById(userId);
@@ -52,17 +51,6 @@ export class StudentDomain {
     }
 
     return await this.studentPersistence.createStudent(userId);
-  }
-
-  /**
-   * A generic function to validate a query based on a given schema.
-   *
-   * @param schema - The schema to validate the query against.
-   * @param query - The query to validate.
-   * @returns The parsed query data.
-   */
-  private validateQuery<T extends z.ZodSchema<any>>(schema: T, query: unknown): z.infer<T> {
-    return schema.parse(query);
   }
 
   /**
@@ -195,13 +183,13 @@ export class StudentDomain {
    */
   public async getStudents(query: unknown, user: UserEntity) {
     // Validate and parse pagination query parameters
-    const pagination = this.validateQuery(PaginationFilterSchema, query);
+    const pagination = PaginationFilterSchema.parse(query);
 
     // Validate and parse student filters
-    const filters = this.validateQuery(StudentFilterSchema, query);
+    const filters = StudentFilterSchema.parse(query);
 
     // Validate and parse student include
-    const include = this.validateQuery(StudentIncludeSchema, query);
+    const include = StudentIncludeSchema.parse(query);
 
     if (user.role === ClassRoleEnum.TEACHER) {
       // Check if the teacher exists
@@ -240,7 +228,7 @@ export class StudentDomain {
    */
   public async updateStudent(body: unknown, user: UserEntity) {
     // Validate and parse body
-    const updateData = this.validateQuery(StudentUpdateSchema, body);
+    const updateData = StudentUpdateSchema.parse(body);
 
     const { id, classes, groups } = updateData;
 
@@ -274,7 +262,7 @@ export class StudentDomain {
    */
   public async deleteStudent(body: unknown, user: UserEntity): Promise<void> {
     // Validate the body
-    const { id } = this.validateQuery(StudentDeleteSchema, body);
+    const { id } = StudentDeleteSchema.parse(body);
 
     // Check if the student exists
     const student = await this.studentPersistence.getStudentById(id);

@@ -1,5 +1,4 @@
 import { TeacherPersistence } from '../persistence/teacher.persistence';
-import { z } from 'zod';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { UserEntity } from '../util/types/user.types';
 import {
@@ -24,43 +23,6 @@ export class TeacherDomain {
   }
 
   /**
-   * A generic function to validate a query based on a given schema.
-   *
-   * @param schema - The schema to validate the query against.
-   * @param query - The query to validate.
-   * @returns The parsed query data.
-   */
-  private validateQuery<T extends z.ZodSchema<any>>(schema: T, query: unknown): z.infer<T> {
-    // TODO: move this to a util function
-    // TODO: Er zijn meerdere plekken waar dit voorkomt, mss op een centrale plek zetten?
-    return schema.parse(query);
-  }
-
-  /**
-   * A generic function to validate a given object exists using a given function and input.
-   *
-   * @param f - The function to retrieve the object
-   * @param input - The input to use for the function
-   * @param errorMessage - The error message to throw if the object does not exist
-   * @returns The object if it exists
-   */
-  private async validateObject<T, W>(
-    f: (input: T) => Promise<W | null>,
-    input: T,
-    errorMessage: string,
-  ) {
-    // TODO: move this to a util function
-
-    const result = await f(input);
-
-    if (!result) {
-      throw new BadRequestError(40000, errorMessage);
-    }
-
-    return result;
-  }
-
-  /**
    * Create a teacher.
    *
    * @param body - The body used in the request to create a teacher
@@ -68,7 +30,7 @@ export class TeacherDomain {
    */
   public async createTeacher(body: unknown) {
     // Validate the request body
-    const { userId } = this.validateQuery(TeacherCreateSchema, body);
+    const { userId } = TeacherCreateSchema.parse(body);
 
     const user = await getUserById(userId);
 
@@ -87,9 +49,9 @@ export class TeacherDomain {
 
   public async getTeachers(query: unknown, user: UserEntity) {
     // Validate the query
-    const paginationData = this.validateQuery(PaginationFilterSchema, query);
-    const filterData = this.validateQuery(TeacherFilterSchema, query);
-    const includeData = this.validateQuery(TeacherIncludeSchema, query);
+    const paginationData = PaginationFilterSchema.parse(query);
+    const filterData = TeacherFilterSchema.parse(query);
+    const includeData = TeacherIncludeSchema.parse(query);
 
     // TODO: validation
 
@@ -99,7 +61,7 @@ export class TeacherDomain {
 
   public async updateTeacher(body: unknown, user: UserEntity) {
     // Validate the body
-    const updateData = this.validateQuery(TeacherUpdateSchema, body);
+    const updateData = TeacherUpdateSchema.parse(body);
 
     // TODO validation
 
@@ -109,7 +71,7 @@ export class TeacherDomain {
 
   public async deleteTeacher(body: unknown, user: UserEntity) {
     // Validate the body
-    const { id } = this.validateQuery(TeacherDeleteSchema, body);
+    const { id } = TeacherDeleteSchema.parse(body);
 
     // TODO validation
 
