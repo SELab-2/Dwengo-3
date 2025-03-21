@@ -39,10 +39,16 @@ export class DiscussionPersistence {
   }
 
   public async getDiscussionById(id: Uuid): Promise<DiscussionDetail> {
-    return this.prisma.discussion.findUniqueOrThrow({
+    const discussion = await this.prisma.discussion.findUniqueOrThrow({
       where: { id: id },
       select: discussionSelectDetail,
     });
+
+    if (!discussion) {
+      throw new Error(`Discussion with id: ${id} was not found`);
+    }
+
+    return discussion;
   }
 
   public async createDiscussion(

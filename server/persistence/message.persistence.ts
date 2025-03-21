@@ -37,10 +37,16 @@ export class MessagePersistence {
   }
 
   public async getMessageById(id: MessageId): Promise<MessageDetail> {
-    return this.prisma.message.findUniqueOrThrow({
+    const message = await this.prisma.message.findUnique({
       where: { id: id },
       select: messageSelectDetail,
     });
+
+    if (!message) {
+      throw new Error(`Message with id: ${id} was not found`);
+    }
+
+    return message;
   }
 
   public async createMessage(
