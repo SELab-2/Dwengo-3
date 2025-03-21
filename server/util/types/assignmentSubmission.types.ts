@@ -1,9 +1,7 @@
 import { Prisma, SubmissionType } from '@prisma/client';
 import { z } from 'zod';
 import { Uuid } from './assignment.types';
-import { GroupShort } from './group.types';
-import { LearningPathNodeShort } from './learningPathNode.types';
-import { JsonValue } from '@prisma/client/runtime/library';
+
 import { assignmentSubmissionSelectDetail } from '../selectInput/assignmentSubmission.select';
 
 const FileSubmissionSchema = z.object({
@@ -28,19 +26,18 @@ export const SubmissionCreateSchema = z
     groupId: z.string().uuid(),
     nodeId: z.string().uuid(),
     submissionType: z.nativeEnum(SubmissionType),
-    submission: z.union([
-      FileSubmissionSchema.optional(),
-      MultipleChoiceSubSchema.optional(),
-    ]),
+    submission: z.union([FileSubmissionSchema, MultipleChoiceSubSchema]),
   })
   .refine(
     (data) =>
-      data.submissionType === SubmissionType.MULTIPLE_CHOICE &&
-      data.submission === undefined,
+      (data.submissionType === SubmissionType.MULTIPLE_CHOICE &&
+        typeof data.submission === 'string') ||
+      (data.submissionType === SubmissionType.FILE &&
+        FileSubmissionSchema.safeParse(data.submission).success),
     {
       message:
-        'Multiple choice submission is required when submissionType is MULTIPLE_CHOICE',
-      path: [],
+        'submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE',
+      path: ['submission'],
     },
   );
 
@@ -48,19 +45,18 @@ export const SubmissionUpdateSchema = z
   .object({
     id: z.string().uuid(),
     submissionType: z.nativeEnum(SubmissionType),
-    submission: z.union([
-      FileSubmissionSchema.optional(),
-      MultipleChoiceSubSchema.optional(),
-    ]),
+    submission: z.union([FileSubmissionSchema, MultipleChoiceSubSchema]),
   })
   .refine(
     (data) =>
-      data.submissionType === SubmissionType.MULTIPLE_CHOICE &&
-      data.submission === undefined,
+      (data.submissionType === SubmissionType.MULTIPLE_CHOICE &&
+        typeof data.submission === 'string') ||
+      (data.submissionType === SubmissionType.FILE &&
+        FileSubmissionSchema.safeParse(data.submission).success),
     {
       message:
-        'Multiple choice submission is required when submissionType is MULTIPLE_CHOICE',
-      path: [],
+        'submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE',
+      path: ['submission'],
     },
   );
 
