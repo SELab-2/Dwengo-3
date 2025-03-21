@@ -82,10 +82,6 @@ function login(req: Request, res: Response) {
   if (provider === undefined || provider === null)
     throw new Error('Provider not found');
 
-  const role = req.path.includes('teacher')
-    ? ClassRoleEnum.TEACHER
-    : ClassRoleEnum.STUDENT;
-
   const providerEnum = provider as AuthenticationProvider;
 
   return providerMapper[providerEnum](req, res);
