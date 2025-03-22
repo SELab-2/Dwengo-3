@@ -35,7 +35,7 @@ export const UserSchema = z.object({
   password: z.string(),
   surname: z.string(),
   name: z.string(),
-  role: z.enum([ClassRoleEnum.STUDENT, ClassRoleEnum.TEACHER]),
+  role: z.enum([ClassRole.STUDENT, ClassRole.TEACHER]),
   id: z.string().uuid(),
   teacher: z.union([TeacherSchema, z.null()]).optional(), // Databse sets this to null if user is a student.
   student: z.union([StudentSchema, z.null()]).optional(), // Databse sets this to null if user is a teacher.

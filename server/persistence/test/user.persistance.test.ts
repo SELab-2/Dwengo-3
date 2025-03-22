@@ -3,42 +3,23 @@ import { getUserByEmail, getUserById, getUserRoleById, saveUser } from "../auth/
 import { ClassRoleEnum } from "../../util/types/user.types";
 import { PrismaSingleton } from "../prismaSingleton";
 import { User } from ".prisma/client";
+import { deleteAllData, insertUsers } from "./testData";
 
-const users = [
-    {
-        username: "student1",
-        email: "student1@test.com",
-        password: "password",
-        surname: "student1",
-        name: "student1",
-        role: ClassRoleEnum.STUDENT
-    },
-    {
-        username: "teacher1",
-        email: "teacher1@test.com",
-        password: "password",
-        surname: "teacher1",
-        name: "teacher1",
-        role: ClassRoleEnum.TEACHER
-    }
-];
-
-let dbUsers: User[] = []
+let users: User[] = []
 
 describe("user persistence test", () => {
     beforeAll(async () => {
-        const requests = users.map((user) => saveUser(user));
-        dbUsers = await Promise.all(requests);
+        users = await insertUsers();
     });
     
     afterAll(async () => {
-        await PrismaSingleton.instance.user.deleteMany();
+        await deleteAllData();
         await PrismaSingleton.instance.$disconnect();
     });
 
     describe("get user by email", () => {
         test("request with existing email responds correctly", async () => {
-            for (const user of dbUsers) {
+            for (const user of users) {
                 const req = getUserByEmail(user.email);
                 let expectedUser;
                 if (user.role === ClassRoleEnum.STUDENT) {
@@ -53,7 +34,7 @@ describe("user persistence test", () => {
 
     describe("get user by id", () => {
         test("request with existing id responds correctly", async () => {
-            for (const user of dbUsers) {
+            for (const user of users) {
                 const req = getUserById(user.id);
                 let expectedUser;
                 if (user.role === ClassRoleEnum.STUDENT) {
@@ -68,10 +49,10 @@ describe("user persistence test", () => {
 
     describe("get user role by id", () => {
         test("request with existing id responds correctly", async () => {
-            for (const user of dbUsers) {
+            for (const user of users) {
                 const req = getUserRoleById(user.id);
                 await expect(req).resolves.toStrictEqual({role: user.role});
             }
-        })
+        });
     });
 });

@@ -1,5 +1,8 @@
 import { z } from 'zod';
 import { Uuid } from './assignment.types';
+import { classSelectDetail } from '../selectInput/class.select';
+import { Prisma } from '@prisma/client';
+import { Select } from '@prisma/client/runtime/library';
 
 export const ClassFilterSchema = z
   .object({
@@ -26,6 +29,8 @@ export const ClassUpdateSchema = z.object({
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
 export type ClassShort = {
-  id: Uuid;
-  name: string;
+  id: Uuid,
+  name: string
 };
+
+export type ClassDetail = Prisma.ClassGetPayload<{select: typeof classSelectDetail}>;

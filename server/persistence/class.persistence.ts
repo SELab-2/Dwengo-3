@@ -1,6 +1,7 @@
 import { PaginationParams } from '../util/types/pagination.types';
 import {
   ClassCreateParams,
+  ClassDetail,
   ClassFilterParams,
   ClassUpdateParams,
 } from '../util/types/class.types';
@@ -61,7 +62,7 @@ export class ClassPersistence {
     return classData;
   }
 
-  public async createClass(params: ClassCreateParams, creator: UserEntity) {
+  public async createClass(params: ClassCreateParams, creator: UserEntity): Promise<ClassDetail> {
     return await this.prisma.class.create({
       data: {
         name: params.name,
@@ -85,7 +86,7 @@ export class ClassPersistence {
     });
   }
 
-  public async isTeacherFromClass(userId: string, classId: string) {
+  public async isTeacherFromClass(userId: string, classId: string): Promise<boolean> {
     const teacher = await this.prisma.teacher.findFirst({
       where: {
         userId,
