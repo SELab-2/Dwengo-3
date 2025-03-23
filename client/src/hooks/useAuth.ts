@@ -1,7 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
 import apiClient from '../api';
-import { LoginData, RegisterData } from '../util/types/auth.types';
+import { LoginData, RegisterData, UserData } from '../util/types/auth.types';
 import { ClassRoleEnum } from '../util/types/class.types';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/authContext';
+
+// Custom hook to access the auth context
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  return context;
+};
 
 export function useRegister() {
   return useMutation({
@@ -31,6 +40,20 @@ export function useLogin() {
         return response.data;
       } else {
         const response = await apiClient.post('/api/auth/teacher/login', data);
+        return response.data;
+      }
+    },
+  });
+}
+
+export function useLogout() {
+  return useMutation({
+    mutationFn: async (data: UserData) => {
+      if (data.role === ClassRoleEnum.STUDENT) {
+        const response = await apiClient.post('/api/auth/student/logout');
+        return response.data;
+      } else {
+        const response = await apiClient.post('/api/auth/teacher/logout');
         return response.data;
       }
     },

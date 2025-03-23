@@ -11,33 +11,39 @@ import ErrorPage from './views/ErrorPage';
 import FooterBar from './components/FooterBar';
 import MainAppBar from './components/MainAppBar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from './contexts/authContext';
+import { ErrorProvider } from './contexts/ErrorContext';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <MainAppBar></MainAppBar>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <ErrorProvider>
+          <ThemeProvider theme={theme}>
+            <Router>
+              <MainAppBar></MainAppBar>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
 
-            {/* Protected Routes */}
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-            </Route>
+                {/* Protected Routes */}
+                <Route element={<ProtectedRoutes />}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                </Route>
 
-            {/* Redirect all other routes to an errorpage */}
-            <Route path="*" element={<ErrorPage />} />
-          </Routes>
-        </Router>
-        <FooterBar></FooterBar>
-      </ThemeProvider>
-    </QueryClientProvider>
+                {/* Redirect all other routes to an errorpage */}
+                <Route path="*" element={<ErrorPage />} />
+              </Routes>
+            </Router>
+            <FooterBar></FooterBar>
+          </ThemeProvider>
+        </ErrorProvider>
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }
 

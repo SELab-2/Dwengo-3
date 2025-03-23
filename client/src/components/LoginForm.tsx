@@ -4,13 +4,16 @@ import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useLogin } from '../hooks/useAuth';
+import { useAuth, useLogin } from '../hooks/useAuth';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
+import { useError } from '../hooks/useError';
 
 function LoginForm() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { setError } = useError();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -29,10 +32,14 @@ function LoginForm() {
         role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, //TODO: Change this to the correct role
       },
       {
-        onSuccess: () => {
+        onSuccess: (response) => {
+          // Update the user context
+          login(response);
+
           // Redirect to the home page
           navigate('/');
         },
+        onError: (error) => setError(error.message),
       },
     );
   };

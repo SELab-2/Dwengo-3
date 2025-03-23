@@ -14,3 +14,19 @@ export interface RegisterData {
   password: string;
   role: ClassRoleEnum;
 }
+
+export interface UserData {
+  id: number;
+  username: string;
+  email: string;
+  role: ClassRoleEnum;
+  name: string;
+  surname: string;
+}
+
+export interface AuthContextType {
+  user: UserData | null;
+  login: (data: UserData) => void;
+  register: (data: UserData) => void;
+  logout: () => void;
+}

@@ -1,12 +1,19 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
+/**
+ * Component that renders child routes if authenticated, otherwise redirects to login
+ */
 function ProtectedRoutes() {
-  // TODO: Implement authentication logic
-  const isAuthenticated = true;
+  const { user } = useAuth();
 
-  if (!isAuthenticated) {
+  // Redirect to login if not authenticated
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
+
+  // TODO: Remove this console.log
+  console.log('Logged in as: \n' + user);
 
   return <Outlet />; // Render child routes if authenticated
 }

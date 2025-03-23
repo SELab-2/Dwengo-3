@@ -6,13 +6,16 @@ import NameTextField from './textfields/NameTextField';
 import SurnameTextField from './textfields/SurnameTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useRegister } from '../hooks/useAuth';
+import { useAuth, useRegister } from '../hooks/useAuth';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
+import { useError } from '../hooks/useError';
 
 function RegisterForm() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { setError } = useError();
+  const { register } = useAuth();
 
   const registerMutation = useRegister();
 
@@ -38,10 +41,14 @@ function RegisterForm() {
         role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER,
       },
       {
-        onSuccess: () => {
+        onSuccess: (response) => {
+          // Update the user context
+          register(response);
+
           // Redirect to the home page
           navigate('/');
         },
+        onError: (error) => setError(error.message),
       },
     );
   };
