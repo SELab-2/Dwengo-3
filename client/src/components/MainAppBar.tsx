@@ -14,7 +14,7 @@ function MainAppBar() {
   }
 
   return (
-    <AppBar position="static" sx={{ height: ComponentSize.huge }}>
+    <AppBar position="static" sx={{ height: ComponentSize.medium }}>
       <Toolbar
         sx={{
           display: 'flex',

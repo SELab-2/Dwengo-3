@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import NameTextField from './textfields/NameTextField';
@@ -10,6 +10,7 @@ import { useAuth, useRegister } from '../hooks/useAuth';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
+import { MarginSize } from '../util/size';
 
 function RegisterForm() {
   const { t } = useTranslation();
@@ -54,18 +55,25 @@ function RegisterForm() {
   };
 
   return (
-    <Box component="form" onSubmit={handleRegisterSubmit} sx={{ mt: 3 }}>
+    <Box
+      component="form"
+      onSubmit={handleRegisterSubmit}
+      sx={{ mt: MarginSize.tiny }}
+    >
       <SurnameTextField surname={name} setSurname={setName} />
       <NameTextField name={surname} setName={setSurname} />
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
-      <Typography variant="h6" gutterBottom>
-        {t('registerAs')}
-      </Typography>
       <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: MarginSize.tiny, mb: 2 }}
+      >
         {t('register')}
       </Button>
+      <Divider sx={{ mb: MarginSize.tiny }} />
       <Typography variant="body2" color="textSecondary" align="center">
         {t('alreadyHaveAccount')}{' '}
       </Typography>

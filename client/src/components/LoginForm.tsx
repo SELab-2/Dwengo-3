@@ -8,6 +8,7 @@ import { useAuth, useLogin } from '../hooks/useAuth';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
+import { MarginSize } from '../util/size';
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -33,23 +34,30 @@ function LoginForm() {
       },
       {
         onSuccess: (response) => {
-          // Update the user context
+          // Set the user in the auth context
           login(response);
 
           // Redirect to the home page
           navigate('/');
         },
-        onError: (error) => setError(error.message),
+        onError: (error) => {
+          setError(error.message);
+        },
       },
     );
   };
 
   return (
-    <Box component="form" onSubmit={handleLoginSubmit} sx={{ mt: 3 }}>
+    <Box component="form" onSubmit={handleLoginSubmit} sx={{ mt: 0 }}>
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
       <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: MarginSize.tiny, mb: MarginSize.xsmall }}
+      >
         {t('login')}
       </Button>
     </Box>

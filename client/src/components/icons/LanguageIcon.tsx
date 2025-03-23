@@ -2,7 +2,7 @@ import React, { useState, MouseEvent } from 'react';
 import { Menu, MenuItem, IconButton, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import LanguageIcon from '@mui/icons-material/Language';
-import { ComponentSize } from '../../util/size';
+import { IconSize } from '../../util/size';
 
 const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation(); // Hook to access and change the language
@@ -32,8 +32,8 @@ const LanguageSwitcher: React.FC = () => {
         <LanguageIcon
           sx={{
             color: theme.palette.secondary.main,
-            width: ComponentSize.xlarge,
-            height: ComponentSize.xlarge,
+            width: IconSize.large,
+            height: IconSize.large,
           }}
         />
       </IconButton>

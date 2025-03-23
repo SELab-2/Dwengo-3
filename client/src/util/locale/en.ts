@@ -2,6 +2,7 @@ export const en = {
   translation: {
     yes: 'Yes',
     no: 'No',
+    or: 'Or',
     email: 'Email address',
     name: 'Name',
     surname: 'Surname',

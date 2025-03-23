@@ -13,37 +13,42 @@ import MainAppBar from './components/MainAppBar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { ErrorProvider } from './contexts/ErrorContext';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const queryClient = new QueryClient();
 
 function App() {
+  // TODO: fill in GoogleClientId
+
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <Router>
-            <MainAppBar></MainAppBar>
-            <ErrorProvider>
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+    <GoogleOAuthProvider clientId="TODO">
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <Router>
+              <MainAppBar></MainAppBar>
+              <ErrorProvider>
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
 
-                {/* Protected Routes */}
-                <Route element={<ProtectedRoutes />}>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                </Route>
+                  {/* Protected Routes */}
+                  <Route element={<ProtectedRoutes />}>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                  </Route>
 
-                {/* Redirect all other routes to an errorpage */}
-                <Route path="*" element={<ErrorPage />} />
-              </Routes>
-            </ErrorProvider>
-          </Router>
-          <FooterBar></FooterBar>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </AuthProvider>
+                  {/* Redirect all other routes to an errorpage */}
+                  <Route path="*" element={<ErrorPage />} />
+                </Routes>
+              </ErrorProvider>
+            </Router>
+            <FooterBar></FooterBar>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </AuthProvider>
+    </GoogleOAuthProvider>
   );
 }
 
