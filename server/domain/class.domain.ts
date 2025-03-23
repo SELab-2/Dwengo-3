@@ -95,23 +95,18 @@ export class ClassDomain {
     return this.classPersistance.createClass(createParamsResult.data, user);
   }
 
-  public async updateClass(body: unknown, user: UserEntity) {
+  public async updateClass(id: string, body: unknown, user: UserEntity) {
     // Validate and parse class update parameters
     const updateParamsResult = ClassUpdateSchema.safeParse(body);
     if (!updateParamsResult.success) {
       throw updateParamsResult.error;
     }
 
-    if (
-      !this.classPersistance.isTeacherFromClass(
-        user.id,
-        updateParamsResult.data.id,
-      )
-    ) {
+    if (!this.classPersistance.isTeacherFromClass(user.id, id)) {
       throw new Error('User must be a teacher of the class to update it.');
     }
 
-    return this.classPersistance.updateClass(updateParamsResult.data);
+    return this.classPersistance.updateClass(id, updateParamsResult.data);
   }
 
   public async checkUserBelongsToClass(user: UserEntity, classId: string) {
