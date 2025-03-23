@@ -25,6 +25,10 @@ dotenv.config({ path: '../.env' });
 export const app: Express = express();
 const port = process.env.PORT || 3001;
 
+// Allow requests from frontend
+import cors from 'cors';
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+
 const options = {
   swaggerDefinition: swaggerDocument, // Use the imported JSON configuration
   apis: ['./routes/*.ts'], // Specify where to find the JSDoc comments

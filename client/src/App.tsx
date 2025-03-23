@@ -10,29 +10,34 @@ import ProtectedRoutes from './components/ProtectedRoutes';
 import ErrorPage from './views/ErrorPage';
 import FooterBar from './components/FooterBar';
 import MainAppBar from './components/MainAppBar';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <MainAppBar></MainAppBar>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <MainAppBar></MainAppBar>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
 
-          {/* Redirect all other routes to an errorpage */}
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
-      </Router>
-      <FooterBar></FooterBar>
-    </ThemeProvider>
+            {/* Redirect all other routes to an errorpage */}
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </Router>
+        <FooterBar></FooterBar>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { Box, Button, Switch, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import NameTextField from './textfields/NameTextField';
 import SurnameTextField from './textfields/SurnameTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useRegister } from '../hooks/useAuth';
+import { ClassRoleEnum } from '../util/types/class.types';
+import { IsStudentSwitch } from './IsStudentSwitch';
 
 function RegisterForm() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const registerMutation = useRegister();
 
   const [name, setName] = useState<string>('');
   const [surname, setSurname] = useState<string>('');
@@ -21,21 +26,24 @@ function RegisterForm() {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      surname: data.get('surname'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
 
-    if (isStudent) {
-      // TODO: Register as a student
-    } else {
-      // TODO: Register as a teacher
-    }
-
-    // Redirect to the home page
-    navigate('/');
+    registerMutation.mutate(
+      {
+        username: ((data.get('name') as string) +
+          data.get('surname')) as string,
+        name: data.get('name') as string,
+        surname: data.get('surname') as string,
+        email: data.get('email') as string,
+        password: data.get('password') as string,
+        role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER,
+      },
+      {
+        onSuccess: () => {
+          // Redirect to the home page
+          navigate('/');
+        },
+      },
+    );
   };
 
   return (
@@ -47,12 +55,7 @@ function RegisterForm() {
       <Typography variant="h6" gutterBottom>
         {t('registerAs')}
       </Typography>
-      <Box
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <Switch checked={isStudent} onChange={() => setIsStudent(!isStudent)} />
-        <Typography>{isStudent ? t('student') : t('teacher')}</Typography>
-      </Box>
+      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
       <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         {t('register')}
       </Button>

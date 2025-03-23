@@ -55,7 +55,9 @@
     "vitest-mock-extended": "^3.0.1"
   },
   "dependencies": {
+    "@types/cors": "^2.8.17",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
     "express": "^5",
