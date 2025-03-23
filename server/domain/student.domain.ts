@@ -4,7 +4,6 @@ import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   StudentCreateSchema,
-  StudentDeleteSchema,
   StudentFilterParams,
   StudentFilterSchema,
   StudentIncludeSchema,
@@ -283,11 +282,11 @@ export class StudentDomain {
    * @param user - The user making the request.
    * @returns The updated student.
    */
-  public async updateStudent(body: unknown, user: UserEntity) {
+  public async updateStudent(id: string, body: unknown, user: UserEntity) {
     // Validate and parse body
     const updateData = this.validateQuery(StudentUpdateSchema, body);
 
-    const { id, classes, groups } = updateData;
+    const { classes, groups } = updateData;
 
     // Check if the student exists
     const student = await this.studentPersistence.getStudentById(id);
@@ -317,10 +316,7 @@ export class StudentDomain {
    * @param body - The body to delete the student. This should contain the student ID.
    * @param user - The user making the request.
    */
-  public async deleteStudent(body: unknown, user: UserEntity): Promise<void> {
-    // Validate the body
-    const { id } = this.validateQuery(StudentDeleteSchema, body);
-
+  public async deleteStudent(id: string, user: UserEntity): Promise<void> {
     // Check if the student exists
     const student = await this.studentPersistence.getStudentById(id);
 
