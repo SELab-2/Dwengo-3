@@ -85,10 +85,10 @@ export class ClassPersistence {
     });
   }
 
-  public async isTeacherFromClass(userId: string, classId: string) {
+  public async isTeacherFromClass(teacherId: string, classId: string) {
     const teacher = await this.prisma.teacher.findFirst({
       where: {
-        userId,
+        id: teacherId,
         classes: {
           some: {
             id: classId,
@@ -97,5 +97,43 @@ export class ClassPersistence {
       },
     });
     return teacher !== null;
+  }
+
+  public async isStudentFromClass(studentId: string, classId: string) {
+    const student = await this.prisma.student.findFirst({
+      where: {
+        id: studentId,
+        classes: {
+          some: {
+            id: classId,
+          },
+        },
+      },
+    });
+    return student !== null;
+  }
+
+  public async removeTeacherFromClass(classId: string, teacherId: string) {
+    return await this.prisma.class.update({
+      where: { id: classId },
+      data: {
+        teachers: {
+          disconnect: { id: teacherId },
+        },
+      },
+      select: classSelectDetail,
+    });
+  }
+
+  public async removeStudentFromClass(classId: string, studentId: string) {
+    return await this.prisma.class.update({
+      where: { id: classId },
+      data: {
+        students: {
+          disconnect: { id: studentId },
+        },
+      },
+      select: classSelectDetail,
+    });
   }
 }

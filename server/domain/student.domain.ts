@@ -97,8 +97,8 @@ export class StudentDomain {
 
       // Check if the teacher is a teacher of the class
       const isTeacherOfClass = await this.classPersistence.isTeacherFromClass(
-        query.classId,
         teacher.id,
+        query.classId,
       );
 
       if (!isTeacherOfClass) {
