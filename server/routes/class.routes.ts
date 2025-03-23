@@ -82,8 +82,6 @@ export class ClassController {
      *                         $ref: '#/components/schemas/ClassShort'
      *       401:
      *         description: Unauthorized, user not authenticated
-     *       500:
-     *         description: Server error
      */
     this.router.get('/', this.getClasses);
     /**
@@ -111,7 +109,7 @@ export class ClassController {
      *           application/json:
      *             schema:
      *               $ref: '#/components/schemas/ClassDetail'
-     *       403:
+     *       401:
      *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: Class not found.

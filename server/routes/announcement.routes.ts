@@ -149,7 +149,7 @@ export class AnnouncementController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/AnnouncementGet'
+     *               $ref: '#/components/schemas/AnnouncementDetail'
      *       403:
      *         description: Unauthorized, user not authenticated.
      *       404:
