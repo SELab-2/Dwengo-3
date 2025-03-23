@@ -3,7 +3,7 @@ import apiClient from '../api';
 import { LoginData, RegisterData, UserData } from '../util/types/auth.types';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { useContext } from 'react';
-import { AuthContext } from '../contexts/authContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 // Custom hook to access the auth context
 export const useAuth = () => {

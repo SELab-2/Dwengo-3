@@ -11,7 +11,7 @@ import ErrorPage from './views/ErrorPage';
 import FooterBar from './components/FooterBar';
 import MainAppBar from './components/MainAppBar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './contexts/authContext';
+import { AuthProvider } from './contexts/AuthContext';
 import { ErrorProvider } from './contexts/ErrorContext';
 
 const queryClient = new QueryClient();
