@@ -58,7 +58,7 @@ export class AnnouncementController {
      *       - cookieAuth: []
      *     tags:
      *       - Announcement
-     *     summary: Create or update an announcement
+     *     summary: Create an announcement
      *     description: Creates a new announcement
      *     requestBody:
      *       required: true
@@ -67,20 +67,16 @@ export class AnnouncementController {
      *           schema:
      *             $ref: '#/components/schemas/AnnouncementCreate'
      *     responses:
-     *       200:
+     *       201:
      *         description: Announcement created successfully.
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/AnnouncementGet'
+     *               $ref: '#/components/schemas/AnnouncementDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       401:
      *         description: Unauthorized, user not authenticated.
-     *       403:
-     *         description: Forbidden, user does not have permission to create the announcement.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.put('/', this.createAnnouncement);
     /**
@@ -115,15 +111,18 @@ export class AnnouncementController {
      *         content:
      *           application/json:
      *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/AnnouncementGet'
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/AnnouncementShort'
      *       400:
      *         description: Bad request due to invalid input or no filters provided.
      *       401:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/', this.getAnnouncements);
     /**
@@ -135,7 +134,7 @@ export class AnnouncementController {
      *     tags:
      *       - Announcement
      *     summary: Get an announcement by ID
-     *     description: Gets the content of a specific announcement selected by its UUID
+     *     description: Gets the content of a specific announcement selected by its UUID.
      *     parameters:
      *       - in: path
      *         name: id
@@ -146,13 +145,15 @@ export class AnnouncementController {
      *         description: The unique identifier of the announcement.
      *     responses:
      *       200:
-     *         description: Announcement fetched succesfully.
+     *         description: Announcement fetched successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/AnnouncementGet'
      *       403:
      *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: Announcement not found.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/:id', this.getAnnouncementById);
     /**
@@ -185,7 +186,7 @@ export class AnnouncementController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/AnnouncementGet'
+     *               $ref: '#/components/schemas/AnnouncementDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       401:
@@ -194,8 +195,6 @@ export class AnnouncementController {
      *         description: Forbidden, user does not have permission to update the announcement.
      *       404:
      *         description: Announcement not found.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.patch('/:id', this.updateAnnouncement);
   }

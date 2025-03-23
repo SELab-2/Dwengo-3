@@ -48,13 +48,11 @@ export class LearningPathNodeTransitionController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningPathNodeTransitionGet'
+     *               $ref: '#/components/schemas/LearningPathNodeTransitionDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       401:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.put('/', this.createLearningPathNodeTransition);
   }
