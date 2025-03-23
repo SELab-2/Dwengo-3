@@ -20,10 +20,10 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
-        <ErrorProvider>
-          <ThemeProvider theme={theme}>
-            <Router>
-              <MainAppBar></MainAppBar>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <MainAppBar></MainAppBar>
+            <ErrorProvider>
               <Routes>
                 {/* Public Routes */}
                 <Route path="/login" element={<LoginPage />} />
@@ -38,10 +38,10 @@ function App() {
                 {/* Redirect all other routes to an errorpage */}
                 <Route path="*" element={<ErrorPage />} />
               </Routes>
-            </Router>
-            <FooterBar></FooterBar>
-          </ThemeProvider>
-        </ErrorProvider>
+            </ErrorProvider>
+          </Router>
+          <FooterBar></FooterBar>
+        </ThemeProvider>
       </QueryClientProvider>
     </AuthProvider>
   );

@@ -12,9 +12,6 @@ function ProtectedRoutes() {
     return <Navigate to="/login" replace />;
   }
 
-  // TODO: Remove this console.log
-  console.log('Logged in as: \n' + user);
-
   return <Outlet />; // Render child routes if authenticated
 }
 

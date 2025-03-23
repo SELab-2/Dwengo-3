@@ -8,12 +8,12 @@ function LoginAppBar() {
       <Toolbar
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
+          height: '100%',
         }}
       >
         <DwengoIcon href="/login" />
-        <Box>
+        <Box sx={{ marginLeft: 'auto' }}>
           <LanguageSwitcher />
         </Box>
       </Toolbar>

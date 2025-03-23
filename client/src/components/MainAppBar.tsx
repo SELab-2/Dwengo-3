@@ -18,13 +18,14 @@ function MainAppBar() {
       <Toolbar
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
+          height: '100%',
         }}
       >
         <DwengoIcon href="/" />
         <Box
           sx={{
+            marginLeft: 'auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
