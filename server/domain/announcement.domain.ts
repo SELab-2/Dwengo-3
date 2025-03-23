@@ -55,22 +55,19 @@ export class AnnouncementDomain {
         throw new Error('Can not get announcements of other user.');
       }
     }
-
-    // check if id is used, announcement belongs to class of user
-    if (query.id) {
-      const res = await this.announcementPersistence.getAnnouncements(
-        { id: query.id },
-        paginationParseResult.data,
-      );
-      if (res.announcements.length !== 0) {
-        const resClassId = res.announcements[0].classId;
-        this.classDomain.checkUserBelongsToClass(user, resClassId);
-      }
-    }
     return this.announcementPersistence.getAnnouncements(
       filterResult.data,
       paginationParseResult.data,
     );
+  }
+
+  public async getAnnouncementById(id: string, user: UserEntity) {
+    const announcement =
+      await this.announcementPersistence.getAnnouncementById(id);
+
+    const classId = announcement.classId;
+    this.classDomain.checkUserBelongsToClass(user, classId);
+    return announcement;
   }
 
   public async createAnnouncement(
@@ -89,13 +86,15 @@ export class AnnouncementDomain {
     if (!teacherIdParseResult.success) {
       throw teacherIdParseResult.error;
     }
-    return this.announcementPersistence.createAnnouncement({
-      ...parseResult.data,
-      teacherId: teacherIdParseResult.data,
-    });
+
+    return this.announcementPersistence.createAnnouncement(
+      parseResult.data,
+      teacherIdParseResult.data,
+    );
   }
 
   public async updateAnnouncement(
+    id: string,
     query: AnnouncementUpdateParams,
     user: UserEntity,
   ) {
@@ -105,9 +104,13 @@ export class AnnouncementDomain {
     }
 
     this.checkUserIsTeacher(user);
-    this.classDomain.checkUserBelongsToClass(user, query.id);
+    const teacherId = TeacherIdSchema.parse(user.teacher?.id);
+    this.announcementPersistence.checkAnnouncementIsFromTeacher(id, teacherId);
 
-    return this.announcementPersistence.updateAnnouncement(parseResult.data);
+    return this.announcementPersistence.updateAnnouncement(
+      id,
+      parseResult.data,
+    );
   }
 
   private async checkUserIsTeacher(user: UserEntity) {

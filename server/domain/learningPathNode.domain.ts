@@ -32,4 +32,8 @@ export class LearningPathNodeDomain {
       ),
     );
   }
+
+  public async getLearningPathNodeById(id: string) {
+    return this.learningPathNodePersistence.getLearningPathNodeById(id);
+  }
 }

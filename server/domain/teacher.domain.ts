@@ -110,6 +110,10 @@ export class TeacherDomain {
     );
   }
 
+  public async getTeacherById(id: string) {
+    return await this.teacherPersistence.getTeacherById(id);
+  }
+
   public async updateTeacher(body: unknown, user: UserEntity) {
     // Validate the body
     const updateData = this.validateQuery(TeacherUpdateSchema, body);

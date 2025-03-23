@@ -75,6 +75,12 @@ export class LearningObjectDomain {
     );
   }
 
+  public async getLearningObjectById(id: string) {
+    const { learningPathNodes, ...learningObject } =
+      await this.learningObjectPersistence.getLearningObjectById(id);
+    return learningObject;
+  }
+
   public async updateLearningObject(
     id: string,
     body: LearningObjectUpdateParams,

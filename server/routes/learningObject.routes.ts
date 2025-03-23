@@ -25,6 +25,12 @@ export class LearningObjectController {
     res.json(await this.learningObjectDomain.getLearningObjects(req.query));
   };
 
+  private getLearningObjectById = async (req: Request, res: Response) => {
+    res.json(
+      await this.learningObjectDomain.getLearningObjectById(req.params.id),
+    );
+  };
+
   private updateLearningObject = async (req: Request, res: Response) => {
     res.json(
       await this.learningObjectDomain.updateLearningObject(
@@ -68,13 +74,11 @@ export class LearningObjectController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningObjectGet'
+     *               $ref: '#/components/schemas/LearningObjectDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.put('/', this.createLearningObject);
     /**
@@ -102,28 +106,57 @@ export class LearningObjectController {
      *           items:
      *             type: integer
      *         description: Target age groups to filter learning objects by.
-     *       - in: query
-     *         name: id
-     *         schema:
-     *           type: string
-     *         description: The unique identifier of the learning object to filter by.
      *     responses:
      *       200:
      *         description: A list of learning objects matching the filters.
      *         content:
      *           application/json:
      *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/LearningObjectGet'
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/LearningObjectShort'
      *       400:
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/', this.getLearningObjects);
+    /**
+     * @swagger
+     * /api/learningObject/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningObject
+     *     summary: Get a learning object by ID
+     *     description: Gets the content of a specific learning object selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the learning object.
+     *     responses:
+     *       200:
+     *         description: Learning object fetched succesfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningObjectDetail'
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Learning object not found.
+     */
+    this.router.get('/:id', this.getLearningObjectById);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -154,13 +187,11 @@ export class LearningObjectController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningObjectGet'
+     *               $ref: '#/components/schemas/LearningObjectDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.patch('/:id', this.updateLearningObject);
     /**
@@ -188,8 +219,6 @@ export class LearningObjectController {
      *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: Learning object not found.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.delete('/:id', this.deleteLearningObject);
   }

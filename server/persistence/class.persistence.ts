@@ -8,6 +8,10 @@ import { Prisma } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { UserEntity } from '../util/types/user.types';
+import {
+  classSelectDetail,
+  classSelectShort,
+} from '../util/selectInput/class.select';
 
 export class ClassPersistence {
   private prisma;
@@ -25,7 +29,6 @@ export class ClassPersistence {
         filters.studentId
           ? { students: { some: { id: filters.studentId } } }
           : {},
-        filters.id ? { id: filters.id } : {},
       ],
     };
   }
@@ -36,21 +39,28 @@ export class ClassPersistence {
   ) {
     const where: Prisma.ClassWhereInput = this.buildWhereClause(filters);
 
-    return searchAndPaginate(this.prisma.class, where, paginationParams, {
-      students: true,
-      teachers: true,
-    });
+    return searchAndPaginate(
+      this.prisma.class,
+      where,
+      paginationParams,
+      undefined,
+      classSelectShort,
+    );
   }
 
   public async getClassById(id: string) {
-    return await this.prisma.class.findUnique({
+    const classData = await this.prisma.class.findUnique({
       where: { id },
-      include: {
-        students: true,
-        teachers: true,
-      },
+      select: classSelectDetail,
     });
+
+    if (!classData) {
+      throw new Error(`Class with id: ${id} was not found`);
+    }
+
+    return classData;
   }
+
   public async createClass(params: ClassCreateParams, creator: UserEntity) {
     return await this.prisma.class.create({
       data: {
@@ -61,6 +71,7 @@ export class ClassPersistence {
           },
         },
       },
+      select: classSelectDetail,
     });
   }
 
@@ -70,6 +81,7 @@ export class ClassPersistence {
     return await this.prisma.class.update({
       where: { id },
       data: data,
+      select: classSelectDetail,
     });
   }
 

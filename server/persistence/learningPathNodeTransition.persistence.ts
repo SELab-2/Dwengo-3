@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { learningPathNodeTransitionSelectDetail } from '../util/selectInput/learningPathNodeTransition.select';
 import { LearningPathNodeTransitionCreateParams } from '../util/types/learningPathNodeTransition.types';
 import { PrismaSingleton } from './prismaSingleton';
 
@@ -16,6 +16,7 @@ export class LearningPathNodeTransitionPersistence {
             connect: { id: data.learningPathNodeId },
           },
         },
+        select: learningPathNodeTransitionSelectDetail,
       });
     return transition;
   }

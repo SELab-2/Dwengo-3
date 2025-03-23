@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { Uuid } from './assignment.types';
 
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),
@@ -6,7 +7,6 @@ export const LearningPathFilterSchema = z.object({
     .array(z.string())
     .transform((val) => val.map(Number))
     .optional(),
-  id: z.string().optional(),
 });
 
 export const LearningPathCreateSchema = z.object({
@@ -23,3 +23,9 @@ export type LearningPathByFilterParams = z.infer<
   typeof LearningPathFilterSchema
 >;
 export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
+export type LearningPathShort = {
+  id: Uuid;
+  title: string;
+  image: string | null;
+  description: string | null;
+};

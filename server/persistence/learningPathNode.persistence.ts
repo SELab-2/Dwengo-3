@@ -1,3 +1,4 @@
+import { learningPathNodeSelectDetail } from '../util/selectInput/learningPathNode.select';
 import { LearningPathNodeCreateParams } from '../util/types/learningPathNode.types';
 import { PrismaSingleton } from './prismaSingleton';
 
@@ -24,8 +25,23 @@ export class LearningPathNodePersistence {
             },
           },
         },
+        select: learningPathNodeSelectDetail,
       });
     return createdLearningPathNode;
+  }
+
+  public async getLearningPathNodeById(id: string) {
+    const learningPathNode =
+      await PrismaSingleton.instance.learningPathNode.findUnique({
+        where: { id: id },
+        select: learningPathNodeSelectDetail,
+      });
+
+    if (!learningPathNode) {
+      throw new Error(`LearningPathNode with id: ${id} was not found`);
+    }
+
+    return learningPathNode;
   }
 
   public async getLearningPathNodeCount(

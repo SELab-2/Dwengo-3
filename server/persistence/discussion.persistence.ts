@@ -2,9 +2,17 @@ import { Discussion, PrismaClient, Prisma } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import {
   DiscussionCreateParams,
+  DiscussionDetail,
   DiscussionFilterParams,
+  discussionShort,
 } from '../util/types/discussion.types';
 import { PaginationParams } from '../util/types/pagination.types';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
+import {
+  discussionSelectDetail,
+  discussionSelectShort,
+} from '../util/selectInput/discussion.select';
+import { Uuid } from '../util/types/assignment.types';
 
 export class DiscussionPersistence {
   private prisma: PrismaClient;
@@ -16,33 +24,36 @@ export class DiscussionPersistence {
   public async getDiscussions(
     filters: DiscussionFilterParams,
     paginationParams: PaginationParams,
-  ): Promise<{ data: Discussion[]; totalPages: number }> {
+  ): Promise<{ data: discussionShort[]; totalPages: number }> {
     const whereClause: Prisma.DiscussionWhereInput = {
-      AND: [
-        filters.id ? { id: filters.id } : {},
-        filters.groupIds ? { groupId: { in: filters.groupIds } } : {},
-      ],
+      AND: [filters.groupIds ? { groupId: { in: filters.groupIds } } : {}],
     };
 
-    const [discussions, totalCount] = await this.prisma.$transaction([
-      this.prisma.discussion.findMany({
-        where: whereClause,
-        skip: paginationParams.skip,
-        take: paginationParams.pageSize,
-      }),
-      this.prisma.discussion.count({
-        where: whereClause,
-      }),
-    ]);
-    return {
-      data: discussions,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(
+      this.prisma.discussion,
+      whereClause,
+      paginationParams,
+      undefined,
+      discussionSelectShort,
+    );
+  }
+
+  public async getDiscussionById(id: Uuid): Promise<DiscussionDetail> {
+    const discussion = await this.prisma.discussion.findUniqueOrThrow({
+      where: { id: id },
+      select: discussionSelectDetail,
+    });
+
+    if (!discussion) {
+      throw new Error(`Discussion with id: ${id} was not found`);
+    }
+
+    return discussion;
   }
 
   public async createDiscussion(
     params: DiscussionCreateParams,
-  ): Promise<Discussion> {
+  ): Promise<DiscussionDetail> {
     return this.prisma.discussion.create({
       data: {
         group: {
@@ -54,6 +65,7 @@ export class DiscussionPersistence {
           connect: params.members.map((member) => ({ id: member })),
         },
       },
+      select: discussionSelectDetail,
     });
   }
 }
