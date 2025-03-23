@@ -10,7 +10,7 @@ cd ../../../db
 npx prisma migrate dev
 
 cd ../server
-vitest -c ./util/test-files/vitest.config.integration.ts
+vitest --run --singleThread -c ./util/test-files/vitest.config.integration.ts
 
 cd ./util/test-files
 docker compose down

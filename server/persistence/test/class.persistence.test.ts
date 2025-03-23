@@ -9,6 +9,7 @@ const classPersistence: ClassPersistence = new ClassPersistence();
 
 describe('class persistence test', () => {
   beforeAll(async () => {
+    await deleteAllData();
     classes = await insertClasses(classPersistence);
   });
 
@@ -33,7 +34,7 @@ describe('class persistence test', () => {
   });
 
   describe('test is teacher from class', () => {
-    test('request with existing teacher id responds correctly', async () => {
+    test('request with existing teacher id responds with true', async () => {
       for (const classData of classes) {
         for (const teacher of classData.teachers) {
           const req = classPersistence.isTeacherFromClass(teacher.userId, classData.id);
@@ -51,7 +52,7 @@ describe('class persistence test', () => {
   });
 
   describe('test get classes', () => {
-    test('request with existing teacher id schould responds with array of classes', async () => {
+    test('request with existing teacher id responds with array of classes', async () => {
       const teacher = classes[0].teachers[0];
       const req = classPersistence.getClasses({page: 1, pageSize: 10, skip:0}, {teacherId: teacher.id});
       const expectedClasses = classes.map((classData) => ({id: classData.id, name: classData.name}));

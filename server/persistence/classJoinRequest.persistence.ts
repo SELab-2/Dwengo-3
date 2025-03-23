@@ -9,6 +9,7 @@ import { Prisma } from '@prisma/client';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinRequest.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { getUserById } from './auth/users.persistance';
 
 export class ClassJoinRequestPersistence {
   public async createClassJoinRequest(
@@ -20,6 +21,7 @@ export class ClassJoinRequestPersistence {
         classId: data.classId,
         userId: user.id,
       },
+      select: classJoinRequestSelectDetail
     });
   }
 
@@ -78,20 +80,33 @@ export class ClassJoinRequestPersistence {
             id: data.requestId,
           },
         });
-
       // Add the student/teacher to the class.
-      await PrismaSingleton.instance.class.update({
-        where: {
-          id: classJoinRequest.classId,
-        },
-        data: {
-          students: {
+      const user = await getUserById(classJoinRequest.userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      let dataConnect;
+      if (user.role === ClassRoleEnum.STUDENT) {
+        dataConnect = {students: {
+          connect: {
+            id: user.student!.id
+          }
+        }};
+      } else {
+        dataConnect = {
+          teachers: {
             connect: {
-              id: classJoinRequest.userId,
-            },
+              id: user.teacher!.id
+            }
+          }
+        };
+      }
+        await PrismaSingleton.instance.class.update({
+          where: {
+            id: classJoinRequest.classId,
           },
-        },
-      });
+          data: dataConnect
+        });
     } else {
       // Delete the join request.
       await PrismaSingleton.instance.classJoinRequest.delete({

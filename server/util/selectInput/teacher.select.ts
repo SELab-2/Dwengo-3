@@ -3,6 +3,7 @@ import { classSelectShort } from './class.select';
 
 export const teacherSelectShort: Prisma.TeacherSelect = {
   id: true,
+  userId: true,
   user: {
     select: {
       name: true,
