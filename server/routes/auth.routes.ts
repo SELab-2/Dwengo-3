@@ -52,7 +52,8 @@ passport.use(
           : ClassRoleEnum.STUDENT;
 
         if (user === null) {
-          user = await userDomain.registerUser({
+          user = await userDomain.createUser({
+            id: profile.id,
             email: profile.emails!![0].value,
             name: profile.name!!.familyName,
             password: '',
