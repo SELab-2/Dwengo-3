@@ -1,8 +1,7 @@
-import { AssignmentSubmission, Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   AssignmentSubCreateParams,
   AssignmentSubFilterParams,
-  AssignmentSubmissionDetail,
   AssignmentSubmissionShort,
   AssignmentSubUpdateParams,
 } from '../util/types/assignmentSubmission.types';
@@ -26,7 +25,7 @@ export class AssignmentSubmissionPersistence {
         filters.nodeId ? { nodeId: filters.nodeId } : {},
       ],
     };
-    return searchAndPaginate(
+    return await searchAndPaginate(
       PrismaSingleton.instance.assignmentSubmission,
       whereClause,
       paginationParams,
@@ -35,42 +34,22 @@ export class AssignmentSubmissionPersistence {
     );
   }
 
-  public async getAssignmentSubmissionById(
-    id: Uuid,
-  ): Promise<AssignmentSubmissionDetail> {
-    return PrismaSingleton.instance.assignmentSubmission.findUniqueOrThrow({
-      where: { id: id },
-      select: {
-        id: true,
-        submission: true,
-        group: {
-          select: {
-            id: true,
-            nodeId: true, //TODO change to nodeIndex
-            assignmentId: true,
-          },
-        },
-        node: {
-          select: {
-            id: true,
-            learningObject: {
-              select: {
-                id: true,
-                title: true,
-                language: true,
-                estimatedTime: true,
-                targetAges: true,
-              },
-            },
-          },
-        },
-      },
-    });
+  public async getAssignmentSubmissionById(id: Uuid) {
+    const assignmentsubmission =
+      await PrismaSingleton.instance.assignmentSubmission.findUnique({
+        where: { id: id },
+        select: assignmentSubmissionSelectDetail,
+      });
+
+    if (!assignmentsubmission) {
+      throw new Error(`AssignmentSubmission with id: ${id} was not found`);
+    }
+
+    return assignmentsubmission;
   }
 
   public async createAssignmentSubmission(params: AssignmentSubCreateParams) {
-    console.log(assignmentSubmissionSelectDetail);
-    return PrismaSingleton.instance.assignmentSubmission.create({
+    return await PrismaSingleton.instance.assignmentSubmission.create({
       data: {
         node: {
           connect: {
@@ -83,72 +62,22 @@ export class AssignmentSubmissionPersistence {
           },
         },
         submissionType: params.submissionType,
-        submission: params.submission!,
+        submission: params.submission,
       },
-      select: {
-        id: true,
-        submission: true,
-        group: {
-          select: {
-            id: true,
-            nodeId: true, //TODO change to nodeIndex
-            assignmentId: true,
-          },
-        },
-        node: {
-          select: {
-            id: true,
-            learningObject: {
-              select: {
-                id: true,
-                title: true,
-                language: true,
-                estimatedTime: true,
-                targetAges: true,
-              },
-            },
-          },
-        },
-      },
+      select: assignmentSubmissionSelectDetail,
     });
   }
 
-  public async updateAssignmentSubmission(
-    params: AssignmentSubUpdateParams,
-  ): Promise<AssignmentSubmissionDetail> {
-    return PrismaSingleton.instance.assignmentSubmission.update({
+  public async updateAssignmentSubmission(params: AssignmentSubUpdateParams) {
+    return await PrismaSingleton.instance.assignmentSubmission.update({
       where: {
         id: params.id,
       },
       data: {
         submissionType: params.submissionType,
-        submission: params.submission!,
+        submission: params.submission,
       },
-      select: {
-        id: true,
-        submission: true,
-        group: {
-          select: {
-            id: true,
-            nodeId: true, //TODO change to nodeIndex
-            assignmentId: true,
-          },
-        },
-        node: {
-          select: {
-            id: true,
-            learningObject: {
-              select: {
-                id: true,
-                title: true,
-                language: true,
-                estimatedTime: true,
-                targetAges: true,
-              },
-            },
-          },
-        },
-      },
+      select: assignmentSubmissionSelectDetail,
     });
   }
 }

@@ -108,15 +108,12 @@ export class AnnouncementPersistence {
       {
         where: {
           id: announcementId,
+          teacherId: teacherId,
         },
       },
     );
 
     if (!announcement) {
-      throw new Error(`Announcement with id: ${announcementId} was not found`);
-    }
-
-    if (announcement.teacherId !== teacherId) {
       throw new Error(
         `Announcement with id: ${announcementId} does not belong to teacher with id: ${teacherId}`,
       );

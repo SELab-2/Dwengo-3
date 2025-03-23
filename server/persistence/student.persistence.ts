@@ -72,8 +72,6 @@ export class StudentPersistence {
   /**
    * Get a student by their ID.
    *
-   * @remarks By default this method includes the student's classes, groups, and user data.
-   *
    * @param id - The ID of the student to fetch.
    * @param include - Optional `include` clause for related models.
    * @returns The student data.
@@ -81,26 +79,7 @@ export class StudentPersistence {
   public async getStudentById(id: string) {
     const student = await this.prisma.student.findUnique({
       where: { id },
-      include: {
-        classes: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        groups: {
-          select: {
-            id: true,
-            assignmentId: true,
-          },
-        },
-        user: {
-          select: {
-            name: true,
-            surname: true,
-          },
-        },
-      },
+      select: studentSelectDetail,
     });
 
     if (!student) {
@@ -113,26 +92,13 @@ export class StudentPersistence {
   /**
    * Get a student by their user ID.
    *
-   * @remarks By default this method includes the student's classes, groups, and user data.
-   *
    * @param userId - The ID of the user to fetch the student for.
    * @returns The student data.
    */
-  public async getStudentByUserId(
-    userId: string,
-    include: StudentIncludeParams = {
-      classes: true,
-      groups: true,
-      user: true,
-    },
-  ) {
+  public async getStudentByUserId(userId: string) {
     return await this.prisma.student.findUnique({
       where: { userId },
-      include: {
-        classes: include.classes,
-        groups: include.groups,
-        user: include.user,
-      },
+      select: studentSelectDetail,
     });
   }
 

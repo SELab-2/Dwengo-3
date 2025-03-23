@@ -4,6 +4,7 @@ import {
   ClassFilterSchema,
   ClassCreateSchema,
   ClassUpdateSchema,
+  ClassFilterParams,
 } from '../util/types/class.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { User } from '@prisma/client';
@@ -15,7 +16,7 @@ export class ClassDomain {
     this.classPersistance = new ClassPersistence();
   }
 
-  public async getClasses(query: unknown, user: UserEntity) {
+  public async getClasses(query: ClassFilterParams, user: UserEntity) {
     // Validate and parse pagination query parameters
     const paginationResult = PaginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
@@ -31,9 +32,7 @@ export class ClassDomain {
     const { studentId, teacherId } = filtersResult.data;
 
     if (!studentId && !teacherId) {
-      throw new Error(
-        'Either studentId, teacherId or classId must be provided.',
-      );
+      throw new Error('Either studentId or teacherId must be provided.');
     }
 
     if (
@@ -49,12 +48,10 @@ export class ClassDomain {
       );
     }
 
-    const { data, totalPages } = await this.classPersistance.getClasses(
+    return await this.classPersistance.getClasses(
       paginationResult.data,
       filtersResult.data,
     );
-
-    return { data, totalPages };
   }
 
   public async getClassById(id: string, user: UserEntity) {
@@ -81,11 +78,7 @@ export class ClassDomain {
     }
 
     // Delete the userId fields from the object
-    return {
-      ...classData,
-      students: classData.students.map(({ userId, ...rest }) => rest),
-      teachers: classData.teachers.map(({ userId, ...rest }) => rest),
-    };
+    return classData;
   }
 
   public async createClass(body: unknown, user: UserEntity) {

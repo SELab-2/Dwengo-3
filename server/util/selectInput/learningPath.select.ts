@@ -4,7 +4,20 @@ import { learningPathNodeSelectShort } from './learningPathNode.select';
 export const learningPathSelectShort: Prisma.LearningPathSelect = {
   id: true,
   title: true,
-  //TODO: add keywords & targetages
+  learningPathNodes: {
+    select: {
+      learningObject: {
+        select: {
+          targetAges: true,
+          keywords: {
+            select: {
+              keyword: true,
+            },
+          },
+        },
+      },
+    },
+  },
   image: true,
   description: true,
 };
