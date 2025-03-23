@@ -76,21 +76,21 @@
             "type": "array",
             "description": "The teachers of the class",
             "items": {
-              "$ref": "#components/schema/TeacherShort"
+              "$ref": "#components/schemas/TeacherShort"
             }
           },
           "students": {
             "type": "array",
             "description": "The students of the class",
             "items": {
-              "$ref": "#components/schema/StudentShort"
+              "$ref": "#components/schemas/StudentShort"
             }
           },
           "assignments": {
             "type": "array",
             "description": "The assignments of the class",
             "items": {
-              "$ref": "#components/schema/AssignmentShort"
+              "$ref": "#components/schemas/AssignmentShort"
             }
           }
         }
@@ -141,7 +141,7 @@
             "type": "array",
             "description": "The classes that a teacher is teaching",
             "items": {
-              "$ref": "#components/schema/ClassShort"
+              "$ref": "#components/schemas/ClassShort"
             }
           }
         }
@@ -197,14 +197,14 @@
             "type": "array",
             "description": "The classes that a student is in",
             "items": {
-              "$ref": "#components/schema/ClassShort"
+              "$ref": "#components/schemas/ClassShort"
             }
           },
           "groups": {
             "type": "array",
             "description": "The groups that a student is in",
             "items": {
-              "$ref": "#components/schema/GroupShort"
+              "$ref": "#components/schemas/GroupShort"
             }
           }
         }
@@ -661,14 +661,14 @@
             "type": "array",
             "description": "The classes that a student is in",
             "items": {
-              "$ref": "#components/schema/ClassShort"
+              "$ref": "#components/schemas/ClassShort"
             }
           },
           "favorites": {
             "type": "array",
             "description": "The learning paths that a user has favorited",
             "items": {
-              "$ref": "#components/schema/LearningPathShort"
+              "$ref": "#components/schemas/LearningPathShort"
             }
           }
         }
@@ -1220,7 +1220,7 @@
             "type": "array",
             "description": "List of keywords associated with the learning object.",
             "items": {
-              "$ref": "#/components/schemas/LearningObjectKeyword"
+              "type": "string"
             }
           }
         },
@@ -1335,7 +1335,7 @@
           "keywords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LearningObjectKeyword"
+              "type": "string"
             },
             "description": "Keywords associated with the learning object."
           }
@@ -1430,6 +1430,59 @@
           }
         },
         "required": ["groupId", "members"]
+      },
+
+      "MessageCreate": {
+        "type": "object",
+        "properties": {
+          "discussionId": {
+            "type": "string",
+            "description": "The ID of the discussion associated with the message.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the message.",
+            "example": "Hello, how are you?"
+          }
+        },
+        "required": ["discussionId", "content"]
+      },
+
+      "AssignmentCreate": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "description": "The groups that are assigned to the assignment",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The ID of the group",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "example": ["550e8400-e29b-41d4-a716-446655440000"]
+          },
+          "learningPathId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the learning path this assignment is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the class this assignment is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "teacherId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the teacher who created the assignment.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "required": ["groups", "learningPathId", "classId", "teacherId"]
       }
     }
   }
