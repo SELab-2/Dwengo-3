@@ -75,12 +75,10 @@ export class ClassPersistence {
     });
   }
 
-  public async updateClass(params: ClassUpdateParams) {
-    const { id, ...data } = params;
-
+  public async updateClass(id: string, params: ClassUpdateParams) {
     return await this.prisma.class.update({
       where: { id },
-      data: data,
+      data: params,
       select: classSelectDetail,
     });
   }

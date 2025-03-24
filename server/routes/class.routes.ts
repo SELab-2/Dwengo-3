@@ -36,7 +36,11 @@ export class ClassController {
 
   private updateClass = async (req: Request, res: Response) => {
     res.json(
-      await this.classDomain.updateClass(req.body, await getUserFromReq(req)),
+      await this.classDomain.updateClass(
+        req.params.id,
+        req.body,
+        await getUserFromReq(req),
+      ),
     );
   };
 
@@ -158,6 +162,14 @@ export class ClassController {
      *       - Class
      *     summary: Update a class
      *     description: Allows a teacher of the class to update its details.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the class.
      *     requestBody:
      *       required: true
      *       content:
@@ -176,7 +188,7 @@ export class ClassController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.patch('/', this.updateClass);
+    this.router.patch('/:id', this.updateClass);
     this.router.use('/', new ClassJoinRequestController().router);
   }
 }
