@@ -14,5 +14,9 @@ export const fr = {
     welcomeMessage: "Bienvenue sur la plateforme d'apprentissage Dwengo!",
     registerAs: 'S’inscrire en tant que',
     alreadyHaveAccount: 'Vous avez déjà un compte?',
+    learningThemes: 'Thèmes d’apprentissage',
+    myLearningPaths: 'Parcours d’apprentissage',
+    profile: 'Profil',
+    myClasses: 'Mes classes',
   },
 };

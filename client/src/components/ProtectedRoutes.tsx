@@ -7,6 +7,8 @@ import { useAuth } from '../hooks/useAuth';
 function ProtectedRoutes() {
   const { user } = useAuth();
 
+  // TODO: prevent flash of unauthenticated content
+
   // Redirect to login if not authenticated
   if (!user) {
     return <Navigate to="/login" replace />;
