@@ -1,4 +1,4 @@
-import { ClassDomain } from '../class.domain';
+import { ClassDomain } from '../../domain/class.domain';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { ClassCreateParams } from '../../util/types/class.types';
 import { ZodError } from 'zod';
