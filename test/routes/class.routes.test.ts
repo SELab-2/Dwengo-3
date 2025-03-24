@@ -33,19 +33,21 @@ describe('class routes test', () => {
   });
 
   describe('GET /class/id', async () => {
-    test('responds on id', () => {
+    test('responds on id', async () => {
       const id: string = 'id';
       const expected = { id: id, name: 'name' };
       mockClassDomain.getClassById.mockResolvedValue(expected);
-      return request(app).get(path.join(route, id)).expect(200);
+      await request(app).get(path.join(route, id)).expect(200);
+      // TODO hier moet nog de response value gecheckt worden
     });
   });
 
-  describe('POST /class', () => {
-    test('responds on payload', () => {
+  describe('POST /class', async () => {
+    test('responds on payload', async () => {
       const body = { name: 'name' };
       mockClassDomain.getClassById.mockResolvedValue({ ...body, id: 'id' });
-      return request(app).post(path.join(route)).send(body).expect(200);
+      await request(app).post(path.join(route)).send(body).expect(200);
+      // TODO hier moet nog de response value worden gecheckt
     });
   });
 });
