@@ -5,9 +5,14 @@ import { ClassPersistence } from "../class.persistence";
 import { ClassDetail } from "../../util/types/class.types";
 import { ClassJoinRequestPersistence } from "../classJoinRequest.persistence";
 import { ClassJoinRequestDetail } from "../../util/types/classJoinRequest.types";
+import { ContentTypeEnum, LearningObjectCreateParams, LearningObjectDetail, SubmissionTypeEnum } from "../../util/types/learningObject.types";
+import { LearningObjectPersistence } from "../learningObject.persistence";
+import { LearningObjectKeywordPersistence } from "../learningObjectKeyword.persistence";
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
+const learningObjectPersistence: LearningObjectPersistence = new LearningObjectPersistence();
+const learningObjectKeywordPersistence: LearningObjectKeywordPersistence = new LearningObjectKeywordPersistence();
 
 const insertStudents = async (): Promise<UserEntity[]> => {
     const users = [
@@ -59,7 +64,7 @@ export const insertUsers = async (): Promise<UserEntity[]> => {
 }
 
 export const insertClasses = async (): Promise<ClassDetail[]> => {
-    const teachers = await insertTeachers();
+    const teacher = (await insertTeachers())[0];
     const classes = [
         { 
             name: "Math",
@@ -71,7 +76,7 @@ export const insertClasses = async (): Promise<ClassDetail[]> => {
             name: "Biology"
         }
     ];
-    return Promise.all(classes.map((classData) => classPersistence.createClass(classData, teachers[0])));
+    return Promise.all(classes.map((classData) => classPersistence.createClass(classData, teacher)));
 }
 
 export const insertClassJoinResuests = async (): Promise<ClassJoinRequestDetail[]> => {
@@ -80,8 +85,73 @@ export const insertClassJoinResuests = async (): Promise<ClassJoinRequestDetail[
     return Promise.all(students.map((student) => classJoinRequestPersistence.createClassJoinRequest({classId: classData.id}, student)));
 }
 
+export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> => {
+    const learningObjectsData: LearningObjectCreateParams[] = [
+        {
+            hruid: "Text plain object",
+            uuid: "1",
+            version: 1,
+            language: "EN",
+            title: "test",
+            description: "test",
+            contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+            targetAges: [7, 8, 9],
+            difficulty: 5,
+            estimatedTime: 10,
+            content: "test",
+            teacherExclusive: false,
+            available: true
+        },
+        {
+            hruid: "Object with multiple choice",
+            uuid: "2",
+            version: 1,
+            language: "EN",
+            title: "test",
+            description: "test",
+            contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+            targetAges: [10, 11, 12],
+            difficulty: 5,
+            estimatedTime: 10,
+            content: "test",
+            teacherExclusive: false,
+            available: true,
+            multipleChoice: {question: "test", options: ["a", "b", "c"]},
+            submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
+        },
+        {
+            hruid: "Object with file submission",
+            uuid: "3",
+            version: 1,
+            language: "EN",
+            title: "test",
+            description: "test",
+            contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+            targetAges: [13, 14, 15],
+            difficulty: 5,
+            estimatedTime: 10,
+            content: "test",
+            teacherExclusive: false,
+            available: true,
+            submissionType: SubmissionTypeEnum.Enum.FILE,
+        },
+    ];
+    const keywordsData = [
+        [{keyword: "test1"}, {keyword: "test2"}, {keyword: "test3"}],
+        [{keyword: "test1"}, {keyword: "test2"}, {keyword: "test3"}],
+        [{keyword: "test1"}, {keyword: "test2"}, {keyword: "test4"}]
+    ];
+    const learningObjects: LearningObjectDetail[] = await Promise.all(learningObjectsData.map((object) => learningObjectPersistence.createLearningObject(object)));
+    for (let i=0; i<keywordsData.length; i++) {
+        const keywords = await learningObjectKeywordPersistence.updateLearningObjectKeywords(learningObjects[i].id, keywordsData[i]);
+        learningObjects[i].keywords = keywords.map((keyword) => ({keyword: keyword.keyword}));
+    }
+    return learningObjects;
+};
+
 export const deleteAllData = async (): Promise<void> => {
     await PrismaSingleton.instance.classJoinRequest.deleteMany();
     await PrismaSingleton.instance.user.deleteMany();
     await PrismaSingleton.instance.class.deleteMany();
+    await PrismaSingleton.instance.learningObject.deleteMany();
 }

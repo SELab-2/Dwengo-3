@@ -4,7 +4,6 @@ import { ClassPersistence } from "../class.persistence";
 import { ClassJoinRequestPersistence } from "../classJoinRequest.persistence";
 import { deleteAllData, insertClassJoinResuests } from "./testData";
 import { PrismaSingleton } from "../prismaSingleton";
-import { getUserById } from "../auth/users.persistance";
 
 let classJoinRequests: ClassJoinRequestDetail[] = [];
 const classPersistence: ClassPersistence = new ClassPersistence();

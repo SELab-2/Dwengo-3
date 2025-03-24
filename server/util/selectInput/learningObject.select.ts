@@ -40,7 +40,7 @@ export const learningObjectSelectDetail: Prisma.LearningObjectSelect = {
   // TODO: geef gewoon een array van keywords mee ipv object met keyword property
   keywords: {
     select: {
-      keyword: true,
+      keyword: true
     },
   },
 };
