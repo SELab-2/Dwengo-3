@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
-import { useAuth } from '../hooks/useAuth';
+import { useParams } from 'react-router-dom';
 
-function HomePage() {
-  const { user } = useAuth();
+function LearningPathPage() {
+  const { id } = useParams<{ id: string }>();
 
   return (
     <Box
@@ -14,11 +14,9 @@ function HomePage() {
         mt: MarginSize.large,
       }}
     >
-      <Typography variant="h4">
-        Home Page of {user?.name ?? 'Nobody'}
-      </Typography>
+      <Typography variant="h4">Learning Path {id}</Typography>
     </Box>
   );
 }
 
-export default HomePage;
+export default LearningPathPage;
