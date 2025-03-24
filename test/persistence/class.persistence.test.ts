@@ -1,5 +1,5 @@
 import { describe, test, beforeAll, afterAll, expect } from 'vitest';
-import { PrismaSingleton } from '../../persistence/prismaSingleton';
+import { PrismaSingleton } from '../../server/persistence/prismaSingleton';
 
 describe('class persistence test', () => {
   beforeAll(async () => {

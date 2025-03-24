@@ -1,0 +1,31 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "Testing",
+  "main": "app.ts",
+  "scripts": {
+    "test:unit": "vitest -c vitest.config.unit.ts",
+    "test:int": "./integration_test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SELab-2/Dwengo-3.git"
+  },
+  "keywords": [
+    "dwengo"
+  ],
+  "author": "SELab groep-3",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SELab-2/Dwengo-3/issues"
+  },
+  "homepage": "https://github.com/SELab-2/Dwengo-3#readme",
+  "devDependencies": {
+    "supertest": "^7.1.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  }
+}
