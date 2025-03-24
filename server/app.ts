@@ -19,6 +19,7 @@ import * as swaggerDocument from './swagger.json';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { StudentController } from './routes/student.routes';
 import { TeacherController } from './routes/teacher.routes';
+import cors from 'cors';
 
 dotenv.config({ path: '../.env' });
 
@@ -26,8 +27,21 @@ export const app: Express = express();
 const port = process.env.PORT || 3001;
 
 // Allow requests from frontend
-import cors from 'cors';
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests from the allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  }),
+);
 
 const options = {
   swaggerDefinition: swaggerDocument, // Use the imported JSON configuration
