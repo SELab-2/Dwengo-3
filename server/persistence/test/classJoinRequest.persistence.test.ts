@@ -12,8 +12,7 @@ const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRe
 
 describe("classJoinRequest persistence test", () => {
     beforeAll(async () => {
-        await deleteAllData();
-        classJoinRequests = await insertClassJoinResuests(classPersistence, classJoinRequestPersistence);
+        classJoinRequests = await insertClassJoinResuests();
     });
 
     afterAll(async () => {

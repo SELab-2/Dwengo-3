@@ -1,16 +1,13 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { getUserByEmail, getUserById, getUserRoleById, saveUser } from "../auth/users.persistance";
+import { getUserByEmail, getUserById, getUserRoleById } from "../auth/users.persistance";
 import { ClassRoleEnum, UserEntity } from "../../util/types/user.types";
 import { PrismaSingleton } from "../prismaSingleton";
-import { User } from ".prisma/client";
 import { deleteAllData, insertUsers } from "./testData";
 
 let users: UserEntity[] = []
 
 describe("user persistence test", () => {
     beforeAll(async () => {
-        await deleteAllData();
-        //const [teachers, students] = await Promise.all([insertTeachers(), insertStudents()]);
         users = await insertUsers();
     });
     

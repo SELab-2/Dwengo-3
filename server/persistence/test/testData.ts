@@ -6,6 +6,9 @@ import { ClassDetail } from "../../util/types/class.types";
 import { ClassJoinRequestPersistence } from "../classJoinRequest.persistence";
 import { ClassJoinRequestDetail } from "../../util/types/classJoinRequest.types";
 
+const classPersistence: ClassPersistence = new ClassPersistence();
+const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
+
 const insertStudents = async (): Promise<UserEntity[]> => {
     const users = [
         {
@@ -51,13 +54,11 @@ const insertTeachers = async (): Promise<UserEntity[]> => {
 }
 
 export const insertUsers = async (): Promise<UserEntity[]> => {
-    await deleteAllData();
     const [students, teachers] = await Promise.all([insertStudents(), insertTeachers()]);
     return [...students, ...teachers];
 }
 
-export const insertClasses = async (classPersistence: ClassPersistence): Promise<ClassDetail[]> => {
-    await deleteAllData();
+export const insertClasses = async (): Promise<ClassDetail[]> => {
     const teachers = await insertTeachers();
     const classes = [
         { 
@@ -73,8 +74,8 @@ export const insertClasses = async (classPersistence: ClassPersistence): Promise
     return Promise.all(classes.map((classData) => classPersistence.createClass(classData, teachers[0])));
 }
 
-export const insertClassJoinResuests = async (classPersistence: ClassPersistence, classJoinRequestPersistence: ClassJoinRequestPersistence): Promise<ClassJoinRequestDetail[]> => {
-    const classData = (await insertClasses(classPersistence))[0];
+export const insertClassJoinResuests = async (): Promise<ClassJoinRequestDetail[]> => {
+    const classData = (await insertClasses())[0];
     const students = await insertStudents();
     return Promise.all(students.map((student) => classJoinRequestPersistence.createClassJoinRequest({classId: classData.id}, student)));
 }

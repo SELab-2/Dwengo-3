@@ -9,8 +9,7 @@ const classPersistence: ClassPersistence = new ClassPersistence();
 
 describe('class persistence test', () => {
   beforeAll(async () => {
-    await deleteAllData();
-    classes = await insertClasses(classPersistence);
+    classes = await insertClasses();
   });
 
   afterAll(async () => {
