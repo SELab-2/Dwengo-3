@@ -2,9 +2,8 @@ import { Box, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 
-function HomePage() {
+function MyClassesPage() {
   const { user } = useAuth();
-
   return (
     <Box
       sx={{
@@ -15,10 +14,10 @@ function HomePage() {
       }}
     >
       <Typography variant="h4">
-        Home Page of {user?.name ?? 'Nobody'}
+        My Classes of {user?.name ?? 'Nobody'}
       </Typography>
     </Box>
   );
 }
 
-export default HomePage;
+export default MyClassesPage;

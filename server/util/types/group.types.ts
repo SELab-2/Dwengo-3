@@ -1,7 +1,7 @@
-import { Uuid } from "./assignment.types"
+import { Uuid } from './assignment.types';
 
 export type GroupShort = {
-    id: Uuid,
-    nodeId: Uuid | null,
-    assignmentId: Uuid
+  id: Uuid;
+  nodeId: Uuid | null;
+  assignmentId: Uuid;
 };
