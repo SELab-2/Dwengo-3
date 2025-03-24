@@ -12,7 +12,9 @@ export const learningPathNodeSelectShort: Prisma.LearningPathNodeSelect = {
 export const learningPathNodeSelectDetail: Prisma.LearningPathNodeSelect = {
   id: true,
   learningPathId: true,
-  learningObjectId: true,
+  learningObject: {
+    select: learningObjectSelectShort
+  },
   instruction: true,
   index: true,
   transitions: {

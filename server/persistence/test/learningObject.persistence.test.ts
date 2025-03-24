@@ -1,9 +1,8 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { LearningObjectDetail, LearningObjectShort } from "../../util/types/learningObject.types";
+import { LearningObjectDetail } from "../../util/types/learningObject.types";
 import { LearningObjectPersistence } from "../learningObject.persistence";
 import { deleteAllData, insertLearningObjects } from "./testData";
 import { PrismaSingleton } from "../prismaSingleton";
-import { object } from "zod";
 
 let learningObjects: LearningObjectDetail[] = [];
 const learningObjectPersistence: LearningObjectPersistence = new LearningObjectPersistence();

@@ -5,18 +5,7 @@ export const learningPathSelectShort: Prisma.LearningPathSelect = {
   id: true,
   title: true,
   learningPathNodes: {
-    select: {
-      learningObject: {
-        select: {
-          targetAges: true,
-          keywords: {
-            select: {
-              keyword: true,
-            },
-          },
-        },
-      },
-    },
+    select: learningPathNodeSelectShort
   },
   image: true,
   description: true,
