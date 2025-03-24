@@ -28,7 +28,7 @@ export class LearningPathNodeDomain {
     return this.learningPathNodePersistence.createLearningPathNode(
       parseResult.data,
       await this.learningPathNodePersistence.getLearningPathNodeCount(
-        parseResult.data,
+        parseResult.data.learningPathId,
       ),
     );
   }

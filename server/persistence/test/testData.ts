@@ -187,7 +187,7 @@ const insertLearningPathNodesHelp = async (learningPaths: LearningPathDetail[]):
             )
         ));
         learningPath.learningPathNodes = nodes.map((node) => ({id: node.id, learningObject: node.learningObject}));
-        //learningPathNodes.push[...nodes];
+        learningPathNodes.push(...nodes);
     }
     return learningPathNodes;
 };

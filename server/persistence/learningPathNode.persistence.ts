@@ -45,9 +45,8 @@ export class LearningPathNodePersistence {
   }
 
   public async getLearningPathNodeCount(
-    learningPathNode: LearningPathNodeCreateParams,
+    learningPathId: string,
   ) {
-    const { learningPathId, learningObjectId, ..._ } = learningPathNode;
     return await PrismaSingleton.instance.learningPathNode.count({
       where: {
         learningPathId: learningPathId,
