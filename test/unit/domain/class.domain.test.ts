@@ -1,6 +1,6 @@
-import { ClassDomain } from '../../server/domain/class.domain';
+import { ClassDomain } from '../../../server/domain/class.domain';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { ClassCreateParams } from '../../server/util/types/class.types';
+import { ClassCreateParams } from '../../../server/util/types/class.types';
 import { ZodError } from 'zod';
 
 // Persistence mock

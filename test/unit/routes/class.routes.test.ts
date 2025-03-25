@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { describe, beforeEach, test, vi } from 'vitest';
-import { app } from '../../server/app';
+import { app } from '../../../server/app';
 import path from 'path';
 
 // Domain mock
