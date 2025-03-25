@@ -6,7 +6,7 @@ import {
   ClassJoinRequestFilterParams,
 } from '../util/types/classJoinRequest.types';
 import { Prisma } from '@prisma/client';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { ClassRoleEnum, UserEntity, UserShort } from '../util/types/user.types';
 import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinRequest.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { getUserById } from './auth/users.persistance';
@@ -44,7 +44,7 @@ export class ClassJoinRequestPersistence {
   public async getJoinRequests(
     paginationParams: PaginationParams,
     filters: ClassJoinRequestFilterParams,
-    user: UserEntity,
+    user: UserEntity | UserShort,
   ) {
     // We need to do this to not expose the Prisma.EnumClassRoleFilter<"User"> type to the domain layer.
     let filterByRole: Prisma.UserWhereInput = {};

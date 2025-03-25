@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ClassRole, Student, Teacher, User } from '@prisma/client';
-import { Uuid } from './assignment.types';
+import { ClassRole, Prisma, Student, Teacher, User } from '@prisma/client';
+import { userSelectShort } from '../selectInput/user.select';
 
 // Must be a different name than ClassRole to avoid conflicts/ confusion with prisma client ClassRole type.
 export enum ClassRoleEnum {
@@ -46,9 +46,4 @@ export type UserEntity = z.infer<typeof UserSchema>;
 
 // do not return the password of the user to the client.
 export type UserDto = Omit<UserEntity, 'password'>;
-export type UserShort = {
-  id: Uuid;
-  surname: string;
-  name: string;
-  role: ClassRole;
-};
+export type UserShort = Prisma.UserGetPayload<{select: typeof userSelectShort}>;

@@ -7,7 +7,7 @@ import {
   TeacherUpdateParams,
 } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { teacherSelectDetail } from '../util/selectInput/teacher.select';
+import { teacherSelectDetail, teacherSelectShort } from '../util/selectInput/teacher.select';
 
 export class TeacherPersistence {
   private prisma: PrismaClient;
@@ -45,11 +45,9 @@ export class TeacherPersistence {
   public async getTeachers(
     pagination: PaginationParams,
     filters: TeacherFilterParams,
-    include: TeacherIncludeParams,
   ) {
     const whereClause = {
       AND: [
-        filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
         filters.assignmentId
           ? { assignments: { some: { id: filters.assignmentId } } }
@@ -61,7 +59,8 @@ export class TeacherPersistence {
       this.prisma.teacher,
       whereClause,
       pagination,
-      include,
+      undefined,
+      teacherSelectShort
     );
   }
 
@@ -93,10 +92,16 @@ export class TeacherPersistence {
    * @returns The teacher data.
    */
   public async getTeacherByUserId(userId: string) {
-    return await this.prisma.teacher.findUnique({
+    const teacher = await this.prisma.teacher.findUnique({
       where: { userId },
       select: teacherSelectDetail,
     });
+
+    if (!teacher) {
+      throw new Error(`Teacher with userId: ${userId} was not found`);
+    }
+
+    return teacher;
   }
 
   /**

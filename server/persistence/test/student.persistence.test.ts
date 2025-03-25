@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { deleteAllData, insertClassesWithStudents } from "./testData";
 import { PrismaSingleton } from "../prismaSingleton";
-import { FullUserType, UserEntity } from "../../util/types/user.types";
+import { FullUserType } from "../../util/types/user.types";
 import { StudentPersistence } from "../student.persistence";
 import { getUserById } from "../auth/users.persistance";
 import { ClassShort } from "../../util/types/class.types";

@@ -98,15 +98,13 @@ export class TeacherDomain {
     // Validate the query
     const paginationData = this.validateQuery(PaginationFilterSchema, query);
     const filterData = this.validateQuery(TeacherFilterSchema, query);
-    const includeData = this.validateQuery(TeacherIncludeSchema, query);
 
     // TODO: validation
 
     // Fetch the teachers
     return await this.teacherPersistence.getTeachers(
       paginationData,
-      filterData,
-      includeData,
+      filterData
     );
   }
 

@@ -70,7 +70,14 @@ export const insertUsers = async (): Promise<UserEntity[]> => {
 };
 
 export const insertClasses = async (): Promise<ClassDetail[]> => {
-    const teacher = (await insertTeachers())[0];
+    const teacher = await saveUser({
+        username: "teacher3",
+            email: "teacher3@test.com",
+            password: "password",
+            surname: "teacher3",
+            name: "teacher3",
+            role: ClassRoleEnum.TEACHER
+    });
     const classes = [
         { 
             name: "Math",
@@ -88,13 +95,17 @@ export const insertClasses = async (): Promise<ClassDetail[]> => {
 export const insertClassJoinRequests = async (): Promise<ClassJoinRequestDetail[]> => {
     const classes = await insertClasses();
     const students = await insertStudents();
-    return Promise.all(
-        classes.flatMap((classData) => 
-            students.map((student) => 
-                classJoinRequestPersistence.createClassJoinRequest({ classId: classData.id }, student)
-            )
-        )
-    );
+    const teachers = await insertTeachers();
+    return Promise.all([
+        ...classes.flatMap((classData) =>
+            students.map((student) =>
+                classJoinRequestPersistence.createClassJoinRequest({ classId: classData.id }, student))
+        ),
+        ...classes.flatMap((classData) =>
+            teachers.map((teacher) =>
+                classJoinRequestPersistence .createClassJoinRequest({ classId: classData.id},  teacher))
+        ),
+    ]);
 };
 
 export const insertClassesWithStudents = async (): Promise<ClassDetail[]> => {

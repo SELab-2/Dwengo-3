@@ -41,7 +41,7 @@ describe("classJoinRequest persistence test", () => {
                 const classId = classJoinRequest.class.id;
                 const user = classJoinRequest.user;
                 const req = classJoinRequestPersistence.getJoinRequests({page: 1, pageSize: 10, skip: 0}, {classId: classId}, user);
-                const expectedRequests = classJoinRequests.filter((request) => request.class.id === classJoinRequest.class.id);
+                const expectedRequests = classJoinRequests.filter((request) => request.class.id === classJoinRequest.class.id && request.user.role === classJoinRequest.user.role);
                 await expect(req).resolves.toEqual({data: expect.arrayContaining(expectedRequests), totalPages: 1});
             }
         });
