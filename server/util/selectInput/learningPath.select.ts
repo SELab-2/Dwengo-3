@@ -1,7 +1,6 @@
-import { Prisma } from '@prisma/client';
 import { learningPathNodeSelectShort } from './learningPathNode.select';
 
-export const learningPathSelectShort: Prisma.LearningPathSelect = {
+export const learningPathSelectShort = {
   id: true,
   title: true,
   learningPathNodes: {
@@ -11,7 +10,7 @@ export const learningPathSelectShort: Prisma.LearningPathSelect = {
   description: true,
 };
 
-export const learningPathSelectDetail: Prisma.LearningPathSelect = {
+export const learningPathSelectDetail = {
   id: true,
   hruid: true,
   language: true,

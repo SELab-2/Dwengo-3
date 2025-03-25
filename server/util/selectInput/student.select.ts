@@ -1,8 +1,7 @@
-import { Prisma } from '@prisma/client';
 import { classSelectShort } from './class.select';
 import { groupSelectShort } from './group.select';
 
-export const studentSelectShort: Prisma.StudentSelect = {
+export const studentSelectShort = {
   id: true,
   userId: true,
   user: {
@@ -13,7 +12,7 @@ export const studentSelectShort: Prisma.StudentSelect = {
   },
 };
 
-export const studentSelectDetail: Prisma.StudentSelect = {
+export const studentSelectDetail = {
   id: true,
   userId: true,
   user: {

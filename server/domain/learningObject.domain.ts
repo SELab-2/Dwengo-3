@@ -76,9 +76,7 @@ export class LearningObjectDomain {
   }
 
   public async getLearningObjectById(id: string) {
-    const { learningPathNodes, ...learningObject } =
-      await this.learningObjectPersistence.getLearningObjectById(id);
-    return learningObject;
+    return await this.learningObjectPersistence.getLearningObjectById(id);
   }
 
   public async updateLearningObject(
@@ -119,8 +117,10 @@ export class LearningObjectDomain {
       throw new Error('Learning object not found');
     }
 
+    const nodes = (await this.learningObjectPersistence.getLearningPathNodes(id))?.learningPathNodes;
+
     // If the LearningObject is linked to any LearningPathNode, prevent deletion
-    if (learningObject.learningPathNodes.length > 0) {
+    if (!nodes || nodes.length > 0) {
       throw new Error(
         'Cannot delete a learning object linked to a learning path.',
       );

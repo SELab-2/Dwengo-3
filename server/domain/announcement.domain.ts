@@ -65,7 +65,7 @@ export class AnnouncementDomain {
     const announcement =
       await this.announcementPersistence.getAnnouncementById(id);
 
-    const classId = announcement.classId;
+    const classId = announcement.class.id;
     this.classDomain.checkUserBelongsToClass(user, classId);
     return announcement;
   }

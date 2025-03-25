@@ -1,15 +1,14 @@
-import { Prisma } from '@prisma/client';
 import { learningObjectSelectShort } from './learningObject.select';
 import { learningPathNodeTransitionSelectDetail } from './learningPathNodeTransition.select';
 
-export const learningPathNodeSelectShort: Prisma.LearningPathNodeSelect = {
+export const learningPathNodeSelectShort = {
   id: true,
   learningObject: {
     select: learningObjectSelectShort,
   },
 };
 
-export const learningPathNodeSelectDetail: Prisma.LearningPathNodeSelect = {
+export const learningPathNodeSelectDetail = {
   id: true,
   learningPathId: true,
   learningObject: {

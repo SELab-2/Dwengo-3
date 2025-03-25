@@ -1,6 +1,4 @@
-import { Prisma } from '@prisma/client';
-
-export const learningPathNodeTransitionSelectDetail: Prisma.LearningNodeTransitionSelect =
+export const learningPathNodeTransitionSelectDetail =
   {
     id: true,
     learningPathNodeId: true,

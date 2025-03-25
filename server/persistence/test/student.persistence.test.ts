@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { deleteAllData, insertClassesWithStudents } from "./testData";
 import { PrismaSingleton } from "../prismaSingleton";
-import { UserEntity } from "../../util/types/user.types";
+import { FullUserType, UserEntity } from "../../util/types/user.types";
 import { StudentPersistence } from "../student.persistence";
 import { getUserById } from "../auth/users.persistance";
 import { ClassShort } from "../../util/types/class.types";
 
-const students: UserEntity[] = [];
+const students: FullUserType[] = [];
 const classes: ClassShort[] = [];
 const studentPersistence: StudentPersistence = new StudentPersistence();
 
@@ -22,7 +22,7 @@ describe("student persistence test", () => {
             classes.push({name: classData.name, id: classData.id});
         }
     
-        students.push(...(await Promise.all(studentPromises)));
+        students.push(...(await Promise.all(studentPromises)).filter((student) => student !== null));
     });
 
     afterAll(async () => {

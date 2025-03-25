@@ -1,14 +1,13 @@
-import { Prisma } from '@prisma/client';
 import { teacherSelectShort } from './teacher.select';
 import { studentSelectShort } from './student.select';
 import { assignmentSelectShort } from './assignment.select';
 
-export const classSelectShort: Prisma.ClassSelect = {
+export const classSelectShort = {
   id: true,
   name: true,
 };
 
-export const classSelectDetail: Prisma.ClassSelect = {
+export const classSelectDetail = {
   id: true,
   name: true,
   teachers: {

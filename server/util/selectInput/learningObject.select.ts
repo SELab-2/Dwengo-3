@@ -1,6 +1,4 @@
-import { Prisma } from '@prisma/client';
-
-export const learningObjectSelectShort: Prisma.LearningObjectSelect = {
+export const learningObjectSelectShort = {
   id: true,
   title: true,
   language: true,
@@ -14,7 +12,7 @@ export const learningObjectSelectShort: Prisma.LearningObjectSelect = {
   targetAges: true,
 };
 
-export const learningObjectSelectDetail: Prisma.LearningObjectSelect = {
+export const learningObjectSelectDetail = {
   id: true,
   hruid: true,
   version: true,

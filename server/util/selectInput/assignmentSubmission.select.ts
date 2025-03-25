@@ -1,8 +1,7 @@
-import { Prisma } from "@prisma/client";
 import { groupSelectShort } from "./group.select";
 import { learningPathNodeSelectShort } from "./learningPathNode.select";
 
-export const assignmentSubmissionSelectDetail: Prisma.AssignmentSubmissionSelect = {
+export const assignmentSubmissionSelectDetail = {
     id: true,
     submission: true,
     group: {
@@ -13,6 +12,6 @@ export const assignmentSubmissionSelectDetail: Prisma.AssignmentSubmissionSelect
     }
 };
   
-export const assignmentSubmissionSelectShort: Prisma.AssignmentSubmissionSelect = {
+export const assignmentSubmissionSelectShort = {
     id: true
 };
