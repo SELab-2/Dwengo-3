@@ -12,6 +12,8 @@ import { LearningPathPersistence } from "../learningPath.persistence";
 import { LearningPathNodePersistence } from "../learningPathNode.persistence";
 import { LearningPathCreateParams, LearningPathDetail } from "../../util/types/learningPath.types";
 import { LearningPathNodeDetail } from "../../util/types/learningPathNode.types";
+import { AnnouncementCreatePersistenceParams, AnnouncementDetail } from "../../util/types/announcement.types";
+import { AnnouncementPersistence } from "../announcement.persistence";
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
@@ -19,6 +21,7 @@ const learningObjectPersistence: LearningObjectPersistence = new LearningObjectP
 const learningObjectKeywordPersistence: LearningObjectKeywordPersistence = new LearningObjectKeywordPersistence();
 const learningPathPersistence: LearningPathPersistence = new LearningPathPersistence();
 const learningPathNodePersistence: LearningPathNodePersistence = new LearningPathNodePersistence();
+const announcementPersistence: AnnouncementPersistence = new AnnouncementPersistence();
 
 export const insertStudents = async (): Promise<UserEntity[]> => {
     const users = [
@@ -230,8 +233,32 @@ export const insertLearningPathNodes = async (): Promise<LearningPathNodeDetail[
     return insertLearningPathNodesHelp(learningPaths);
 };
 
+export const insertAnnouncements = async (): Promise<AnnouncementDetail[]> => {
+    const classes = await insertClassesWithStudents();
+    const announcements = [];
+    for (const classData of classes) {
+        const announcementsData: AnnouncementCreatePersistenceParams[] = [
+            {
+                title: "Announcement 1",
+                content: "test",
+                classId: classData.id
+            },
+            {
+                title: "Announcemnt 2",
+                content: "test",
+                classId: classData.id
+            }
+        ];
+        announcements.push(...announcementsData.map((announcement) => 
+            announcementPersistence.createAnnouncement(announcement, classData.teachers[0].id))
+        );
+    }
+    return Promise.all(announcements);
+}
+
 export const deleteAllData = async (): Promise<void> => {
     await PrismaSingleton.instance.classJoinRequest.deleteMany();
+    await PrismaSingleton.instance.announcement.deleteMany();
     await PrismaSingleton.instance.user.deleteMany();
     await PrismaSingleton.instance.class.deleteMany();
     await PrismaSingleton.instance.learningPathNode.deleteMany();
