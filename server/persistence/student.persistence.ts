@@ -7,7 +7,7 @@ import {
   StudentIncludeParams,
   StudentUpdateParams,
 } from '../util/types/student.types';
-import { studentSelectDetail } from '../util/selectInput/student.select';
+import { studentSelectDetail, studentSelectShort } from '../util/selectInput/student.select';
 
 /**
  * Persistence class for Student model.
@@ -50,12 +50,10 @@ export class StudentPersistence {
    */
   public async getStudents(
     pagination: PaginationParams,
-    filters: StudentFilterParams,
-    include: StudentIncludeParams,
+    filters: StudentFilterParams
   ) {
     const whereClause: Prisma.StudentWhereInput = {
       AND: [
-        filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
         filters.groupId ? { groups: { some: { id: filters.groupId } } } : {},
       ],
@@ -65,7 +63,8 @@ export class StudentPersistence {
       this.prisma.student,
       whereClause,
       pagination,
-      include,
+      undefined,
+      studentSelectShort
     );
   }
 
@@ -96,10 +95,16 @@ export class StudentPersistence {
    * @returns The student data.
    */
   public async getStudentByUserId(userId: string) {
-    return await this.prisma.student.findUnique({
+    const student = await this.prisma.student.findUnique({
       where: { userId },
       select: studentSelectDetail,
     });
+
+    if (!student) {
+      throw new Error(`Student with userId: ${userId} was not found`);
+    }
+
+    return student;
   }
 
   /**

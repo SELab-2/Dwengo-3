@@ -20,7 +20,7 @@ const learningObjectKeywordPersistence: LearningObjectKeywordPersistence = new L
 const learningPathPersistence: LearningPathPersistence = new LearningPathPersistence();
 const learningPathNodePersistence: LearningPathNodePersistence = new LearningPathNodePersistence();
 
-const insertStudents = async (): Promise<UserEntity[]> => {
+export const insertStudents = async (): Promise<UserEntity[]> => {
     const users = [
         {
             username: "student1",
@@ -85,11 +85,27 @@ export const insertClasses = async (): Promise<ClassDetail[]> => {
     return Promise.all(classes.map((classData) => classPersistence.createClass(classData, teacher)));
 };
 
-export const insertClassJoinResuests = async (): Promise<ClassJoinRequestDetail[]> => {
-    const classData = (await insertClasses())[0];
+export const insertClassJoinRequests = async (): Promise<ClassJoinRequestDetail[]> => {
+    const classes = await insertClasses();
     const students = await insertStudents();
-    return Promise.all(students.map((student) => classJoinRequestPersistence.createClassJoinRequest({classId: classData.id}, student)));
+    return Promise.all(
+        classes.flatMap((classData) => 
+            students.map((student) => 
+                classJoinRequestPersistence.createClassJoinRequest({ classId: classData.id }, student)
+            )
+        )
+    );
 };
+
+export const insertClassesWithStudents = async (): Promise<ClassDetail[]> => {
+    const joinRequests = await insertClassJoinRequests();
+    const classIds = new Set<string>();
+    for (const joinRequest of joinRequests) {
+        await classJoinRequestPersistence.handleJoinRequest({requestId: joinRequest.id, acceptRequest: true});
+        classIds.add(joinRequest.class.id);
+    }
+    return Promise.all(Array.from(classIds).map((classId) => classPersistence.getClassById(classId)));
+}
 
 export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> => {
     const learningObjectsData: LearningObjectCreateParams[] = [

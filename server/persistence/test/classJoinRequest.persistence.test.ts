@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { ClassJoinRequestDetail } from "../../util/types/classJoinRequest.types";
 import { ClassPersistence } from "../class.persistence";
 import { ClassJoinRequestPersistence } from "../classJoinRequest.persistence";
-import { deleteAllData, insertClassJoinResuests } from "./testData";
+import { deleteAllData, insertClassJoinRequests } from "./testData";
 import { PrismaSingleton } from "../prismaSingleton";
 
 let classJoinRequests: ClassJoinRequestDetail[] = [];
@@ -11,7 +11,7 @@ const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRe
 
 describe("classJoinRequest persistence test", () => {
     beforeAll(async () => {
-        classJoinRequests = await insertClassJoinResuests();
+        classJoinRequests = await insertClassJoinRequests();
     });
 
     afterAll(async () => {
@@ -37,16 +37,21 @@ describe("classJoinRequest persistence test", () => {
 
     describe("test get join request", () => {
         test("request with existing class id responds with array of classJoinRequests", async () => {
-            const classId = classJoinRequests[0].class.id;
-            const user = classJoinRequests[0].user;
-            const req = classJoinRequestPersistence.getJoinRequests({page: 1, pageSize: 10, skip: 0}, {classId: classId}, user);
-            await expect(req).resolves.toEqual({data: expect.arrayContaining(classJoinRequests), totalPages: 1});
+            for (const classJoinRequest of classJoinRequests) {
+                const classId = classJoinRequest.class.id;
+                const user = classJoinRequest.user;
+                const req = classJoinRequestPersistence.getJoinRequests({page: 1, pageSize: 10, skip: 0}, {classId: classId}, user);
+                const expectedRequests = classJoinRequests.filter((request) => request.class.id === classJoinRequest.class.id);
+                await expect(req).resolves.toEqual({data: expect.arrayContaining(expectedRequests), totalPages: 1});
+            }
         });
 
         test("request with existing user id responds with array of classJoinRequests", async () => {
-            const user = classJoinRequests[0].user;
-            const req = classJoinRequestPersistence.getJoinRequests({page: 1, pageSize: 10, skip: 0}, {userId: user.id}, user);
-            await expect(req).resolves.toEqual({data: expect.arrayContaining([classJoinRequests[0]]), totalPages: 1});
+            for (const classJoinRequest of classJoinRequests) {
+                const user = classJoinRequest.user;
+                const req = classJoinRequestPersistence.getJoinRequests({page: 1, pageSize: 10, skip: 0}, {userId: user.id}, user);
+                await expect(req).resolves.toEqual({data: expect.arrayContaining([classJoinRequest]), totalPages: 1});
+            }
         });
     });
 

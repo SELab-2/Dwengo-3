@@ -4,6 +4,7 @@ import { groupSelectShort } from './group.select';
 
 export const studentSelectShort: Prisma.StudentSelect = {
   id: true,
+  userId: true,
   user: {
     select: {
       name: true,

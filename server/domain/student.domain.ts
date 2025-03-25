@@ -195,9 +195,6 @@ export class StudentDomain {
     // Validate and parse student filters
     const filters = this.validateQuery(StudentFilterSchema, query);
 
-    // Validate and parse student include
-    const include = this.validateQuery(StudentIncludeSchema, query);
-
     if (user.role === ClassRoleEnum.TEACHER) {
       // Check if the teacher exists
       const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
@@ -225,8 +222,7 @@ export class StudentDomain {
 
     return await this.studentPersistence.getStudents(
       pagination,
-      filters,
-      include,
+      filters
     );
   }
 
@@ -358,8 +354,7 @@ export class StudentDomain {
     // Fetch all students in the group
     const students = await this.studentPersistence.getStudents(
       { page: 1, pageSize: Infinity, skip: 0 },
-      { groupId },
-      { user: false, classes: false, groups: false },
+      { groupId }
     );
 
     // Check if the student exists
