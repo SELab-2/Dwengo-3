@@ -1,0 +1,49 @@
+{
+    "testLearningObject": {
+        "hruid": "test-v1",
+        "uuid": "bfba889e-f642-4f05-8286-04ed116be3ce",
+        "version": 3,
+        "language": "nl",
+        "title": "This is a titleeeee",
+        "description": "This is a description",
+        "contentType": "text/markdown",
+        "target_ages": [
+            4,
+            3
+        ],
+        "teacher_exclusive": true,
+        "skos_concepts": [
+            "http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen",
+            "http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso"
+        ],
+        "educational_goals": [
+            {
+                "_id": "61510999f505a74ccc1f2da5",
+                "source": "Source",
+                "id": "id"
+            },
+            {
+                "_id": "61510999f505a74ccc1f2da6",
+                "source": "Source2",
+                "id": "id2"
+            }
+        ],
+        "copyright": "Copyright by dwengo",
+        "licence": "CC BY",
+        "difficulty": 3,
+        "estimated_time": 20,
+        "return_value": {
+                "callback_url":"url/callback",
+                "callback_schema":{
+                "att":"test",
+                "att2":"test2"
+            }
+        },
+        "available": true,
+        "content": "content",
+        "keywords": [
+            "keyword1",
+            "keyword2"
+        ]
+    }
+}
