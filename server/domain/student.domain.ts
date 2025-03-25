@@ -307,7 +307,7 @@ export class StudentDomain {
       }
     }
 
-    return await this.studentPersistence.updateStudent(updateData);
+    return await this.studentPersistence.updateStudent(id, updateData);
   }
 
   /**
