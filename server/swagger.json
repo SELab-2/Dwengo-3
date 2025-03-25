@@ -1456,12 +1456,16 @@
             "type": "array",
             "description": "The groups that are assigned to the assignment",
             "items": {
-              "type": "string",
-              "format": "uuid",
-              "description": "The ID of the group",
-              "example": "550e8400-e29b-41d4-a716-446655440000"
+              "type": "array",
+              "description": "the userId's of the people in a group",
+              "items": {
+                "type": "string",
+                "format": "uuid",
+                "description": "The ID of the group",
+                "example": "550e8400-e29b-41d4-a716-446655440000"
+              }
             },
-            "example": ["550e8400-e29b-41d4-a716-446655440000"]
+            "example": [["550e8400-e29b-41d4-a716-446655440000"]]
           },
           "learningPathId": {
             "type": "string",
