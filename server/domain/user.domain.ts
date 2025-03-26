@@ -4,13 +4,14 @@ import {
   RegisterCredentials,
 } from '../util/types/auth.types';
 import * as persistence from '../persistence/auth/users.persistance';
-import { AuthProvider, ClassRole, User } from '@prisma/client';
+import { AuthProvider, User, ClassRole } from '@prisma/client';
 import {
   AuthenticationProvider,
   ClassRoleEnum,
   FullUserType,
   UserEntity,
 } from '../util/types/user.types';
+import * as crypto from 'node:crypto';
 
 const providerMap = {
   [AuthProvider.GOOGLE]: AuthenticationProvider.GOOGLE,
@@ -30,7 +31,10 @@ export async function createUser(
     email: user.email,
     id: user.id,
     name: user.name,
-    password: user.password,
+    password: crypto
+      .createHash('sha256')
+      .update(user.password)
+      .digest('base64'),
     provider: providerMap[user.provider],
     role: roleMap[user.role],
     student: user.student,
@@ -40,13 +44,15 @@ export async function createUser(
   };
 }
 
-export async function loginUser(
-  loginRequest: LoginCredentials,
-): Promise<UserEntity> {
-  const user: FullUserType | null = await persistence.getUserByEmail(
-    loginRequest.email,
-  );
-  if (user === null) throw new Error('User not found');
+/**
+ * Fetches a user by their ID.
+ *
+ * @param id - The ID of the user to fetch.
+ * @returns The user data. If the user is not found, null is returned.
+ */
+export async function getUserById(id: string): Promise<UserEntity | null> {
+  const user = await persistence.getUserById(id);
+  if (user === null) return null;
   return {
     id: user.id,
     provider: providerMap[user.provider],
@@ -61,16 +67,6 @@ export async function loginUser(
   };
 }
 
-/**
- * Fetches a user by their ID.
- *
- * @param id - The ID of the user to fetch.
- * @returns The user data. If the user is not found, null is returned.
- */
-export async function getUserById(id: string): Promise<FullUserType | null> {
-  return await persistence.getUserById(id);
-}
-
 export async function deleteUser(id: string): Promise<boolean> {
   const user: User | null = await persistence.deleteUser(id);
   return user !== null;
@@ -79,4 +75,23 @@ export async function deleteUser(id: string): Promise<boolean> {
 export async function getUserFromReq(req: Request): Promise<UserEntity> {
   // todo: rewrite with new cookie format using express-session
   throw new Error('Not implemented yet.');
+}
+
+export async function getUserByEmail(
+  email: string,
+): Promise<UserEntity | null> {
+  const user = await persistence.getUserByEmail(email);
+  if (user === null) return null;
+  return {
+    id: user.id,
+    provider: providerMap[user.provider],
+    username: user.username,
+    email: user.email,
+    password: user.password,
+    name: user.name,
+    surname: user.surname,
+    role: roleMap[user.role],
+    teacher: user.teacher,
+    student: user.student,
+  };
 }

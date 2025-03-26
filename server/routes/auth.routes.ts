@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import {
   Profile,
   Strategy as GoogleStrategy,
@@ -11,9 +11,9 @@ import * as userDomain from '../domain/user.domain';
 import {
   AuthenticationProvider,
   ClassRoleEnum,
-  UserDto,
   UserEntity,
 } from '../util/types/user.types';
+import * as crypto from 'node:crypto';
 
 export const router = express.Router();
 const apiCallbackUrl =
@@ -21,12 +21,25 @@ const apiCallbackUrl =
     ? 'http://localhost:3001/api/auth/callback/google'
     : 'https://sel2-3.ugent.be/api/auth/callback/google';
 const providerMapper = {
-  [AuthenticationProvider.GOOGLE]: passport.authenticate('google', {
-    scope: ['email', 'profile'],
-  }),
-  [AuthenticationProvider.LOCAL]: passport.authenticate('local', {
-    /* todo */
-  }),
+  [AuthenticationProvider.GOOGLE]: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    return passport.authenticate('google', {
+      scope: ['email', 'profile'],
+      session: true,
+    })(req, res, next);
+  },
+  [AuthenticationProvider.LOCAL]: (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    return passport.authenticate('local', {
+      session: true,
+    })(req, res, next);
+  },
 };
 
 passport.use(
@@ -34,7 +47,7 @@ passport.use(
     {
       clientID: (process.env.GOOGLE_CLIENT_ID as string) ?? '',
       clientSecret: (process.env.GOOGLE_CLIENT_SECRET as string) ?? '',
-      callbackURL: 'http://localhost:3001/auth/callback/google',
+      callbackURL: apiCallbackUrl,
       passReqToCallback: true,
     },
     async (
@@ -44,9 +57,8 @@ passport.use(
       profile: Profile,
       done: VerifyCallback,
     ) => {
-      console.debug(req.path);
       try {
-        let user = await userDomain.getUserById(profile.id);
+        let user: UserEntity | null = await userDomain.getUserById(profile.id);
         const role = req.path.includes('teacher')
           ? ClassRoleEnum.TEACHER
           : ClassRoleEnum.STUDENT;
@@ -66,47 +78,128 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        return done(error);
+        return done(error, false);
       }
     },
   ),
 );
 
 passport.use(
-  new LocalStrategy(async (email: string, password: string, done) => {
-    // todo
-  }),
+  new LocalStrategy(
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback: true,
+      session: true,
+    },
+    async (req: Request, email: string, password: string, done) => {
+      try {
+        const user = await userDomain.getUserByEmail(email);
+        const role = req.path.includes('teacher')
+          ? ClassRoleEnum.TEACHER
+          : ClassRoleEnum.STUDENT;
+        const provider = req.query.provider as AuthenticationProvider;
+        if (user === null) {
+          return done(null, false, { message: 'incorrect login credentials' });
+        }
+
+        if (
+          crypto.createHash('sha256').update(password).digest('base64') !==
+          user.password
+        ) {
+          return done(null, false, { message: 'incorrect login credentials' });
+        }
+
+        if (user.role !== role) {
+          return done(null, false, { message: 'incorrect login credentials' });
+        }
+
+        if (user.provider !== provider) {
+          return done(null, false, { message: 'incorrect login credentials' });
+        }
+
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    },
+  ),
 );
 
-function login(req: Request, res: Response) {
+function login(req: Request, res: Response, next: NextFunction) {
   const provider = req.query.provider;
   if (provider === undefined || provider === null)
     throw new Error('Provider not found');
 
-  const providerEnum = provider as AuthenticationProvider;
+  const providerEnum =
+    provider === 'google'
+      ? AuthenticationProvider.GOOGLE
+      : AuthenticationProvider.LOCAL;
 
-  return providerMapper[providerEnum](req, res);
+  return providerMapper[providerEnum](req, res, next);
 }
 
 passport.serializeUser((user: any, done) => done(null, user.id));
 passport.deserializeUser(async (id: string, done) => {
   try {
     const user = await userDomain.getUserById(id);
+
+    // todo: change to error types
+    if (user === null) return new Error('User not found');
+
     return done(null, user);
   } catch (error) {
     return done(error);
   }
 });
 
-router.get('/student/login', (req: Request, res: Response) => login(req, res));
-router.get('/teacher/login', (req: Request, res: Response) => login(req, res));
+router.get(
+  '/student/login',
+  (req: Request, res: Response, next: NextFunction) => login(req, res, next),
+);
+router.get(
+  '/teacher/login',
+  (req: Request, res: Response, next: NextFunction) => login(req, res, next),
+);
+
+router.put('/student/register', async (req: Request, res: Response) => {
+  try {
+    const role = req.path.includes('teacher')
+      ? ClassRoleEnum.TEACHER
+      : ClassRoleEnum.STUDENT;
+
+    const user: UserEntity = await userDomain.createUser({
+      email: req.body.email,
+      name: req.body.name,
+      password: req.body.password,
+      provider: AuthenticationProvider.LOCAL,
+      role: role,
+      surname: req.body.surname,
+      username: req.body.username,
+    });
+    res.json(user);
+  } catch (error) {
+    res.status(400);
+  }
+});
 
 router.get(
   '/callback/:provider',
-  passport.authenticate('google', { session: true }),
-  (req: Request, res: Response) => {
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log('OAuth Callback Hit:', req.params.provider);
+    console.log('Query Params:', req.query);
+    console.log('Session:', req.session);
+
     const provider = req.params.provider;
-    if (provider === undefined) throw new Error('Provider not found');
-    res.json({ user: req.user as UserDto });
+    if (provider === '' || (provider !== 'google' && provider !== 'local'))
+      throw new Error('Unsupported provider');
+
+    console.log('provider:', provider);
+
+    // something wrong here... see gpt
+    passport.authenticate(provider)(req, res, next);
+  },
+  (req: Request, res: Response) => {
+    res.status(200).json(req.user);
   },
 );

@@ -21,6 +21,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import { StudentController } from './routes/student.routes';
 import { TeacherController } from './routes/teacher.routes';
 import passport from 'passport';
+import session from 'express-session';
 
 export const app: Express = express();
 const port = 3001;
@@ -37,14 +38,29 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 }
 
+if (process.env.SESSION_SECRET === undefined) {
+  throw new Error('Secret for cookies not present');
+}
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: 'strict',
+      maxAge: 1000 * 60 * 60 * 5, // 5 hours
+    },
+  }),
+);
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  // TODO: Maybe make some error logging mechanism?
-  console.error('[ERROR]', err);
-
   // If the error is a ZodError, it means that the request did not pass the validation
   const statusCode = err instanceof ZodError ? 400 : 500;
 
