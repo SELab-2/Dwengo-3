@@ -91,8 +91,6 @@ export class DiscussionDomain {
 
     const memberIds = groupMemberUserIds.concat(teacherIds);
 
-    console.log('memberIds', memberIds);
-
     return this.discussionPersistence.createDiscussion(parseResult, memberIds);
   }
 }
