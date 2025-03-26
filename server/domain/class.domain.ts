@@ -59,7 +59,7 @@ export class ClassDomain {
 
     if (user.role === ClassRoleEnum.TEACHER) {
       const isTeacherOfThisClass = classData.teachers.some(
-        (teacher) => teacher.userId === user.id,
+        (teacher) => teacher.id === user.teacher?.id,
       );
 
       if (!isTeacherOfThisClass) {
@@ -102,7 +102,11 @@ export class ClassDomain {
       throw updateParamsResult.error;
     }
 
-    if (!this.classPersistance.isTeacherFromClass(user.id, id)) {
+    if (!user.teacher) {
+      throw new Error('User must be a teacher to update a class.');
+    }
+
+    if (!this.classPersistance.isTeacherFromClass(user.teacher.id, id)) {
       throw new Error('User must be a teacher of the class to update it.');
     }
 
@@ -126,5 +130,55 @@ export class ClassDomain {
     if (!exists) {
       throw new Error('User does not belong to the class.');
     }
+  }
+
+  public async removeTeacherFromClass(
+    classId: string,
+    teacherId: string,
+    user: UserEntity,
+  ) {
+    if (!user.teacher) {
+      throw new Error('User must be a teacher to remove people from a class.');
+    }
+
+    if (!this.classPersistance.isTeacherFromClass(user.teacher.id, classId)) {
+      throw new Error(
+        'User must be a teacher of the class to remove people from it.',
+      );
+    }
+
+    if (!this.classPersistance.isTeacherFromClass(teacherId, classId)) {
+      throw new Error('Teacher not found in this class.');
+    }
+
+    return await this.classPersistance.removeTeacherFromClass(
+      classId,
+      teacherId,
+    );
+  }
+
+  public async removeStudentFromClass(
+    classId: string,
+    studentId: string,
+    user: UserEntity,
+  ) {
+    if (!user.teacher) {
+      throw new Error('User must be a teacher to remove people from a class.');
+    }
+
+    if (!this.classPersistance.isTeacherFromClass(user.teacher.id, classId)) {
+      throw new Error(
+        'User must be a teacher of the class to remove people from it.',
+      );
+    }
+
+    if (!this.classPersistance.isStudentFromClass(studentId, classId)) {
+      throw new Error('Student not found in this class.');
+    }
+
+    return await this.classPersistance.removeStudentFromClass(
+      classId,
+      studentId,
+    );
   }
 }
