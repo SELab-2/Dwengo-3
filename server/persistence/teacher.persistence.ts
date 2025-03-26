@@ -4,7 +4,6 @@ import { PaginationParams } from '../util/types/pagination.types';
 import {
   TeacherFilterParams,
   TeacherIncludeParams,
-  TeacherUpdateParams,
 } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { teacherSelectDetail } from '../util/selectInput/teacher.select';

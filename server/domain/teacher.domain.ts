@@ -4,10 +4,8 @@ import { ClassPersistence } from '../persistence/class.persistence';
 import { UserEntity } from '../util/types/user.types';
 import {
   TeacherCreateSchema,
-  TeacherDeleteSchema,
   TeacherFilterSchema,
   TeacherIncludeSchema,
-  TeacherUpdateSchema,
 } from '../util/types/teacher.types';
 import { getUserById } from '../persistence/auth/users.persistance';
 import { Class } from '@prisma/client';
