@@ -95,7 +95,7 @@ export class AssignmentSubmissionDomain {
     }
 
     const isStudentOfThisGroup = groupData.students.some(
-      (student) => student.id === user.id,
+      (student) => student.userId === user.id,
     );
 
     if (!isStudentOfThisGroup) {
