@@ -38,7 +38,11 @@ export class ClassJoinRequestDomain {
     );
   }
 
-  public async getJoinRequests(query: unknown, user: UserEntity) {
+  public async getJoinRequests(
+    query: unknown,
+    user: UserEntity,
+    classRole: ClassRoleEnum,
+  ) {
     const paginationResult = PaginationFilterSchema.safeParse(query);
     if (!paginationResult.success) {
       throw paginationResult.error;
@@ -90,7 +94,7 @@ export class ClassJoinRequestDomain {
     return this.classJoinRequestPersistance.getJoinRequests(
       paginationResult.data,
       ClassJoinRequestFilterResult.data,
-      user,
+      classRole,
     );
   }
 

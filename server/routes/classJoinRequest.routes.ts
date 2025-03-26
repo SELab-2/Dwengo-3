@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { ClassJoinRequestDomain } from '../domain/classJoinRequest.domain';
 import { getUserFromReq } from '../domain/user.domain';
+import { ClassRoleEnum } from '../util/types/user.types';
 
 export class ClassJoinRequestController {
   public router: Router;
@@ -21,14 +22,35 @@ export class ClassJoinRequestController {
     );
   };
 
-  private getJoinRequests = async (req: Request, res: Response) => {
+  private getStudentJoinRequests = async (req: Request, res: Response) => {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
         req.query,
         await getUserFromReq(req),
+        ClassRoleEnum.STUDENT,
       ),
     );
   };
+
+  private getTeacherJoinRequests = async (req: Request, res: Response) => {
+    res.json(
+      await this.classJoinRequestDomain.getJoinRequests(
+        req.query,
+        await getUserFromReq(req),
+        ClassRoleEnum.TEACHER,
+      ),
+    );
+  };
+
+  // private getJoinRequests = async (req: Request, res: Response) => {
+  //   res.json(
+  //     await this.classJoinRequestDomain.getJoinRequests(
+  //       req.query,
+  //       await getUserFromReq(req),
+  //       ClassRoleEnum.STUDENT,
+  //     ),
+  //   );
+  // };
 
   private handleJoinRequest = async (req: Request, res: Response) => {
     res.json(
@@ -136,7 +158,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/studentRequest', this.getJoinRequests);
+    this.router.get('/studentRequest', this.getStudentJoinRequests);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -183,7 +205,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/teacherRequest', this.getJoinRequests);
+    this.router.get('/teacherRequest', this.getTeacherJoinRequests);
     /**
      * @swagger
      * /api/class/studentRequest:
