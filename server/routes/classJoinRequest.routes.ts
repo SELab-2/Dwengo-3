@@ -42,16 +42,6 @@ export class ClassJoinRequestController {
     );
   };
 
-  // private getJoinRequests = async (req: Request, res: Response) => {
-  //   res.json(
-  //     await this.classJoinRequestDomain.getJoinRequests(
-  //       req.query,
-  //       await getUserFromReq(req),
-  //       ClassRoleEnum.STUDENT,
-  //     ),
-  //   );
-  // };
-
   private handleJoinRequest = async (req: Request, res: Response) => {
     res.json(
       await this.classJoinRequestDomain.handleJoinRequest(
