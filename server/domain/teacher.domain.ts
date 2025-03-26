@@ -114,26 +114,6 @@ export class TeacherDomain {
     return await this.teacherPersistence.getTeacherById(id);
   }
 
-  public async updateTeacher(body: unknown, user: UserEntity) {
-    // Validate the body
-    const updateData = this.validateQuery(TeacherUpdateSchema, body);
-
-    // TODO validation
-
-    // Update the teacher
-    return await this.teacherPersistence.updateTeacher(updateData);
-  }
-
-  public async deleteTeacher(body: unknown, user: UserEntity) {
-    // Validate the body
-    const { id } = this.validateQuery(TeacherDeleteSchema, body);
-
-    // TODO validation
-
-    // Delete the teacher
-    return await this.teacherPersistence.deleteTeacher(id);
-  }
-
   public async shareClass(userId1: string, userId2: string) {
     // TODO: move this to class domain
 

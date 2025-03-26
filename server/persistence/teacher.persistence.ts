@@ -98,35 +98,4 @@ export class TeacherPersistence {
       select: teacherSelectDetail,
     });
   }
-
-  /**
-   * Update a teacher's classes and assignments.
-   *
-   * @param params - The parameters used to update the teacher.
-   * @returns The updated teacher.
-   */
-  public async updateTeacher(params: TeacherUpdateParams) {
-    return await this.prisma.teacher.update({
-      where: { id: params.id },
-      data: {
-        classes: {
-          connect: params.classes?.map((id) => ({ id })),
-        },
-        assignment: {
-          connect: params.assignments?.map((id) => ({ id })),
-        },
-      },
-    });
-  }
-
-  /**
-   * Delete a teacher.
-   *
-   * @param teacherId - The ID of the teacher to delete.
-   */
-  public async deleteTeacher(teacherId: string) {
-    await this.prisma.teacher.delete({
-      where: { id: teacherId },
-    });
-  }
 }
