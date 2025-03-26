@@ -1,8 +1,4 @@
-import {
-  AssignmentSubmission,
-  ClassRole,
-  SubmissionType,
-} from '@prisma/client';
+import { ClassRole, SubmissionType } from '@prisma/client';
 import { AssignmentSubmissionPersistence } from '../persistence/assignmentSubmission.persistence';
 import { Request } from 'express';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
@@ -15,22 +11,21 @@ import {
   AssignmentSubmissionDetail,
 } from '../util/types/assignmentSubmission.types';
 import { UserEntity } from '../util/types/user.types';
-import {
-  checkIfUserIsInGroup,
-  compareUserIdWithFilterId,
-} from '../util/coockie-checks/coockieChecks.util';
+import { checkIfUserIsInGroup } from '../util/coockie-checks/coockieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
-import { z, ZodEffects, ZodObject } from 'zod';
 import { Uuid } from '../util/types/assignment.types';
+import { LearningPathNodePersistence } from '../persistence/learningPathNode.persistence';
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
   private groupPersistence: GroupPersistence;
+  private learningPathNodePersistence: LearningPathNodePersistence;
 
   public constructor() {
     this.assignmentSubmissionPersistence =
       new AssignmentSubmissionPersistence();
     this.groupPersistence = new GroupPersistence();
+    this.learningPathNodePersistence = new LearningPathNodePersistence();
   }
 
   public async getAssignmentSubmissions(
@@ -93,7 +88,32 @@ export class AssignmentSubmissionDomain {
       data.submission = fileSubmission;
     }
 
-    checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
+    const groupData =
+      await this.groupPersistence.getGroupByIdWithCustomIncludes(data.groupId);
+    if (!groupData) {
+      throw new Error('Group not found');
+    }
+
+    const isStudentOfThisGroup = groupData.students.some(
+      (student) => student.id === user.id,
+    );
+
+    if (!isStudentOfThisGroup) {
+      throw new Error("Can't submit to a group you're not a student of.");
+    }
+
+    const node = await this.learningPathNodePersistence.getLearningPathNodeById(
+      data.nodeId,
+    );
+
+    if (node.index > Math.max(...groupData.progress)) {
+      const new_progress = [...groupData.progress, node.index];
+      await this.groupPersistence.updateGroupProgress(
+        data.groupId,
+        new_progress,
+      );
+    }
+
     return this.assignmentSubmissionPersistence.createAssignmentSubmission(
       data,
     );
