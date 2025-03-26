@@ -38,7 +38,7 @@ export const checkIfUserIsInClass = async (
 
   if (user.role === ClassRoleEnum.TEACHER) {
     const isTeacherOfThisClass = classData.teachers.some(
-      (teacher) => teacher.userId === user.id,
+      (teacher) => user.teacher && teacher.id === user.teacher.id,
     );
 
     if (!isTeacherOfThisClass) {
@@ -48,7 +48,7 @@ export const checkIfUserIsInClass = async (
 
   if (user.role === ClassRoleEnum.STUDENT) {
     const isStudentOfThisClass = classData.students.some(
-      (student) => student.userId === user.id,
+      (student) => user.student && student.id === user.student.id,
     );
 
     if (!isStudentOfThisClass) {
