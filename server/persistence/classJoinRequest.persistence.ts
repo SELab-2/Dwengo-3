@@ -17,9 +17,18 @@ export class ClassJoinRequestPersistence {
   ) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {
-        classId: data.classId,
-        userId: user.id,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        class: {
+          connect: {
+            id: data.classId,
+          },
+        },
       },
+      select: classJoinRequestSelectDetail,
     });
   }
 

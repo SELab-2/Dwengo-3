@@ -55,6 +55,12 @@ export class ClassJoinRequestDomain {
 
     // Teacher checks:
     if (user.role === ClassRoleEnum.TEACHER) {
+      if (!user.teacher) {
+        throw new Error(
+          'User must be a teacher to remove people from a class.',
+        );
+      }
+
       // If userId is provided, it must match the teacher's own userId
       // Teachers should only be able to view join requests for their own classes.
       if (userId && userId !== user.id) {
@@ -66,7 +72,10 @@ export class ClassJoinRequestDomain {
       // If classId is provided, check if the teacher is associated with that class
       if (
         classId &&
-        !(await this.classPersistence.isTeacherFromClass(user.id, classId))
+        !(await this.classPersistence.isTeacherFromClass(
+          user.teacher.id,
+          classId,
+        ))
       ) {
         throw new Error(
           'Teachers can only view join requests of their own classes.',
