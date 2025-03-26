@@ -7,7 +7,6 @@ import {
   StudentFilterParams,
   StudentFilterSchema,
   StudentIncludeSchema,
-  StudentUpdateSchema,
 } from '../util/types/student.types';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { getUserById } from '../persistence/auth/users.persistance';
@@ -273,70 +272,6 @@ export class StudentDomain {
 
       return studentExists;
     }
-  }
-
-  /**
-   * Update a student with the necessary validation.
-   *
-   * @param body - The body to update the student. This should contain the student ID and the new data.
-   * @param user - The user making the request.
-   * @returns The updated student.
-   */
-  public async updateStudent(id: string, body: unknown, user: UserEntity) {
-    // Validate and parse body
-    const updateData = this.validateQuery(StudentUpdateSchema, body);
-
-    const { classes, groups } = updateData;
-
-    // Check if the student exists
-    const student = await this.studentPersistence.getStudentById(id);
-
-    if (!student) {
-      throw new Error('Student not found.');
-    }
-
-    // A teacher can not update a student's info
-    if (user.role === ClassRoleEnum.TEACHER) {
-      throw new Error("Can't update student info as a teacher.");
-    }
-
-    // A student can only update their own student record
-    if (user.role === ClassRoleEnum.STUDENT) {
-      if (student.userId !== user.id) {
-        throw new Error("Can't update other students.");
-      }
-    }
-
-    return await this.studentPersistence.updateStudent(id, updateData);
-  }
-
-  /**
-   * Delete a student with the necessary validation.
-   *
-   * @param body - The body to delete the student. This should contain the student ID.
-   * @param user - The user making the request.
-   */
-  public async deleteStudent(id: string, user: UserEntity): Promise<void> {
-    // Check if the student exists
-    const student = await this.studentPersistence.getStudentById(id);
-
-    if (!student) {
-      throw new Error('Student not found.');
-    }
-
-    // A teacher can not delete a student
-    if (user.role === ClassRoleEnum.TEACHER) {
-      throw new Error("Can't delete a student as a teacher.");
-    }
-
-    // A student can only delete their own student record
-    if (user.role === ClassRoleEnum.STUDENT) {
-      if (student.userId !== user.id) {
-        throw new Error("Can't delete other students.");
-      }
-    }
-
-    await this.studentPersistence.deleteStudent(id);
   }
 
   /**

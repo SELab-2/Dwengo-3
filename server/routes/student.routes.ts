@@ -30,25 +30,6 @@ export class StudentController {
     );
   };
 
-  private updateStudent = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.updateStudent(
-        req.params.id,
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
-  };
-
-  private deleteStudent = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.deleteStudent(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
-    );
-  };
-
   private initializeRoutes() {
     /**
      * @swagger
@@ -126,47 +107,5 @@ export class StudentController {
      *         description: Student not found.
      */
     this.router.get('/:id', this.getStudentById);
-    /**
-     * @swagger
-     * /api/student/{id}:
-     *   patch:
-     *     security:
-     *       - cookieAuth: []
-     *     tags: [Student]
-     *     summary: Update a student
-     *     description: Updates a students classes and groups
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             $ref: '#/components/schemas/StudentUpdate'
-     *     responses:
-     *       200:
-     *         description: Succesfully updated the student
-     *         content:
-     *           application/json:
-     *             schema:
-     *               $ref: '#/components/schemas/StudentDetail'
-     *       401:
-     *         description: Unauthorized, user not authenticated
-     */
-    this.router.patch('/id', this.updateStudent);
-    /**
-     * @swagger
-     * /api/student/{id}:
-     *   delete:
-     *     security:
-     *       - cookieAuth: []
-     *     tags: [Student]
-     *     summary: Delete a student
-     *     description: Deletes a student
-     *     responses:
-     *       200:
-     *         description: Succesfully deleted the student
-     *       401:
-     *         description: Unauthorized, user not authenticated
-     */
-    this.router.delete('/id', this.deleteStudent);
   }
 }
