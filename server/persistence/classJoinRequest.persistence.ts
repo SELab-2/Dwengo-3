@@ -88,15 +88,27 @@ export class ClassJoinRequestPersistence {
           },
         });
 
-      // Add the student/teacher to the class.
-      await PrismaSingleton.instance.class.update({
+      // // Add the student/teacher to the class.
+      // await PrismaSingleton.instance.class.update({
+      //   where: {
+      //     id: classJoinRequest.classId,
+      //   },
+      //   data: {
+      //     students: {
+      //       connect: {
+      //         id: classJoinRequest.userId,
+      //       },
+      //     },
+      //   },
+      // });
+      await PrismaSingleton.instance.student.update({
         where: {
-          id: classJoinRequest.classId,
+          userId: classJoinRequest.userId,
         },
         data: {
-          students: {
+          classes: {
             connect: {
-              id: classJoinRequest.userId,
+              id: classJoinRequest.classId,
             },
           },
         },
