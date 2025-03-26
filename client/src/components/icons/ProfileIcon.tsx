@@ -1,14 +1,14 @@
 import { AccountCircle } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { ComponentSize } from '../../util/size';
+import { IconSize } from '../../util/size';
 
 function ProfileIcon() {
   return (
     <a href="/profile">
       <Box
         sx={{
-          width: ComponentSize.xlarge,
-          height: ComponentSize.xlarge,
+          width: IconSize.large,
+          height: IconSize.large,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

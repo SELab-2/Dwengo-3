@@ -111,9 +111,9 @@ export class StudentPersistence {
    * @param params - The data to update the student with.
    * @returns - The updated student data.
    */
-  public async updateStudent(params: StudentUpdateParams) {
+  public async updateStudent(id: string, params: StudentUpdateParams) {
     return await this.prisma.student.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         classes: {
           connect: params.classes?.map((classId) => ({ id: classId })),

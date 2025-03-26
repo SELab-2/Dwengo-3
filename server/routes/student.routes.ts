@@ -33,6 +33,7 @@ export class StudentController {
   private updateStudent = async (req: Request, res: Response) => {
     res.json(
       await this.studentDomain.updateStudent(
+        req.params.id,
         req.body,
         await getUserFromReq(req),
       ),
@@ -42,7 +43,7 @@ export class StudentController {
   private deleteStudent = async (req: Request, res: Response) => {
     res.json(
       await this.studentDomain.deleteStudent(
-        req.body,
+        req.params.id,
         await getUserFromReq(req),
       ),
     );
@@ -150,7 +151,7 @@ export class StudentController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.patch('/', this.updateStudent);
+    this.router.patch('/id', this.updateStudent);
     /**
      * @swagger
      * /api/student/{id}:
@@ -166,6 +167,6 @@ export class StudentController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.delete('/', this.deleteStudent);
+    this.router.delete('/id', this.deleteStudent);
   }
 }
