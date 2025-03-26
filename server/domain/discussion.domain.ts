@@ -14,14 +14,21 @@ import {
 } from '../util/coockie-checks/coockieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { Uuid } from '../util/types/assignment.types';
+import { TeacherFilterParams } from '../util/types/teacher.types';
+import { TeacherPersistence } from '../persistence/teacher.persistence';
+import { StudentPersistence } from '../persistence/student.persistence';
 
 export class DiscussionDomain {
   private discussionPersistence: DiscussionPersistence;
   private groupPersistence: GroupPersistence;
+  private teacherPersistence: TeacherPersistence;
+  private studentPersistence: StudentPersistence;
 
   public constructor() {
     this.discussionPersistence = new DiscussionPersistence();
     this.groupPersistence = new GroupPersistence();
+    this.teacherPersistence = new TeacherPersistence();
+    this.studentPersistence = new StudentPersistence();
   }
 
   public async getDiscussions(
@@ -59,17 +66,33 @@ export class DiscussionDomain {
     query: any,
     user: UserEntity,
   ): Promise<DiscussionDetail> {
-    const parseResult = DiscussionCreateSchema.safeParse(query);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
-    const data = parseResult.data;
-    checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
-    checkIfUsersAreInSameGroup(
-      data.members,
-      data.groupId,
+    const parseResult = DiscussionCreateSchema.parse(query);
+
+    await checkIfUserIsInGroup(
+      user,
+      parseResult.groupId,
       this.groupPersistence,
     );
-    return this.discussionPersistence.createDiscussion(data);
+
+    // get all the users that are supposed to see the discussion
+    // This includes all the group members and the teachers in the class
+
+    // get the group members userIds
+    const groupMemberUserIds: string[] =
+      await this.studentPersistence.getStudentUserIdsByGroupId(
+        parseResult.groupId,
+      );
+
+    // get the teacherIds
+    const teacherIds: string[] =
+      await this.teacherPersistence.getTeacherUserIdsByGroupId(
+        parseResult.groupId,
+      );
+
+    const memberIds = groupMemberUserIds.concat(teacherIds);
+
+    console.log('memberIds', memberIds);
+
+    return this.discussionPersistence.createDiscussion(parseResult, memberIds);
   }
 }

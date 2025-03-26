@@ -129,4 +129,30 @@ export class TeacherPersistence {
       where: { id: teacherId },
     });
   }
+
+  /*
+   * Get teacher user ids by class id.
+   *
+   * @param groupId - The id of a group that is connected to an assignment, that is connected to a class
+   * @returns The teacher user ids of the teachers that are connected to the class that the group is connected to
+   */
+  public async getTeacherUserIdsByGroupId(groupId: string) {
+    const teachers = await this.prisma.teacher.findMany({
+      where: {
+        assignment: {
+          some: {
+            groups: {
+              some: {
+                id: groupId,
+              },
+            },
+          },
+        },
+      },
+      select: {
+        userId: true,
+      },
+    });
+    return teachers.map((teacher) => teacher.userId);
+  }
 }

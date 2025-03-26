@@ -14,7 +14,6 @@ export const DiscussionFilterSchema = z
 
 export const DiscussionCreateSchema = z.object({
   groupId: z.string().uuid(),
-  members: z.string().uuid().array().nonempty(),
 });
 
 export type DiscussionFilterParams = z.infer<typeof DiscussionFilterSchema>;
