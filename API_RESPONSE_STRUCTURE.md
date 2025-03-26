@@ -203,7 +203,7 @@ Er bestaat momenteel nog geen endpoint van groups
 ## Group (short)
 
 - `id`
-- `nodeIndex`
+- `[nodeIndex]` (de index van de reeds gemaakte nodes)
 - `assignemntId`
 - `name`
 
