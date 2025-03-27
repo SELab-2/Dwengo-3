@@ -44,7 +44,7 @@ export class ClassJoinRequestDomain {
     // Teacher checks:
     if (user.role === ClassRoleEnum.TEACHER) {
       if (!user.teacher) {
-        throw new Error('User must be a teacher to remove people from a class.');
+        throw new Error('User must be a teacher to retrieve join requests for their classes.');
       }
 
       // If userId is provided, it must match the teacher's own userId
