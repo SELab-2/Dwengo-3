@@ -34,6 +34,8 @@ const multipleChoiseShema = z.object({
   options: z.string().array().nonempty()
 });
 
+export type MultipleChoice = z.infer<typeof multipleChoiseShema>;
+
 export const LearningObjectCreateSchema = z.object({
   hruid: z.string().min(1, 'HRUID is required'),
   uuid: z.string().uuid(),

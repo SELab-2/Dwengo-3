@@ -30,7 +30,7 @@ describe("announcement persistence test", () => {
         test("request with unexisting id responds with an error", async () => {
             const req = announcementPersistence.getAnnouncementById("skjdfqsmlf");
             await expect(req).rejects.toThrow();
-        })
+        });
     });
 
     describe("test check announcement is from teacher", () => {

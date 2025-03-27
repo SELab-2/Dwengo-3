@@ -35,6 +35,7 @@ export const learningObjectSelectDetail = {
   updatedAt: true,
   content: true,
   multipleChoice: true,
+  submissionType: true,
   // TODO: geef gewoon een array van keywords mee ipv object met keyword property
   keywords: {
     select: {

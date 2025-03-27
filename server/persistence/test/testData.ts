@@ -9,6 +9,7 @@ import {
   ContentTypeEnum,
   LearningObjectCreateParams,
   LearningObjectDetail,
+  MultipleChoice,
   SubmissionTypeEnum,
 } from '../../util/types/learningObject.types';
 import { LearningObjectPersistence } from '../learningObject.persistence';
@@ -32,6 +33,8 @@ import {
 } from '../../util/types/discussion.types';
 import { AssignmentCreateSchema, AssignmentDetail } from '../../util/types/assignment.types';
 import { AssignmentPersistence } from '../assignment.persistence';
+import { AssignmentSubmissionDetail } from '../../util/types/assignmentSubmission.types';
+import { AssignmentSubmissionPersistence } from '../assignmentSubmission.persistence';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence =
@@ -50,6 +53,8 @@ const discussionPersistence: DiscussionPersistence =
   new DiscussionPersistence();
 const assignmentPersistence: AssignmentPersistence =
   new AssignmentPersistence();
+const assignemntSubmissionPersistence: AssignmentSubmissionPersistence =
+  new AssignmentSubmissionPersistence();
 
 export const insertStudents = async (): Promise<UserEntity[]> => {
   const users = [
@@ -355,6 +360,38 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
     }
   }
   return Promise.all(assignments);
+};
+
+export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissionDetail[]> => {
+  const assignments = await insertAssignments();
+  const submissions = [];
+  for (const assignemnt of assignments) {
+    for (const group of assignemnt.groups) {
+      for (const learningPathNode of assignemnt.learningPath.learningPathNodes) {
+        const learningObject = await learningObjectPersistence.getLearningObjectById(learningPathNode.learningObject.id);
+        if (learningObject.submissionType === SubmissionTypeEnum.Enum.MULTIPLE_CHOICE) {
+          const multipleChoice = learningObject.multipleChoice as MultipleChoice;
+          submissions.push(assignemntSubmissionPersistence.createAssignmentSubmission({
+            nodeId: learningPathNode.id,
+            groupId: group.id,
+            submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
+            submission: multipleChoice.options[0]
+          }));
+        } else if (learningObject.submissionType === SubmissionTypeEnum.Enum.FILE) {
+          submissions.push(assignemntSubmissionPersistence.createAssignmentSubmission({
+            nodeId: learningPathNode.id,
+            groupId: group.id,
+            submissionType: SubmissionTypeEnum.Enum.FILE,
+            submission: {
+              fileName: "test.txt",
+              filePath: "files-submissions/qkjfqmlfqkf.txt"
+            }
+          }));
+        }
+      }
+    }
+  }
+  return Promise.all(submissions);
 }
 
 // TODO: Vooraleer we deze Discussion test maken zouden we eigenlijk
@@ -375,6 +412,7 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
 
 export const deleteAllData = async (): Promise<void> => {
   await PrismaSingleton.instance.classJoinRequest.deleteMany();
+  await PrismaSingleton.instance.assignmentSubmission.deleteMany();
   await PrismaSingleton.instance.announcement.deleteMany();
   await PrismaSingleton.instance.group.deleteMany();
   await PrismaSingleton.instance.assignment.deleteMany();
