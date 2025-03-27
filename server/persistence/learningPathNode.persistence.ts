@@ -1,6 +1,7 @@
 import { learningPathNodeSelectDetail } from '../util/selectInput/learningPathNode.select';
 import { LearningPathNodeCreateParams } from '../util/types/learningPathNode.types';
 import { PrismaSingleton } from './prismaSingleton';
+import { NotFoundError } from '../util/types/error.types';
 
 export class LearningPathNodePersistence {
   public async createLearningPathNode(
@@ -36,7 +37,7 @@ export class LearningPathNodePersistence {
     });
 
     if (!learningPathNode) {
-      throw new Error(`LearningPathNode with id: ${id} was not found`);
+      throw new NotFoundError(40412);
     }
 
     return learningPathNode;

@@ -35,11 +35,7 @@ export class MessageDomain {
   }
 
   public async createMessage(query: any, user: UserEntity): Promise<MessageDetail> {
-    const parseResult = MessageCreateSchema.safeParse(query);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
-    const data = parseResult.data;
+    const data = MessageCreateSchema.parse(query);
     await this.discussionDomain.getDiscussions({ id: data.discussionId }, user); //this checks if user is part of the discussion
     if (user.role === ClassRole.TEACHER) {
       data.senderId = user.teacher!.userId;

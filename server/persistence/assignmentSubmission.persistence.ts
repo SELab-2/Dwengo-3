@@ -10,9 +10,10 @@ import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { Uuid } from '../util/types/assignment.types';
 import {
-  assignmentSubmissionSelectShort,
   assignmentSubmissionSelectDetail,
+  assignmentSubmissionSelectShort,
 } from '../util/selectInput/assignmentSubmission.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class AssignmentSubmissionPersistence {
   public async getAssignmentSubmissions(
@@ -41,7 +42,7 @@ export class AssignmentSubmissionPersistence {
     });
 
     if (!assignmentsubmission) {
-      throw new Error(`AssignmentSubmission with id: ${id} was not found`);
+      throw new NotFoundError(40406);
     }
 
     return assignmentsubmission;

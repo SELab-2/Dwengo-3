@@ -5,6 +5,7 @@ import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { UserEntity } from '../util/types/user.types';
 import { classSelectDetail, classSelectShort } from '../util/selectInput/class.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class ClassPersistence {
   private prisma;
@@ -41,7 +42,7 @@ export class ClassPersistence {
     });
 
     if (!classData) {
-      throw new Error(`Class with id: ${id} was not found`);
+      throw new NotFoundError(40401);
     }
 
     return classData;

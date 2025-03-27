@@ -58,6 +58,20 @@ export class NotFoundError extends APIError {
         return 'Teacher not found...';
       case 40405:
         return 'User not found...';
+      case 40406:
+        return 'AssignmentSubmission not found...';
+      case 40407:
+        return 'Message not found...';
+      case 40408:
+        return 'Assignment not found...';
+      case 40409:
+        return 'LearningPath not found...';
+      case 40410:
+        return 'Discussion not found...';
+      case 40411:
+        return 'LearningObject not found...';
+      case 40412:
+        return 'LearningPathNode not found...';
       default:
         return 'Not found...';
     }
@@ -142,6 +156,12 @@ export class BadRequestError extends APIError {
         return 'File submission is required when submissionType is FILE...';
       case 40035:
         return 'User must be a teacher to remove people from a class...';
+      case 40036:
+        return "Can't fetch students you're not a teacher of....";
+      case 40037:
+        return 'Announcement does not belong to teacher...';
+      case 40038:
+        return 'User role does not match expected role...';
       default:
         return 'Bad request...';
     }

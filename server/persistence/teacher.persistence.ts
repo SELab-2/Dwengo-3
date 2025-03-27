@@ -8,6 +8,7 @@ import {
 } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { teacherSelectDetail } from '../util/selectInput/teacher.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class TeacherPersistence {
   private prisma: PrismaClient;
@@ -72,7 +73,7 @@ export class TeacherPersistence {
     });
 
     if (!teacher) {
-      throw new Error(`Teacher with id: ${teacherId} was not found`);
+      throw new NotFoundError(40404);
     }
 
     return teacher;

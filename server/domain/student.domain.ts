@@ -195,13 +195,13 @@ export class StudentDomain {
 
       if (!teacher) {
         // This should never happen as the user is a teacher
-        throw new Error('Teacher not found.');
+        throw new NotFoundError(40404);
       }
 
       const isStudentInTeacherClass = await this.isStudentInTeacherClass(id, teacher.id);
 
       if (!isStudentInTeacherClass) {
-        throw new Error("Can't fetch students you're not a teacher of.");
+        throw new BadRequestError(40036);
       }
 
       return this.studentPersistence.getStudentById(id);
@@ -212,7 +212,7 @@ export class StudentDomain {
 
       if (!student) {
         // This should never happen as the user is a student
-        throw new Error('Student not found.');
+        throw new NotFoundError(40403);
       }
 
       // Check if the student exists
@@ -224,7 +224,7 @@ export class StudentDomain {
       );
 
       if (!shareGroup && id !== student.id) {
-        throw new Error("Can't fetch other students.");
+        throw new BadRequestError(40026);
       }
 
       return studentExists;

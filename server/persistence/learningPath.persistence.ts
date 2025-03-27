@@ -10,6 +10,7 @@ import {
   learningPathSelectDetail,
   learningPathSelectShort,
 } from '../util/selectInput/learningPath.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class LearningPathPersistence {
   private prisma: PrismaClient;
@@ -80,7 +81,7 @@ export class LearningPathPersistence {
     });
 
     if (!learningPath) {
-      throw new Error(`LearningPath with id: ${id} was not found`);
+      throw new NotFoundError(40409);
     }
 
     return learningPath;

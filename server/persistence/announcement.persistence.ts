@@ -11,6 +11,7 @@ import {
   announcementSelectShort,
 } from '../util/selectInput/announcement.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
 
 //TODO : import prisma client from singleton
 
@@ -55,7 +56,7 @@ export class AnnouncementPersistence {
     });
 
     if (!announcement) {
-      throw new Error(`Announcement with id: ${id} was not found`);
+      throw new NotFoundError(40408);
     }
 
     return announcement;
@@ -103,9 +104,7 @@ export class AnnouncementPersistence {
     });
 
     if (!announcement) {
-      throw new Error(
-        `Announcement with id: ${announcementId} does not belong to teacher with id: ${teacherId}`,
-      );
+      throw new BadRequestError(40037);
     }
   }
 }

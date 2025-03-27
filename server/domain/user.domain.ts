@@ -4,6 +4,7 @@ import { LoginRequest, RegisterRequest } from '../util/types/RequestTypes';
 import * as persistence from '../persistence/auth/users.persistance';
 import { ClassRole, User } from '@prisma/client';
 import { ClassRoleEnum, FullUserType, UserEntity, UserSchema } from '../util/types/user.types';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
 
 export async function registerUser(registerRequest: RegisterRequest): Promise<UserEntity> {
   const user = await persistence.saveUser({
@@ -29,7 +30,7 @@ export async function registerUser(registerRequest: RegisterRequest): Promise<Us
 
 export async function loginUser(loginRequest: LoginRequest): Promise<UserEntity> {
   const user: FullUserType | null = await persistence.getUserByEmail(loginRequest.email);
-  if (user === null) throw new Error('User not found');
+  if (user === null) throw new NotFoundError(40405);
   return {
     id: user.id,
     username: user.username,
@@ -50,9 +51,8 @@ export async function deleteUser(id: string): Promise<boolean> {
 
 export async function expectUserRole(id: string, expectedRole: ClassRole) {
   const user: { role: ClassRole } | null = await persistence.getUserRoleById(id);
-  if (user === null) throw new Error('User not found');
-  if (user.role != expectedRole)
-    throw new Error(`User role ${user.role} does not match expected role of ${expectedRole}`);
+  if (user === null) throw new NotFoundError(40405);
+  if (user.role != expectedRole) throw new BadRequestError(40038);
 }
 
 export async function getUserFromReq(req: Request): Promise<UserEntity> {
