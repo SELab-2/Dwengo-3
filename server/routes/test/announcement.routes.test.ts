@@ -1,7 +1,6 @@
 import request from 'supertest';
 import { describe, beforeEach, test, vi, expect } from 'vitest';
 import { app } from '../../app';
-import { AnnouncementDomain } from '../../domain/announcement.domain';
 
 // Domain mock
 const { mockAnnouncementDomain } = vi.hoisted(() => {
