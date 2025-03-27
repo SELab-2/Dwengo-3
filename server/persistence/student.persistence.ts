@@ -96,4 +96,21 @@ export class StudentPersistence {
       select: studentSelectDetail,
     });
   }
+
+  public async getStudentUserIdsByGroupId(groupId: string) {
+    const students = await this.prisma.student.findMany({
+      where: {
+        groups: {
+          some: {
+            id: groupId,
+          },
+        },
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    return students.map((student) => student.userId);
+  }
 }

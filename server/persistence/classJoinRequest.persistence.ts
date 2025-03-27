@@ -14,9 +14,18 @@ export class ClassJoinRequestPersistence {
   public async createClassJoinRequest(data: ClassJoinRequestCreateParams, user: UserEntity) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {
-        classId: data.classId,
-        userId: user.id,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        class: {
+          connect: {
+            id: data.classId,
+          },
+        },
       },
+      select: classJoinRequestSelectDetail,
     });
   }
 
@@ -72,14 +81,14 @@ export class ClassJoinRequestPersistence {
       });
 
       // Add the student/teacher to the class.
-      await PrismaSingleton.instance.class.update({
+      await PrismaSingleton.instance.student.update({
         where: {
-          id: classJoinRequest.classId,
+          userId: classJoinRequest.userId,
         },
         data: {
-          students: {
+          classes: {
             connect: {
-              id: classJoinRequest.userId,
+              id: classJoinRequest.classId,
             },
           },
         },
