@@ -81,7 +81,7 @@ export class ClassJoinRequestPersistence {
       });
 
       // Add the student/teacher to the class.
-      await PrismaSingleton.instance.class.update({
+      await PrismaSingleton.instance.student.update({
         where: {
           userId: classJoinRequest.userId,
         },

@@ -51,28 +51,25 @@ export class DiscussionDomain {
     return discussion;
   }
 
-
   public async createDiscussion(query: any, user: UserEntity): Promise<DiscussionDetail> {
     const data = DiscussionCreateSchema.parse(query);
     await checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
 
     // get all the users that are supposed to see the discussion
     // This includes all the group members and the teachers in the class
-    
+
     // get the group members userIds
-    const groupMemberUserIds: string[] =
-      await this.studentPersistence.getStudentUserIdsByGroupId(
-        parseResult.groupId,
-      );
+    const groupMemberUserIds: string[] = await this.studentPersistence.getStudentUserIdsByGroupId(
+      data.groupId,
+    );
 
     // get the teacherIds
-    const teacherIds: string[] =
-      await this.teacherPersistence.getTeacherUserIdsByGroupId(
-        parseResult.groupId,
-      );
+    const teacherIds: string[] = await this.teacherPersistence.getTeacherUserIdsByGroupId(
+      data.groupId,
+    );
 
     const memberIds = groupMemberUserIds.concat(teacherIds);
 
-    return this.discussionPersistence.createDiscussion(parseResult, memberIds);
+    return this.discussionPersistence.createDiscussion(data, memberIds);
   }
 }
