@@ -3,10 +3,8 @@ import { ClassPersistence } from '../persistence/class.persistence';
 import { UserEntity } from '../util/types/user.types';
 import {
   TeacherCreateSchema,
-  TeacherDeleteSchema,
   TeacherFilterSchema,
   TeacherIncludeSchema,
-  TeacherUpdateSchema,
 } from '../util/types/teacher.types';
 import { getUserById } from '../persistence/auth/users.persistance';
 import { Class } from '@prisma/client';
@@ -63,25 +61,6 @@ export class TeacherDomain {
     return await this.teacherPersistence.getTeacherById(id);
   }
 
-  public async updateTeacher(body: unknown, user: UserEntity) {
-    // Validate the body
-    const updateData = TeacherUpdateSchema.parse(body);
-
-    // TODO validation
-
-    // Update the teacher
-    return await this.teacherPersistence.updateTeacher(updateData);
-  }
-
-  public async deleteTeacher(body: unknown, user: UserEntity) {
-    // Validate the body
-    const { id } = TeacherDeleteSchema.parse(body);
-
-    // TODO validation
-
-    // Delete the teacher
-    return await this.teacherPersistence.deleteTeacher(id);
-  }
 
   public async shareClass(userId1: string, userId2: string) {
     // TODO: move this to class domain
