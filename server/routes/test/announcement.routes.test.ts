@@ -29,7 +29,7 @@ describe('announcement routes test', () => {
   });
 
   describe('GET /announcement', () => {
-    test('Responds on getAnnouncement', async () => {
+    test('Responds on getAnnouncements', async () => {
       const query = { teacherId: '550e8400-e29b-41d4-a716-446655440000' };
       const expected = { endpoint: 'getAnnouncements' };
       mockAnnouncementDomain.getAnnouncements.mockResolvedValue(expected);
