@@ -1211,16 +1211,14 @@
               "answer": "4"
             }
           },
-          "canUploadSubmission": {
-            "type": "boolean",
-            "description": "Indicates whether submissions can be uploaded for the learning object.",
-            "example": false
-          },
           "keywords": {
             "type": "array",
             "description": "List of keywords associated with the learning object.",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "keyword": { "type": "string" }
+              }
             }
           }
         },
