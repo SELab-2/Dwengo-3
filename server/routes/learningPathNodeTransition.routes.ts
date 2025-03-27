@@ -8,15 +8,11 @@ export class LearningPathNodeTransitionController {
 
   constructor() {
     this.router = Router();
-    this.LearningPathNodeTransitionDomain =
-      new LearningPathNodeTransitionDomain();
+    this.LearningPathNodeTransitionDomain = new LearningPathNodeTransitionDomain();
     this.initializeRoutes();
   }
 
-  private createLearningPathNodeTransition = async (
-    req: Request,
-    res: Response,
-  ) => {
+  private createLearningPathNodeTransition = async (req: Request, res: Response) => {
     res.json(
       await this.LearningPathNodeTransitionDomain.createLearningPathNodeTransition(
         req.body,

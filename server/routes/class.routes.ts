@@ -14,37 +14,44 @@ export class ClassController {
   }
 
   private getClasses = async (req: Request, res: Response) => {
-    res.json(
-      await this.classDomain.getClasses(req.query, await getUserFromReq(req)),
-    );
+    res.json(await this.classDomain.getClasses(req.query, await getUserFromReq(req)));
   };
 
   private getClassById = async (req: Request, res: Response) => {
-    res.json(
-      await this.classDomain.getClassById(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.classDomain.getClassById(req.params.id, await getUserFromReq(req)));
   };
 
   private createClass = async (req: Request, res: Response) => {
-    res.json(
-      await this.classDomain.createClass(req.body, await getUserFromReq(req)),
-    );
+    res.json(await this.classDomain.createClass(req.body, await getUserFromReq(req)));
   };
 
   private updateClass = async (req: Request, res: Response) => {
     res.json(
-      await this.classDomain.updateClass(
-        req.params.id,
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.classDomain.updateClass(req.params.id, req.body, await getUserFromReq(req)),
     );
   };
 
+  private deleteTeacherFromClass = async (req: Request, res: Response) => {
+    await this.classDomain.removeTeacherFromClass(
+      req.params.id,
+      req.params.teacherId,
+      await getUserFromReq(req),
+    );
+    res.status(200).send();
+  };
+
+  private deleteStudentFromClass = async (req: Request, res: Response) => {
+    await this.classDomain.removeStudentFromClass(
+      req.params.id,
+      req.params.studentId,
+      await getUserFromReq(req),
+    );
+    res.status(200).send();
+  };
+
   private initializeRoutes() {
+    this.router.use('/', new ClassJoinRequestController().router);
+
     /**
      * @swagger
      * /api/class:
@@ -88,6 +95,7 @@ export class ClassController {
      *         description: Unauthorized, user not authenticated
      */
     this.router.get('/', this.getClasses);
+
     /**
      * @swagger
      * /api/class/{id}:
@@ -119,6 +127,7 @@ export class ClassController {
      *         description: Class not found.
      */
     this.router.get('/:id', this.getClassById);
+
     /**
      * @swagger
      * /api/class:
@@ -152,6 +161,7 @@ export class ClassController {
      *         description: Unauthorized, user not authenticated
      */
     this.router.put('/', this.createClass);
+
     /**
      * @swagger
      * /api/class/{id}:
@@ -189,6 +199,75 @@ export class ClassController {
      *         description: Unauthorized, user not authenticated
      */
     this.router.patch('/:id', this.updateClass);
-    this.router.use('/', new ClassJoinRequestController().router);
+
+    /**
+     * @swagger
+     * /api/class/{id}/teacher/{teacherId}:
+     *   delete:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Class
+     *     summary: Remove a teacher from a class
+     *     description: Allows a teacher to remove a teacher from a specific class.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the class.
+     *       - in: path
+     *         name: teacherId
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the teacher.
+     *     responses:
+     *       200:
+     *         description: Teacher successfully removed from the class.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Class or teacher not found.
+     */
+    this.router.delete('/:id/teacher/:teacherId', this.deleteTeacherFromClass);
+
+    /**
+     * @swagger
+     * /api/class/{id}/student/{studentId}:
+     *   delete:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Class
+     *     summary: Remove a student from a class
+     *     description: Allows a teacher to remove a student from a specific class.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the class.
+     *       - in: path
+     *         name: studentId
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the student.
+     *     responses:
+     *       200:
+     *         description: Student successfully removed from the class.
+     *       401:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Class or student not found.
+     */
+    this.router.delete('/:id/student/:studentId', this.deleteStudentFromClass);
   }
 }

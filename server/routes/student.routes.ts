@@ -13,40 +13,21 @@ export class StudentController {
   }
 
   private getStudents = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.getStudents(
-        req.query,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.studentDomain.getStudents(req.query, await getUserFromReq(req)));
   };
 
   private getStudentById = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.getStudentById(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.studentDomain.getStudentById(req.params.id, await getUserFromReq(req)));
   };
 
   private updateStudent = async (req: Request, res: Response) => {
     res.json(
-      await this.studentDomain.updateStudent(
-        req.params.id,
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.studentDomain.updateStudent(req.params.id, req.body, await getUserFromReq(req)),
     );
   };
 
   private deleteStudent = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.deleteStudent(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.studentDomain.deleteStudent(req.params.id, await getUserFromReq(req)));
   };
 
   private initializeRoutes() {

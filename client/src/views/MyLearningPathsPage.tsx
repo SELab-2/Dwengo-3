@@ -13,9 +13,7 @@ function MyLearningPathsPage() {
         mt: MarginSize.large,
       }}
     >
-      <Typography variant="h4">
-        Learning Paths of {user?.name ?? 'Nobody'}
-      </Typography>
+      <Typography variant="h4">Learning Paths of {user?.name ?? 'Nobody'}</Typography>
     </Box>
   );
 }

@@ -10,16 +10,10 @@ export const compareUserIdWithFilterId = async (
   teacherId: Uuid | undefined,
 ): Promise<void> => {
   if (
-    (studentId &&
-      user.role === ClassRoleEnum.STUDENT &&
-      user.student?.id !== studentId) ||
-    (teacherId &&
-      user.role === ClassRoleEnum.TEACHER &&
-      user.teacher?.id !== teacherId)
+    (studentId && user.role === ClassRoleEnum.STUDENT && user.student?.id !== studentId) ||
+    (teacherId && user.role === ClassRoleEnum.TEACHER && user.teacher?.id !== teacherId)
   ) {
-    throw new Error(
-      "User ID doesn't correspond with the provided studentId or teacherId.",
-    );
+    throw new Error("User ID doesn't correspond with the provided studentId or teacherId.");
   }
 };
 
@@ -37,9 +31,7 @@ export const checkIfUserIsInClass = async (
   }
 
   if (user.role === ClassRoleEnum.TEACHER) {
-    const isTeacherOfThisClass = classData.teachers.some(
-      (teacher) => teacher.userId === user.id,
-    );
+    const isTeacherOfThisClass = classData.teachers.some((teacher) => teacher.userId === user.id);
 
     if (!isTeacherOfThisClass) {
       throw new Error("Can't fetch classes you're not a teacher of.");
@@ -47,9 +39,7 @@ export const checkIfUserIsInClass = async (
   }
 
   if (user.role === ClassRoleEnum.STUDENT) {
-    const isStudentOfThisClass = classData.students.some(
-      (student) => student.userId === user.id,
-    );
+    const isStudentOfThisClass = classData.students.some((student) => student.userId === user.id);
 
     if (!isStudentOfThisClass) {
       throw new Error("Can't fetch classes you're not a student of.");
@@ -63,8 +53,7 @@ export const checkIfUserIsInGroup = async (
   groupPersistence: GroupPersistence,
 ): Promise<void> => {
   if (!groupId) return;
-  const groupData =
-    await groupPersistence.getGroupByIdWithCustomIncludes(groupId);
+  const groupData = await groupPersistence.getGroupByIdWithCustomIncludes(groupId);
   if (!groupData) throw new Error('Group not found.');
 
   if (user.role === ClassRole.TEACHER) {
@@ -76,9 +65,7 @@ export const checkIfUserIsInGroup = async (
     }
   }
   if (user.role === ClassRole.STUDENT) {
-    const isStudentOfThisGroup = groupData.students.some(
-      (student) => student.userId === user.id,
-    );
+    const isStudentOfThisGroup = groupData.students.some((student) => student.userId === user.id);
     if (!isStudentOfThisGroup) {
       throw new Error("Can't fetch groups you're not a student of.");
     }
@@ -96,9 +83,7 @@ export const checkIfUsersAreInSameClass = async (
     throw new Error('Class not found.');
   }
   // Extract student IDs from the class
-  const classStudentIds = new Set(
-    classData.students.map((student) => student.id),
-  );
+  const classStudentIds = new Set(classData.students.map((student) => student.id));
 
   // Ensure all students in each group belong to the class
   const check = groups.every((group) =>
@@ -119,20 +104,13 @@ export const checkIfUsersAreInSameGroup = async (
   groupId: Uuid,
   groupPersistence: GroupPersistence,
 ): Promise<void> => {
-  const groupData =
-    await groupPersistence.getGroupByIdWithCustomIncludes(groupId);
+  const groupData = await groupPersistence.getGroupByIdWithCustomIncludes(groupId);
   if (!groupData) {
     throw new Error('Group not found');
   }
-  const groupStudendtIds = new Set(
-    groupData.students.map((student) => student.userId),
-  );
-  const teacherIds = new Set(
-    groupData.assignment.class.teachers.map((teacher) => teacher.userId),
-  ); //Teachers can see all groups of the class
-  const check = users.every(
-    (user) => groupStudendtIds.has(user) || teacherIds.has(user),
-  );
+  const groupStudendtIds = new Set(groupData.students.map((student) => student.userId));
+  const teacherIds = new Set(groupData.assignment.class.teachers.map((teacher) => teacher.userId)); //Teachers can see all groups of the class
+  const check = users.every((user) => groupStudendtIds.has(user) || teacherIds.has(user));
   if (!check) {
     throw new Error('All users must belong to the same group');
   }

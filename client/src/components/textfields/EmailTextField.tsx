@@ -1,13 +1,7 @@
 import { TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-function EmailTextField({
-  email,
-  setEmail,
-}: {
-  email: string;
-  setEmail: (email: string) => void;
-}) {
+function EmailTextField({ email, setEmail }: { email: string; setEmail: (email: string) => void }) {
   const { t } = useTranslation();
 
   return (

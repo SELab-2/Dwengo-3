@@ -47,31 +47,13 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/classes" element={<MyClassesPage />} />
-                    <Route
-                      path="/learning-paths"
-                      element={<MyLearningPathsPage />}
-                    />
-                    <Route
-                      path="/learning-paths/:id"
-                      element={<LearningPathPage />}
-                    />
-                    <Route
-                      path="/learning-themes"
-                      element={<LearningThemesPage />}
-                    />
-                    <Route
-                      path="learning-themes/:id"
-                      element={<LearningThemePage />}
-                    />
+                    <Route path="/learning-paths" element={<MyLearningPathsPage />} />
+                    <Route path="/learning-paths/:id" element={<LearningPathPage />} />
+                    <Route path="/learning-themes" element={<LearningThemesPage />} />
+                    <Route path="learning-themes/:id" element={<LearningThemePage />} />
                     <Route path="/class/:id" element={<ClassPage />} />
-                    <Route
-                      path="/class/:id/assignments"
-                      element={<ClassAssignmentsPage />}
-                    />
-                    <Route
-                      path="/class/:id/assignments/:a_id"
-                      element={<ClassAssignmentPage />}
-                    />
+                    <Route path="/class/:id/assignments" element={<ClassAssignmentsPage />} />
+                    <Route path="/class/:id/assignments/:a_id" element={<ClassAssignmentPage />} />
                   </Route>
 
                   {/* Redirect all other routes to an errorpage */}

@@ -129,29 +129,16 @@ export class AssignmentController {
   }
 
   private async getAssignments(req: Request, res: Response): Promise<void> {
-    res.json(
-      await this.assignmentDomain.getAssignments(
-        req.query,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.assignmentDomain.getAssignments(req.query, await getUserFromReq(req)));
   }
 
   private async getAssignmentById(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.assignmentDomain.getAssignmentById(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
+      await this.assignmentDomain.getAssignmentById(req.params.id, await getUserFromReq(req)),
     );
   }
 
   private async createAssignment(req: Request, res: Response): Promise<void> {
-    res.json(
-      await this.assignmentDomain.createAssigment(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.assignmentDomain.createAssigment(req.body, await getUserFromReq(req)));
   }
 }

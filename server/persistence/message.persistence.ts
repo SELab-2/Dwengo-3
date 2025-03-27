@@ -8,10 +8,8 @@ import {
 } from '../util/types/message.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import {
-  messageSelectDetail,
-  messageSelectShort,
-} from '../util/selectInput/message.select';
+import { messageSelectDetail, messageSelectShort } from '../util/selectInput/message.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class MessagePersistence {
   private prisma: PrismaClient;
@@ -43,15 +41,13 @@ export class MessagePersistence {
     });
 
     if (!message) {
-      throw new Error(`Message with id: ${id} was not found`);
+      throw new NotFoundError(40407);
     }
 
     return message;
   }
 
-  public async createMessage(
-    params: MessageCreateParams,
-  ): Promise<MessageDetail> {
+  public async createMessage(params: MessageCreateParams): Promise<MessageDetail> {
     return this.prisma.message.create({
       data: {
         discussion: {

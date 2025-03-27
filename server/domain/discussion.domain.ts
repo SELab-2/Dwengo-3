@@ -1,4 +1,3 @@
-import { Discussion } from '@prisma/client';
 import { DiscussionPersistence } from '../persistence/discussion.persistence';
 import { queryWithPaginationParser } from '../util/pagination/queryWithPaginationParser.util';
 import {
@@ -28,10 +27,7 @@ export class DiscussionDomain {
     query: any,
     user: UserEntity,
   ): Promise<{ data: discussionShort[]; totalPages: number }> {
-    const parseResult = queryWithPaginationParser(
-      query,
-      DiscussionFilterSchema,
-    );
+    const parseResult = queryWithPaginationParser(query, DiscussionFilterSchema);
     const filters = parseResult.dataSchema;
     const checks = filters.groupIds
       ? filters.groupIds.map((groupId) =>
@@ -39,37 +35,19 @@ export class DiscussionDomain {
         )
       : [];
     await Promise.all(checks);
-    return this.discussionPersistence.getDiscussions(
-      filters,
-      parseResult.dataPagination,
-    );
+    return this.discussionPersistence.getDiscussions(filters, parseResult.dataPagination);
   }
 
   public async getDiscussionById(id: Uuid, user: UserEntity) {
     const discussion = await this.discussionPersistence.getDiscussionById(id);
-    await checkIfUserIsInGroup(
-      user,
-      discussion.group.id,
-      this.groupPersistence,
-    );
+    await checkIfUserIsInGroup(user, discussion.group.id, this.groupPersistence);
     return discussion;
   }
 
-  public async createDiscussion(
-    query: any,
-    user: UserEntity,
-  ): Promise<DiscussionDetail> {
-    const parseResult = DiscussionCreateSchema.safeParse(query);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
-    const data = parseResult.data;
-    checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
-    checkIfUsersAreInSameGroup(
-      data.members,
-      data.groupId,
-      this.groupPersistence,
-    );
+  public async createDiscussion(query: any, user: UserEntity): Promise<DiscussionDetail> {
+    const data = DiscussionCreateSchema.parse(query);
+    await checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
+    await checkIfUsersAreInSameGroup(data.members, data.groupId, this.groupPersistence);
     return this.discussionPersistence.createDiscussion(data);
   }
 }
