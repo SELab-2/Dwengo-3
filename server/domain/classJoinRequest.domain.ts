@@ -33,15 +33,10 @@ export class ClassJoinRequestDomain {
     return this.classJoinRequestPersistence.createClassJoinRequest(classJoinRequestParams, user);
   }
 
-  public async getJoinRequests(
-    query: unknown,
-    user: UserEntity,
-    classRole: ClassRoleEnum,
-  ) {
+  public async getJoinRequests(query: unknown, user: UserEntity, classRole: ClassRoleEnum) {
     const pagination = PaginationFilterSchema.parse(query);
 
     const classJoinRequestFilter = ClassJoinRequestFilterSchema.parse(query);
-
 
     // Atleast one of them will be non null because of the checks in the zod scheme.
     const { classId, userId } = classJoinRequestFilter;
@@ -49,9 +44,7 @@ export class ClassJoinRequestDomain {
     // Teacher checks:
     if (user.role === ClassRoleEnum.TEACHER) {
       if (!user.teacher) {
-        throw new Error(
-          'User must be a teacher to remove people from a class.',
-        );
+        throw new Error('User must be a teacher to remove people from a class.');
       }
 
       // If userId is provided, it must match the teacher's own userId
@@ -79,7 +72,7 @@ export class ClassJoinRequestDomain {
       }
     }
 
-    return this.classJoinRequestPersistance.getJoinRequests(
+    return this.classJoinRequestPersistence.getJoinRequests(
       pagination,
       classJoinRequestFilter,
       classRole,
