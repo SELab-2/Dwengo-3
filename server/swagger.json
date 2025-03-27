@@ -1417,16 +1417,6 @@
             "format": "uuid",
             "description": "The ID of the group this discussion is for.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
-          },
-          "members": {
-            "type": "array",
-            "description": "The userIds of the members of the discussion",
-            "items": {
-              "type": "string",
-              "format": "uuid",
-              "description": "The ID of the user"
-            },
-            "example": ["550e8400-e29b-41d4-a716-446655440000"]
           }
         },
         "required": ["groupId", "members"]
