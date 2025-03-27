@@ -16,16 +16,10 @@ export function useRegister() {
   return useMutation({
     mutationFn: async (data: RegisterData) => {
       if (data.role === ClassRoleEnum.STUDENT) {
-        const response = await apiClient.put(
-          '/api/auth/student/register',
-          data,
-        );
+        const response = await apiClient.put('/api/auth/student/register', data);
         return response.data;
       } else {
-        const response = await apiClient.put(
-          '/api/auth/teacher/register',
-          data,
-        );
+        const response = await apiClient.put('/api/auth/teacher/register', data);
         return response.data;
       }
     },

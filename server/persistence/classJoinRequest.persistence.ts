@@ -11,10 +11,7 @@ import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinReque
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 export class ClassJoinRequestPersistence {
-  public async createClassJoinRequest(
-    data: ClassJoinRequestCreateParams,
-    user: UserEntity,
-  ) {
+  public async createClassJoinRequest(data: ClassJoinRequestCreateParams, user: UserEntity) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {
         user: {
@@ -32,18 +29,14 @@ export class ClassJoinRequestPersistence {
     });
   }
 
-  public async checkIfJoinRequestExists(
-    classId: string,
-    userId: string,
-  ): Promise<boolean> {
-    const existingRequest =
-      await PrismaSingleton.instance.classJoinRequest.findFirst({
-        where: {
-          classId,
-          userId,
-        },
-        select: classJoinRequestSelectDetail,
-      });
+  public async checkIfJoinRequestExists(classId: string, userId: string): Promise<boolean> {
+    const existingRequest = await PrismaSingleton.instance.classJoinRequest.findFirst({
+      where: {
+        classId,
+        userId,
+      },
+      select: classJoinRequestSelectDetail,
+    });
 
     return !!existingRequest;
   }
@@ -81,13 +74,14 @@ export class ClassJoinRequestPersistence {
   public async handleJoinRequest(data: ClassJoinRequestDecisionParams) {
     if (data.acceptRequest) {
       // Delete the join request.
-      const classJoinRequest =
-        await PrismaSingleton.instance.classJoinRequest.delete({
-          where: {
-            id: data.requestId,
-          },
-        });
-      await PrismaSingleton.instance.student.update({
+      const classJoinRequest = await PrismaSingleton.instance.classJoinRequest.delete({
+        where: {
+          id: data.requestId,
+        },
+      });
+
+      // Add the student/teacher to the class.
+      await PrismaSingleton.instance.class.update({
         where: {
           userId: classJoinRequest.userId,
         },
@@ -109,30 +103,24 @@ export class ClassJoinRequestPersistence {
     }
   }
 
-  public async isTeacherOfClassFromRequest(
-    classJoinRequestId: string,
-    userId: string,
-  ) {
-    const classJoinRequest =
-      await PrismaSingleton.instance.classJoinRequest.findFirst({
-        where: {
-          id: classJoinRequestId,
-        },
-        include: {
-          class: {
-            include: {
-              teachers: true,
-            },
+  public async isTeacherOfClassFromRequest(classJoinRequestId: string, userId: string) {
+    const classJoinRequest = await PrismaSingleton.instance.classJoinRequest.findFirst({
+      where: {
+        id: classJoinRequestId,
+      },
+      include: {
+        class: {
+          include: {
+            teachers: true,
           },
         },
-      });
+      },
+    });
 
     if (!classJoinRequest) {
       return false;
     }
 
-    return classJoinRequest.class.teachers.some(
-      (teacher) => teacher.userId === userId,
-    );
+    return classJoinRequest.class.teachers.some((teacher) => teacher.userId === userId);
   }
 }

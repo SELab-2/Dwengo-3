@@ -41,9 +41,7 @@ const LanguageSwitcher: React.FC = () => {
       {/* Dropdown Menu for Language Selection */}
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => handleLanguageChange('en')}>English</MenuItem>
-        <MenuItem onClick={() => handleLanguageChange('nl')}>
-          Nederlands
-        </MenuItem>
+        <MenuItem onClick={() => handleLanguageChange('nl')}>Nederlands</MenuItem>
         <MenuItem onClick={() => handleLanguageChange('fr')}>Français</MenuItem>
       </Menu>
     </div>

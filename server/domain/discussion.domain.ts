@@ -1,4 +1,3 @@
-import { Discussion } from '@prisma/client';
 import { DiscussionPersistence } from '../persistence/discussion.persistence';
 import { queryWithPaginationParser } from '../util/pagination/queryWithPaginationParser.util';
 import {
@@ -35,10 +34,7 @@ export class DiscussionDomain {
     query: any,
     user: UserEntity,
   ): Promise<{ data: discussionShort[]; totalPages: number }> {
-    const parseResult = queryWithPaginationParser(
-      query,
-      DiscussionFilterSchema,
-    );
+    const parseResult = queryWithPaginationParser(query, DiscussionFilterSchema);
     const filters = parseResult.dataSchema;
     const checks = filters.groupIds
       ? filters.groupIds.map((groupId) =>
@@ -46,37 +42,23 @@ export class DiscussionDomain {
         )
       : [];
     await Promise.all(checks);
-    return this.discussionPersistence.getDiscussions(
-      filters,
-      parseResult.dataPagination,
-    );
+    return this.discussionPersistence.getDiscussions(filters, parseResult.dataPagination);
   }
 
   public async getDiscussionById(id: Uuid, user: UserEntity) {
     const discussion = await this.discussionPersistence.getDiscussionById(id);
-    await checkIfUserIsInGroup(
-      user,
-      discussion.group.id,
-      this.groupPersistence,
-    );
+    await checkIfUserIsInGroup(user, discussion.group.id, this.groupPersistence);
     return discussion;
   }
 
-  public async createDiscussion(
-    query: any,
-    user: UserEntity,
-  ): Promise<DiscussionDetail> {
-    const parseResult = DiscussionCreateSchema.parse(query);
 
-    await checkIfUserIsInGroup(
-      user,
-      parseResult.groupId,
-      this.groupPersistence,
-    );
+  public async createDiscussion(query: any, user: UserEntity): Promise<DiscussionDetail> {
+    const data = DiscussionCreateSchema.parse(query);
+    await checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
 
     // get all the users that are supposed to see the discussion
     // This includes all the group members and the teachers in the class
-
+    
     // get the group members userIds
     const groupMemberUserIds: string[] =
       await this.studentPersistence.getStudentUserIdsByGroupId(

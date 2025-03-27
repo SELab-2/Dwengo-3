@@ -11,9 +11,7 @@ export function IsStudentSwitch({
   const { t } = useTranslation();
 
   return (
-    <Box
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-    >
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Switch checked={isStudent} onChange={() => setIsStudent(!isStudent)} />
       <Typography>{isStudent ? t('student') : t('teacher')}</Typography>
     </Box>
