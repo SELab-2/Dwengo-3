@@ -14,17 +14,12 @@ export class LearningPathNodeController {
 
   private createLearningPathNode = async (req: Request, res: Response) => {
     res.json(
-      await this.learningPathNodeDomain.createLearningPathNode(
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.learningPathNodeDomain.createLearningPathNode(req.body, await getUserFromReq(req)),
     );
   };
 
   private getLearningPathNodeById = async (req: Request, res: Response) => {
-    res.json(
-      await this.learningPathNodeDomain.getLearningPathNodeById(req.params.id),
-    );
+    res.json(await this.learningPathNodeDomain.getLearningPathNodeById(req.params.id));
   };
 
   private initializeRoutes() {

@@ -14,9 +14,7 @@ function HomePage() {
         mt: MarginSize.large,
       }}
     >
-      <Typography variant="h4">
-        Home Page of {user?.name ?? 'Nobody'}
-      </Typography>
+      <Typography variant="h4">Home Page of {user?.name ?? 'Nobody'}</Typography>
     </Box>
   );
 }

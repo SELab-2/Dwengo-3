@@ -39,22 +39,13 @@ function LoginPage() {
             {t('welcomeMessage')}
           </Typography>
           <Divider sx={{ mb: MarginSize.xsmall }} />
-          <GoogleLogin
-            onSuccess={handleSuccess}
-            onError={handleError}
-            useOneTap
-          ></GoogleLogin>
+          <GoogleLogin onSuccess={handleSuccess} onError={handleError} useOneTap></GoogleLogin>
           <Divider sx={{ mt: MarginSize.xsmall }} />
           <Typography variant="h6">{t('or')} </Typography>
           <Divider />
           <LoginForm />
           <Divider sx={{ mb: MarginSize.xsmall }} />
-          <Button
-            fullWidth
-            variant="outlined"
-            color="primary"
-            onClick={handleRegisterClick}
-          >
+          <Button fullWidth variant="outlined" color="primary" onClick={handleRegisterClick}>
             {t('register')}
           </Button>
         </Paper>

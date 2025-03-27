@@ -13,9 +13,7 @@ function LearningThemesPage() {
         mt: MarginSize.large,
       }}
     >
-      <Typography variant="h4">
-        Learning themes of {user?.name ?? 'Nobody'}
-      </Typography>
+      <Typography variant="h4">Learning themes of {user?.name ?? 'Nobody'}</Typography>
     </Box>
   );
 }

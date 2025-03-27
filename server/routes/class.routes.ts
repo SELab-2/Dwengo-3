@@ -14,33 +14,20 @@ export class ClassController {
   }
 
   private getClasses = async (req: Request, res: Response) => {
-    res.json(
-      await this.classDomain.getClasses(req.query, await getUserFromReq(req)),
-    );
+    res.json(await this.classDomain.getClasses(req.query, await getUserFromReq(req)));
   };
 
   private getClassById = async (req: Request, res: Response) => {
-    res.json(
-      await this.classDomain.getClassById(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.classDomain.getClassById(req.params.id, await getUserFromReq(req)));
   };
 
   private createClass = async (req: Request, res: Response) => {
-    res.json(
-      await this.classDomain.createClass(req.body, await getUserFromReq(req)),
-    );
+    res.json(await this.classDomain.createClass(req.body, await getUserFromReq(req)));
   };
 
   private updateClass = async (req: Request, res: Response) => {
     res.json(
-      await this.classDomain.updateClass(
-        req.params.id,
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.classDomain.updateClass(req.params.id, req.body, await getUserFromReq(req)),
     );
   };
 

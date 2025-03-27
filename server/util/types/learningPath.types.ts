@@ -19,9 +19,7 @@ export const LearningPathCreateSchema = z.object({
   updatedAt: z.coerce.date().optional(),
 });
 
-export type LearningPathByFilterParams = z.infer<
-  typeof LearningPathFilterSchema
->;
+export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;
 export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
 export type LearningPathShort = {
   id: Uuid;

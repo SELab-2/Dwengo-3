@@ -33,8 +33,7 @@ function RegisterForm() {
 
     registerMutation.mutate(
       {
-        username: ((data.get('name') as string) +
-          data.get('surname')) as string,
+        username: ((data.get('name') as string) + data.get('surname')) as string,
         name: data.get('name') as string,
         surname: data.get('surname') as string,
         email: data.get('email') as string,
@@ -55,22 +54,13 @@ function RegisterForm() {
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleRegisterSubmit}
-      sx={{ mt: MarginSize.tiny }}
-    >
+    <Box component="form" onSubmit={handleRegisterSubmit} sx={{ mt: MarginSize.tiny }}>
       <SurnameTextField surname={name} setSurname={setName} />
       <NameTextField name={surname} setName={setSurname} />
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
       <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mt: MarginSize.tiny, mb: 2 }}
-      >
+      <Button type="submit" fullWidth variant="contained" sx={{ mt: MarginSize.tiny, mb: 2 }}>
         {t('register')}
       </Button>
       <Divider sx={{ mb: MarginSize.tiny }} />

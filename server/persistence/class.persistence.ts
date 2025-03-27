@@ -1,17 +1,11 @@
 import { PaginationParams } from '../util/types/pagination.types';
-import {
-  ClassCreateParams,
-  ClassFilterParams,
-  ClassUpdateParams,
-} from '../util/types/class.types';
+import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from '../util/types/class.types';
 import { Prisma } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { UserEntity } from '../util/types/user.types';
-import {
-  classSelectDetail,
-  classSelectShort,
-} from '../util/selectInput/class.select';
+import { classSelectDetail, classSelectShort } from '../util/selectInput/class.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class ClassPersistence {
   private prisma;
@@ -23,20 +17,13 @@ export class ClassPersistence {
   private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
     return {
       AND: [
-        filters.teacherId
-          ? { teachers: { some: { id: filters.teacherId } } }
-          : {},
-        filters.studentId
-          ? { students: { some: { id: filters.studentId } } }
-          : {},
+        filters.teacherId ? { teachers: { some: { id: filters.teacherId } } } : {},
+        filters.studentId ? { students: { some: { id: filters.studentId } } } : {},
       ],
     };
   }
 
-  public async getClasses(
-    paginationParams: PaginationParams,
-    filters: ClassFilterParams,
-  ) {
+  public async getClasses(paginationParams: PaginationParams, filters: ClassFilterParams) {
     const where: Prisma.ClassWhereInput = this.buildWhereClause(filters);
 
     return searchAndPaginate(
@@ -55,7 +42,7 @@ export class ClassPersistence {
     });
 
     if (!classData) {
-      throw new Error(`Class with id: ${id} was not found`);
+      throw new NotFoundError(40401);
     }
 
     return classData;
