@@ -30,6 +30,8 @@ import {
   DiscussionCreateParams,
   DiscussionDetail,
 } from '../../util/types/discussion.types';
+import { AssignmentCreateSchema, AssignmentDetail } from '../../util/types/assignment.types';
+import { AssignmentPersistence } from '../assignment.persistence';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence =
@@ -46,6 +48,8 @@ const announcementPersistence: AnnouncementPersistence =
   new AnnouncementPersistence();
 const discussionPersistence: DiscussionPersistence =
   new DiscussionPersistence();
+const assignmentPersistence: AssignmentPersistence =
+  new AssignmentPersistence();
 
 export const insertStudents = async (): Promise<UserEntity[]> => {
   const users = [
@@ -334,6 +338,25 @@ export const insertAnnouncements = async (): Promise<AnnouncementDetail[]> => {
   return Promise.all(announcements);
 };
 
+export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
+  const classes = await insertClassesWithStudents();
+  const learningPaths = await insertLearningPaths();
+  const assignments = [];
+  for (const classData of classes) {
+    const groups = classData.students.map((student) => [student.id]);
+    for (const path of learningPaths) {
+      const assignment = AssignmentCreateSchema.parse({
+        classId: classData.id,
+        teacherId: classData.teachers[0].id,
+        groups: groups,
+        learningPathId: path.id
+      });
+      assignments.push(assignmentPersistence.createAssignment(assignment))
+    }
+  }
+  return Promise.all(assignments);
+}
+
 // TODO: Vooraleer we deze Discussion test maken zouden we eigenlijk
 // de createParams van de discussion moeten aanpassen
 // Momenteel moet je zelf members meegeven terwijl deze beter in de backend worden opgehaald
@@ -353,6 +376,8 @@ export const insertAnnouncements = async (): Promise<AnnouncementDetail[]> => {
 export const deleteAllData = async (): Promise<void> => {
   await PrismaSingleton.instance.classJoinRequest.deleteMany();
   await PrismaSingleton.instance.announcement.deleteMany();
+  await PrismaSingleton.instance.group.deleteMany();
+  await PrismaSingleton.instance.assignment.deleteMany();
   await PrismaSingleton.instance.user.deleteMany();
   await PrismaSingleton.instance.class.deleteMany();
   await PrismaSingleton.instance.learningPathNode.deleteMany();

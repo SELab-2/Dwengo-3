@@ -28,7 +28,13 @@ export class AssignmentPersistence {
           : {},
         filters.teacherId
           ? {
-              teacherId: filters.teacherId,
+              class: {
+                teachers: {
+                  some: {
+                    id: filters.teacherId,
+                  }
+                }
+              }
             }
           : {},
         filters.groupId
@@ -46,7 +52,7 @@ export class AssignmentPersistence {
                 some: {
                   students: {
                     some: {
-                      userId: filters.studentId,
+                      id: filters.studentId,
                     },
                   },
                 },
@@ -105,7 +111,7 @@ export class AssignmentPersistence {
     // TODO: the following should be in group.persistence.ts, and should be called from assignment.domain.ts
     // TODO: maybe we should name 'group' according to the language of the request.
     //create groups for the assignment
-    await PrismaSingleton.instance.$transaction(
+    const groups = await PrismaSingleton.instance.$transaction(
       params.groups.map((group: Uuid[], index: number) =>
         PrismaSingleton.instance.group.create({
           data: {
@@ -122,6 +128,11 @@ export class AssignmentPersistence {
         }),
       ),
     );
+    assignment.groups = groups.map((group) => ({
+      id: group.id,
+      nodeId: group.nodeId,
+      assignmentId: group.assignmentId
+    }));
     return assignment;
   }
 }
