@@ -14,28 +14,19 @@ export class ClassJoinRequestController {
 
   private createJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.createClassJoinRequest(
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.classJoinRequestDomain.createClassJoinRequest(req.body, await getUserFromReq(req)),
     );
   };
 
   private getJoinRequests = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.getJoinRequests(
-        req.query,
-        await getUserFromReq(req),
-      ),
+      await this.classJoinRequestDomain.getJoinRequests(req.query, await getUserFromReq(req)),
     );
   };
 
   private handleJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.handleJoinRequest(
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.classJoinRequestDomain.handleJoinRequest(req.body, await getUserFromReq(req)),
     );
   };
 

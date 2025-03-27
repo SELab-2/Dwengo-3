@@ -13,12 +13,7 @@ export class TeacherController {
   }
 
   private getTeachers = async (req: Request, res: Response) => {
-    res.json(
-      await this.teacherDomain.getTeachers(
-        req.query,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.teacherDomain.getTeachers(req.query, await getUserFromReq(req)));
   };
 
   private getTeacherById = async (req: Request, res: Response) => {
@@ -26,21 +21,11 @@ export class TeacherController {
   };
 
   private updateTeacher = async (req: Request, res: Response) => {
-    res.json(
-      await this.teacherDomain.updateTeacher(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.teacherDomain.updateTeacher(req.body, await getUserFromReq(req)));
   };
 
   private deleteTeacher = async (req: Request, res: Response) => {
-    res.json(
-      await this.teacherDomain.deleteTeacher(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.teacherDomain.deleteTeacher(req.body, await getUserFromReq(req)));
   };
 
   private initializeRoutes() {

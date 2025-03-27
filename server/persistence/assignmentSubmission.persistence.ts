@@ -35,11 +35,10 @@ export class AssignmentSubmissionPersistence {
   }
 
   public async getAssignmentSubmissionById(id: Uuid) {
-    const assignmentsubmission =
-      await PrismaSingleton.instance.assignmentSubmission.findUnique({
-        where: { id: id },
-        select: assignmentSubmissionSelectDetail,
-      });
+    const assignmentsubmission = await PrismaSingleton.instance.assignmentSubmission.findUnique({
+      where: { id: id },
+      select: assignmentSubmissionSelectDetail,
+    });
 
     if (!assignmentsubmission) {
       throw new Error(`AssignmentSubmission with id: ${id} was not found`);

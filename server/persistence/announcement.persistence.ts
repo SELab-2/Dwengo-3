@@ -47,14 +47,12 @@ export class AnnouncementPersistence {
   }
 
   public async getAnnouncementById(id: string) {
-    const announcement = await PrismaSingleton.instance.announcement.findUnique(
-      {
-        where: {
-          id: id,
-        },
-        select: announcementSelectDetail,
+    const announcement = await PrismaSingleton.instance.announcement.findUnique({
+      where: {
+        id: id,
       },
-    );
+      select: announcementSelectDetail,
+    });
 
     if (!announcement) {
       throw new Error(`Announcement with id: ${id} was not found`);
@@ -87,31 +85,22 @@ export class AnnouncementPersistence {
     return announcement;
   }
 
-  public async updateAnnouncement(
-    id: string,
-    announcementUpdateParams: AnnouncementUpdateParams,
-  ) {
-    const updatedAnnouncement =
-      await PrismaSingleton.instance.announcement.update({
-        where: { id: id },
-        data: announcementUpdateParams,
-        select: announcementSelectDetail,
-      });
+  public async updateAnnouncement(id: string, announcementUpdateParams: AnnouncementUpdateParams) {
+    const updatedAnnouncement = await PrismaSingleton.instance.announcement.update({
+      where: { id: id },
+      data: announcementUpdateParams,
+      select: announcementSelectDetail,
+    });
     return updatedAnnouncement;
   }
 
-  public async checkAnnouncementIsFromTeacher(
-    announcementId: string,
-    teacherId: string,
-  ) {
-    const announcement = await PrismaSingleton.instance.announcement.findUnique(
-      {
-        where: {
-          id: announcementId,
-          teacherId: teacherId,
-        },
+  public async checkAnnouncementIsFromTeacher(announcementId: string, teacherId: string) {
+    const announcement = await PrismaSingleton.instance.announcement.findUnique({
+      where: {
+        id: announcementId,
+        teacherId: teacherId,
       },
-    );
+    });
 
     if (!announcement) {
       throw new Error(

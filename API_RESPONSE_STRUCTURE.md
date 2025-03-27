@@ -128,6 +128,7 @@ Onderstaande attributen worden gereturned wanneer het minimale informatie vereis
 - `keywords [string]` (deze wil je namelijk zien als je filtert op strings)
 - `targetAges [int]` (deze wil je ook zien als je filtert op targetAges)
 - `difficulty`
+
 ---
 
 ## LearningPathNode (detail)

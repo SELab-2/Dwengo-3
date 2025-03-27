@@ -8,10 +8,7 @@ import {
 } from '../util/types/message.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import {
-  messageSelectDetail,
-  messageSelectShort,
-} from '../util/selectInput/message.select';
+import { messageSelectDetail, messageSelectShort } from '../util/selectInput/message.select';
 
 export class MessagePersistence {
   private prisma: PrismaClient;
@@ -49,9 +46,7 @@ export class MessagePersistence {
     return message;
   }
 
-  public async createMessage(
-    params: MessageCreateParams,
-  ): Promise<MessageDetail> {
+  public async createMessage(params: MessageCreateParams): Promise<MessageDetail> {
     return this.prisma.message.create({
       data: {
         discussion: {

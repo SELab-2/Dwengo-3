@@ -77,9 +77,7 @@ export class AssignmentPersistence {
     return assignment;
   }
 
-  public async createAssignment(
-    params: AssignmentCreateParams,
-  ): Promise<AssignmentDetail> {
+  public async createAssignment(params: AssignmentCreateParams): Promise<AssignmentDetail> {
     //create assignment
     const assignment = await PrismaSingleton.instance.assignment.create({
       data: {

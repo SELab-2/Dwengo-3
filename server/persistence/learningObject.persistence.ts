@@ -64,10 +64,7 @@ export class LearningObjectPersistence {
     return learningObject;
   }
 
-  public async updateLearningObject(
-    id: string,
-    data: LearningObjectUpdateWithoutKeywords,
-  ) {
+  public async updateLearningObject(id: string, data: LearningObjectUpdateWithoutKeywords) {
     return await this.prisma.learningObject.update({
       where: { id: id },
       data: data,

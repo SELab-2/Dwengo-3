@@ -9,33 +9,31 @@ export class LearningPathNodePersistence {
   ) {
     // create a learningPathNode without transitions and connect it to the learningPath
     const { learningPathId, learningObjectId, ...data } = learningPathNode;
-    const createdLearningPathNode =
-      await PrismaSingleton.instance.learningPathNode.create({
-        data: {
-          ...data,
-          index,
-          learningPath: {
-            connect: {
-              id: learningPathId,
-            },
-          },
-          learningObject: {
-            connect: {
-              id: learningObjectId,
-            },
+    const createdLearningPathNode = await PrismaSingleton.instance.learningPathNode.create({
+      data: {
+        ...data,
+        index,
+        learningPath: {
+          connect: {
+            id: learningPathId,
           },
         },
-        select: learningPathNodeSelectDetail,
-      });
+        learningObject: {
+          connect: {
+            id: learningObjectId,
+          },
+        },
+      },
+      select: learningPathNodeSelectDetail,
+    });
     return createdLearningPathNode;
   }
 
   public async getLearningPathNodeById(id: string) {
-    const learningPathNode =
-      await PrismaSingleton.instance.learningPathNode.findUnique({
-        where: { id: id },
-        select: learningPathNodeSelectDetail,
-      });
+    const learningPathNode = await PrismaSingleton.instance.learningPathNode.findUnique({
+      where: { id: id },
+      select: learningPathNodeSelectDetail,
+    });
 
     if (!learningPathNode) {
       throw new Error(`LearningPathNode with id: ${id} was not found`);
@@ -44,9 +42,7 @@ export class LearningPathNodePersistence {
     return learningPathNode;
   }
 
-  public async getLearningPathNodeCount(
-    learningPathNode: LearningPathNodeCreateParams,
-  ) {
+  public async getLearningPathNodeCount(learningPathNode: LearningPathNodeCreateParams) {
     const { learningPathId, learningObjectId, ..._ } = learningPathNode;
     return await PrismaSingleton.instance.learningPathNode.count({
       where: {

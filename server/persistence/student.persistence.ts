@@ -61,12 +61,7 @@ export class StudentPersistence {
       ],
     };
 
-    return searchAndPaginate(
-      this.prisma.student,
-      whereClause,
-      pagination,
-      include,
-    );
+    return searchAndPaginate(this.prisma.student, whereClause, pagination, include);
   }
 
   /**

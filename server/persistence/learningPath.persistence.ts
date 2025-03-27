@@ -18,9 +18,7 @@ export class LearningPathPersistence {
     this.prisma = PrismaSingleton.instance;
   }
 
-  private buildWhereClause(
-    filters: LearningPathByFilterParams,
-  ): Prisma.LearningPathWhereInput {
+  private buildWhereClause(filters: LearningPathByFilterParams): Prisma.LearningPathWhereInput {
     return {
       AND: [
         filters.keywords && filters.keywords.length > 0
@@ -62,8 +60,7 @@ export class LearningPathPersistence {
     filters: LearningPathByFilterParams,
     paginationParams: PaginationParams,
   ) {
-    const whereClause: Prisma.LearningPathWhereInput =
-      this.buildWhereClause(filters);
+    const whereClause: Prisma.LearningPathWhereInput = this.buildWhereClause(filters);
 
     return searchAndPaginate(
       this.prisma.learningPath,

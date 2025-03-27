@@ -14,10 +14,7 @@ export class LearningObjectController {
 
   private createLearningObject = async (req: Request, res: Response) => {
     res.json(
-      await this.learningObjectDomain.createLearningObject(
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.learningObjectDomain.createLearningObject(req.body, await getUserFromReq(req)),
     );
   };
 
@@ -26,9 +23,7 @@ export class LearningObjectController {
   };
 
   private getLearningObjectById = async (req: Request, res: Response) => {
-    res.json(
-      await this.learningObjectDomain.getLearningObjectById(req.params.id),
-    );
+    res.json(await this.learningObjectDomain.getLearningObjectById(req.params.id));
   };
 
   private updateLearningObject = async (req: Request, res: Response) => {

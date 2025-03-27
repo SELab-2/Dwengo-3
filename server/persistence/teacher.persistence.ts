@@ -51,18 +51,11 @@ export class TeacherPersistence {
       AND: [
         filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
-        filters.assignmentId
-          ? { assignments: { some: { id: filters.assignmentId } } }
-          : {},
+        filters.assignmentId ? { assignments: { some: { id: filters.assignmentId } } } : {},
       ],
     };
 
-    return await searchAndPaginate(
-      this.prisma.teacher,
-      whereClause,
-      pagination,
-      include,
-    );
+    return await searchAndPaginate(this.prisma.teacher, whereClause, pagination, include);
   }
 
   /**
