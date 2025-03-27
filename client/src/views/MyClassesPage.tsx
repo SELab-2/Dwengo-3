@@ -13,9 +13,7 @@ function MyClassesPage() {
         mt: MarginSize.large,
       }}
     >
-      <Typography variant="h4">
-        My Classes of {user?.name ?? 'Nobody'}
-      </Typography>
+      <Typography variant="h4">My Classes of {user?.name ?? 'Nobody'}</Typography>
     </Box>
   );
 }

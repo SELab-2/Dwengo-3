@@ -7,6 +7,7 @@ import {
   StudentIncludeParams,
 } from '../util/types/student.types';
 import { studentSelectDetail } from '../util/selectInput/student.select';
+import { NotFoundError } from '../util/types/error.types';
 
 /**
  * Persistence class for Student model.
@@ -60,12 +61,7 @@ export class StudentPersistence {
       ],
     };
 
-    return searchAndPaginate(
-      this.prisma.student,
-      whereClause,
-      pagination,
-      include,
-    );
+    return searchAndPaginate(this.prisma.student, whereClause, pagination, include);
   }
 
   /**
@@ -82,7 +78,7 @@ export class StudentPersistence {
     });
 
     if (!student) {
-      throw new Error(`Student with id: ${id} was not found`);
+      throw new NotFoundError(40403);
     }
 
     return student;

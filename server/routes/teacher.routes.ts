@@ -13,12 +13,7 @@ export class TeacherController {
   }
 
   private getTeachers = async (req: Request, res: Response) => {
-    res.json(
-      await this.teacherDomain.getTeachers(
-        req.query,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.teacherDomain.getTeachers(req.query, await getUserFromReq(req)));
   };
 
   private getTeacherById = async (req: Request, res: Response) => {

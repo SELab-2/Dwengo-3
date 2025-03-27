@@ -11,6 +11,7 @@ import {
   learningObjectSelectDetail,
   learningObjectSelectShort,
 } from '../util/selectInput/learningObject.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class LearningObjectPersistence {
   private prisma: PrismaClient;
@@ -64,10 +65,7 @@ export class LearningObjectPersistence {
     return learningObject;
   }
 
-  public async updateLearningObject(
-    id: string,
-    data: LearningObjectUpdateWithoutKeywords,
-  ) {
+  public async updateLearningObject(id: string, data: LearningObjectUpdateWithoutKeywords) {
     return await this.prisma.learningObject.update({
       where: { id: id },
       data: data,
@@ -82,7 +80,7 @@ export class LearningObjectPersistence {
     });
 
     if (!learningObject) {
-      throw new Error(`LearningObject with id: ${id} not found`);
+      throw new NotFoundError(40411);
     }
 
     return learningObject;

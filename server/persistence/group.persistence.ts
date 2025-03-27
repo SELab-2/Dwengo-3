@@ -1,11 +1,4 @@
-import {
-  Assignment,
-  Class,
-  Group,
-  PrismaClient,
-  Student,
-  Teacher,
-} from '@prisma/client';
+import { Assignment, Class, Group, PrismaClient, Student, Teacher } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { Uuid } from '../util/types/assignment.types';
 import { groupSelectDetail } from '../util/selectInput/group.select';

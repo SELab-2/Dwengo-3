@@ -7,6 +7,7 @@ import {
 } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { teacherSelectDetail } from '../util/selectInput/teacher.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class TeacherPersistence {
   private prisma: PrismaClient;
@@ -50,18 +51,11 @@ export class TeacherPersistence {
       AND: [
         filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
-        filters.assignmentId
-          ? { assignments: { some: { id: filters.assignmentId } } }
-          : {},
+        filters.assignmentId ? { assignments: { some: { id: filters.assignmentId } } } : {},
       ],
     };
 
-    return await searchAndPaginate(
-      this.prisma.teacher,
-      whereClause,
-      pagination,
-      include,
-    );
+    return await searchAndPaginate(this.prisma.teacher, whereClause, pagination, include);
   }
 
   /**
@@ -78,7 +72,7 @@ export class TeacherPersistence {
     });
 
     if (!teacher) {
-      throw new Error(`Teacher with id: ${teacherId} was not found`);
+      throw new NotFoundError(40404);
     }
 
     return teacher;

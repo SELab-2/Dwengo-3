@@ -114,29 +114,14 @@ export class MessageController {
   }
 
   private async getMessages(req: Request, res: Response): Promise<void> {
-    res.json(
-      await this.messageDomain.getMessages(
-        req.query,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.messageDomain.getMessages(req.query, await getUserFromReq(req)));
   }
 
   private async createMessage(req: Request, res: Response): Promise<void> {
-    res.json(
-      await this.messageDomain.createMessage(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.messageDomain.createMessage(req.body, await getUserFromReq(req)));
   }
 
   private async deleteMessage(req: Request, res: Response): Promise<void> {
-    res.json(
-      await this.messageDomain.deleteMessage(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.messageDomain.deleteMessage(req.params.id, await getUserFromReq(req)));
   }
 }
