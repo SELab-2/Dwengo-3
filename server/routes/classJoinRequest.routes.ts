@@ -14,28 +14,19 @@ export class ClassJoinRequestController {
 
   private createJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.createClassJoinRequest(
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.classJoinRequestDomain.createClassJoinRequest(req.body, await getUserFromReq(req)),
     );
   };
 
   private getJoinRequests = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.getJoinRequests(
-        req.query,
-        await getUserFromReq(req),
-      ),
+      await this.classJoinRequestDomain.getJoinRequests(req.query, await getUserFromReq(req)),
     );
   };
 
   private handleJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.handleJoinRequest(
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.classJoinRequestDomain.handleJoinRequest(req.body, await getUserFromReq(req)),
     );
   };
 
@@ -63,8 +54,6 @@ export class ClassJoinRequestController {
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.put('/studentRequest', this.createJoinRequest);
     /**
@@ -90,8 +79,6 @@ export class ClassJoinRequestController {
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.put('/teacherRequest', this.createJoinRequest);
     /**
@@ -124,12 +111,21 @@ export class ClassJoinRequestController {
      *     responses:
      *       200:
      *         description: Class join requests fetched successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/ClassJoinRequestDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/studentRequest', this.getJoinRequests);
     /**
@@ -162,12 +158,21 @@ export class ClassJoinRequestController {
      *     responses:
      *       200:
      *         description: Class join requests fetched successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/ClassJoinRequestDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/teacherRequest', this.getJoinRequests);
     /**
@@ -179,7 +184,7 @@ export class ClassJoinRequestController {
      *     tags:
      *       - ClassJoinRequest
      *     summary: Accept or deny a class join request from a student
-     *     description: Accept or deny a class join request coming from an user who is a student.
+     *     description: Accept or deny a class join request coming from a student.
      *     requestBody:
      *       required: true
      *       content:
@@ -193,8 +198,6 @@ export class ClassJoinRequestController {
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.post('/studentRequest', this.handleJoinRequest);
     /**
@@ -206,7 +209,7 @@ export class ClassJoinRequestController {
      *     tags:
      *       - ClassJoinRequest
      *     summary: Accept or deny a class join request from a teacher
-     *     description: Accept or deny a class join request coming from an user who is a teacher.
+     *     description: Accept or deny a class join request coming from a teacher.
      *     requestBody:
      *       required: true
      *       content:
@@ -220,8 +223,6 @@ export class ClassJoinRequestController {
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.post('/teacherRequest', this.handleJoinRequest);
   }

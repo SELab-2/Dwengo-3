@@ -135,11 +135,13 @@ export class BadRequestError extends APIError {
       case 40031:
         return 'User is not a teacher or student...';
       case 40032:
-        return 'User is already a teacher or student';
+        return 'User is already a teacher or student...';
       case 40033:
-        return 'Only students can create or update submissions';
+        return 'Only students can create or update submissions...';
       case 40034:
-        return 'File submission is required when submissionType is FILE';
+        return 'File submission is required when submissionType is FILE...';
+      case 40035:
+        return 'User must be a teacher to remove people from a class...';
       default:
         return 'Bad request...';
     }

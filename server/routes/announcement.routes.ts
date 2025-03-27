@@ -13,26 +13,23 @@ export class AnnouncementController {
   }
 
   private getAnnouncements = async (req: Request, res: Response) => {
+    res.json(await this.announcementDomain.getAnnouncements(req.query, await getUserFromReq(req)));
+  };
+
+  private getAnnouncementById = async (req: Request, res: Response) => {
     res.json(
-      await this.announcementDomain.getAnnouncements(
-        req.query,
-        await getUserFromReq(req),
-      ),
+      await this.announcementDomain.getAnnouncementById(req.params.id, await getUserFromReq(req)),
     );
   };
 
   private createAnnouncement = async (req: Request, res: Response) => {
-    res.json(
-      await this.announcementDomain.createAnnouncement(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.announcementDomain.createAnnouncement(req.body, await getUserFromReq(req)));
   };
 
   private updateAnnouncement = async (req: Request, res: Response) => {
     res.json(
       await this.announcementDomain.updateAnnouncement(
+        req.params.id,
         req.body,
         await getUserFromReq(req),
       ),
@@ -48,7 +45,7 @@ export class AnnouncementController {
      *       - cookieAuth: []
      *     tags:
      *       - Announcement
-     *     summary: Create or update an announcement
+     *     summary: Create an announcement
      *     description: Creates a new announcement
      *     requestBody:
      *       required: true
@@ -57,20 +54,16 @@ export class AnnouncementController {
      *           schema:
      *             $ref: '#/components/schemas/AnnouncementCreate'
      *     responses:
-     *       200:
+     *       201:
      *         description: Announcement created successfully.
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/AnnouncementGet'
+     *               $ref: '#/components/schemas/AnnouncementDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       401:
      *         description: Unauthorized, user not authenticated.
-     *       403:
-     *         description: Forbidden, user does not have permission to create the announcement.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.put('/', this.createAnnouncement);
     /**
@@ -99,31 +92,60 @@ export class AnnouncementController {
      *         schema:
      *           type: string
      *         description: Filter announcements by student ID.
-     *       - in: query
-     *         name: id
-     *         schema:
-     *           type: string
-     *         description: Filter announcements by their unique ID.
      *     responses:
      *       200:
      *         description: A list of announcements matching the filters.
      *         content:
      *           application/json:
      *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/AnnouncementGet'
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/AnnouncementShort'
      *       400:
      *         description: Bad request due to invalid input or no filters provided.
      *       401:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.get('/', this.getAnnouncements);
     /**
      * @swagger
-     * /api/announcement:
+     * /api/announcement/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - Announcement
+     *     summary: Get an announcement by ID
+     *     description: Gets the content of a specific announcement selected by its UUID.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the announcement.
+     *     responses:
+     *       200:
+     *         description: Announcement fetched successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/AnnouncementDetail'
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Announcement not found.
+     */
+    this.router.get('/:id', this.getAnnouncementById);
+    /**
+     * @swagger
+     * /api/announcement/{id}:
      *   patch:
      *     security:
      *       - cookieAuth: []
@@ -131,6 +153,14 @@ export class AnnouncementController {
      *       - Announcement
      *     summary: Update an announcement
      *     description: Updates an existing announcement with the provided data.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the announcement.
      *     requestBody:
      *       required: true
      *       content:
@@ -143,7 +173,7 @@ export class AnnouncementController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/AnnouncementGet'
+     *               $ref: '#/components/schemas/AnnouncementDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       401:
@@ -152,9 +182,7 @@ export class AnnouncementController {
      *         description: Forbidden, user does not have permission to update the announcement.
      *       404:
      *         description: Announcement not found.
-     *       500:
-     *         description: Internal server error.
      */
-    this.router.patch('/', this.updateAnnouncement);
+    this.router.patch('/:id', this.updateAnnouncement);
   }
 }

@@ -1,6 +1,12 @@
-import { Assignment, ClassRole } from '@prisma/client';
+import { ClassRole } from '@prisma/client';
 import { AssignmentPersistence } from '../persistence/assignment.persistence';
-import { AssignmentCreateSchema, AssignmentFilterSchema } from '../util/types/assignment.types';
+import {
+  AssignmentCreateSchema,
+  AssignmentDetail,
+  AssignmentFilterSchema,
+  AssignmentShort,
+  Uuid,
+} from '../util/types/assignment.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import { UserEntity } from '../util/types/user.types';
 import {
@@ -27,21 +33,23 @@ export class AssignmentDomain {
   public async getAssignments(
     query: any,
     user: UserEntity,
-  ): Promise<{ data: Assignment[]; totalPages: number }> {
+  ): Promise<{ data: AssignmentShort[]; totalPages: number }> {
     const pagination = PaginationFilterSchema.parse(query);
     const filters = AssignmentFilterSchema.parse(query);
 
     await compareUserIdWithFilterId(user, filters.studentId, filters.teacherId);
     await checkIfUserIsInClass(user, filters.classId, this.classPersistence);
     await checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
-    const assignments = await this.assignmentPersistence.getAssignments(filters, pagination);
-    if (filters.id && assignments.data.length === 1) {
-      await checkIfUserIsInClass(user, assignments.data[0].classId, this.classPersistence);
-    }
-    return assignments;
+    return this.assignmentPersistence.getAssignments(filters, pagination);
   }
 
-  public async createAssigment(query: any, user: UserEntity): Promise<Assignment> {
+  public async getAssignmentById(id: Uuid, user: UserEntity): Promise<AssignmentDetail> {
+    const assignment = await this.assignmentPersistence.getAssignmentId(id);
+    await checkIfUserIsInClass(user, assignment.class.id, this.classPersistence);
+    return assignment;
+  }
+
+  public async createAssigment(query: any, user: UserEntity): Promise<AssignmentDetail> {
     if (user.role !== ClassRole.TEACHER) {
       throw new BadRequestError(40012);
     }

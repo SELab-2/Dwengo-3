@@ -6,6 +6,10 @@ import {
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import {
+  learningPathSelectDetail,
+  learningPathSelectShort,
+} from '../util/selectInput/learningPath.select';
 
 export class LearningPathPersistence {
   private prisma: PrismaClient;
@@ -14,9 +18,7 @@ export class LearningPathPersistence {
     this.prisma = PrismaSingleton.instance;
   }
 
-  private buildWhereClause(
-    filters: LearningPathByFilterParams,
-  ): Prisma.LearningPathWhereInput {
+  private buildWhereClause(filters: LearningPathByFilterParams): Prisma.LearningPathWhereInput {
     return {
       AND: [
         filters.keywords && filters.keywords.length > 0
@@ -50,7 +52,6 @@ export class LearningPathPersistence {
               },
             }
           : {},
-        filters.id ? { id: filters.id } : {},
       ],
     };
   }
@@ -59,27 +60,37 @@ export class LearningPathPersistence {
     filters: LearningPathByFilterParams,
     paginationParams: PaginationParams,
   ) {
-    const whereClause: Prisma.LearningPathWhereInput =
-      this.buildWhereClause(filters);
+    const whereClause: Prisma.LearningPathWhereInput = this.buildWhereClause(filters);
 
     return searchAndPaginate(
       this.prisma.learningPath,
       whereClause,
       paginationParams,
-      {
-        learningPathNodes: {
-          include: {
-            learningObject: true,
-          },
-        },
-      },
+      undefined,
+      learningPathSelectShort,
     );
+  }
+
+  public async getLearningPathById(id: string) {
+    const learningPath = await this.prisma.learningPath.findUnique({
+      where: {
+        id: id,
+      },
+      select: learningPathSelectDetail,
+    });
+
+    if (!learningPath) {
+      throw new Error(`LearningPath with id: ${id} was not found`);
+    }
+
+    return learningPath;
   }
 
   public async createLearningPath(data: LearningPathCreateParams) {
     // create a learningPath without any connected nodes
     const learningPath = await this.prisma.learningPath.create({
       data: data,
+      select: learningPathSelectDetail,
     });
     return learningPath;
   }

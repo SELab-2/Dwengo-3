@@ -1,8 +1,10 @@
 import { z } from 'zod';
+import { Uuid } from './assignment.types';
+import { GroupShort } from './group.types';
+import { UserShort } from './user.types';
 
 export const DiscussionFilterSchema = z
   .object({
-    id: z.string().uuid().optional(),
     groupIds: z.string().uuid().array().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
@@ -17,3 +19,11 @@ export const DiscussionCreateSchema = z.object({
 
 export type DiscussionFilterParams = z.infer<typeof DiscussionFilterSchema>;
 export type DiscussionCreateParams = z.infer<typeof DiscussionCreateSchema>;
+export type DiscussionDetail = {
+  id: Uuid;
+  group: GroupShort;
+  members: UserShort[];
+};
+export type discussionShort = {
+  id: Uuid;
+};

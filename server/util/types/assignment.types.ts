@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { LearningPathShort } from './learningPath.types';
+import { ClassShort } from './class.types';
+import { GroupShort } from './group.types';
 
 export const AssignmentFilterSchema = z
   .object({
@@ -6,7 +9,6 @@ export const AssignmentFilterSchema = z
     groupId: z.string().uuid().optional(),
     teacherId: z.string().uuid().optional(),
     studentId: z.string().uuid().optional(),
-    id: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: 'At least one filter must be provided.',
@@ -25,3 +27,15 @@ export const AssignmentCreateSchema = z.object({
 export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;
 export type Uuid = z.infer<typeof IdSchema>;
 export type AssignmentFilterParams = z.infer<typeof AssignmentFilterSchema>;
+export type AssignmentDetail = {
+  id: Uuid;
+  learningPath: LearningPathShort;
+  class: ClassShort;
+  groups: GroupShort[];
+  teacherId: Uuid;
+};
+
+export type AssignmentShort = {
+  id: Uuid;
+  learningPathId: Uuid;
+};

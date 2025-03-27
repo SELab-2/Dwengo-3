@@ -3,7 +3,6 @@ import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   StudentCreateSchema,
-  StudentDeleteSchema,
   StudentFilterParams,
   StudentFilterSchema,
   StudentIncludeSchema,
@@ -71,8 +70,8 @@ export class StudentDomain {
 
       // Check if the teacher is a teacher of the class
       const isTeacherOfClass = await this.classPersistence.isTeacherFromClass(
-        query.classId,
         teacher.id,
+        query.classId,
       );
 
       if (!isTeacherOfClass) {
@@ -80,17 +79,6 @@ export class StudentDomain {
       }
     }
 
-    // A teacher can fetch students they're a teacher of
-    if (query.id) {
-      // Check if the student is in one of the teacher's classes
-      const isStudentInTeacherClass = await this.isStudentInTeacherClass(query.id, teacher.id);
-
-      if (!isStudentInTeacherClass) {
-        throw new BadRequestError(40024);
-      }
-    }
-
-    // A teacher can fetch students they're a teacher of
     if (query.userId) {
       // Check if the user exists
       const userExists = await getUserById(query.userId);
@@ -136,25 +124,6 @@ export class StudentDomain {
     }
 
     // A student can fetch their own student record
-    if (query.id) {
-      // Check if the student exists
-      const studentExists = await this.studentPersistence.getStudentById(query.id);
-
-      if (!studentExists) {
-        throw new NotFoundError(40403);
-      }
-
-      //Check if the student shares a group with the student making the request
-      const shareGroup = student.groups.some((group) =>
-        studentExists.groups.some((group2) => group.id === group2.id),
-      );
-
-      if (!shareGroup && query.id !== student.id) {
-        throw new BadRequestError(40026);
-      }
-    }
-
-    // A student can fetch their own student record
     if (query.userId) {
       // Check if the student exists
       const studentExists = await this.studentPersistence.getStudentByUserId(query.userId);
@@ -193,7 +162,7 @@ export class StudentDomain {
 
     if (user.role === ClassRoleEnum.TEACHER) {
       // Check if the teacher exists
-      const teacher = await this.teacherPersistence.getTeacherById(user.id);
+      const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
 
       if (!teacher) {
         // This should never happen as the user is a teacher
@@ -219,6 +188,49 @@ export class StudentDomain {
     return await this.studentPersistence.getStudents(pagination, filters, include);
   }
 
+  public async getStudentById(id: string, user: UserEntity) {
+    if (user.role === ClassRoleEnum.TEACHER) {
+      // Check if the teacher exists
+      const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
+
+      if (!teacher) {
+        // This should never happen as the user is a teacher
+        throw new Error('Teacher not found.');
+      }
+
+      const isStudentInTeacherClass = await this.isStudentInTeacherClass(id, teacher.id);
+
+      if (!isStudentInTeacherClass) {
+        throw new Error("Can't fetch students you're not a teacher of.");
+      }
+
+      return this.studentPersistence.getStudentById(id);
+    }
+
+    if (user.role === ClassRoleEnum.STUDENT) {
+      const student = await this.studentPersistence.getStudentByUserId(user.id);
+
+      if (!student) {
+        // This should never happen as the user is a student
+        throw new Error('Student not found.');
+      }
+
+      // Check if the student exists
+      const studentExists = await this.studentPersistence.getStudentById(id);
+
+      //Check if the student shares a group with the student making the request
+      const shareGroup = student.groups.some((group) =>
+        studentExists.groups.some((group2: any) => group.id === group2.id),
+      );
+
+      if (!shareGroup && id !== student.id) {
+        throw new Error("Can't fetch other students.");
+      }
+
+      return studentExists;
+    }
+  }
+
   /**
    * Update a student with the necessary validation.
    *
@@ -226,11 +238,9 @@ export class StudentDomain {
    * @param user - The user making the request.
    * @returns The updated student.
    */
-  public async updateStudent(body: unknown, user: UserEntity) {
+  public async updateStudent(id: string, body: unknown, user: UserEntity) {
     // Validate and parse body
     const updateData = StudentUpdateSchema.parse(body);
-
-    const { id, classes, groups } = updateData;
 
     // Check if the student exists
     const student = await this.studentPersistence.getStudentById(id);
@@ -251,19 +261,10 @@ export class StudentDomain {
       }
     }
 
-    return await this.studentPersistence.updateStudent(updateData);
+    return await this.studentPersistence.updateStudent(id, updateData);
   }
 
-  /**
-   * Delete a student with the necessary validation.
-   *
-   * @param body - The body to delete the student. This should contain the student ID.
-   * @param user - The user making the request.
-   */
-  public async deleteStudent(body: unknown, user: UserEntity): Promise<void> {
-    // Validate the body
-    const { id } = StudentDeleteSchema.parse(body);
-
+  public async deleteStudent(id: string, user: UserEntity): Promise<void> {
     // Check if the student exists
     const student = await this.studentPersistence.getStudentById(id);
 

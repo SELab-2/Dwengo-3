@@ -25,4 +25,8 @@ export class LearningPathNodeDomain {
       await this.learningPathNodePersistence.getLearningPathNodeCount(data),
     );
   }
+
+  public async getLearningPathNodeById(id: string) {
+    return this.learningPathNodePersistence.getLearningPathNodeById(id);
+  }
 }

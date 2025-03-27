@@ -14,11 +14,12 @@ export class LearningPathNodeController {
 
   private createLearningPathNode = async (req: Request, res: Response) => {
     res.json(
-      await this.learningPathNodeDomain.createLearningPathNode(
-        req.body,
-        await getUserFromReq(req),
-      ),
+      await this.learningPathNodeDomain.createLearningPathNode(req.body, await getUserFromReq(req)),
     );
+  };
+
+  private getLearningPathNodeById = async (req: Request, res: Response) => {
+    res.json(await this.learningPathNodeDomain.getLearningPathNodeById(req.params.id));
   };
 
   private initializeRoutes() {
@@ -44,14 +45,43 @@ export class LearningPathNodeController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningPathNodeGet'
+     *               $ref: '#/components/schemas/LearningPathNodeDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       401:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
     this.router.put('/', this.createLearningPathNode);
+    /**
+     * @swagger
+     * /api/learningPathNode/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningPathNode
+     *     summary: Get a learningPathNode by ID
+     *     description: Gets the content of a specific learningPathNode selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the learningPathNode.
+     *     responses:
+     *       200:
+     *         description: LearningPathNode fetched successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningPathNodeDetail'
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: LearningPathNode not found.
+     */
+    this.router.get('/:id', this.getLearningPathNodeById);
   }
 }

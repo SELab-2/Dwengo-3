@@ -6,6 +6,11 @@ import {
 } from '../util/types/announcement.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
+import {
+  announcementSelectDetail,
+  announcementSelectShort,
+} from '../util/selectInput/announcement.select';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 //TODO : import prisma client from singleton
 
@@ -18,7 +23,6 @@ export class AnnouncementPersistence {
       AND: [
         filters.classId ? { classId: filters.classId } : {},
         filters.teacherId ? { teacherId: filters.teacherId } : {},
-        filters.id ? { id: filters.id } : {},
         filters.studentId
           ? {
               class: {
@@ -32,32 +36,36 @@ export class AnnouncementPersistence {
           : {},
       ],
     };
-    const [announcements, totalCount] =
-      await PrismaSingleton.instance.$transaction([
-        PrismaSingleton.instance.announcement.findMany({
-          where: whereClause,
-          include: {
-            class: true,
-            teacher: true,
-          },
-          skip: paginationParams.skip,
-          take: paginationParams.pageSize,
-        }),
-        PrismaSingleton.instance.announcement.count({
-          where: whereClause, // TODO this is probably not efficient
-        }),
-      ]);
 
-    return {
-      announcements,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(
+      PrismaSingleton.instance.announcement,
+      whereClause,
+      paginationParams,
+      undefined,
+      announcementSelectShort,
+    );
+  }
+
+  public async getAnnouncementById(id: string) {
+    const announcement = await PrismaSingleton.instance.announcement.findUnique({
+      where: {
+        id: id,
+      },
+      select: announcementSelectDetail,
+    });
+
+    if (!announcement) {
+      throw new Error(`Announcement with id: ${id} was not found`);
+    }
+
+    return announcement;
   }
 
   public async createAnnouncement(
     announcementCreateParams: AnnouncementCreatePersistenceParams,
+    teacherId: string,
   ) {
-    const { classId, teacherId, ...data } = announcementCreateParams;
+    const { classId, ...data } = announcementCreateParams;
     const announcement = await PrismaSingleton.instance.announcement.create({
       data: {
         ...data,
@@ -72,19 +80,32 @@ export class AnnouncementPersistence {
           },
         },
       },
+      select: announcementSelectDetail,
     });
     return announcement;
   }
 
-  public async updateAnnouncement(
-    announcementUpdateParams: AnnouncementUpdateParams,
-  ) {
-    const { id, ...data } = announcementUpdateParams;
-    const updatedAnnouncement =
-      await PrismaSingleton.instance.announcement.update({
-        where: { id: id },
-        data: data,
-      });
+  public async updateAnnouncement(id: string, announcementUpdateParams: AnnouncementUpdateParams) {
+    const updatedAnnouncement = await PrismaSingleton.instance.announcement.update({
+      where: { id: id },
+      data: announcementUpdateParams,
+      select: announcementSelectDetail,
+    });
     return updatedAnnouncement;
+  }
+
+  public async checkAnnouncementIsFromTeacher(announcementId: string, teacherId: string) {
+    const announcement = await PrismaSingleton.instance.announcement.findUnique({
+      where: {
+        id: announcementId,
+        teacherId: teacherId,
+      },
+    });
+
+    if (!announcement) {
+      throw new Error(
+        `Announcement with id: ${announcementId} does not belong to teacher with id: ${teacherId}`,
+      );
+    }
   }
 }

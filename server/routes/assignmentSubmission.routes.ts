@@ -38,31 +38,18 @@ export class AssignmentSubmissionController {
     if (this.acceptedMimeTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(
-        new Error(`Expected mimiTypes: ${this.acceptedMimeTypes.toString()}`),
-        false,
-      );
+      cb(new Error(`Expected mimiTypes: ${this.acceptedMimeTypes.toString()}`), false);
     }
   }
 
   private initializeRoutes(): void {
     this.router.get('/', this.getAssignmentSubmission.bind(this));
-    this.router.put(
-      '/',
-      this.upload.single('file'),
-      this.createAssignmentSubmission.bind(this),
-    );
-    this.router.patch(
-      '/',
-      this.upload.single('file'),
-      this.updateAssignmentSubmission.bind(this),
-    ); //TODO change 'file' to the correct field name
+    this.router.get('/:id', this.getAssignmentById.bind(this));
+    this.router.put('/', this.upload.single('file'), this.createAssignmentSubmission.bind(this));
+    this.router.patch('/', this.upload.single('file'), this.updateAssignmentSubmission.bind(this)); //TODO change 'file' to the correct field name
   }
 
-  private async getAssignmentSubmission(
-    req: Request,
-    res: Response,
-  ): Promise<void> {
+  private async getAssignmentSubmission(req: Request, res: Response): Promise<void> {
     res.json(
       await this.assignmentSubmissionsDomain.getAssignmentSubmissions(
         req.query,
@@ -71,10 +58,16 @@ export class AssignmentSubmissionController {
     );
   }
 
-  private async createAssignmentSubmission(
-    req: Request,
-    res: Response,
-  ): Promise<void> {
+  private async getAssignmentById(req: Request, res: Response): Promise<void> {
+    res.json(
+      await this.assignmentSubmissionsDomain.getAssignmentSubmissionById(
+        req.params.id,
+        await getUserFromReq(req),
+      ),
+    );
+  }
+
+  private async createAssignmentSubmission(req: Request, res: Response): Promise<void> {
     res.json(
       await this.assignmentSubmissionsDomain.createAssignmentSubmission(
         req,
@@ -96,10 +89,7 @@ export class AssignmentSubmissionController {
      "nodeId":"4aa49f79-564b-4cf3-863f-421d0606e914", 
      "submissionType":"MULTIPLE_CHOICE", 
      "submission":"1"}'*/
-  private async updateAssignmentSubmission(
-    req: Request,
-    res: Response,
-  ): Promise<void> {
+  private async updateAssignmentSubmission(req: Request, res: Response): Promise<void> {
     res.json(
       await this.assignmentSubmissionsDomain.updateAssignmentSubmission(
         req,

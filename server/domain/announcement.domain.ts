@@ -47,38 +47,36 @@ export class AnnouncementDomain {
       }
     }
 
-    // check if id is used, announcement belongs to class of user
-    if (query.id) {
-      const res = await this.announcementPersistence.getAnnouncements({ id: query.id }, pagination);
-      if (res.announcements.length !== 0) {
-        const resClassId = res.announcements[0].classId;
-        await this.classDomain.checkUserBelongsToClass(user, resClassId);
-      }
-    }
     return this.announcementPersistence.getAnnouncements(filter, pagination);
   }
 
+  public async getAnnouncementById(id: string, user: UserEntity) {
+    const announcement = await this.announcementPersistence.getAnnouncementById(id);
+
+    const classId = announcement.classId;
+    await this.classDomain.checkUserBelongsToClass(user, classId);
+    return announcement;
+  }
+
   public async createAnnouncement(query: AnnouncementCreateDomainParams, user: UserEntity) {
-    const data = AnnouncementCreateDomainSchema.parse(query);
+    const announcementData = AnnouncementCreateDomainSchema.parse(query);
 
     await this.checkUserIsTeacher(user);
     await this.classDomain.checkUserBelongsToClass(user, query.classId);
 
-    const teacherId = TeacherIdSchema.parse(user.teacher?.id);
+    const teacherData = TeacherIdSchema.parse(user.teacher?.id);
 
-    return this.announcementPersistence.createAnnouncement({
-      ...data,
-      teacherId: teacherId,
-    });
+    return this.announcementPersistence.createAnnouncement(announcementData, teacherData);
   }
 
-  public async updateAnnouncement(query: AnnouncementUpdateParams, user: UserEntity) {
+  public async updateAnnouncement(id: string, query: AnnouncementUpdateParams, user: UserEntity) {
     const data = AnnouncementUpdateSchema.parse(query);
 
     await this.checkUserIsTeacher(user);
-    await this.classDomain.checkUserBelongsToClass(user, query.id);
+    const teacherId = TeacherIdSchema.parse(user.teacher?.id);
+    await this.announcementPersistence.checkAnnouncementIsFromTeacher(id, teacherId);
 
-    return this.announcementPersistence.updateAnnouncement(data);
+    return this.announcementPersistence.updateAnnouncement(id, data);
   }
 
   private async checkUserIsTeacher(user: UserEntity) {
