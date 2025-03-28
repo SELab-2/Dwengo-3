@@ -42,7 +42,6 @@ export class AssignmentDomain {
 
   public async getAssignmentById(id: Uuid, user: UserEntity): Promise<AssignmentDetail> {
     const assignment = await this.assignmentPersistence.getAssignmentId(id);
-    console.log(assignment, user);
     await checkIfUserIsInClass(user, assignment.class.id, this.classPersistence);
     return assignment;
   }
