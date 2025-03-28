@@ -129,8 +129,9 @@ export class AssignmentPersistence {
     );
     assignment.groups = groups.map((group) => ({
       id: group.id,
-      nodeId: group.nodeId,
-      assignmentId: group.assignmentId
+      assignmentId: group.assignmentId,
+      name: group.name,
+      progress: group.progress
     }));
     return assignment;
   }

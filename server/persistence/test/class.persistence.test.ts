@@ -36,7 +36,7 @@ describe('class persistence test', () => {
     test('request with existing teacher id responds with true', async () => {
       for (const classData of classes) {
         for (const teacher of classData.teachers) {
-          const req = classPersistence.isTeacherFromClass(teacher.userId, classData.id);
+          const req = classPersistence.isTeacherFromClass(teacher.id, classData.id);
           await expect(req).resolves.not.toBeFalsy();
         }
       }
@@ -64,7 +64,7 @@ describe('class persistence test', () => {
       for (const classData of classes) {
         classData.name = "Test update";
         const updateData = {name: classData.name, id: classData.id};
-        await classPersistence.updateClass(updateData);
+        await classPersistence.updateClass(classData.id, updateData);
         const req = classPersistence.getClassById(classData.id);
         await expect(req).resolves.toStrictEqual(classData);
       }
