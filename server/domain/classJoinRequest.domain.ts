@@ -33,8 +33,9 @@ export class ClassJoinRequestDomain {
     return this.classJoinRequestPersistence.createClassJoinRequest(classJoinRequestParams, user);
   }
 
-  public async getJoinRequests(query: unknown, user: UserEntity) {
+  public async getJoinRequests(query: unknown, user: UserEntity, classRole: ClassRoleEnum) {
     const pagination = PaginationFilterSchema.parse(query);
+
     const classJoinRequestFilter = ClassJoinRequestFilterSchema.parse(query);
 
     // Atleast one of them will be non null because of the checks in the zod scheme.
@@ -42,6 +43,10 @@ export class ClassJoinRequestDomain {
 
     // Teacher checks:
     if (user.role === ClassRoleEnum.TEACHER) {
+      if (!user.teacher) {
+        throw new Error('User must be a teacher to retrieve join requests for their classes.');
+      }
+
       // If userId is provided, it must match the teacher's own userId
       // Teachers should only be able to view join requests for their own classes.
       if (userId && userId !== user.id) {
@@ -49,7 +54,7 @@ export class ClassJoinRequestDomain {
       }
 
       // If classId is provided, check if the teacher is associated with that class
-      if (classId && !(await this.classPersistence.isTeacherFromClass(user.id, classId))) {
+      if (classId && !(await this.classPersistence.isTeacherFromClass(user.teacher.id, classId))) {
         throw new BadRequestError(40015);
       }
     }
@@ -70,7 +75,7 @@ export class ClassJoinRequestDomain {
     return this.classJoinRequestPersistence.getJoinRequests(
       pagination,
       classJoinRequestFilter,
-      user,
+      classRole,
     );
   }
 

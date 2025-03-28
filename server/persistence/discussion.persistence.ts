@@ -52,7 +52,8 @@ export class DiscussionPersistence {
     return discussion;
   }
 
-  public async createDiscussion(params: DiscussionCreateParams): Promise<DiscussionDetail> {
+
+  public async createDiscussion(params: DiscussionCreateParams, memberIds: string[]): Promise<DiscussionDetail> {
     return this.prisma.discussion.create({
       data: {
         group: {
@@ -61,7 +62,7 @@ export class DiscussionPersistence {
           },
         },
         members: {
-          connect: params.members.map((member) => ({ id: member })),
+          connect: memberIds.map((member) => ({ id: member })),
         },
       },
       select: discussionSelectDetail,

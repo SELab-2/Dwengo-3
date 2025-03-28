@@ -14,9 +14,18 @@ export class ClassJoinRequestPersistence {
   public async createClassJoinRequest(data: ClassJoinRequestCreateParams, user: UserEntity) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {
-        classId: data.classId,
-        userId: user.id,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        class: {
+          connect: {
+            id: data.classId,
+          },
+        },
       },
+      select: classJoinRequestSelectDetail,
     });
   }
 
@@ -35,11 +44,13 @@ export class ClassJoinRequestPersistence {
   public async getJoinRequests(
     paginationParams: PaginationParams,
     filters: ClassJoinRequestFilterParams,
-    user: UserEntity,
+    classRole: ClassRoleEnum,
   ) {
     // We need to do this to not expose the Prisma.EnumClassRoleFilter<"User"> type to the domain layer.
     let filterByRole: Prisma.UserWhereInput = {};
-    if (user.role === ClassRoleEnum.STUDENT) {
+
+    // TODO This can probably be simplified.
+    if (classRole === ClassRoleEnum.STUDENT) {
       filterByRole = { role: 'STUDENT' };
     } else {
       filterByRole = { role: 'TEACHER' };
@@ -72,14 +83,14 @@ export class ClassJoinRequestPersistence {
       });
 
       // Add the student/teacher to the class.
-      await PrismaSingleton.instance.class.update({
+      await PrismaSingleton.instance.student.update({
         where: {
-          id: classJoinRequest.classId,
+          userId: classJoinRequest.userId,
         },
         data: {
-          students: {
+          classes: {
             connect: {
-              id: classJoinRequest.userId,
+              id: classJoinRequest.classId,
             },
           },
         },

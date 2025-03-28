@@ -14,7 +14,7 @@ import {
   checkIfUserIsInGroup,
   checkIfUsersAreInSameClass,
   compareUserIdWithFilterId,
-} from '../util/coockie-checks/coockieChecks.util';
+} from '../util/cookie-checks/cookieChecks.util';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { BadRequestError } from '../util/types/error.types';
@@ -30,10 +30,7 @@ export class AssignmentDomain {
     this.groupPersistence = new GroupPersistence();
   }
 
-  public async getAssignments(
-    query: any,
-    user: UserEntity,
-  ): Promise<{ data: AssignmentShort[]; totalPages: number }> {
+  public async getAssignments(query: any, user: UserEntity): Promise<{ data: AssignmentShort[]; totalPages: number }> {
     const pagination = PaginationFilterSchema.parse(query);
     const filters = AssignmentFilterSchema.parse(query);
 
@@ -57,12 +54,7 @@ export class AssignmentDomain {
     const data = AssignmentCreateSchema.parse(query);
 
     data.teacherId = user.teacher!.id;
-    await checkIfUsersAreInSameClass(
-      data.groups,
-      data.classId,
-      data.teacherId!,
-      this.classPersistence,
-    );
+    await checkIfUsersAreInSameClass(data.groups, data.classId, data.teacherId!, this.classPersistence);
     return this.assignmentPersistence.createAssignment(data);
   }
 }
