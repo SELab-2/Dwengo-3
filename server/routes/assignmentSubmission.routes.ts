@@ -45,6 +45,37 @@ export class AssignmentSubmissionController {
   private initializeRoutes(): void {
     this.router.get('/', this.getAssignmentSubmission.bind(this));
     this.router.get('/:id', this.getAssignmentById.bind(this));
+    /**
+     * @swagger
+     * /api/assignmentSubmission:
+     *   put:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - AssignmentSubmission
+     *     summary: Create an assignment submission
+     *     description: Allows a user to submit an assignment with a file upload.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         multipart/form-data:
+     *           schema:
+     *             allOf:
+     *               - $ref: '#/components/schemas/SubmissionCreate'
+     *             type: object
+     *             properties:
+     *               file:
+     *                 type: string
+     *                 format: binary
+     *                 description: The file to be uploaded as part of the submission
+     *     responses:
+     *       200:
+     *         description: Submission successfully created
+     *       400:
+     *         description: Bad request due to invalid parameters
+     *       401:
+     *         description: Unauthorized, user not authenticated
+     */
     this.router.put('/', this.upload.single('file'), this.createAssignmentSubmission.bind(this));
     this.router.patch('/', this.upload.single('file'), this.updateAssignmentSubmission.bind(this)); //TODO change 'file' to the correct field name
   }

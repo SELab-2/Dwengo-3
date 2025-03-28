@@ -31,7 +31,9 @@ export const checkIfUserIsInClass = async (
   }
 
   if (user.role === ClassRoleEnum.TEACHER) {
-    const isTeacherOfThisClass = classData.teachers.some((teacher) => teacher.userId === user.id);
+    const isTeacherOfThisClass = classData.teachers.some(
+      (teacher) => user.teacher && teacher.id === user.teacher.id,
+    );
 
     if (!isTeacherOfThisClass) {
       throw new Error("Can't fetch classes you're not a teacher of.");
@@ -39,7 +41,9 @@ export const checkIfUserIsInClass = async (
   }
 
   if (user.role === ClassRoleEnum.STUDENT) {
-    const isStudentOfThisClass = classData.students.some((student) => student.userId === user.id);
+    const isStudentOfThisClass = classData.students.some(
+      (student) => user.student && student.id === user.student.id,
+    );
 
     if (!isStudentOfThisClass) {
       throw new Error("Can't fetch classes you're not a student of.");

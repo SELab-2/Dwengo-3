@@ -65,7 +65,10 @@ export class AssignmentSubmissionDomain {
     }
 
     const groupData = await this.groupPersistence.getGroupByIdWithCustomIncludes(data.groupId);
-    if (!groupData || !groupData.students.some((student) => student.userId === user.id)) {
+    if (
+      !groupData ||
+      !groupData.students.some((student) => user.student && student.id === user.student.id)
+    ) {
       throw new BadRequestError(40039);
     }
 
