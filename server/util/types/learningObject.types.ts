@@ -39,7 +39,6 @@ export const LearningObjectCreateSchema = z.object({
   available: z.boolean().default(true),
   content: z.string().min(1, 'Content is required'),
   multipleChoice: z.any().optional(), // JSON object
-  canUploadSubmission: z.boolean().default(false),
   keywords: z.array(learningObjectKeywordSchema).optional(),
 });
 
@@ -64,7 +63,6 @@ export const LearningObjectUpdateSchema = z.object({
   available: z.boolean().optional(),
   content: z.string().min(1, 'Content is required').optional(),
   multipleChoice: z.any().optional(),
-  canUploadSubmission: z.boolean().optional(),
   learningObjectsKeywords: z.array(learningObjectKeywordSchema).optional(),
 });
 

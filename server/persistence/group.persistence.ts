@@ -44,4 +44,15 @@ export class GroupPersistence {
       },
     });
   }
+
+  public async updateGroupProgress(groupId: string, progress: number[]) {
+    return this.prisma.group.update({
+      where: {
+        id: groupId,
+      },
+      data: {
+        progress,
+      },
+    });
+  }
 }

@@ -1,4 +1,4 @@
-import { Class, ClassRole } from '@prisma/client';
+import { ClassRole } from '@prisma/client';
 
 import { Uuid } from '../types/assignment.types';
 import { ClassRoleEnum, UserEntity } from '../types/user.types';
