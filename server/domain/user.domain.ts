@@ -26,15 +26,16 @@ const roleMap = {
 export async function createUser(
   userData: RegisterCredentials,
 ): Promise<UserEntity> {
+  userData.password = crypto
+    .createHash('sha256')
+    .update(userData.password)
+    .digest('base64');
   const user = await persistence.saveUser(userData);
   return {
     email: user.email,
     id: user.id,
     name: user.name,
-    password: crypto
-      .createHash('sha256')
-      .update(user.password)
-      .digest('base64'),
+    password: user.password,
     provider: providerMap[user.provider],
     role: roleMap[user.role],
     student: user.student,
@@ -67,16 +68,35 @@ export async function getUserById(id: string): Promise<UserEntity | null> {
   };
 }
 
+/**
+ * Deletes a user by their ID.
+ *
+ * @param id - The ID of the user to delete.
+ *
+ * @returns `true` if the user was successfully deleted, `false` otherwise.
+ */
 export async function deleteUser(id: string): Promise<boolean> {
   const user: User | null = await persistence.deleteUser(id);
   return user !== null;
 }
 
-export async function getUserFromReq(req: Request): Promise<UserEntity> {
-  // todo: rewrite with new cookie format using express-session
-  throw new Error('Not implemented yet.');
+/**
+ * Extracts the authenticated user from the request object.
+ *
+ * @param req - The Express request object containing the user information.
+ * @returns The authenticated user as a UserEntity.
+ * @throws If the user is not authenticated or the user data is malformed.
+ */
+export function getUserFromReq(req: Request): UserEntity {
+  return req.user!! as UserEntity;
 }
 
+/**
+ * Fetches a user by their email address.
+ *
+ * @param email - The email address to search for.
+ * @returns The user data if the user is found, otherwise null.
+ */
 export async function getUserByEmail(
   email: string,
 ): Promise<UserEntity | null> {

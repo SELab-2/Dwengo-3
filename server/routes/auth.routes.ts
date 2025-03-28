@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import {
   Profile,
   Strategy as GoogleStrategy,
@@ -15,32 +15,15 @@ import {
 } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 
+function isValidRoleUrl(path: string): boolean {
+  return path.includes('teacher') || path.includes('student');
+}
+
 export const router = express.Router();
 const apiCallbackUrl =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3001/api/auth/callback/google'
     : 'https://sel2-3.ugent.be/api/auth/callback/google';
-const providerMapper = {
-  [AuthenticationProvider.GOOGLE]: (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    return passport.authenticate('google', {
-      scope: ['email', 'profile'],
-      session: true,
-    })(req, res, next);
-  },
-  [AuthenticationProvider.LOCAL]: (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    return passport.authenticate('local', {
-      session: true,
-    })(req, res, next);
-  },
-};
 
 passport.use(
   new GoogleStrategy(
@@ -92,13 +75,16 @@ passport.use(
       passReqToCallback: true,
       session: true,
     },
-    async (req: Request, email: string, password: string, done) => {
+    async (req: Request, username: string, password: string, done) => {
       try {
-        const user = await userDomain.getUserByEmail(email);
+        const user = await userDomain.getUserByEmail(username);
         const role = req.path.includes('teacher')
           ? ClassRoleEnum.TEACHER
           : ClassRoleEnum.STUDENT;
-        const provider = req.query.provider as AuthenticationProvider;
+
+        const provider = AuthenticationProvider.LOCAL;
+        console.debug(user);
+
         if (user === null) {
           return done(null, false, { message: 'incorrect login credentials' });
         }
@@ -120,29 +106,17 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
+        console.error(error);
         return done(error);
       }
     },
   ),
 );
 
-function login(req: Request, res: Response, next: NextFunction) {
-  const provider = req.query.provider;
-  if (provider === undefined || provider === null)
-    throw new Error('Provider not found');
-
-  const providerEnum =
-    provider === 'google'
-      ? AuthenticationProvider.GOOGLE
-      : AuthenticationProvider.LOCAL;
-
-  return providerMapper[providerEnum](req, res, next);
-}
-
 passport.serializeUser((user: any, done) => done(null, user.id));
 passport.deserializeUser(async (id: string, done) => {
   try {
-    const user = await userDomain.getUserById(id);
+    const user: UserEntity | null = await userDomain.getUserById(id);
 
     // todo: change to error types
     if (user === null) return new Error('User not found');
@@ -154,16 +128,41 @@ passport.deserializeUser(async (id: string, done) => {
 });
 
 router.get(
-  '/student/login',
-  (req: Request, res: Response, next: NextFunction) => login(req, res, next),
+  '/student/login/google',
+  passport.authenticate('google', {
+    scope: ['email', 'profile'],
+    session: true,
+  }),
 );
 router.get(
-  '/teacher/login',
-  (req: Request, res: Response, next: NextFunction) => login(req, res, next),
+  '/teacher/login/google',
+  passport.authenticate('google', {
+    scope: ['email', 'profile'],
+    session: true,
+  }),
+);
+
+router.post(
+  '/student/login/local',
+  passport.authenticate('local', { session: true }),
+  (req: Request, res: Response) => {
+    res.status(200).json(req.user);
+  },
+);
+
+router.post(
+  '/teacher/login/local',
+  passport.authenticate('local', { session: true }),
+  (req: Request, res: Response) => {
+    res.status(200).json(req.user);
+  },
 );
 
 router.put('/student/register', async (req: Request, res: Response) => {
   try {
+    if (!isValidRoleUrl(req.path))
+      res.status(400).json({ message: 'Invalid url' });
+
     const role = req.path.includes('teacher')
       ? ClassRoleEnum.TEACHER
       : ClassRoleEnum.STUDENT;
@@ -184,22 +183,23 @@ router.put('/student/register', async (req: Request, res: Response) => {
 });
 
 router.get(
-  '/callback/:provider',
+  '/callback/google',
   (req: Request, res: Response, next: NextFunction) => {
-    console.log('OAuth Callback Hit:', req.params.provider);
-    console.log('Query Params:', req.query);
-    console.log('Session:', req.session);
-
-    const provider = req.params.provider;
-    if (provider === '' || (provider !== 'google' && provider !== 'local'))
-      throw new Error('Unsupported provider');
-
-    console.log('provider:', provider);
-
     // something wrong here... see gpt
-    passport.authenticate(provider)(req, res, next);
+    passport.authenticate('google')(req, res, next);
   },
   (req: Request, res: Response) => {
     res.status(200).json(req.user);
+  },
+);
+
+router.delete(
+  '/logout',
+  (req: Request, res: Response, next: NextFunction) => {
+    req.logout((err) => next(err));
+  },
+  (req: Request, res: Response) => {
+    res.clearCookie('connect.sid', { maxAge: 0 });
+    res.status(200).json({ message: 'Logout successful' });
   },
 );
