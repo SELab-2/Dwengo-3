@@ -10,9 +10,7 @@ export const LearningPathNodeCreateSchema = z.object({
   instruction: z.string().optional(),
 });
 
-export type LearningPathNodeCreateParams = z.infer<
-  typeof LearningPathNodeCreateSchema
->;
+export type LearningPathNodeCreateParams = z.infer<typeof LearningPathNodeCreateSchema>;
 
 export type LearningPathNodeShort = Prisma.LearningPathNodeGetPayload<{select: typeof learningPathNodeSelectShort}>;
 export type LearningPathNodeDetail = Prisma.LearningPathNodeGetPayload<{select: typeof learningPathNodeSelectDetail}>;

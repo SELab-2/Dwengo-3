@@ -158,7 +158,6 @@ model ClassJoinRequest {
 model Group {
   id                    String                 @id @default(uuid())
   name                  String
-  nodeId                String?
   assignmentId          String
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]

@@ -4,13 +4,15 @@ import { studentSelectShort } from './student.select';
 
 export const groupSelectShort = {
   id: true,
-  nodeId: true, //TODO change to nodeIndex
+  progress: true,
   assignmentId: true,
+  name: true,
 };
 
 export const groupSelectDetail = {
   id: true,
-  nodeId: true, //TODO change to nodeIndex
+  name: true,
+  progress: true,
   assignment: {
     select: assignmentSelectShort,
   },

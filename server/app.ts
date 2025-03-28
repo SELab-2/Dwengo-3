@@ -1,10 +1,9 @@
 import cookieParser from 'cookie-parser';
 import * as http2 from 'node:http2';
 import { router as auth, verifyCookie } from './routes/auth.router';
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { ClassController } from './routes/class.routes';
-import { ZodError } from 'zod';
 import { LearningPathController } from './routes/learningPath.routes';
 import { LearningPathNodeController } from './routes/learningPathNode.routes';
 import { LearningPathNodeTransitionController } from './routes/learningPathNodeTransition.routes';
@@ -19,11 +18,30 @@ import * as swaggerDocument from './swagger.json';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { StudentController } from './routes/student.routes';
 import { TeacherController } from './routes/teacher.routes';
+import { errorHandling } from './errorHandling';
+import cors from 'cors';
 
 dotenv.config({ path: '../.env' });
 
 export const app: Express = express();
 const port = process.env.PORT || 3001;
+
+// Allow requests from frontend
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests from the allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  }),
+);
 
 const options = {
   swaggerDefinition: swaggerDocument, // Use the imported JSON configuration
@@ -38,42 +56,21 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // cookie validating middleware
-app.use(
-  cookieParser(),
-  async (req: Request, res: Response, next: NextFunction) => {
-    const verified = await verifyCookie(req.cookies['DWENGO_SESSION']);
-    if (!verified) {
-      const path = req.path;
+app.use(cookieParser(), async (req: Request, res: Response, next: NextFunction) => {
+  const verified = await verifyCookie(req.cookies['DWENGO_SESSION']);
+  if (!verified) {
+    const path = req.path;
 
-      // TODO: MOET HERSCHREVEN WORDEN!!!
-      if (path.indexOf('/auth') == -1) {
-        // TODO: redirect to login page, but only when header is set to redirect
-        res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send('unauthorized');
-        return;
-      }
+    // TODO: MOET HERSCHREVEN WORDEN!!!
+    if (path.indexOf('/auth') == -1) {
+      // TODO: redirect to login page, but only when header is set to redirect
+      res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send('unauthorized');
+      return;
     }
-    next();
-  },
-);
-app.use(express.json());
-
-// Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  // TODO: Maybe make some error logging mechanism?
-  console.error('[ERROR]', err);
-
-  // If the error is a ZodError, it means that the request did not pass the validation
-  const statusCode = err instanceof ZodError ? 400 : 500;
-
-  if (process.env.NODE_ENV === 'production') {
-    res.status(statusCode).send('Something broke!');
-  } else {
-    res.status(statusCode).json({
-      message: err.message || 'Internal Server Error',
-      stack: err.stack,
-    });
   }
+  next();
 });
+app.use(express.json());
 
 const apiRouter = express.Router();
 if (process.env.NODE_ENV === 'development') {
@@ -88,21 +85,18 @@ apiRouter.use('/teacher', new TeacherController().router);
 apiRouter.use('/class', new ClassController().router);
 apiRouter.use('/learningPath', new LearningPathController().router);
 apiRouter.use('/learningPathNode', new LearningPathNodeController().router);
-apiRouter.use(
-  '/learningPathNodeTransition',
-  new LearningPathNodeTransitionController().router,
-);
+apiRouter.use('/learningPathNodeTransition', new LearningPathNodeTransitionController().router);
 apiRouter.use('/learningObject', new LearningObjectController().router);
 apiRouter.use('/announcement', new AnnouncementController().router);
 apiRouter.use('/assignment', new AssignmentController().router);
-apiRouter.use(
-  '/assignmentSubmission',
-  new AssignmentSubmissionController().router,
-);
+apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().router);
 
 apiRouter.use('/auth', auth);
 apiRouter.use('/discussion', new DiscussionController().router);
 apiRouter.use('/message', new MessageController().router);
+
+// Error handling middleware
+app.use(errorHandling);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);

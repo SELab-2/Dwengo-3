@@ -14,17 +14,18 @@ function MainAppBar() {
   }
 
   return (
-    <AppBar position="static" sx={{ height: ComponentSize.huge }}>
+    <AppBar position="static" sx={{ height: ComponentSize.medium }}>
       <Toolbar
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
+          height: '100%',
         }}
       >
         <DwengoIcon href="/" />
         <Box
           sx={{
+            marginLeft: 'auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

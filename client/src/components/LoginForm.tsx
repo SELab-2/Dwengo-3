@@ -4,31 +4,60 @@ import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useAuth, useLogin } from '../hooks/useAuth';
+import { ClassRoleEnum } from '../util/types/class.types';
+import { IsStudentSwitch } from './IsStudentSwitch';
+import { useError } from '../hooks/useError';
+import { MarginSize } from '../util/size';
 
 function LoginForm() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { setError } = useError();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [isStudent, setIsStudent] = useState<boolean>(true);
+
+  const loginMutation = useLogin();
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    // TODO: API call to login
-    // Redirect to the home page
-    navigate('/');
+
+    loginMutation.mutate(
+      {
+        email: data.get('email') as string,
+        password: data.get('password') as string,
+        role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, //TODO: Change this to the correct role
+      },
+      {
+        onSuccess: (response) => {
+          // Set the user in the auth context
+          login(response);
+
+          // Redirect to the home page
+          navigate('/');
+        },
+        onError: (error) => {
+          setError(error.message);
+        },
+      },
+    );
   };
 
   return (
-    <Box component="form" onSubmit={handleLoginSubmit} sx={{ mt: 3 }}>
+    <Box component="form" onSubmit={handleLoginSubmit} sx={{ mt: 0 }}>
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: MarginSize.tiny, mb: MarginSize.xsmall }}
+      >
         {t('login')}
       </Button>
     </Box>

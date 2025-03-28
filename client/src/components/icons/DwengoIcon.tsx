@@ -4,6 +4,9 @@ function DwengoIcon({ href }: { href: string }) {
   return (
     <Box
       sx={{
+        position: 'absolute',
+        left: '50%',
+        transform: 'translateX(-50%)',
         flexGrow: 1,
         display: 'flex',
         justifyContent: 'center',

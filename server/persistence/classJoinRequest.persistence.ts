@@ -5,17 +5,14 @@ import {
   ClassJoinRequestDecisionParams,
   ClassJoinRequestFilterParams,
 } from '../util/types/classJoinRequest.types';
-import { Prisma } from '@prisma/client';
+import { ClassRole, Prisma } from '@prisma/client';
 import { ClassRoleEnum, UserEntity, UserShort } from '../util/types/user.types';
 import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinRequest.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { getUserById } from './auth/users.persistance';
 
 export class ClassJoinRequestPersistence {
-  public async createClassJoinRequest(
-    data: ClassJoinRequestCreateParams,
-    user: UserEntity,
-  ) {
+  public async createClassJoinRequest(data: ClassJoinRequestCreateParams, user: UserEntity) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {
         classId: data.classId,
@@ -25,18 +22,14 @@ export class ClassJoinRequestPersistence {
     });
   }
 
-  public async checkIfJoinRequestExists(
-    classId: string,
-    userId: string,
-  ): Promise<boolean> {
-    const existingRequest =
-      await PrismaSingleton.instance.classJoinRequest.findFirst({
-        where: {
-          classId,
-          userId,
-        },
-        select: classJoinRequestSelectDetail,
-      });
+  public async checkIfJoinRequestExists(classId: string, userId: string): Promise<boolean> {
+    const existingRequest = await PrismaSingleton.instance.classJoinRequest.findFirst({
+      where: {
+        classId,
+        userId,
+      },
+      select: classJoinRequestSelectDetail,
+    });
 
     return !!existingRequest;
   }
@@ -44,11 +37,13 @@ export class ClassJoinRequestPersistence {
   public async getJoinRequests(
     paginationParams: PaginationParams,
     filters: ClassJoinRequestFilterParams,
-    user: UserEntity | UserShort,
+    classRole: ClassRole,
   ) {
     // We need to do this to not expose the Prisma.EnumClassRoleFilter<"User"> type to the domain layer.
     let filterByRole: Prisma.UserWhereInput = {};
-    if (user.role === ClassRoleEnum.STUDENT) {
+
+    // TODO This can probably be simplified.
+    if (classRole === ClassRoleEnum.STUDENT) {
       filterByRole = { role: 'STUDENT' };
     } else {
       filterByRole = { role: 'TEACHER' };
@@ -117,30 +112,24 @@ export class ClassJoinRequestPersistence {
     }
   }
 
-  public async isTeacherOfClassFromRequest(
-    classJoinRequestId: string,
-    userId: string,
-  ) {
-    const classJoinRequest =
-      await PrismaSingleton.instance.classJoinRequest.findFirst({
-        where: {
-          id: classJoinRequestId,
-        },
-        include: {
-          class: {
-            include: {
-              teachers: true,
-            },
+  public async isTeacherOfClassFromRequest(classJoinRequestId: string, userId: string) {
+    const classJoinRequest = await PrismaSingleton.instance.classJoinRequest.findFirst({
+      where: {
+        id: classJoinRequestId,
+      },
+      include: {
+        class: {
+          include: {
+            teachers: true,
           },
         },
-      });
+      },
+    });
 
     if (!classJoinRequest) {
       return false;
     }
 
-    return classJoinRequest.class.teachers.some(
-      (teacher) => teacher.userId === userId,
-    );
+    return classJoinRequest.class.teachers.some((teacher) => teacher.userId === userId);
   }
 }

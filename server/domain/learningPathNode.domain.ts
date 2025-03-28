@@ -4,6 +4,7 @@ import {
   LearningPathNodeCreateSchema,
 } from '../util/types/learningPathNode.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { BadRequestError } from '../util/types/error.types';
 
 export class LearningPathNodeDomain {
   private learningPathNodePersistence;
@@ -12,24 +13,16 @@ export class LearningPathNodeDomain {
     this.learningPathNodePersistence = new LearningPathNodePersistence();
   }
 
-  public async createLearningPathNode(
-    body: LearningPathNodeCreateParams,
-    user: UserEntity,
-  ) {
-    const parseResult = LearningPathNodeCreateSchema.safeParse(body);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
+  public async createLearningPathNode(body: LearningPathNodeCreateParams, user: UserEntity) {
+    const data = LearningPathNodeCreateSchema.parse(body);
 
     // TODO: CHECK if teacher is owner of the path!!!
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error('User must be a teacher to create a learning path.');
+      throw new BadRequestError(40009);
     }
     return this.learningPathNodePersistence.createLearningPathNode(
-      parseResult.data,
-      await this.learningPathNodePersistence.getLearningPathNodeCount(
-        parseResult.data.learningPathId,
-      ),
+      data,
+      await this.learningPathNodePersistence.getLearningPathNodeCount(data.learningPathId),
     );
   }
 

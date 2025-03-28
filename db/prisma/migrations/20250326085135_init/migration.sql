@@ -131,7 +131,6 @@ CREATE TABLE "ClassJoinRequest" (
 CREATE TABLE "Group" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "nodeId" TEXT,
     "assignmentId" TEXT NOT NULL,
     "progress" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
 

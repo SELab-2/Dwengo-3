@@ -28,27 +28,15 @@ export const AnnouncementCreateDomainSchema = z.object({
 export const TeacherIdSchema = z.string();
 
 export const AnnouncementUpdateSchema = z.object({
-  title: z
-    .string()
-    .min(1, 'Title must be a non-empty string')
-    .trim()
-    .optional(),
-  content: z
-    .string()
-    .min(1, 'Content must be a non-empty string')
-    .trim()
-    .optional(),
+  title: z.string().min(1, 'Title must be a non-empty string').trim().optional(),
+  content: z.string().min(1, 'Content must be a non-empty string').trim().optional(),
 });
 
-export type AnnouncementByFilterParams = z.infer<
-  typeof AnnouncementFilterSchema
->;
+export type AnnouncementByFilterParams = z.infer<typeof AnnouncementFilterSchema>;
 export type AnnouncementCreatePersistenceParams = z.infer<
   typeof AnnouncementCreatePersistenceSchema
 >;
-export type AnnouncementCreateDomainParams = z.infer<
-  typeof AnnouncementCreateDomainSchema
->;
+export type AnnouncementCreateDomainParams = z.infer<typeof AnnouncementCreateDomainSchema>;
 export type TeacherId = z.infer<typeof TeacherIdSchema>;
 export type AnnouncementUpdateParams = z.infer<typeof AnnouncementUpdateSchema>;
 

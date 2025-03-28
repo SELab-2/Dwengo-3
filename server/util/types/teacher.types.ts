@@ -45,29 +45,3 @@ export const TeacherIncludeSchema = z.object({
 });
 
 export type TeacherIncludeParams = z.infer<typeof TeacherIncludeSchema>;
-
-/**
- * Schema for updating a teacher
- *
- * @property id - The id of the teacher to update
- * @property classes - The classes the teacher needs to be added to
- * @property assignments - The assignments the teacher needs to be added to
- */
-export const TeacherUpdateSchema = z.object({
-  id: z.string().uuid(),
-  classes: z.array(z.string().uuid()).optional(),
-  assignments: z.array(z.string().uuid()).optional(),
-});
-
-export type TeacherUpdateParams = z.infer<typeof TeacherUpdateSchema>;
-
-/**
- * Schema for deleting a teacher
- *
- * @property id - The id of the teacher to delete
- */
-export const TeacherDeleteSchema = z.object({
-  id: z.string().uuid(),
-});
-
-export type TeacherDeleteParams = z.infer<typeof TeacherDeleteSchema>;
