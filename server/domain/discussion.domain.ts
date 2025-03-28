@@ -7,10 +7,7 @@ import {
   discussionShort,
 } from '../util/types/discussion.types';
 import { UserEntity } from '../util/types/user.types';
-import {
-  checkIfUserIsInGroup,
-  checkIfUsersAreInSameGroup,
-} from '../util/coockie-checks/coockieChecks.util';
+import { checkIfUserIsInGroup, checkIfUsersAreInSameGroup } from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { Uuid } from '../util/types/assignment.types';
 import { TeacherFilterParams } from '../util/types/teacher.types';
@@ -30,16 +27,11 @@ export class DiscussionDomain {
     this.studentPersistence = new StudentPersistence();
   }
 
-  public async getDiscussions(
-    query: any,
-    user: UserEntity,
-  ): Promise<{ data: discussionShort[]; totalPages: number }> {
+  public async getDiscussions(query: any, user: UserEntity): Promise<{ data: discussionShort[]; totalPages: number }> {
     const parseResult = queryWithPaginationParser(query, DiscussionFilterSchema);
     const filters = parseResult.dataSchema;
     const checks = filters.groupIds
-      ? filters.groupIds.map((groupId) =>
-          checkIfUserIsInGroup(user, groupId, this.groupPersistence),
-        )
+      ? filters.groupIds.map((groupId) => checkIfUserIsInGroup(user, groupId, this.groupPersistence))
       : [];
     await Promise.all(checks);
     return this.discussionPersistence.getDiscussions(filters, parseResult.dataPagination);
@@ -59,14 +51,10 @@ export class DiscussionDomain {
     // This includes all the group members and the teachers in the class
 
     // get the group members userIds
-    const groupMemberUserIds: string[] = await this.studentPersistence.getStudentUserIdsByGroupId(
-      data.groupId,
-    );
+    const groupMemberUserIds: string[] = await this.studentPersistence.getStudentUserIdsByGroupId(data.groupId);
 
     // get the teacherIds
-    const teacherIds: string[] = await this.teacherPersistence.getTeacherUserIdsByGroupId(
-      data.groupId,
-    );
+    const teacherIds: string[] = await this.teacherPersistence.getTeacherUserIdsByGroupId(data.groupId);
 
     const memberIds = groupMemberUserIds.concat(teacherIds);
 

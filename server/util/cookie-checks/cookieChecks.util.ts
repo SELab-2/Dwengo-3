@@ -87,9 +87,7 @@ export const checkIfUsersAreInSameClass = async (
   const classStudentIds = new Set(classData.students.map((student) => student.id));
 
   // Ensure all students in each group belong to the class
-  const check = groups.every((group) =>
-    group.every((groupMember) => classStudentIds.has(groupMember)),
-  );
+  const check = groups.every((group) => group.every((groupMember) => classStudentIds.has(groupMember)));
 
   if (!check) {
     throw new Error('All students in a group must belong to the same class.');

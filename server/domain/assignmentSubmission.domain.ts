@@ -10,7 +10,7 @@ import {
   SubmissionUpdateSchema,
 } from '../util/types/assignmentSubmission.types';
 import { UserEntity } from '../util/types/user.types';
-import { checkIfUserIsInGroup } from '../util/coockie-checks/coockieChecks.util';
+import { checkIfUserIsInGroup } from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { BadRequestError } from '../util/types/error.types';
 import { Uuid } from '../util/types/assignment.types';
@@ -41,10 +41,7 @@ export class AssignmentSubmissionDomain {
     return submission;
   }
 
-  public async createAssignmentSubmission(
-    req: Request,
-    user: UserEntity,
-  ): Promise<AssignmentSubmissionDetail> {
+  public async createAssignmentSubmission(req: Request, user: UserEntity): Promise<AssignmentSubmissionDetail> {
     if (user.role !== ClassRole.STUDENT) {
       throw new BadRequestError(40033);
     }
@@ -65,10 +62,7 @@ export class AssignmentSubmissionDomain {
     return this.assignmentSubmissionPersistence.createAssignmentSubmission(data);
   }
 
-  public async updateAssignmentSubmission(
-    req: Request,
-    user: UserEntity,
-  ): Promise<AssignmentSubmissionDetail> {
+  public async updateAssignmentSubmission(req: Request, user: UserEntity): Promise<AssignmentSubmissionDetail> {
     if (user.role !== ClassRole.STUDENT) {
       throw new BadRequestError(40033);
     }
