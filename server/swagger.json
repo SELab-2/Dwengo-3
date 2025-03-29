@@ -57,7 +57,181 @@
         },
         "required": ["hruid", "language", "title"]
       },
-      "LearningPathGet": {
+
+      "ClassDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the class.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the class.",
+            "example": "Class 1A"
+          },
+          "teachers": {
+            "type": "array",
+            "description": "The teachers of the class",
+            "items": {
+              "$ref": "#components/schemas/TeacherShort"
+            }
+          },
+          "students": {
+            "type": "array",
+            "description": "The students of the class",
+            "items": {
+              "$ref": "#components/schemas/StudentShort"
+            }
+          },
+          "assignments": {
+            "type": "array",
+            "description": "The assignments of the class",
+            "items": {
+              "$ref": "#components/schemas/AssignmentShort"
+            }
+          }
+        }
+      },
+      "ClassShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the class.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the class.",
+            "example": "Class 1A"
+          }
+        }
+      },
+
+      "TeacherDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the teacher.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the user.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The last name of the teacher.",
+            "example": "Doe"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the teacher.",
+            "example": "John"
+          },
+          "classes": {
+            "type": "array",
+            "description": "The classes that a teacher is teaching",
+            "items": {
+              "$ref": "#components/schemas/ClassShort"
+            }
+          }
+        }
+      },
+      "TeacherShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the teacher.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The last name of the teacher.",
+            "example": "Doe"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the teacher.",
+            "example": "John"
+          }
+        }
+      },
+
+      "StudentDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the student.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the user.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The last name of the student.",
+            "example": "Doe"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the student.",
+            "example": "John"
+          },
+          "classes": {
+            "type": "array",
+            "description": "The classes that a student is in",
+            "items": {
+              "$ref": "#components/schemas/ClassShort"
+            }
+          },
+          "groups": {
+            "type": "array",
+            "description": "The groups that a student is in",
+            "items": {
+              "$ref": "#components/schemas/GroupShort"
+            }
+          }
+        }
+      },
+      "StudentShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the student.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The last name of the student.",
+            "example": "Doe"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the student.",
+            "example": "John"
+          }
+        }
+      },
+
+      "LearningPathDetail": {
         "type": "object",
         "properties": {
           "id": {
@@ -65,9 +239,801 @@
             "format": "uuid",
             "description": "The unique identifier for the learning path.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "hruid": {
+            "type": "string",
+            "description": "The human-readable identifier for the learning path",
+            "example": "intro-to-programming"
+          },
+          "language": {
+            "type": "string",
+            "description": "The language of the learning path.",
+            "example": "en"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the learning path.",
+            "example": "Introduction to Programming"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the learning path.",
+            "example": "A beginner-friendly learning path for programming."
+          },
+          "image": {
+            "type": "string",
+            "description": "The image associated with the learning path in bytes."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the teacher who created the learning path",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning path was created.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning path was last updated.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "learningPathNodes": {
+            "type": "array",
+            "description": "The learningPathNodes present in the learning path",
+            "items": {
+              "$ref": "#/components/schemas/LearningPathNodeShort"
+            }
           }
         }
       },
+      "LearningPathShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning path.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the learning path.",
+            "example": "Introduction to Programming"
+          },
+          "keywords": {
+            "type": "array",
+            "description": "List of keywords associated with the learning path.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["programming", "beginner"]
+          },
+          "targetAges": {
+            "type": "array",
+            "description": "The target age groups for the learning path.",
+            "items": {
+              "type": "integer"
+            },
+            "example": [12, 14]
+          },
+          "image": {
+            "type": "string",
+            "description": "The image associated with the learning path in bytes."
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the learning path.",
+            "example": "A beginner-friendly learning path for programming."
+          }
+        }
+      },
+
+      "LearningObjectDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning object.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "hruid": {
+            "type": "string",
+            "description": "The human-readable identifier for the learning object. This is only unique in combination with a version and language.",
+            "example": "intro-to-programming"
+          },
+          "version": {
+            "type": "integer",
+            "description": "The version of the learning object.",
+            "example": 1
+          },
+          "language": {
+            "type": "string",
+            "description": "The language of the learning object.",
+            "example": "en"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the learning object.",
+            "example": "Introduction to Programming"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the learning object.",
+            "example": "A beginner-friendly learning object for programming."
+          },
+          "contentType": {
+            "type": "string",
+            "enum": [
+              "TEXT_PLAIN",
+              "TEXT_MARKDOWN",
+              "IMAGE_IMAGE_BLOCK",
+              "IMAGE_IMAGE",
+              "AUDIO_MPEG",
+              "APPLICATION_PDF",
+              "EXTERN",
+              "BLOCKLY"
+            ],
+            "description": "The type of content in the learning object.",
+            "example": "TEXT_MARKDOWN"
+          },
+          "contentLocation": {
+            "type": "string",
+            "description": "The location of the content of the learning object.",
+            "example": "https://example.com"
+          },
+          "targetAges": {
+            "type": "array",
+            "description": "The target age groups for the learning object.",
+            "items": {
+              "type": "integer"
+            },
+            "example": [12, 14]
+          },
+          "teacherExclusive": {
+            "type": "boolean",
+            "description": "Indicates whether the learning object is exclusive to teachers.",
+            "example": false
+          },
+          "skosConcepts": {
+            "type": "array",
+            "description": "List of SKOS concept url's associated with the learning object.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["https//example.com"]
+          },
+          "educationalGoals": {
+            "type": "array",
+            "description": "List of educational goals associated with the learning object.",
+            "items": {
+              "type": "object"
+            },
+            "example": [{ "goal": "Understand variables" }]
+          },
+          "copyright": {
+            "type": "string",
+            "description": "The copyright information for the learning object.",
+            "example": "© 2023 Dwengo"
+          },
+          "license": {
+            "type": "string",
+            "description": "The license under which the learning object is distributed.",
+            "example": "MIT"
+          },
+          "difficulty": {
+            "type": "number",
+            "description": "The difficulty level of the learning object. This is a number from 1 to 5.",
+            "example": 3
+          },
+          "estimatedTime": {
+            "type": "number",
+            "description": "The estimated time required to complete the learning object in minutes.",
+            "example": 60
+          },
+          "returnValue": {
+            "type": "object",
+            "description": "Callback url for submission",
+            "example": { "callback": "https://example.com" }
+          },
+          "available": {
+            "type": "boolean",
+            "description": "Indicates whether the learning object is available.",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning object was created.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the learning object was last updated.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the learning object.",
+            "example": "This is the content of the learning object."
+          },
+          "multipleChoice": {
+            "type": "object",
+            "description": "The multiple-choice questions for the learning object (JSON object).",
+            "example": {
+              "question": "What is 2 + 2?",
+              "options": ["2", "4", "6"],
+              "answer": "4"
+            }
+          },
+          "submissionType": {
+            "type": "string",
+            "description": "The type of submission that is expected for this learning object.",
+            "enum": ["MULTIPLE_CHOICE", "FILE", "READ"],
+            "example": "TEXT"
+          },
+          "keywords": {
+            "type": "array",
+            "description": "List of keywords associated with the learning path.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["programming", "beginner"]
+          }
+        }
+      },
+      "LearningObjectShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning object.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the learning object.",
+            "example": "Introduction to Programming"
+          },
+          "language": {
+            "type": "string",
+            "description": "The language of the learning object.",
+            "example": "en"
+          },
+          "estimatedTime": {
+            "type": "number",
+            "description": "The estimated time required to complete the learning object in minutes.",
+            "example": 60
+          },
+          "keywords": {
+            "type": "array",
+            "description": "List of keywords associated with the learning path.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["programming", "beginner"]
+          },
+          "targetAges": {
+            "type": "array",
+            "description": "The target age groups for the learning object.",
+            "items": {
+              "type": "integer"
+            },
+            "example": [12, 14]
+          },
+          "difficulty": {
+            "type": "number",
+            "description": "The difficulty level of the learning object. This is a number from 1 to 5.",
+            "example": 3
+          }
+        }
+      },
+
+      "LearningPathNodeDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning path node.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "learningPathId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the learning path this node belongs to.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "learningObjectId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the learning object associated with this node.",
+            "example": "550e8400-e29b-41d4-a716-446655440002"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "Optional instructions for this learning path node.",
+            "example": "Complete the exercises in this section."
+          },
+          "index": {
+            "type": "integer",
+            "description": "The index of the learning path node in the learning path.",
+            "example": 1
+          },
+          "transitions": {
+            "type": "array",
+            "description": "The transitions that are possible from this learning path node.",
+            "items": {
+              "$ref": "#/components/schemas/LearningPathNodeTransitionDetail"
+            }
+          }
+        }
+      },
+      "LearningPathNodeShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning path node.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "learningObjects": {
+            "type": "array",
+            "description": "The learning objects associated with this node",
+            "items": {
+              "$ref": "#/components/schemas/LearningObjectShort"
+            }
+          }
+        }
+      },
+
+      "LearningPathNodeTransitionDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning path node transition.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "learningPathNodeId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the learning path node this transition starts from.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "condition": {
+            "type": "string",
+            "description": "The condition that must be met to trigger this transition. If no condition is given, the condition is assumed to be met",
+            "example": "answer == 'B'"
+          },
+          "toNodeIndex": {
+            "type": "integer",
+            "description": "The index of the learningPathNode this transitions should lead to.",
+            "example": 2
+          }
+        }
+      },
+
+      "UserDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the user.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the user.",
+            "example": "user@example.com"
+          },
+          "oneOf": [
+            {
+              "properties": {
+                "student": {
+                  "$ref": "#/components/schemas/StudentShort"
+                }
+              }
+            },
+            {
+              "properties": {
+                "teacher": {
+                  "$ref": "#/components/schemas/TeacherShort"
+                }
+              }
+            }
+          ],
+          "role": {
+            "type": "string",
+            "description": "The role of the user.",
+            "enum": ["STUDENT", "TEACHER"]
+          },
+          "classes": {
+            "type": "array",
+            "description": "The classes that a student is in",
+            "items": {
+              "$ref": "#components/schemas/ClassShort"
+            }
+          },
+          "favorites": {
+            "type": "array",
+            "description": "The learning paths that a user has favorited",
+            "items": {
+              "$ref": "#components/schemas/LearningPathShort"
+            }
+          }
+        }
+      },
+      "UserShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the user.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the user.",
+            "example": "John"
+          },
+          "name": {
+            "type": "string",
+            "description": "The last name of the user.",
+            "example": "Doe"
+          },
+          "role": {
+            "type": "string",
+            "description": "The role of the user.",
+            "enum": ["STUDENT", "TEACHER"]
+          }
+        }
+      },
+
+      "ClassJoinRequestDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the class join request.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "class": {
+            "$ref": "#/components/schemas/ClassShort"
+          },
+          "student": {
+            "$ref": "#/components/schemas/StudentShort"
+          }
+        }
+      },
+
+      "GroupDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the group.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the group.",
+            "example": "Group 1"
+          },
+          "finished_node_indices": {
+            "type": "array",
+            "description": "The indices of the learning path nodes that have been completed by the group.",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "assignment": {
+            "$ref": "#/components/schemas/AssignmentShort"
+          },
+          "discussion": {
+            "$ref": "#/components/schemas/DiscussionShort"
+          },
+          "students": {
+            "type": "array",
+            "description": "The students in the group",
+            "items": {
+              "$ref": "#/components/schemas/StudentShort"
+            }
+          }
+        }
+      },
+      "GroupShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the group.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "finished_node_indices": {
+            "type": "array",
+            "description": "The indices of the learning path nodes that have been completed by the group.",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "assignmentId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the assignment.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the group.",
+            "example": "Group 1"
+          }
+        }
+      },
+
+      "AssignmentDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the assignment.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "learningPath": {
+            "$ref": "#/components/schemas/LearningPathShort"
+          },
+          "class": {
+            "$ref": "#/components/schemas/ClassShort"
+          },
+          "groups": {
+            "type": "array",
+            "description": "The groups that are assigned to the assignment",
+            "items": {
+              "$ref": "#/components/schemas/GroupShort"
+            }
+          },
+          "teacherId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the teacher.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+      "AssignmentShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the assignment.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "learningPathId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the learning path.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+
+      "SubmissionDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the submission.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "submission": {
+            "type": "object",
+            "description": "The submission of the student",
+            "example": { "answer": "B" }
+          },
+          "group": {
+            "$ref": "#/components/schemas/GroupShort"
+          },
+          "learningPathNode": {
+            "$ref": "#/components/schemas/LearningPathNodeShort"
+          }
+        }
+      },
+      "SubmissionShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the submission.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+
+      "DiscussionDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the discussion.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "subject": {
+            "type": "string",
+            "description": "The subject of the discussion.",
+            "example": "LearningPath2 question"
+          },
+          "messages": {
+            "type": "array",
+            "description": "The messages in the discussion",
+            "items": {
+              "$ref": "#/components/schemas/MessageDetail"
+            }
+          },
+          "members": {
+            "type": "array",
+            "description": "The members of the discussion",
+            "items": {
+              "$ref": "#/components/schemas/UserShort"
+            }
+          }
+        }
+      },
+      "DiscussionShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the discussion.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+
+      "MessageDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the message.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the message.",
+            "example": "Hello, how are you?"
+          },
+          "sender": {
+            "$ref": "#/components/schemas/UserShort"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the message was created.",
+            "example": "2023-06-25T10:00:00Z"
+          },
+          "discussionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the discussion.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+
+      "AnnouncementDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the announcement.",
+            "example": "This is an important announcement."
+          },
+          "class": {
+            "$ref": "#/components/schemas/ClassShort"
+          },
+          "teacher": {
+            "description": "The teacher who made the announcement",
+            "$ref": "#/components/schemas/TeacherShort"
+          }
+        }
+      },
+      "AnnouncementShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the announcement.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the announcement.",
+            "example": "Important announcement"
+          }
+        }
+      },
+
+      "PaginatedResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "description": "The total number of pages with data from the request",
+            "example": 10
+          },
+          "data": {
+            "type": "array",
+            "description": "The data from the request. The type specific for each request",
+            "items": {}
+          }
+        }
+      },
+
+      "ClassUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the class.",
+            "example": "Class 1A"
+          }
+        }
+      },
+
+      "StudentUpdate": {
+        "type": "object",
+        "properties": {
+          "classes": {
+            "type": "array",
+            "description": "The classId's of the classes you want the student to be in",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "groups": {
+            "type": "array",
+            "description": "The groupIds of the groups you want the student to be in",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+
       "LearningPathNodeCreate": {
         "type": "object",
         "properties": {
@@ -89,17 +1055,6 @@
         },
         "required": ["learningPathId, learningObjectId", "startNode"]
       },
-      "LearningPathNodeGet": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The unique identifier for the learning path node.",
-            "example": "550e8400-e29b-41d4-a716-446655440001"
-          }
-        }
-      },
       "LearningPathNodeTransitionCreate": {
         "type": "object",
         "properties": {
@@ -120,17 +1075,6 @@
           }
         },
         "required": ["fromNodeId", "toNodeId"]
-      },
-      "LearningPathNodeTransitionGet": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The unique identifier for the learning path node transition.",
-            "example": "550e8400-e29b-41d4-a716-446655440004"
-          }
-        }
       },
       "LearningObjectCreate": {
         "type": "object",
@@ -267,170 +1211,18 @@
               "answer": "4"
             }
           },
-          "canUploadSubmission": {
-            "type": "boolean",
-            "description": "Indicates whether submissions can be uploaded for the learning object.",
-            "example": false
-          },
           "keywords": {
             "type": "array",
             "description": "List of keywords associated with the learning object.",
             "items": {
-              "$ref": "#/components/schemas/LearningObjectKeyword"
+              "type": "object",
+              "properties": {
+                "keyword": { "type": "string" }
+              }
             }
           }
         },
         "required": ["hruid", "uuid", "version", "language", "title", "content"]
-      },
-      "LearningObjectGet": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The unique identifier for the learning object.",
-            "example": "550e8400-e29b-41d4-a716-446655440000"
-          },
-          "hruid": {
-            "type": "string",
-            "description": "The human-readable identifier for the learning object. This is only unique in combination with a version and language.",
-            "example": "intro-to-programming"
-          },
-          "uuid": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The unique identifier for the learning object. (artefact from previous api, need to delete)",
-            "example": "550e8400-e29b-41d4-a716-446655440000"
-          },
-          "version": {
-            "type": "integer",
-            "description": "The version of the learning object.",
-            "example": 1
-          },
-          "language": {
-            "type": "string",
-            "description": "The language of the learning object.",
-            "example": "en"
-          },
-          "title": {
-            "type": "string",
-            "description": "The title of the learning object.",
-            "example": "Introduction to Programming"
-          },
-          "description": {
-            "type": "string",
-            "description": "A brief description of the learning object.",
-            "example": "A beginner-friendly learning object for programming."
-          },
-          "contentType": {
-            "type": "string",
-            "enum": [
-              "TEXT_PLAIN",
-              "TEXT_MARKDOWN",
-              "IMAGE_IMAGE_BLOCK",
-              "IMAGE_IMAGE",
-              "AUDIO_MPEG",
-              "APPLICATION_PDF",
-              "EXTERN",
-              "BLOCKLY"
-            ],
-            "description": "The type of content in the learning object.",
-            "example": "TEXT_MARKDOWN"
-          },
-          "targetAges": {
-            "type": "array",
-            "description": "The target age groups for the learning object.",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "example": [12, 14]
-          },
-          "teacherExclusive": {
-            "type": "boolean",
-            "description": "Indicates whether the learning object is exclusive to teachers.",
-            "example": false
-          },
-          "skosConcepts": {
-            "type": "array",
-            "description": "List of SKOS concept url's associated with the learning object.",
-            "items": {
-              "type": "string"
-            },
-            "example": ["https//example.com"]
-          },
-          "educationalGoals": {
-            "type": "array",
-            "description": "List of educational goals associated with the learning object.",
-            "items": {
-              "type": "object"
-            },
-            "example": [{ "goal": "Understand variables" }]
-          },
-          "copyright": {
-            "type": "string",
-            "description": "The copyright information for the learning object.",
-            "example": "© 2023 Dwengo"
-          },
-          "licence": {
-            "type": "string",
-            "description": "The license under which the learning object is distributed.",
-            "example": "MIT"
-          },
-          "estimatedTime": {
-            "type": "number",
-            "description": "The estimated time required to complete the learning object.",
-            "example": 60
-          },
-          "returnValue": {
-            "type": "object",
-            "description": "Callback url for something (i have no idea)",
-            "example": { "callback": "https://example.com" }
-          },
-          "available": {
-            "type": "boolean",
-            "description": "Indicates whether the learning object is available.",
-            "example": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date and time when the learning object was created.",
-            "example": "2023-06-25T10:00:00Z"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date and time when the learning object was last updated.",
-            "example": "2023-06-25T10:00:00Z"
-          },
-          "content": {
-            "type": "string",
-            "description": "The content of the learning object.",
-            "example": "This is the content of the learning object."
-          },
-          "multipleChoice": {
-            "type": "object",
-            "description": "The multiple-choice questions for the learning object (JSON object).",
-            "example": {
-              "question": "What is 2 + 2?",
-              "options": ["2", "4", "6"],
-              "answer": "4"
-            }
-          },
-          "canUploadSubmission": {
-            "type": "boolean",
-            "description": "Indicates whether submissions can be uploaded for the learning object.",
-            "example": false
-          },
-          "keywords": {
-            "type": "array",
-            "description": "List of keywords associated with the learning object.",
-            "items": {
-              "$ref": "#/components/schemas/LearningObjectKeyword"
-            }
-          }
-        }
       },
       "LearningObjectUpdate": {
         "type": "object",
@@ -541,24 +1333,13 @@
           "keywords": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LearningObjectKeyword"
+              "type": "string"
             },
             "description": "Keywords associated with the learning object."
           }
         }
       },
 
-      "LearningObjectKeyword": {
-        "type": "object",
-        "properties": {
-          "keyword": {
-            "type": "string",
-            "description": "A keyword associated with the learning object.",
-            "example": "programming"
-          }
-        },
-        "required": ["keyword"]
-      },
       "AnnouncementCreate": {
         "type": "object",
         "properties": {
@@ -576,55 +1357,13 @@
             "type": "string",
             "description": "The ID of the class this announcement is for.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
-          },
-          "teacherId": {
-            "type": "string",
-            "description": "The ID of the teacher who created the announcement.",
-            "example": "550e8400-e29b-41d4-a716-446655440001"
           }
         },
         "required": ["title", "content", "classId", "teacherId"]
       },
-      "AnnouncementGet": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The unique identifier for the announcement.",
-            "example": "550e8400-e29b-41d4-a716-446655440000"
-          },
-          "title": {
-            "type": "string",
-            "description": "The title of the announcement.",
-            "example": "Important announcement"
-          },
-          "content": {
-            "type": "string",
-            "description": "The content of the announcement.",
-            "example": "This is an important announcement."
-          },
-          "classId": {
-            "type": "string",
-            "description": "The ID of the class this announcement is for.",
-            "example": "550e8400-e29b-41d4-a716-446655440000"
-          },
-          "teacherId": {
-            "type": "string",
-            "description": "The ID of the teacher who created the announcement.",
-            "example": "550e8400-e29b-41d4-a716-446655440001"
-          }
-        }
-      },
       "AnnouncementUpdate": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The unique identifier for the announcement.",
-            "example": "550e8400-e29b-41d4-a716-446655440000"
-          },
           "title": {
             "type": "string",
             "description": "The title of the announcement.",
@@ -666,6 +1405,129 @@
           }
         },
         "required": ["requestId", "decision"]
+      },
+
+      "DiscussionCreate": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the group this discussion is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "required": ["groupId", "members"]
+      },
+
+      "MessageCreate": {
+        "type": "object",
+        "properties": {
+          "discussionId": {
+            "type": "string",
+            "description": "The ID of the discussion associated with the message.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the message.",
+            "example": "Hello, how are you?"
+          }
+        },
+        "required": ["discussionId", "content"]
+      },
+
+      "AssignmentCreate": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "description": "The groups that are assigned to the assignment",
+            "items": {
+              "type": "array",
+              "description": "the userId's of the people in a group",
+              "items": {
+                "type": "string",
+                "format": "uuid",
+                "description": "The ID of the group",
+                "example": "550e8400-e29b-41d4-a716-446655440000"
+              }
+            },
+            "example": [["550e8400-e29b-41d4-a716-446655440000"]]
+          },
+          "learningPathId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the learning path this assignment is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the class this assignment is for.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "teacherId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the teacher who created the assignment.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        },
+        "required": ["groups", "learningPathId", "classId", "teacherId"]
+      },
+
+      "SubmissionCreate": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the group submitting the assignment.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "nodeId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the node this submission belongs to.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "submissionType": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "FILE"],
+            "description": "The type of submission. MULTIPLE_CHOICE expects a string, FILE expects an object."
+          },
+          "submission": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "For MULTIPLE_CHOICE submission type, this should be a string representing the selected answer.",
+                "example": "A"
+              },
+              {
+                "$ref": "#/components/schemas/FileSubmissionSchema"
+              }
+            ],
+            "description": "The submission data, either a string for MULTIPLE_CHOICE or an object for FILE."
+          }
+        },
+        "required": ["groupId", "nodeId", "submissionType", "submission"]
+      },
+      "FileSubmissionSchema": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "The name of the file being submitted.",
+            "example": "example.pdf"
+          },
+          "filePath": {
+            "type": "string",
+            "description": "The path where the file is stored.",
+            "example": "/uploads/example.pdf"
+          }
+        },
+        "required": ["fileName", "filePath"]
       }
     }
   }

@@ -20,7 +20,6 @@ export type StudentCreateParams = z.infer<typeof StudentCreateSchema>;
  * @property groupId - The id the group to get all students from
  */
 export const StudentFilterSchema = z.object({
-  id: z.string().uuid().optional(),
   userId: z.string().uuid().optional(),
   classId: z.string().uuid().optional(),
   groupId: z.string().uuid().optional(),
@@ -42,29 +41,3 @@ export const StudentIncludeSchema = z.object({
 });
 
 export type StudentIncludeParams = z.infer<typeof StudentIncludeSchema>;
-
-/**
- * Schema for updating a student
- *
- * @property id - The id of the student to update
- * @property classes - The classes the student needs to be added to
- * @property groups - The groups the student needs to be added to
- */
-export const StudentUpdateSchema = z.object({
-  id: z.string().uuid(),
-  classes: z.array(z.string().uuid()).optional(),
-  groups: z.array(z.string().uuid()).optional(),
-});
-
-export type StudentUpdateParams = z.infer<typeof StudentUpdateSchema>;
-
-/**
- * Schema for deleting a student
- *
- * @property id - The id of the student to delete
- */
-export const StudentDeleteSchema = z.object({
-  id: z.string().uuid(),
-});
-
-export type StudentDeleteParams = z.infer<typeof StudentDeleteSchema>;

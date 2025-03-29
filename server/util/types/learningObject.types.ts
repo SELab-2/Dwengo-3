@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { Uuid } from './assignment.types';
+import { Decimal } from '@prisma/client/runtime/library';
 
 export const ContentTypeEnum = z.enum([
   'TEXT_PLAIN',
@@ -15,9 +17,7 @@ export const learningObjectKeywordSchema = z.object({
   keyword: z.string().min(1, 'Keyword is required'),
 });
 
-export type LearningObjectKeywordParams = z.infer<
-  typeof learningObjectKeywordSchema
->;
+export type LearningObjectKeywordParams = z.infer<typeof learningObjectKeywordSchema>;
 
 export const LearningObjectCreateSchema = z.object({
   hruid: z.string().min(1, 'HRUID is required'),
@@ -39,25 +39,15 @@ export const LearningObjectCreateSchema = z.object({
   available: z.boolean().default(true),
   content: z.string().min(1, 'Content is required'),
   multipleChoice: z.any().optional(), // JSON object
-  canUploadSubmission: z.boolean().default(false),
   keywords: z.array(learningObjectKeywordSchema).optional(),
 });
 
-export type LearningObjectCreateParams = z.infer<
-  typeof LearningObjectCreateSchema
->;
+export type LearningObjectCreateParams = z.infer<typeof LearningObjectCreateSchema>;
 
-export type LearningObjectWithoutKeywords = Omit<
-  LearningObjectCreateParams,
-  'keywords'
->;
+export type LearningObjectWithoutKeywords = Omit<LearningObjectCreateParams, 'keywords'>;
 
 export const LearningObjectUpdateSchema = z.object({
-  version: z
-    .number()
-    .int()
-    .min(1, 'Version must be a positive integer')
-    .optional(),
+  version: z.number().int().min(1, 'Version must be a positive integer').optional(),
   title: z.string().min(1, 'Title is required').optional(),
   description: z.string().optional(),
   contentType: ContentTypeEnum.optional(),
@@ -73,13 +63,10 @@ export const LearningObjectUpdateSchema = z.object({
   available: z.boolean().optional(),
   content: z.string().min(1, 'Content is required').optional(),
   multipleChoice: z.any().optional(),
-  canUploadSubmission: z.boolean().optional(),
   learningObjectsKeywords: z.array(learningObjectKeywordSchema).optional(),
 });
 
-export type LearningObjectUpdateParams = z.infer<
-  typeof LearningObjectUpdateSchema
->;
+export type LearningObjectUpdateParams = z.infer<typeof LearningObjectUpdateSchema>;
 
 export type LearningObjectUpdateWithoutKeywords = Omit<
   LearningObjectUpdateParams,
@@ -92,9 +79,13 @@ export const LearningObjectFilterSchema = z.object({
     .array(z.string())
     .transform((val) => val.map(Number))
     .optional(),
-  id: z.string().optional(),
 });
 
-export type LearningObjectFilterParams = z.infer<
-  typeof LearningObjectFilterSchema
->;
+export type LearningObjectFilterParams = z.infer<typeof LearningObjectFilterSchema>;
+export type LearningObjectShort = {
+  id: Uuid;
+  title: string;
+  language: string;
+  estimatedTime: Decimal | null;
+  targetAges: number[];
+};

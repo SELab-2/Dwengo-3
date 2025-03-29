@@ -7,31 +7,36 @@ import {
 } from '../util/types/classJoinRequest.types';
 import { Prisma } from '@prisma/client';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinRequest.select';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 export class ClassJoinRequestPersistence {
-  public async createClassJoinRequest(
-    data: ClassJoinRequestCreateParams,
-    user: UserEntity,
-  ) {
+  public async createClassJoinRequest(data: ClassJoinRequestCreateParams, user: UserEntity) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {
-        classId: data.classId,
-        userId: user.id,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        class: {
+          connect: {
+            id: data.classId,
+          },
+        },
       },
+      select: classJoinRequestSelectDetail,
     });
   }
 
-  public async checkIfJoinRequestExists(
-    classId: string,
-    userId: string,
-  ): Promise<boolean> {
-    const existingRequest =
-      await PrismaSingleton.instance.classJoinRequest.findFirst({
-        where: {
-          classId,
-          userId,
-        },
-      });
+  public async checkIfJoinRequestExists(classId: string, userId: string): Promise<boolean> {
+    const existingRequest = await PrismaSingleton.instance.classJoinRequest.findFirst({
+      where: {
+        classId,
+        userId,
+      },
+      select: classJoinRequestSelectDetail,
+    });
 
     return !!existingRequest;
   }
@@ -39,11 +44,13 @@ export class ClassJoinRequestPersistence {
   public async getJoinRequests(
     paginationParams: PaginationParams,
     filters: ClassJoinRequestFilterParams,
-    user: UserEntity,
+    classRole: ClassRoleEnum,
   ) {
     // We need to do this to not expose the Prisma.EnumClassRoleFilter<"User"> type to the domain layer.
     let filterByRole: Prisma.UserWhereInput = {};
-    if (user.role === ClassRoleEnum.STUDENT) {
+
+    // TODO This can probably be simplified.
+    if (classRole === ClassRoleEnum.STUDENT) {
       filterByRole = { role: 'STUDENT' };
     } else {
       filterByRole = { role: 'TEACHER' };
@@ -57,43 +64,33 @@ export class ClassJoinRequestPersistence {
       ],
     };
 
-    const [classJoinRequests, totalCount] =
-      await PrismaSingleton.instance.$transaction([
-        PrismaSingleton.instance.classJoinRequest.findMany({
-          where,
-          skip: paginationParams.skip,
-          take: paginationParams.pageSize,
-        }),
-        PrismaSingleton.instance.classJoinRequest.count({
-          where,
-        }),
-      ]);
-
-    return {
-      data: classJoinRequests,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(
+      PrismaSingleton.instance.classJoinRequest,
+      where,
+      paginationParams,
+      undefined,
+      classJoinRequestSelectDetail,
+    );
   }
 
   public async handleJoinRequest(data: ClassJoinRequestDecisionParams) {
     if (data.acceptRequest) {
       // Delete the join request.
-      const classJoinRequest =
-        await PrismaSingleton.instance.classJoinRequest.delete({
-          where: {
-            id: data.requestId,
-          },
-        });
+      const classJoinRequest = await PrismaSingleton.instance.classJoinRequest.delete({
+        where: {
+          id: data.requestId,
+        },
+      });
 
       // Add the student/teacher to the class.
-      await PrismaSingleton.instance.class.update({
+      await PrismaSingleton.instance.student.update({
         where: {
-          id: classJoinRequest.classId,
+          userId: classJoinRequest.userId,
         },
         data: {
-          students: {
+          classes: {
             connect: {
-              id: classJoinRequest.userId,
+              id: classJoinRequest.classId,
             },
           },
         },
@@ -108,30 +105,24 @@ export class ClassJoinRequestPersistence {
     }
   }
 
-  public async isTeacherOfClassFromRequest(
-    classJoinRequestId: string,
-    userId: string,
-  ) {
-    const classJoinRequest =
-      await PrismaSingleton.instance.classJoinRequest.findFirst({
-        where: {
-          id: classJoinRequestId,
-        },
-        include: {
-          class: {
-            include: {
-              teachers: true,
-            },
+  public async isTeacherOfClassFromRequest(classJoinRequestId: string, userId: string) {
+    const classJoinRequest = await PrismaSingleton.instance.classJoinRequest.findFirst({
+      where: {
+        id: classJoinRequestId,
+      },
+      include: {
+        class: {
+          include: {
+            teachers: true,
           },
         },
-      });
+      },
+    });
 
     if (!classJoinRequest) {
       return false;
     }
 
-    return classJoinRequest.class.teachers.some(
-      (teacher) => teacher.userId === userId,
-    );
+    return classJoinRequest.class.teachers.some((teacher) => teacher.userId === userId);
   }
 }

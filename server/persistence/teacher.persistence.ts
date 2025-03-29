@@ -1,12 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
-import {
-  TeacherFilterParams,
-  TeacherIncludeParams,
-  TeacherUpdateParams,
-} from '../util/types/teacher.types';
+import { TeacherFilterParams, TeacherIncludeParams } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { teacherSelectDetail } from '../util/selectInput/teacher.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class TeacherPersistence {
   private prisma: PrismaClient;
@@ -48,105 +46,72 @@ export class TeacherPersistence {
   ) {
     const whereClause = {
       AND: [
-        filters.id ? { id: filters.id } : {},
         filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
-        filters.assignmentId
-          ? { assignments: { some: { id: filters.assignmentId } } }
-          : {},
+        filters.assignmentId ? { assignments: { some: { id: filters.assignmentId } } } : {},
       ],
     };
 
-    return await searchAndPaginate(
-      this.prisma.teacher,
-      whereClause,
-      pagination,
-      include,
-    );
+    return await searchAndPaginate(this.prisma.teacher, whereClause, pagination, include);
   }
 
   /**
    * Get a teacher by their ID.
    *
-   * @remarks By default, this function includes the teacher's classes, assignments, and user.
-   *
    * @param teacherId - The ID of the teacher to get.
    * @param include - Optional `include` clause for related models.
    * @returns The teacher data.
    */
-  public async getTeacherById(
-    teacherId: string,
-    include: TeacherIncludeParams = {
-      classes: true,
-      assignments: true,
-      user: true,
-    },
-  ) {
-    return await this.prisma.teacher.findUnique({
+  public async getTeacherById(teacherId: string) {
+    const teacher = await this.prisma.teacher.findUnique({
       where: { id: teacherId },
-      include: {
-        classes: include.classes,
-        assignment: include.assignments,
-        user: include.user,
-      },
+      select: teacherSelectDetail,
     });
+
+    if (!teacher) {
+      throw new NotFoundError(40404);
+    }
+
+    return teacher;
   }
 
   /**
    * Get a teacher by their user ID.
    *
-   * @remarks By default, this function includes the teacher's classes, assignments, and user.
-   *
    * @param userId - The ID of the user to get the teacher for.
    * @param include - Optional `include` clause for related models.
    * @returns The teacher data.
    */
-  public async getTeacherByUserId(
-    userId: string,
-    include: TeacherIncludeParams = {
-      classes: true,
-      assignments: true,
-      user: true,
-    },
-  ) {
+  public async getTeacherByUserId(userId: string) {
     return await this.prisma.teacher.findUnique({
       where: { userId },
-      include: {
-        classes: include.classes,
-        assignment: include.assignments,
-        user: include.user,
-      },
+      select: teacherSelectDetail,
     });
   }
 
-  /**
-   * Update a teacher's classes and assignments.
+  /*
+   * Get teacher user ids by class id.
    *
-   * @param params - The parameters used to update the teacher.
-   * @returns The updated teacher.
+   * @param groupId - The id of a group that is connected to an assignment, that is connected to a class
+   * @returns The teacher user ids of the teachers that are connected to the class that the group is connected to
    */
-  public async updateTeacher(params: TeacherUpdateParams) {
-    return await this.prisma.teacher.update({
-      where: { id: params.id },
-      data: {
-        classes: {
-          connect: params.classes?.map((id) => ({ id })),
-        },
+  public async getTeacherUserIdsByGroupId(groupId: string) {
+    const teachers = await this.prisma.teacher.findMany({
+      where: {
         assignment: {
-          connect: params.assignments?.map((id) => ({ id })),
+          some: {
+            groups: {
+              some: {
+                id: groupId,
+              },
+            },
+          },
         },
       },
+      select: {
+        userId: true,
+      },
     });
-  }
-
-  /**
-   * Delete a teacher.
-   *
-   * @param teacherId - The ID of the teacher to delete.
-   */
-  public async deleteTeacher(teacherId: string) {
-    await this.prisma.teacher.delete({
-      where: { id: teacherId },
-    });
+    return teachers.map((teacher) => teacher.userId);
   }
 }

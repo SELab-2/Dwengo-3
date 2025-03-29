@@ -164,7 +164,6 @@ model ClassJoinRequest {
 model Group {
   id                    String                 @id @default(uuid())
   name                  String
-  nodeId                String?
   assignmentId          String
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
@@ -194,8 +193,8 @@ model AssignmentSubmission {
   id             String           @id @default(uuid())
   groupId        String
   nodeId         String
-  submissionType SubmissionType?
-  submission     Json?
+  submissionType SubmissionType
+  submission     Json
   node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   group          Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
