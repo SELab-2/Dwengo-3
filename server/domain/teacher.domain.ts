@@ -6,7 +6,7 @@ import {
   TeacherFilterSchema,
   TeacherIncludeSchema,
 } from '../util/types/teacher.types';
-import { getUserById } from '../persistence/auth/users.persistance';
+import { UsersPersistence } from '../persistence/auth/users.persistence';
 import { Class } from '@prisma/client';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import { BadRequestError, NotFoundError } from '../util/types/error.types';
@@ -14,10 +14,12 @@ import { BadRequestError, NotFoundError } from '../util/types/error.types';
 export class TeacherDomain {
   private teacherPersistence: TeacherPersistence;
   private classPersistence: ClassPersistence;
+  private readonly userPersistence: UsersPersistence;
 
   constructor() {
     this.teacherPersistence = new TeacherPersistence();
     this.classPersistence = new ClassPersistence();
+    this.userPersistence = new UsersPersistence();
   }
 
   /**
@@ -30,7 +32,7 @@ export class TeacherDomain {
     // Validate the request body
     const { userId } = TeacherCreateSchema.parse(body);
 
-    const user = await getUserById(userId);
+    const user = await this.userPersistence.getUserById(userId);
 
     if (!user) {
       throw new NotFoundError(40405);
@@ -79,7 +81,7 @@ export class TeacherDomain {
   public async getClassesByUserId(userId: string) {
     // TODO: move this to class domain
 
-    const user = await getUserById(userId);
+    const user = await this.userPersistence.getUserById(userId);
 
     if (!user) {
       throw new NotFoundError(40405);

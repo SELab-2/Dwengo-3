@@ -1,21 +1,26 @@
 import { Request, Response, Router } from 'express';
 import { ClassJoinRequestDomain } from '../domain/classJoinRequest.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 import { ClassRoleEnum } from '../util/types/user.types';
 
 export class ClassJoinRequestController {
   public router: Router;
   private classJoinRequestDomain: ClassJoinRequestDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.classJoinRequestDomain = new ClassJoinRequestDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private createJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.createClassJoinRequest(req.body, await getUserFromReq(req)),
+      await this.classJoinRequestDomain.createClassJoinRequest(
+        req.body,
+        this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
@@ -23,7 +28,7 @@ export class ClassJoinRequestController {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
         req.query,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
         ClassRoleEnum.STUDENT,
       ),
     );
@@ -33,7 +38,7 @@ export class ClassJoinRequestController {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
         req.query,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
         ClassRoleEnum.TEACHER,
       ),
     );
@@ -41,7 +46,10 @@ export class ClassJoinRequestController {
 
   private handleJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.handleJoinRequest(req.body, await getUserFromReq(req)),
+      await this.classJoinRequestDomain.handleJoinRequest(
+        req.body,
+        this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 

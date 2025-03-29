@@ -1,23 +1,27 @@
 import { Router, Request, Response } from 'express';
 import { StudentDomain } from '../domain/student.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 
 export class StudentController {
   public router: Router;
-  private studentDomain: StudentDomain;
+  private readonly studentDomain: StudentDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.studentDomain = new StudentDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private getStudents = async (req: Request, res: Response) => {
-    res.json(await this.studentDomain.getStudents(req.query, await getUserFromReq(req)));
+    res.json(await this.studentDomain.getStudents(req.query, this.userDomain.getUserFromReq(req)));
   };
 
   private getStudentById = async (req: Request, res: Response) => {
-    res.json(await this.studentDomain.getStudentById(req.params.id, await getUserFromReq(req)));
+    res.json(
+      await this.studentDomain.getStudentById(req.params.id, this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private initializeRoutes() {

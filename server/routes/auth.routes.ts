@@ -3,10 +3,12 @@ import { Profile, Strategy as GoogleStrategy, VerifyCallback } from 'passport-go
 import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
 
-import * as userDomain from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError } from '../util/types/error.types';
+
+const userDomain = new UserDomain();
 
 /**
  * Prevent users from registering as one role while using the endpoint for the other.
