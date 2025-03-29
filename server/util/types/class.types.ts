@@ -20,7 +20,6 @@ export const ClassCreateSchema = z.object({
 export type ClassCreateParams = z.infer<typeof ClassCreateSchema>;
 
 export const ClassUpdateSchema = z.object({
-  id: z.string().uuid('Id must be a valid UUID'),
   name: z.string().min(1, 'Name must be a non-empty string').trim().optional(),
 });
 

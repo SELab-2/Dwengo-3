@@ -1,11 +1,4 @@
-import {
-  Assignment,
-  Class,
-  Group,
-  PrismaClient,
-  Student,
-  Teacher,
-} from '@prisma/client';
+import { Assignment, Class, Group, PrismaClient, Student, Teacher } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { Uuid } from '../util/types/assignment.types';
 import { groupSelectDetail } from '../util/selectInput/group.select';
@@ -48,6 +41,17 @@ export class GroupPersistence {
           },
         },
         students: true,
+      },
+    });
+  }
+
+  public async updateGroupProgress(groupId: string, progress: number[]) {
+    return this.prisma.group.update({
+      where: {
+        id: groupId,
+      },
+      data: {
+        progress,
       },
     });
   }

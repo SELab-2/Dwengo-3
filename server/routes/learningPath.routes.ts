@@ -21,12 +21,7 @@ export class LearningPathController {
   };
 
   private createLearningPath = async (req: Request, res: Response) => {
-    res.json(
-      await this.learningPathDomain.createLearningPath(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.learningPathDomain.createLearningPath(req.body, await getUserFromReq(req)));
   };
 
   // TODO : Add delete method as soon as an owner/creator attribute is added to the learningPath model

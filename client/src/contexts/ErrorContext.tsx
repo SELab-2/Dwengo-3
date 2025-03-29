@@ -5,9 +5,7 @@ export interface ErrorContextType {
   setError: (message: string) => void;
 }
 
-export const ErrorContext = createContext<ErrorContextType | undefined>(
-  undefined,
-);
+export const ErrorContext = createContext<ErrorContextType | undefined>(undefined);
 
 export function ErrorProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);

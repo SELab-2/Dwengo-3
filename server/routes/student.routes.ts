@@ -13,39 +13,11 @@ export class StudentController {
   }
 
   private getStudents = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.getStudents(
-        req.query,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.studentDomain.getStudents(req.query, await getUserFromReq(req)));
   };
 
   private getStudentById = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.getStudentById(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
-    );
-  };
-
-  private updateStudent = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.updateStudent(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
-  };
-
-  private deleteStudent = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.deleteStudent(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.studentDomain.getStudentById(req.params.id, await getUserFromReq(req)));
   };
 
   private initializeRoutes() {
@@ -125,47 +97,5 @@ export class StudentController {
      *         description: Student not found.
      */
     this.router.get('/:id', this.getStudentById);
-    /**
-     * @swagger
-     * /api/student/{id}:
-     *   patch:
-     *     security:
-     *       - cookieAuth: []
-     *     tags: [Student]
-     *     summary: Update a student
-     *     description: Updates a students classes and groups
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             $ref: '#/components/schemas/StudentUpdate'
-     *     responses:
-     *       200:
-     *         description: Succesfully updated the student
-     *         content:
-     *           application/json:
-     *             schema:
-     *               $ref: '#/components/schemas/StudentDetail'
-     *       401:
-     *         description: Unauthorized, user not authenticated
-     */
-    this.router.patch('/', this.updateStudent);
-    /**
-     * @swagger
-     * /api/student/{id}:
-     *   delete:
-     *     security:
-     *       - cookieAuth: []
-     *     tags: [Student]
-     *     summary: Delete a student
-     *     description: Deletes a student
-     *     responses:
-     *       200:
-     *         description: Succesfully deleted the student
-     *       401:
-     *         description: Unauthorized, user not authenticated
-     */
-    this.router.delete('/', this.deleteStudent);
   }
 }

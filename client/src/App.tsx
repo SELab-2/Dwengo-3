@@ -47,39 +47,18 @@ function App() {
                   <Route>
                     <Route path={AppRoutes.home} element={<HomePage />} />
                     <Route path={AppRoutes.profile} element={<ProfilePage />} />
-                    <Route
-                      path={AppRoutes.myClasses}
-                      element={<MyClassesPage />}
-                    />
-                    <Route
-                      path={AppRoutes.myLearningPaths}
-                      element={<MyLearningPathsPage />}
-                    />
-                    <Route
-                      path={AppRoutes.learningPath(':id')}
-                      element={<LearningPathPage />}
-                    />
-                    <Route
-                      path={AppRoutes.learningThemes}
-                      element={<LearningThemesPage />}
-                    />
-                    <Route
-                      path={AppRoutes.learningTheme(':id')}
-                      element={<LearningThemePage />}
-                    />
-                    <Route
-                      path={AppRoutes.class(':id')}
-                      element={<ClassPage />}
-                    />
+                    <Route path={AppRoutes.myClasses} element={<MyClassesPage />} />
+                    <Route path={AppRoutes.myLearningPaths} element={<MyLearningPathsPage />} />
+                    <Route path={AppRoutes.learningPath(':id')} element={<LearningPathPage />} />
+                    <Route path={AppRoutes.learningThemes} element={<LearningThemesPage />} />
+                    <Route path={AppRoutes.learningTheme(':id')} element={<LearningThemePage />} />
+                    <Route path={AppRoutes.class(':id')} element={<ClassPage />} />
                     <Route
                       path={AppRoutes.classAssignments(':classId')}
                       element={<ClassAssignmentsPage />}
                     />
                     <Route
-                      path={AppRoutes.classAssignment(
-                        ':classId',
-                        ':assignmentId',
-                      )}
+                      path={AppRoutes.classAssignment(':classId', ':assignmentId')}
                       element={<ClassAssignmentPage />}
                     />
                   </Route>

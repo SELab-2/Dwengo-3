@@ -67,6 +67,7 @@ async function login(req: Request, res: Response): Promise<void> {
     return;
   }
 
+  // TODO safeParse -> parse!
   const loginRequest = LoginSchema.safeParse(req.body);
   if (!loginRequest.success) {
     res
@@ -122,11 +123,7 @@ async function clearCookie(req: Request, res: Response): Promise<void> {
  * @param email the email of the user, used in the hash
  * @param password the password of the user, used in the hash
  */
-export function generateCookie(
-  userId: string,
-  email: string,
-  password: string,
-): string {
+export function generateCookie(userId: string, email: string, password: string): string {
   const cookie: string = userId + '?';
   const hash = crypto
     .createHash('sha512')
