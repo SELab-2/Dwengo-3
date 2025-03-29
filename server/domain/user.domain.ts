@@ -1,8 +1,5 @@
 import { Request } from 'express';
-import {
-  LoginCredentials,
-  RegisterCredentials,
-} from '../util/types/auth.types';
+import { LoginCredentials, RegisterCredentials } from '../util/types/auth.types';
 import * as persistence from '../persistence/auth/users.persistance';
 import { AuthProvider, User, ClassRole } from '@prisma/client';
 import {
@@ -23,13 +20,11 @@ const roleMap = {
   [ClassRole.STUDENT]: ClassRoleEnum.STUDENT,
 };
 
-export async function createUser(
-  userData: RegisterCredentials,
-): Promise<UserEntity> {
-  userData.password = crypto
-    .createHash('sha256')
-    .update(userData.password)
-    .digest('base64');
+export async function createUser(userData: RegisterCredentials): Promise<UserEntity> {
+  if (userData.provider === AuthenticationProvider.LOCAL) {
+    userData.password = crypto.createHash('sha256').update(userData.password).digest('base64');
+  }
+
   const user = await persistence.saveUser(userData);
   return {
     email: user.email,
@@ -97,9 +92,7 @@ export function getUserFromReq(req: Request): UserEntity {
  * @param email - The email address to search for.
  * @returns The user data if the user is found, otherwise null.
  */
-export async function getUserByEmail(
-  email: string,
-): Promise<UserEntity | null> {
+export async function getUserByEmail(email: string): Promise<UserEntity | null> {
   const user = await persistence.getUserByEmail(email);
   if (user === null) return null;
   return {
