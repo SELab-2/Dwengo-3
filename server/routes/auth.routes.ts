@@ -19,6 +19,51 @@ function isValidRoleUrl(path: string): boolean {
   return path.includes('teacher') || path.includes('student');
 }
 
+/**
+ * A middleware function that checks if the user is authenticated.
+ *
+ * If the user is authenticated, `next()` is called.
+ * Otherwise, an error is thrown.
+ *
+ * @param req - The Express request object
+ * @param res - The Express response object
+ * @param next - The next middleware function
+ */
+export function isAuthenticated(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  // todo: change when error handling is available
+  throw new Error('[TMP]: [USER]: Not authenticated');
+}
+
+/**
+ * A middleware function that checks if the user is not authenticated.
+ * Used to allow users to call register and login endpoints.
+ *
+ * If the user is not authenticated, `next()` is called.
+ * Otherwise, an error is thrown.
+ *
+ * @param req - The Express request object
+ * @param res - The Express response object
+ * @param next - The next middleware function
+ */
+export function isNotAuthenticated(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  if (req.isUnauthenticated()) {
+    return next();
+  }
+  // todo: change when error handling is available
+  throw new Error('[TMP]: [USER]: Already authenticated');
+}
+
 export const router = express.Router();
 const apiCallbackUrl =
   process.env.NODE_ENV === 'development'
