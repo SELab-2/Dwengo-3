@@ -19,5 +19,4 @@ export const RegisterSchema = z.object({
   role: z.nativeEnum(ClassRoleEnum),
 });
 
-export type LoginCredentials = z.infer<typeof LoginSchema>;
-export type RegisterCredentials = z.infer<typeof RegisterSchema>;
+export type RegisterParams = z.infer<typeof RegisterSchema>;

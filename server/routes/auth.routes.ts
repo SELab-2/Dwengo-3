@@ -1,22 +1,23 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
-import {
-  Profile,
-  Strategy as GoogleStrategy,
-  VerifyCallback,
-} from 'passport-google-oauth20';
+import { Profile, Strategy as GoogleStrategy, VerifyCallback } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
 
 import * as userDomain from '../domain/user.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../util/types/user.types';
+import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
+import { AuthorizationError, BadRequestError } from '../util/types/error.types';
 
-function isValidRoleUrl(path: string): boolean {
-  return path.includes('teacher') || path.includes('student');
+/**
+ * Prevent users from registering as one role while using the endpoint for the other.
+ * @param req the request being processed.
+ * @returns true if the role is valid, false otherwise.
+ */
+function isValidRoleUrl(req: Request): boolean {
+  return (
+    (req.path.includes('teacher') && req.body.role === ClassRoleEnum.TEACHER) ||
+    (req.path.includes('student') && req.body.role === ClassRoleEnum.STUDENT)
+  );
 }
 
 /**
@@ -29,16 +30,12 @@ function isValidRoleUrl(path: string): boolean {
  * @param res - The Express response object
  * @param next - The next middleware function
  */
-export function isAuthenticated(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) {
     return next();
   }
-  // todo: change when error handling is available
-  throw new Error('[TMP]: [USER]: Not authenticated');
+
+  throw new AuthorizationError(-1, 'User is not authenticated');
 }
 
 /**
@@ -52,16 +49,11 @@ export function isAuthenticated(
  * @param res - The Express response object
  * @param next - The next middleware function
  */
-export function isNotAuthenticated(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export function isNotAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (req.isUnauthenticated()) {
     return next();
   }
-  // todo: change when error handling is available
-  throw new Error('[TMP]: [USER]: Already authenticated');
+  throw new AuthorizationError(-1, 'User is already authenticated');
 }
 
 export const router = express.Router();
@@ -87,9 +79,7 @@ passport.use(
     ) => {
       try {
         let user: UserEntity | null = await userDomain.getUserById(profile.id);
-        const role = req.path.includes('teacher')
-          ? ClassRoleEnum.TEACHER
-          : ClassRoleEnum.STUDENT;
+        const role = req.path.includes('teacher') ? ClassRoleEnum.TEACHER : ClassRoleEnum.STUDENT;
 
         if (user === null) {
           user = await userDomain.createUser({
@@ -123,30 +113,24 @@ passport.use(
     async (req: Request, username: string, password: string, done) => {
       try {
         const user = await userDomain.getUserByEmail(username);
-        const role = req.path.includes('teacher')
-          ? ClassRoleEnum.TEACHER
-          : ClassRoleEnum.STUDENT;
+        const role = req.path.includes('teacher') ? ClassRoleEnum.TEACHER : ClassRoleEnum.STUDENT;
 
         const provider = AuthenticationProvider.LOCAL;
-        console.debug(user);
 
         if (user === null) {
-          return done(null, false, { message: 'incorrect login credentials' });
+          return done(new AuthorizationError(-1, 'Invalid credentials'));
         }
 
-        if (
-          crypto.createHash('sha256').update(password).digest('base64') !==
-          user.password
-        ) {
-          return done(null, false, { message: 'incorrect login credentials' });
+        if (crypto.createHash('sha256').update(password).digest('base64') !== user.password) {
+          return done(new AuthorizationError(-1, 'Invalid credentials'));
         }
 
         if (user.role !== role) {
-          return done(null, false, { message: 'incorrect login credentials' });
+          return done(new AuthorizationError(-1, 'Invalid credentials'));
         }
 
         if (user.provider !== provider) {
-          return done(null, false, { message: 'incorrect login credentials' });
+          return done(new AuthorizationError(-1, 'Invalid credentials'));
         }
 
         return done(null, user);
@@ -179,6 +163,7 @@ router.get(
     session: true,
   }),
 );
+
 router.get(
   '/teacher/login/google',
   passport.authenticate('google', {
@@ -203,34 +188,48 @@ router.post(
   },
 );
 
-router.put('/student/register', async (req: Request, res: Response) => {
+router.put('/student/register', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (!isValidRoleUrl(req.path))
-      res.status(400).json({ message: 'Invalid url' });
-
-    const role = req.path.includes('teacher')
-      ? ClassRoleEnum.TEACHER
-      : ClassRoleEnum.STUDENT;
+    if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
 
     const user: UserEntity = await userDomain.createUser({
       email: req.body.email,
       name: req.body.name,
       password: req.body.password,
       provider: AuthenticationProvider.LOCAL,
-      role: role,
+      role: ClassRoleEnum.STUDENT,
       surname: req.body.surname,
       username: req.body.username,
     });
     res.json(user);
   } catch (error) {
-    res.status(400);
+    next(error);
+  }
+});
+
+router.put('/teacher/register', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
+
+    const user: UserEntity = await userDomain.createUser({
+      email: req.body.email,
+      name: req.body.name,
+      password: req.body.password,
+      provider: AuthenticationProvider.LOCAL,
+      role: ClassRoleEnum.TEACHER,
+      surname: req.body.surname,
+      username: req.body.username,
+    });
+
+    res.json(user);
+  } catch (error) {
+    next(error);
   }
 });
 
 router.get(
   '/callback/google',
   (req: Request, res: Response, next: NextFunction) => {
-    // something wrong here... see gpt
     passport.authenticate('google')(req, res, next);
   },
   (req: Request, res: Response) => {

@@ -1,14 +1,10 @@
 import { Request } from 'express';
-import { LoginCredentials, RegisterCredentials } from '../util/types/auth.types';
+import { RegisterParams } from '../util/types/auth.types';
 import * as persistence from '../persistence/auth/users.persistance';
-import { AuthProvider, User, ClassRole } from '@prisma/client';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  FullUserType,
-  UserEntity,
-} from '../util/types/user.types';
+import { AuthProvider, ClassRole, User } from '@prisma/client';
+import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
+import { BadRequestError } from '../util/types/error.types';
 
 const providerMap = {
   [AuthProvider.GOOGLE]: AuthenticationProvider.GOOGLE,
@@ -20,7 +16,11 @@ const roleMap = {
   [ClassRole.STUDENT]: ClassRoleEnum.STUDENT,
 };
 
-export async function createUser(userData: RegisterCredentials): Promise<UserEntity> {
+export async function createUser(userData: RegisterParams): Promise<UserEntity> {
+  if ((await persistence.getUserByEmail(userData.email)) !== null) {
+    throw new BadRequestError(-1, 'User already exists');
+  }
+
   if (userData.provider === AuthenticationProvider.LOCAL) {
     userData.password = crypto.createHash('sha256').update(userData.password).digest('base64');
   }
