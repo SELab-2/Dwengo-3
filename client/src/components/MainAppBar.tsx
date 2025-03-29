@@ -7,11 +7,12 @@ import ProfileIcon from './icons/ProfileIcon';
 import { ComponentSize, FontSize } from '../util/size';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import { AppRoutes } from '../util/routes';
 
 const TabIndex: { [key: string]: number } = {
-  '/learning-themes': 0,
-  '/classes': 1,
-  '/learning-paths': 2,
+  [AppRoutes.learningThemes]: 0,
+  [AppRoutes.myClasses]: 1,
+  [AppRoutes.myLearningPaths]: 2,
 };
 
 function MainAppBar() {
@@ -21,7 +22,7 @@ function MainAppBar() {
     TabIndex[location.pathname] ?? false,
   );
 
-  if (['/login', '/register'].includes(location.pathname)) {
+  if ([AppRoutes.login, AppRoutes.register].includes(location.pathname)) {
     return <LoginAppBar />;
   }
 
@@ -35,7 +36,7 @@ function MainAppBar() {
           height: '100%',
         }}
       >
-        <DwengoIcon href="/" />
+        <DwengoIcon href={AppRoutes.home} />
         <Box
           sx={{
             position: 'absolute',
@@ -51,17 +52,17 @@ function MainAppBar() {
           >
             <Tab
               label={t('learningThemes')}
-              href="/learning-themes"
+              href={AppRoutes.learningThemes}
               sx={{ fontSize: FontSize.large }}
             />
             <Tab
               label={t('myClasses')}
-              href="/classes"
+              href={AppRoutes.myClasses}
               sx={{ fontSize: FontSize.large }}
             />
             <Tab
               label={t('myLearningPaths')}
-              href="/learning-paths"
+              href={AppRoutes.myLearningPaths}
               sx={{ fontSize: FontSize.large }}
             />
           </Tabs>

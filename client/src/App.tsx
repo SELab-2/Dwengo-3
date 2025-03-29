@@ -22,6 +22,7 @@ import LearningPathPage from './views/LearningPathPage';
 import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
+import { AppRoutes } from './util/routes';
 
 const queryClient = new QueryClient();
 
@@ -38,38 +39,47 @@ function App() {
               <ErrorProvider>
                 <Routes>
                   {/* Public Routes */}
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path={AppRoutes.login} element={<LoginPage />} />
+                  <Route path={AppRoutes.register} element={<RegisterPage />} />
 
                   {/* Protected Routes */}
                   {/* TODO: Wrap the protected routes in a ProtectedRoutes component, deleted this for production ease */}
                   <Route>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/classes" element={<MyClassesPage />} />
+                    <Route path={AppRoutes.home} element={<HomePage />} />
+                    <Route path={AppRoutes.profile} element={<ProfilePage />} />
                     <Route
-                      path="/learning-paths"
+                      path={AppRoutes.myClasses}
+                      element={<MyClassesPage />}
+                    />
+                    <Route
+                      path={AppRoutes.myLearningPaths}
                       element={<MyLearningPathsPage />}
                     />
                     <Route
-                      path="/learning-paths/:id"
+                      path={AppRoutes.learningPath(':id')}
                       element={<LearningPathPage />}
                     />
                     <Route
-                      path="/learning-themes"
+                      path={AppRoutes.learningThemes}
                       element={<LearningThemesPage />}
                     />
                     <Route
-                      path="learning-themes/:id"
+                      path={AppRoutes.learningTheme(':id')}
                       element={<LearningThemePage />}
                     />
-                    <Route path="/class/:id" element={<ClassPage />} />
                     <Route
-                      path="/class/:id/assignments"
+                      path={AppRoutes.class(':id')}
+                      element={<ClassPage />}
+                    />
+                    <Route
+                      path={AppRoutes.classAssignments(':classId')}
                       element={<ClassAssignmentsPage />}
                     />
                     <Route
-                      path="/class/:id/assignments/:a_id"
+                      path={AppRoutes.classAssignment(
+                        ':classId',
+                        ':assignmentId',
+                      )}
                       element={<ClassAssignmentPage />}
                     />
                   </Route>
