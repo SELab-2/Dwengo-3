@@ -35,6 +35,8 @@ import { AssignmentCreateSchema, AssignmentDetail } from '../../util/types/assig
 import { AssignmentPersistence } from '../assignment.persistence';
 import { AssignmentSubmissionDetail } from '../../util/types/assignmentSubmission.types';
 import { AssignmentSubmissionPersistence } from '../assignmentSubmission.persistence';
+import { StudentPersistence } from '../student.persistence';
+import { TeacherPersistence } from '../teacher.persistence';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence =
@@ -55,6 +57,8 @@ const assignmentPersistence: AssignmentPersistence =
   new AssignmentPersistence();
 const assignemntSubmissionPersistence: AssignmentSubmissionPersistence =
   new AssignmentSubmissionPersistence();
+const studentPersistence: StudentPersistence = new StudentPersistence();
+const teacherPersistence: TeacherPersistence = new TeacherPersistence();
 
 export const insertStudents = async (): Promise<UserEntity[]> => {
   const users = [
@@ -398,22 +402,32 @@ export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissi
 // de createParams van de discussion moeten aanpassen
 // Momenteel moet je zelf members meegeven terwijl deze beter in de backend worden opgehaald
 
-// export const insertDiscussions = async (): Promise<DiscussionDetail[]> => {
-//     const classes = await insertClassesWithStudents();
-//     const discussions = [];
-//     for (const classData of classes) {
-//         const discussionData: DiscussionCreateParams = {
-//             title: "Discussion 1",
-//             content: "test",
-//             classId: classData.id
-//         };
-//         discussions.push(discussionPersistence.createDiscussion(discussionData, classData.teachers[0].id));
-//     }
+export const insertDiscussions = async (): Promise<DiscussionDetail[]> => {
+  const assignments = await insertAssignments();
+  const discussions = [];
+  for (const assignemnt of assignments) {
+  for (const group of assignemnt.groups) {
+      const discussionData: DiscussionCreateParams = {
+      groupId: group.id
+      };
+      // get the group members userIds
+      const groupMemberUserIds: string[] = await studentPersistence.getStudentUserIdsByGroupId(group.id);
+
+      // get the teacherIds
+      const teacherIds: string[] = await teacherPersistence.getTeacherUserIdsByGroupId(group.id);
+
+      const memberIds = groupMemberUserIds.concat(teacherIds);
+      discussions.push(discussionPersistence.createDiscussion(discussionData, memberIds));
+    }
+  }
+  return Promise.all(discussions);
+}
 
 export const deleteAllData = async (): Promise<void> => {
   await PrismaSingleton.instance.classJoinRequest.deleteMany();
   await PrismaSingleton.instance.assignmentSubmission.deleteMany();
   await PrismaSingleton.instance.announcement.deleteMany();
+  await PrismaSingleton.instance.discussion.deleteMany();
   await PrismaSingleton.instance.group.deleteMany();
   await PrismaSingleton.instance.assignment.deleteMany();
   await PrismaSingleton.instance.user.deleteMany();

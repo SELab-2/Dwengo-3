@@ -1,15 +1,17 @@
-import { afterAll, beforeAll, describe, expect, test } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { DiscussionPersistence } from '../discussion.persistence';
 import { PrismaSingleton } from '../prismaSingleton';
 import { deleteAllData, insertDiscussions } from './testData';
+import { DiscussionDetail } from '../../util/types/discussion.types';
 
 const discussionPersistence: DiscussionPersistence =
   new DiscussionPersistence();
-let discussions;
+let discussions: DiscussionDetail[] = [];
 
 describe('discussion persistence test', () => {
   beforeAll(async () => {
     discussions = await insertDiscussions();
+    expect(discussions).not.toEqual([]);
   });
 
   afterAll(async () => {
@@ -21,62 +23,33 @@ describe('discussion persistence test', () => {
     test('discussion with existing id responds with discussion', async () => {
       for (const discussion of discussions) {
         const req = discussionPersistence.getDiscussionById(discussion.id);
-        await expect(req).resolves.toEqual(discussion);
+        await expect(req).resolves.toStrictEqual(discussion);
       }
     });
 
-    test('discussion with non-existing id responds with null', async () => {
+    test('discussion with non-existing id responds with an error', async () => {
       const req = discussionPersistence.getDiscussionById('nonexistent-id');
-      await expect(req).resolves.toBeNull();
+      await expect(req).rejects.toThrow();
     });
   });
 
   describe('test get discussions', () => {
-    test('request with existing class id responds with array of discussions', async () => {
-      for (const discussion of discussions) {
-        const classId = discussion.class.id;
-        const req = discussionPersistence.getDiscussions(
-          { page: 1, pageSize: 10, skip: 0 },
-          { classId },
-        );
-        const expectedDiscussions = discussions.filter(
-          (d) => d.class.id === classId,
-        );
-        await expect(req).resolves.toEqual({
-          data: expect.arrayContaining(expectedDiscussions),
-          totalPages: 1,
-        });
-      }
-    });
-
     test('request with existing user id responds with array of discussions', async () => {
       for (const discussion of discussions) {
-        const userId = discussion.user.id;
-        const req = discussionPersistence.getDiscussions(
-          { page: 1, pageSize: 10, skip: 0 },
-          { userId },
-        );
-        await expect(req).resolves.toEqual({
-          data: expect.arrayContaining([discussion]),
-          totalPages: 1,
-        });
-      }
-    });
-  });
-
-  describe('test get discussions by class id and user', () => {
-    test('request with existing class id and user id responds with array of discussions', async () => {
-      for (const discussion of discussions) {
-        const classId = discussion.class.id;
-        const userId = discussion.user.id;
-        const req = discussionPersistence.getDiscussions(
-          { page: 1, pageSize: 10, skip: 0 },
-          { classId, userId },
-        );
-        await expect(req).resolves.toEqual({
-          data: expect.arrayContaining([discussion]),
-          totalPages: 1,
-        });
+        for (const user of discussion.members) {
+          const req = discussionPersistence.getDiscussions(
+            { userId: user.id },
+            { page: 1, pageSize: 20, skip: 0 },
+          );
+          const expectedDiscussions = discussions.filter((d) => d.members.some((member) => member.id === user.id)).map((d) => ({
+            id: d.id
+          }));
+          expect(expectedDiscussions).not.toEqual([]);
+          await expect(req).resolves.toEqual({
+            data: expect.arrayContaining(expectedDiscussions),
+            totalPages: 1,
+          });
+        }
       }
     });
   });
