@@ -1,3 +1,6 @@
+/**
+ * This constant contains the routes for the application.
+ */
 export const AppRoutes = {
   // Public Routes
   login: '/login',
@@ -17,6 +20,9 @@ export const AppRoutes = {
     `/class/${classId}/assignments/${assignmentId}`,
 };
 
+/**
+ * This constant contains the API routes for the application.
+ */
 export const ApiRoutes = {
   // Auth
   login: {
@@ -37,6 +43,7 @@ export const ApiRoutes = {
     list: '/api/announcement',
     create: '/api/announcement',
     get: (id: string) => `/api/announcement/${id}`,
+    update: (id: string) => `/api/announcement/${id}`,
   },
 
   // Assignment
@@ -46,17 +53,34 @@ export const ApiRoutes = {
     get: (id: string) => `/api/assignment/${id}`,
   },
 
+  // AssignmentSubmission
+  assignmentSubmission: {
+    create: '/api/assignmentSubmission',
+  },
+
   // Class
   class: {
     list: '/api/class',
     create: '/api/class',
     get: (id: string) => `/api/class/${id}`,
+    update: (id: string) => `/api/class/${id}`,
+    deleteStudent: (id: string, studentId: string) => `/api/class/${id}/student/${studentId}`,
+    deleteTeacher: (id: string, teacherId: string) => `/api/class/${id}/teacher/${teacherId}`,
   },
 
   // ClassJoinRequest
+  // TODO: Change this when the backend is changed
   classJoinRequest: {
-    student: '/api/studentRequest',
-    teacher: '/api/teacherRequest',
+    student: {
+      create: '/api/class/studentRequest',
+      list: '/api/class/studentRequest',
+      reply: '/api/class/studentRequest',
+    },
+    teacher: {
+      create: '/api/class/teacherRequest',
+      List: '/api/class/teacherRequest',
+      reply: '/api/class/teacherRequest',
+    },
   },
 
   // Discussion
@@ -71,6 +95,8 @@ export const ApiRoutes = {
     list: '/api/learningObject',
     create: '/api/learningObject',
     get: (id: string) => `/api/learningObject/${id}`,
+    update: (id: string) => `/api/learningObject/${id}`,
+    delete: (id: string) => `/api/learningObject/${id}`,
   },
 
   // LearningPath
@@ -80,11 +106,22 @@ export const ApiRoutes = {
     get: (id: string) => `/api/learningPath/${id}`,
   },
 
+  // LearningPathNode
+  learningPathNode: {
+    create: '/api/learningPathNode',
+    get: (id: string) => `/api/learningPathNode/${id}`,
+  },
+
+  // LearningPathNodeTransition
+  learningPathNodeTransition: {
+    create: '/api/learningPathNodeTransition',
+  },
+
   // Message
   message: {
     list: '/api/message',
     create: '/api/message',
-    get: (id: string) => `/api/message/${id}`,
+    delete: (id: string) => `/api/message/${id}`,
   },
 
   // Student
