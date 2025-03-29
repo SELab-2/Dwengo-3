@@ -37,6 +37,8 @@ import { AssignmentSubmissionDetail } from '../../util/types/assignmentSubmissio
 import { AssignmentSubmissionPersistence } from '../assignmentSubmission.persistence';
 import { StudentPersistence } from '../student.persistence';
 import { TeacherPersistence } from '../teacher.persistence';
+import { MessageCreateParams, MessageDetail } from '../../util/types/message.types';
+import { MessagePersistence } from '../message.persistence';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence =
@@ -59,6 +61,7 @@ const assignemntSubmissionPersistence: AssignmentSubmissionPersistence =
   new AssignmentSubmissionPersistence();
 const studentPersistence: StudentPersistence = new StudentPersistence();
 const teacherPersistence: TeacherPersistence = new TeacherPersistence();
+const messagePersistence: MessagePersistence = new MessagePersistence();
 
 export const insertStudents = async (): Promise<UserEntity[]> => {
   const users = [
@@ -396,11 +399,7 @@ export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissi
     }
   }
   return Promise.all(submissions);
-}
-
-// TODO: Vooraleer we deze Discussion test maken zouden we eigenlijk
-// de createParams van de discussion moeten aanpassen
-// Momenteel moet je zelf members meegeven terwijl deze beter in de backend worden opgehaald
+};
 
 export const insertDiscussions = async (): Promise<DiscussionDetail[]> => {
   const assignments = await insertAssignments();
@@ -421,12 +420,36 @@ export const insertDiscussions = async (): Promise<DiscussionDetail[]> => {
     }
   }
   return Promise.all(discussions);
+};
+
+export const insertMessages = async (): Promise<MessageDetail[]> => {
+  const discussions = await insertDiscussions();
+  const messages = [];
+  for (const discussion of discussions) {
+    const messagesData: MessageCreateParams[] = [
+      {
+        content: "test",
+        discussionId: discussion.id,
+        senderId: discussion.members[0].id
+      },
+      {
+        content: "test2",
+        discussionId: discussion.id,
+        senderId: discussion.members[0].id
+      }
+    ];
+    for (const message of messagesData) {
+      messages.push(messagePersistence.createMessage(message));
+    }
+  }
+  return Promise.all(messages);
 }
 
 export const deleteAllData = async (): Promise<void> => {
   await PrismaSingleton.instance.classJoinRequest.deleteMany();
   await PrismaSingleton.instance.assignmentSubmission.deleteMany();
   await PrismaSingleton.instance.announcement.deleteMany();
+  await PrismaSingleton.instance.message.deleteMany();
   await PrismaSingleton.instance.discussion.deleteMany();
   await PrismaSingleton.instance.group.deleteMany();
   await PrismaSingleton.instance.assignment.deleteMany();
