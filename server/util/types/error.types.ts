@@ -162,6 +162,8 @@ export class BadRequestError extends APIError {
         return 'Announcement does not belong to teacher...';
       case 40038:
         return 'User role does not match expected role...';
+      case 40039:
+        return "Can't submit to a group you're not a student of.";
       default:
         return 'Bad request...';
     }

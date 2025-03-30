@@ -1211,16 +1211,14 @@
               "answer": "4"
             }
           },
-          "canUploadSubmission": {
-            "type": "boolean",
-            "description": "Indicates whether submissions can be uploaded for the learning object.",
-            "example": false
-          },
           "keywords": {
             "type": "array",
             "description": "List of keywords associated with the learning object.",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "keyword": { "type": "string" }
+              }
             }
           }
         },
@@ -1477,6 +1475,59 @@
           }
         },
         "required": ["groups", "learningPathId", "classId", "teacherId"]
+      },
+
+      "SubmissionCreate": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the group submitting the assignment.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "nodeId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the node this submission belongs to.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "submissionType": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "FILE"],
+            "description": "The type of submission. MULTIPLE_CHOICE expects a string, FILE expects an object."
+          },
+          "submission": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "For MULTIPLE_CHOICE submission type, this should be a string representing the selected answer.",
+                "example": "A"
+              },
+              {
+                "$ref": "#/components/schemas/FileSubmissionSchema"
+              }
+            ],
+            "description": "The submission data, either a string for MULTIPLE_CHOICE or an object for FILE."
+          }
+        },
+        "required": ["groupId", "nodeId", "submissionType", "submission"]
+      },
+      "FileSubmissionSchema": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "The name of the file being submitted.",
+            "example": "example.pdf"
+          },
+          "filePath": {
+            "type": "string",
+            "description": "The path where the file is stored.",
+            "example": "/uploads/example.pdf"
+          }
+        },
+        "required": ["fileName", "filePath"]
       }
     }
   }

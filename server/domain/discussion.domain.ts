@@ -10,7 +10,7 @@ import { UserEntity } from '../util/types/user.types';
 import {
   checkIfUserIsInGroup,
   checkIfUsersAreInSameGroup,
-} from '../util/coockie-checks/coockieChecks.util';
+} from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { Uuid } from '../util/types/assignment.types';
 import { TeacherFilterParams } from '../util/types/teacher.types';

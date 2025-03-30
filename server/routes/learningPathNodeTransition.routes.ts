@@ -1,14 +1,16 @@
 import { Router, Request, Response } from 'express';
 import { LearningPathNodeTransitionDomain } from '../domain/learningPathNodeTransition.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 
 export class LearningPathNodeTransitionController {
   public router: Router;
   private LearningPathNodeTransitionDomain: LearningPathNodeTransitionDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.LearningPathNodeTransitionDomain = new LearningPathNodeTransitionDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -16,7 +18,7 @@ export class LearningPathNodeTransitionController {
     res.json(
       await this.LearningPathNodeTransitionDomain.createLearningPathNodeTransition(
         req.body,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
       ),
     );
   };

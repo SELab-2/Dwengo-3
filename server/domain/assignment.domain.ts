@@ -14,7 +14,7 @@ import {
   checkIfUserIsInGroup,
   checkIfUsersAreInSameClass,
   compareUserIdWithFilterId,
-} from '../util/coockie-checks/coockieChecks.util';
+} from '../util/cookie-checks/cookieChecks.util';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { BadRequestError } from '../util/types/error.types';

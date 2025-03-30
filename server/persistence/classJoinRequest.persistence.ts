@@ -44,11 +44,13 @@ export class ClassJoinRequestPersistence {
   public async getJoinRequests(
     paginationParams: PaginationParams,
     filters: ClassJoinRequestFilterParams,
-    user: UserEntity,
+    classRole: ClassRoleEnum,
   ) {
     // We need to do this to not expose the Prisma.EnumClassRoleFilter<"User"> type to the domain layer.
     let filterByRole: Prisma.UserWhereInput = {};
-    if (user.role === ClassRoleEnum.STUDENT) {
+
+    // TODO This can probably be simplified.
+    if (classRole === ClassRoleEnum.STUDENT) {
       filterByRole = { role: 'STUDENT' };
     } else {
       filterByRole = { role: 'TEACHER' };

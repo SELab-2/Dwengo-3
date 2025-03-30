@@ -2,6 +2,7 @@ import { Uuid } from './assignment.types';
 
 export type GroupShort = {
   id: Uuid;
-  nodeId: Uuid | null;
+  progress: number[];
   assignmentId: Uuid;
+  name: string;
 };
