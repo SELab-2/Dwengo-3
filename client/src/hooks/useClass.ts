@@ -21,6 +21,7 @@ export function useClass(studentId?: string, teacherId?: string) {
       });
       return response.data;
     },
+    enabled: !!studentId || !!teacherId,
     refetchOnWindowFocus: false,
   });
 }
@@ -38,6 +39,7 @@ export function useClassById(classId: string) {
       const response = await apiClient.get(ApiRoutes.class.get(classId));
       return response.data;
     },
+    enabled: !!classId,
     refetchOnWindowFocus: false,
   });
 }

@@ -23,6 +23,7 @@ export function useStudent(userId?: string, classId?: string, groupId?: string) 
       });
       return response.data;
     },
+    enabled: !!userId || !!classId || !!groupId,
     refetchOnWindowFocus: false,
   });
 }
@@ -31,8 +32,8 @@ export function useStudent(userId?: string, classId?: string, groupId?: string) 
  * Fetches the list of teachers for the given parameters.
  *
  * @param userId - The ID of the user whose teacher data needs to be fetched.
- * @classId - The ID of the class to filter the teacher.
- * @groupId - The ID of the group to filter the teacher.
+ * @param classId - The ID of the class to filter the teacher.
+ * @param groupId - The ID of the group to filter the teacher.
  * @returns The query object containing the teacher data.
  */
 export function useTeacher(userId?: string, classId?: string, groupId?: string) {
@@ -48,6 +49,7 @@ export function useTeacher(userId?: string, classId?: string, groupId?: string) 
       });
       return response.data;
     },
+    enabled: !!userId || !!classId || !!groupId,
     refetchOnWindowFocus: false,
   });
 }

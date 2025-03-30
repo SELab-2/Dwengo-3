@@ -6,20 +6,24 @@ import { useTranslation } from 'react-i18next';
 import { useClass } from '../hooks/useClass';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { useStudent, useTeacher } from '../hooks/useUser';
+import { en } from '../util/locale/en';
 
 function MyClassesPage() {
   const { user } = useAuth();
   const { t } = useTranslation();
 
+  let classes;
+
   if (user?.role === ClassRoleEnum.STUDENT) {
-    const { data: student } = useStudent(user?.id ?? '');
-    const { data: classes } = useClass(student?.id ?? '');
+    const { data: student } = useStudent(user?.id);
+    classes = useClass(student?.id, undefined).data;
   } else {
-    const { data: teacher } = useTeacher(user?.id ?? '');
-    const { data: classes } = useClass(teacher?.id ?? '');
+    // Fetch teacher data only if the user is a teacher and the user ID is available
+    const { data: teacher } = useTeacher(user?.id);
+    classes = useClass(undefined, teacher?.id).data;
   }
 
-  console.log(classes);
+  console.log('classes', classes);
 
   return (
     <Box
