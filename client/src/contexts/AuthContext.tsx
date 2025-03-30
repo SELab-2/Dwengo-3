@@ -1,10 +1,11 @@
 import { createContext, useState, ReactNode, useEffect } from 'react';
-import { AuthContextType, UserData } from '../util/types/auth.types';
+import { AuthContextType } from '../util/types/auth.types';
+import { UserDetail } from '../util/types/user.types';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<UserDetail | null>(null);
 
   // Load user from local storage
   useEffect(() => {
@@ -15,13 +16,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Save user to local storage
-  const login = (userData: UserData) => {
+  const login = (userData: UserDetail) => {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
   // Save user to local storage
-  const register = (userData: UserData) => {
+  const register = (userData: UserDetail) => {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   };

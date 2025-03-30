@@ -9,6 +9,8 @@ import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
+import { AppRoutes } from '../util/routes';
+import { UserDetail } from '../util/types/user.types';
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -33,12 +35,12 @@ function LoginForm() {
         role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, //TODO: Change this to the correct role
       },
       {
-        onSuccess: (response) => {
+        onSuccess: (response: UserDetail) => {
           // Set the user in the auth context
           login(response);
 
           // Redirect to the home page
-          navigate('/');
+          navigate(AppRoutes.home);
         },
         onError: (error) => {
           setError(error.message);
