@@ -16,7 +16,7 @@ export interface RegisterData {
 }
 
 export interface UserData {
-  id: number;
+  id: string;
   username: string;
   email: string;
   role: ClassRoleEnum;
