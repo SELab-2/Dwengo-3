@@ -26,8 +26,9 @@ dotenv.config({ path: '../.env' });
 export const app: Express = express();
 const port = process.env.PORT || 3001;
 
-// Allow requests from frontend
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+// Allow requests from frontend/backend
+// TODO: Change this to the production URL
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3001'];
 
 app.use(
   cors({
