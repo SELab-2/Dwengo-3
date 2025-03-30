@@ -27,7 +27,8 @@ export const app: Express = express();
 const port = process.env.PORT || 3001;
 
 // Allow requests from frontend
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+// TODO: change this for production
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3001'];
 
 app.use(
   cors({
