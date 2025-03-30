@@ -1,10 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import apiClient from '../api';
-import { LoginData, RegisterData, UserData } from '../util/types/auth.types';
+import { LoginData, RegisterData } from '../util/types/auth.types';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { ApiRoutes } from '../util/routes';
+import { UserDetail } from '../util/types/user.types';
 
 // Custom hook to access the auth context
 export const useAuth = () => {
@@ -43,7 +44,7 @@ export function useLogin() {
 
 export function useLogout() {
   return useMutation({
-    mutationFn: async (data: UserData) => {
+    mutationFn: async (data: UserDetail) => {
       if (data.role === ClassRoleEnum.STUDENT) {
         const response = await apiClient.post(ApiRoutes.logout.student);
         return response.data;
