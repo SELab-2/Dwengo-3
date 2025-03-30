@@ -20,11 +20,16 @@ vi.mock('../../domain/message.domain', () => {
   };
 });
 
-const route = '/api/message';
+const route = '/message';
+const agent = request.agent(app);
 
 describe('message routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /message', () => {
@@ -33,7 +38,7 @@ describe('message routes test', () => {
       const expected = { endpoint: 'getMessages' };
       mockMessageDomain.getMessages.mockResolvedValue(expected);
 
-      await request(app).get(`${route}`).query(query).expect(200, expected);
+      await agent.get(`${route}`).query(query).expect(200, expected);
 
       expect(mockMessageDomain.getMessages).toHaveBeenCalledWith(query, expect.any(Object));
     });
@@ -48,7 +53,7 @@ describe('message routes test', () => {
       const expected = { endpoint: 'createMessage' };
       mockMessageDomain.createMessage.mockResolvedValue(expected);
 
-      await request(app).put(`${route}`).send(body).expect(200, expected);
+      await agent.put(`${route}`).send(body).expect(200, expected);
 
       expect(mockMessageDomain.createMessage).toHaveBeenCalledWith(body, expect.any(Object));
     });
@@ -60,7 +65,7 @@ describe('message routes test', () => {
       const expected = { endpoint: 'deleteMessage' };
       mockMessageDomain.deleteMessage.mockResolvedValue(expected);
 
-      await request(app).delete(`${route}/${id}`).expect(200, expected);
+      await agent.delete(`${route}/${id}`).expect(200, expected);
 
       expect(mockMessageDomain.deleteMessage).toHaveBeenCalledWith(id, expect.any(Object));
     });

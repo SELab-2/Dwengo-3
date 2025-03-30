@@ -1,7 +1,6 @@
 import request from 'supertest';
 import { describe, beforeEach, test, vi, expect } from 'vitest';
 import { app } from '../../app';
-import { mock } from 'node:test';
 
 // Domain mock
 const { mockDiscussionDomain } = vi.hoisted(() => {
@@ -21,20 +20,25 @@ vi.mock('../../domain/discussion.domain', () => {
   };
 });
 
-const route = '/api/dicsussion';
+const route = '/discussion';
+const agent = request.agent(app);
 
 describe('discussion routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /discussion', () => {
     test('Responds on getDiscussions', async () => {
-      const query = { groupIds: ['550e8400-e29b-41d4-a716-446655440000'] };
+      const query = { groupIds: '550e8400-e29b-41d4-a716-446655440000' };
       const expected = { endpoint: 'getDiscussions' };
       mockDiscussionDomain.getDiscussions.mockResolvedValue(expected);
 
-      await request(app).get(`${route}`).query(query).expect(200, expected);
+      await agent.get(`${route}`).query(query).expect(200, expected);
 
       expect(mockDiscussionDomain.getDiscussions).toHaveBeenCalledWith(query, expect.any(Object));
     });
@@ -46,7 +50,7 @@ describe('discussion routes test', () => {
       const expected = { endpoint: 'getDiscussionById' };
       mockDiscussionDomain.getDiscussionById.mockResolvedValue(expected);
 
-      await request(app).get(`${route}/${id}`).expect(200, expected);
+      await agent.get(`${route}/${id}`).expect(200, expected);
 
       expect(mockDiscussionDomain.getDiscussionById).toHaveBeenCalledWith(id, expect.any(Object));
     });
@@ -60,7 +64,7 @@ describe('discussion routes test', () => {
       const expected = { endpoint: 'createDiscussion' };
       mockDiscussionDomain.createDiscussion.mockResolvedValue(expected);
 
-      await request(app).put(`${route}`).send(body).expect(200, expected);
+      await agent.put(`${route}`).send(body).expect(200, expected);
 
       expect(mockDiscussionDomain.createDiscussion).toHaveBeenCalledWith(body, expect.any(Object));
     });

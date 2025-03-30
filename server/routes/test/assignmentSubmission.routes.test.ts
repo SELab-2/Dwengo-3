@@ -21,11 +21,16 @@ vi.mock('../../domain/assignmentSubmission.domain', () => {
   };
 });
 
-const route = '/api/assignmentSubmission';
+const route = '/assignmentSubmission';
+const agent = request.agent(app);
 
 describe('assignmentSubmission routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /assignmentSubmission', () => {
@@ -34,7 +39,7 @@ describe('assignmentSubmission routes test', () => {
       const expected = { endpoint: 'getAssignmentSubmissions' };
       mockAssignmentSubmissionDomain.getAssignmentSubmissions.mockResolvedValue(expected);
 
-      await request(app).get(`${route}`).query(query).expect(200, expected);
+      await agent.get(`${route}`).query(query).expect(200, expected);
 
       expect(mockAssignmentSubmissionDomain.getAssignmentSubmissions).toHaveBeenCalledWith(
         query,
@@ -49,7 +54,7 @@ describe('assignmentSubmission routes test', () => {
       const expected = { endpoint: 'getAssignmentSubmissionById' };
       mockAssignmentSubmissionDomain.getAssignmentSubmissionById.mockResolvedValue(expected);
 
-      await request(app).get(`${route}/${id}`).expect(200, expected);
+      await agent.get(`${route}/${id}`).expect(200, expected);
 
       expect(mockAssignmentSubmissionDomain.getAssignmentSubmissionById).toHaveBeenCalledWith(
         id,
@@ -69,7 +74,7 @@ describe('assignmentSubmission routes test', () => {
       const expected = { endpoint: 'createAssignmentSubmission' };
       mockAssignmentSubmissionDomain.createAssignmentSubmission.mockResolvedValue(expected);
 
-      await request(app).put(`${route}`).send(body).expect(200, expected);
+      await agent.put(`${route}`).send(body).expect(200, expected);
 
       expect(mockAssignmentSubmissionDomain.createAssignmentSubmission).toHaveBeenCalledWith(
         expect.objectContaining({ body }),
@@ -88,7 +93,7 @@ describe('assignmentSubmission routes test', () => {
       const expected = { endpoint: 'updateAssignmentSubmission' };
       mockAssignmentSubmissionDomain.updateAssignmentSubmission.mockResolvedValue(expected);
 
-      await request(app).patch(`${route}`).send(body).expect(200, expected);
+      await agent.patch(`${route}`).send(body).expect(200, expected);
 
       expect(mockAssignmentSubmissionDomain.updateAssignmentSubmission).toHaveBeenCalledWith(
         expect.objectContaining({ body }),

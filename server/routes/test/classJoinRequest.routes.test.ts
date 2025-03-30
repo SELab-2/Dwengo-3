@@ -20,12 +20,17 @@ vi.mock('../../domain/classJoinRequest.domain', () => {
   };
 });
 
-const studentRoute = '/api/class/studentRequest';
-const teacherRoute = '/api/class/teacherRequest';
+const studentRoute = '/class/studentRequest';
+const teacherRoute = '/class/teacherRequest';
+const agent = request.agent(app);
 
 describe('announcement routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /class/studentRequest', () => {
@@ -34,11 +39,12 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'getStudentJoinRequests' };
       mockClassJoinRequestDomain.getJoinRequests.mockResolvedValue(expected);
 
-      await request(app).get(`${studentRoute}`).query(query).expect(200, expected);
+      await agent.get(`${studentRoute}`).query(query).expect(200, expected);
 
       expect(mockClassJoinRequestDomain.getJoinRequests).toHaveBeenCalledWith(
         query,
         expect.any(Object),
+        'STUDENT',
       );
     });
   });
@@ -49,11 +55,12 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'getTeacherJoinRequests' };
       mockClassJoinRequestDomain.getJoinRequests.mockResolvedValue(expected);
 
-      await request(app).get(`${teacherRoute}`).query(query).expect(200, expected);
+      await agent.get(`${teacherRoute}`).query(query).expect(200, expected);
 
       expect(mockClassJoinRequestDomain.getJoinRequests).toHaveBeenCalledWith(
         query,
         expect.any(Object),
+        'TEACHER',
       );
     });
   });
@@ -64,7 +71,7 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'createStudentClassJoinRequest' };
       mockClassJoinRequestDomain.createClassJoinRequest.mockResolvedValue(expected);
 
-      await request(app).put(`${studentRoute}`).send(body).expect(200, expected);
+      await agent.put(`${studentRoute}`).send(body).expect(200, expected);
 
       expect(mockClassJoinRequestDomain.createClassJoinRequest).toHaveBeenCalledWith(
         body,
@@ -79,7 +86,7 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'createTeacherClassJoinRequest' };
       mockClassJoinRequestDomain.createClassJoinRequest.mockResolvedValue(expected);
 
-      await request(app).put(`${teacherRoute}`).send(body).expect(200, expected);
+      await agent.put(`${teacherRoute}`).send(body).expect(200, expected);
 
       expect(mockClassJoinRequestDomain.createClassJoinRequest).toHaveBeenCalledWith(
         body,
@@ -97,7 +104,7 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'handleStudentJoinRequest' };
       mockClassJoinRequestDomain.handleJoinRequest.mockResolvedValue(expected);
 
-      await request(app).post(`${studentRoute}`).send(body).expect(200, expected);
+      await agent.post(`${studentRoute}`).send(body).expect(200, expected);
 
       expect(mockClassJoinRequestDomain.handleJoinRequest).toHaveBeenCalledWith(
         body,
@@ -115,7 +122,7 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'handleTeacherJoinRequest' };
       mockClassJoinRequestDomain.handleJoinRequest.mockResolvedValue(expected);
 
-      await request(app).post(`${teacherRoute}`).send(body).expect(200, expected);
+      await agent.post(`${teacherRoute}`).send(body).expect(200, expected);
 
       expect(mockClassJoinRequestDomain.handleJoinRequest).toHaveBeenCalledWith(
         body,

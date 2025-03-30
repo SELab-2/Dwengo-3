@@ -21,11 +21,16 @@ vi.mock('../../domain/announcement.domain', () => {
   };
 });
 
-const route = '/api/announcement';
+const route = '/announcement';
+const agent = request.agent(app);
 
 describe('announcement routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /announcement', () => {
@@ -34,7 +39,7 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'getAnnouncements' };
       mockAnnouncementDomain.getAnnouncements.mockResolvedValue(expected);
 
-      await request(app).get(`${route}`).query(query).expect(200, expected);
+      await agent.get(`${route}`).query(query).expect(200, expected);
 
       expect(mockAnnouncementDomain.getAnnouncements).toHaveBeenCalledWith(
         query,
@@ -49,7 +54,7 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'getAnnouncementById' };
       mockAnnouncementDomain.getAnnouncementById.mockResolvedValue(expected);
 
-      await request(app).get(`${route}/${id}`).expect(200, expected);
+      await agent.get(`${route}/${id}`).expect(200, expected);
 
       expect(mockAnnouncementDomain.getAnnouncementById).toHaveBeenCalledWith(
         id,
@@ -68,7 +73,7 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'createAnnouncement' };
       mockAnnouncementDomain.createAnnouncement.mockResolvedValue(expected);
 
-      await request(app).put(`${route}`).send(body).expect(200, expected);
+      await agent.put(`${route}`).send(body).expect(200, expected);
 
       expect(mockAnnouncementDomain.createAnnouncement).toHaveBeenCalledWith(
         body,
@@ -87,7 +92,7 @@ describe('announcement routes test', () => {
       const expected = { endpoint: 'createAnnouncement' };
       mockAnnouncementDomain.updateAnnouncement.mockResolvedValue(expected);
 
-      await request(app).patch(`${route}/${id}`).send(body).expect(200, expected);
+      await agent.patch(`${route}/${id}`).send(body).expect(200, expected);
 
       expect(mockAnnouncementDomain.updateAnnouncement).toHaveBeenCalledWith(
         id,

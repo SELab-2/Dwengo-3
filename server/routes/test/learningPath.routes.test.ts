@@ -21,11 +21,16 @@ vi.mock('../../domain/learningPath.domain', () => {
   };
 });
 
-const route = '/api/learningPath';
+const route = '/learningPath';
+const agent = request.agent(app);
 
 describe('learningPath routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /learningPath', () => {
@@ -34,7 +39,7 @@ describe('learningPath routes test', () => {
       const expected = { endpoint: 'getLearningPaths' };
       mockLearningPathDomain.getLearningPaths.mockResolvedValue(expected);
 
-      await request(app).get(`${route}`).query(query).expect(200, expected);
+      await agent.get(`${route}`).query(query).expect(200, expected);
 
       expect(mockLearningPathDomain.getLearningPaths).toHaveBeenCalledWith(query);
     });
@@ -46,7 +51,7 @@ describe('learningPath routes test', () => {
       const expected = { endpoint: 'getLearningPathById' };
       mockLearningPathDomain.getLearningPathById.mockResolvedValue(expected);
 
-      await request(app).get(`${route}/${id}`).expect(200, expected);
+      await agent.get(`${route}/${id}`).expect(200, expected);
 
       expect(mockLearningPathDomain.getLearningPathById).toHaveBeenCalledWith(id);
     });
@@ -66,7 +71,7 @@ describe('learningPath routes test', () => {
       const expected = { endpoint: 'createLearningPath' };
       mockLearningPathDomain.createLearningPath.mockResolvedValue(expected);
 
-      await request(app).put(`${route}`).send(body).expect(200, expected);
+      await agent.put(`${route}`).send(body).expect(200, expected);
 
       expect(mockLearningPathDomain.createLearningPath).toHaveBeenCalledWith(
         body,

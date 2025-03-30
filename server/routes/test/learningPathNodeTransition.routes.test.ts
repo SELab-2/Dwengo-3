@@ -18,11 +18,16 @@ vi.mock('../../domain/learningPathNodeTransition.domain', () => {
   };
 });
 
-const route = '/api/learningPathNodeTransition';
+const route = '/learningPathNodeTransition';
+const agent = request.agent(app);
 
 describe('learningPathNodeTransition routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('PUT /learningPathNodeTransition', () => {
@@ -37,7 +42,7 @@ describe('learningPathNodeTransition routes test', () => {
         expected,
       );
 
-      await request(app).put(`${route}`).send(body).expect(200, expected);
+      await agent.put(`${route}`).send(body).expect(200, expected);
 
       expect(
         mockLearningPathNodeTransitionDomain.createLearningPathNodeTransition,

@@ -1,7 +1,6 @@
 import request from 'supertest';
 import { describe, beforeEach, test, vi, expect } from 'vitest';
 import { app } from '../../app';
-import { mock } from 'node:test';
 
 // Domain mock
 const { mockLearningObjectDomain } = vi.hoisted(() => {
@@ -23,11 +22,16 @@ vi.mock('../../domain/learningObject.domain', () => {
   };
 });
 
-const route = '/api/learningObject';
+const route = '/learningObject';
+const agent = request.agent(app);
 
 describe('learningObject routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /learningObject', () => {
@@ -36,7 +40,7 @@ describe('learningObject routes test', () => {
       const expected = { endpoint: 'getLearningObjects' };
       mockLearningObjectDomain.getLearningObjects.mockResolvedValue(expected);
 
-      await request(app).get(`${route}`).query(query).expect(200, expected);
+      await agent.get(`${route}`).query(query).expect(200, expected);
 
       expect(mockLearningObjectDomain.getLearningObjects).toHaveBeenCalledWith(query);
     });
@@ -48,7 +52,7 @@ describe('learningObject routes test', () => {
       const expected = { endpoint: 'getLearningObjectById' };
       mockLearningObjectDomain.getLearningObjectById.mockResolvedValue(expected);
 
-      await request(app).get(`${route}/${id}`).expect(200, expected);
+      await agent.get(`${route}/${id}`).expect(200, expected);
 
       expect(mockLearningObjectDomain.getLearningObjectById).toHaveBeenCalledWith(id);
     });
@@ -94,7 +98,7 @@ describe('learningObject routes test', () => {
       const expected = { endpoint: 'createLearningObject' };
       mockLearningObjectDomain.createLearningObject.mockResolvedValue(expected);
 
-      await request(app).put(`${route}`).send(body).expect(200, expected);
+      await agent.put(`${route}`).send(body).expect(200, expected);
 
       expect(mockLearningObjectDomain.createLearningObject).toHaveBeenCalledWith(
         body,
@@ -129,7 +133,7 @@ describe('learningObject routes test', () => {
       const expected = { endpoint: 'updateLearningObject' };
       mockLearningObjectDomain.updateLearningObject.mockResolvedValue(expected);
 
-      await request(app).patch(`${route}/${id}`).send(body).expect(200, expected);
+      await agent.patch(`${route}/${id}`).send(body).expect(200, expected);
 
       expect(mockLearningObjectDomain.updateLearningObject).toHaveBeenCalledWith(
         id,
@@ -145,7 +149,7 @@ describe('learningObject routes test', () => {
       const expected = { endpoint: 'deleteLearningObject' };
       mockLearningObjectDomain.deleteLearningObject.mockResolvedValue(expected);
 
-      await request(app).delete(`${route}/${id}`).expect(200, expected);
+      await agent.delete(`${route}/${id}`).expect(200, expected);
 
       expect(mockLearningObjectDomain.deleteLearningObject).toHaveBeenCalledWith(
         id,

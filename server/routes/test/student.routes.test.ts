@@ -19,11 +19,16 @@ vi.mock('../../domain/student.domain', () => {
   };
 });
 
-const route = '/api/student';
+const route = '/student';
+const agent = request.agent(app);
 
 describe('student routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /student', () => {
@@ -32,7 +37,7 @@ describe('student routes test', () => {
       const expected = { endpoint: 'getStudents' };
       mockStudentDomain.getStudents.mockResolvedValue(expected);
 
-      await request(app).get(`${route}`).query(query).expect(200, expected);
+      await agent.get(`${route}`).query(query).expect(200, expected);
 
       expect(mockStudentDomain.getStudents).toHaveBeenCalledWith(query, expect.any(Object));
     });
@@ -44,7 +49,7 @@ describe('student routes test', () => {
       const expected = { endpoint: 'getStudentById' };
       mockStudentDomain.getStudentById.mockResolvedValue(expected);
 
-      await request(app).get(`${route}/${id}`).expect(200, expected);
+      await agent.get(`${route}/${id}`).expect(200, expected);
 
       expect(mockStudentDomain.getStudentById).toHaveBeenCalledWith(id, expect.any(Object));
     });

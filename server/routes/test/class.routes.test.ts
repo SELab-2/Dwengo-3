@@ -10,8 +10,8 @@ const { mockClassDomain } = vi.hoisted(() => {
       getClassById: vi.fn(),
       createClass: vi.fn(),
       updateClass: vi.fn(),
-      deleteTeacherFromClass: vi.fn(),
-      deleteStudentFromClass: vi.fn(),
+      removeTeacherFromClass: vi.fn(),
+      removeStudentFromClass: vi.fn(),
     },
   };
 });
@@ -24,12 +24,17 @@ vi.mock('../../domain/class.domain', () => {
 });
 
 // Global test variables
-const route: string = '/api/class';
+const route: string = '/class';
+const agent = request.agent(app);
 
 // Tests
 describe('class routes test', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
+    await agent
+      .post('/auth/teacher/login/local')
+      .send({ email: 'test@example.com', password: 'password123' })
+      .expect(200);
   });
 
   describe('GET /class', () => {
@@ -38,7 +43,7 @@ describe('class routes test', () => {
       const expected = { endpoint: 'getClasses' };
       mockClassDomain.getClasses.mockResolvedValue(expected);
 
-      await request(app).get(`${route}`).query(query).expect(200, expected);
+      await agent.get(`${route}`).query(query).expect(200, expected);
 
       expect(mockClassDomain.getClasses).toHaveBeenCalledWith(query, expect.any(Object));
     });
@@ -50,7 +55,7 @@ describe('class routes test', () => {
       const expected = { endpoint: 'getClassById' };
       mockClassDomain.getClassById.mockResolvedValue(expected);
 
-      await request(app).get(`${route}/${id}`).expect(200, expected);
+      await agent.get(`${route}/${id}`).expect(200, expected);
 
       expect(mockClassDomain.getClassById).toHaveBeenCalledWith(id, expect.any(Object));
     });
@@ -62,7 +67,7 @@ describe('class routes test', () => {
       const expected = { endpoint: 'createClass' };
       mockClassDomain.createClass.mockResolvedValue(expected);
 
-      await request(app).put(`${route}`).send(body).expect(200, expected);
+      await agent.put(`${route}`).send(body).expect(200, expected);
 
       expect(mockClassDomain.createClass).toHaveBeenCalledWith(body, expect.any(Object));
     });
@@ -75,7 +80,7 @@ describe('class routes test', () => {
       const expected = { endpoint: 'updateClass' };
       mockClassDomain.updateClass.mockResolvedValue(expected);
 
-      await request(app).patch(`${route}/${id}`).send(body).expect(200, expected);
+      await agent.patch(`${route}/${id}`).send(body).expect(200, expected);
 
       expect(mockClassDomain.updateClass).toHaveBeenCalledWith(id, body, expect.any(Object));
     });
@@ -86,11 +91,11 @@ describe('class routes test', () => {
       const id = '550e8400-e29b-41d4-a716-446655440000';
       const teacherId = '660e8400-e29b-41d4-a716-446655440000';
       const expected = { endpoint: 'deleteTeacherFromClass' };
-      mockClassDomain.deleteTeacherFromClass.mockResolvedValue(expected);
+      mockClassDomain.removeTeacherFromClass.mockResolvedValue(expected);
 
-      await request(app).delete(`${route}/${id}/teacher/${teacherId}`).expect(200, expected);
+      await agent.delete(`${route}/${id}/teacher/${teacherId}`).expect(200);
 
-      expect(mockClassDomain.deleteTeacherFromClass).toHaveBeenCalledWith(
+      expect(mockClassDomain.removeTeacherFromClass).toHaveBeenCalledWith(
         id,
         teacherId,
         expect.any(Object),
@@ -102,12 +107,12 @@ describe('class routes test', () => {
     test('Responds on deleteStudenFromClass', async () => {
       const id = '550e8400-e29b-41d4-a716-446655440000';
       const studentId = '770e8400-e29b-41d4-a716-446655440000';
-      const expected = { endpoint: 'deleteStudentFromClass' };
-      mockClassDomain.deleteTeacherFromClass.mockResolvedValue(expected);
+      const expected = { endpoint: 'removeStudentFromClass' };
+      mockClassDomain.removeStudentFromClass.mockResolvedValue(expected);
 
-      await request(app).delete(`${route}/${id}/teacher/${studentId}`).expect(200, expected);
+      await agent.delete(`${route}/${id}/student/${studentId}`).expect(200);
 
-      expect(mockClassDomain.deleteStudentFromClass).toHaveBeenCalledWith(
+      expect(mockClassDomain.removeStudentFromClass).toHaveBeenCalledWith(
         id,
         studentId,
         expect.any(Object),
