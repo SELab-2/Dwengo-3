@@ -25,10 +25,13 @@ export const nl = {
     edit: 'Bewerken',
     delete: 'Verwijderen',
     deleteAccount: 'Account verwijderen',
-    deleteAccountConfirmation:
-      'Weet je zeker dat je je account wilt verwijderen?',
+    deleteAccountConfirmation: 'Weet je zeker dat je je account wilt verwijderen?',
     deleteAccountSuccess: 'Je account is succesvol verwijderd.',
     settings: 'Instellingen',
     memberSince: 'Lid sinds',
+    favorites: 'Favorieten',
+    continue: 'Ga verder',
+    view_edit: 'Bekijk/Bewerk',
+    assignments: 'Opdrachten',
   },
 };
