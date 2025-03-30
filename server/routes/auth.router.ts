@@ -82,6 +82,9 @@ async function login(req: Request, res: Response): Promise<void> {
   res.cookie('DWENGO_SESSION', cookie, {
     maxAge: 6 * 60 * 60 * 1000,
     httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    path: '/',
   }); // 6 hours
   res.status(http2.constants.HTTP_STATUS_OK).send({
     id: user.id,
