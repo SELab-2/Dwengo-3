@@ -61,7 +61,6 @@ export class TeacherDomain {
     return await this.teacherPersistence.getTeacherById(id);
   }
 
-
   public async shareClass(userId1: string, userId2: string) {
     // TODO: move this to class domain
 

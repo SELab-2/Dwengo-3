@@ -14,5 +14,9 @@ export const en = {
     welcomeMessage: 'Welcome to the Dwengo learningplatform!',
     registerAs: 'Register as',
     alreadyHaveAccount: 'Already have an account?',
+    learningThemes: 'Learning Themes',
+    myLearningPaths: 'Learning Paths',
+    profile: 'Profile',
+    myClasses: 'My Classes',
   },
 };

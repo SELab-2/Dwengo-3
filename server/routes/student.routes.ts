@@ -19,7 +19,7 @@ export class StudentController {
   private getStudentById = async (req: Request, res: Response) => {
     res.json(await this.studentDomain.getStudentById(req.params.id, await getUserFromReq(req)));
   };
-  
+
   private initializeRoutes() {
     /**
      * @swagger

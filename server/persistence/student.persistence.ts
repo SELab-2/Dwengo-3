@@ -2,10 +2,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import {
-  StudentFilterParams,
-  StudentIncludeParams,
-} from '../util/types/student.types';
+import { StudentFilterParams, StudentIncludeParams } from '../util/types/student.types';
 import { studentSelectDetail } from '../util/selectInput/student.select';
 import { NotFoundError } from '../util/types/error.types';
 

@@ -14,5 +14,9 @@ export const nl = {
     welcomeMessage: 'Welkom op het Dwengo leerplatform!',
     registerAs: 'Registreer als',
     alreadyHaveAccount: 'Heb je al een account?',
+    learningThemes: "Leerthema's",
+    myLearningPaths: 'Mijn leerpaden',
+    profile: 'Profiel',
+    myClasses: 'Mijn klassen',
   },
 };
