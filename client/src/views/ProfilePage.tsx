@@ -22,6 +22,7 @@ import { useAuth, useLogout } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import NotLoggedIn from '../components/NotLoggedIn';
 import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../util/routes';
 
 function ProfilePage() {
   // TODO: call to API to get user data?
@@ -38,7 +39,7 @@ function ProfilePage() {
         logout();
 
         // Redirect to the login page or home page
-        navigate('/login');
+        navigate(AppRoutes.login);
       },
       onError: (error) => {
         // Handle error (e.g., show error message)
@@ -91,28 +92,17 @@ function ProfilePage() {
             </Box>
             <Box display="flex" alignItems="center">
               <SchoolIcon color="action" sx={{ mr: 1 }} />
-              <Typography variant="body1">
-                {t('school')}: user.school?
-              </Typography>
+              <Typography variant="body1">{t('school')}: user.school?</Typography>
             </Box>
             <Box display="flex" alignItems="center">
               <CalendarIcon color="action" sx={{ mr: 1 }} />
-              <Typography variant="body1">
-                {t('memberSince')}: user.createdAt?
-              </Typography>
+              <Typography variant="body1">{t('memberSince')}: user.createdAt?</Typography>
             </Box>
           </Box>
           <Divider sx={{ my: 2 }} />
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-          >
+          <Box display="flex" flexDirection="row" justifyContent="space-between">
             <List sx={{ width: '48%' }}>
-              <ListItem
-                component="button"
-                onClick={() => handleDeleteAccount()}
-              >
+              <ListItem component="button" onClick={() => handleDeleteAccount()}>
                 <ListItemIcon>
                   <DeleteIcon color="error" />
                 </ListItemIcon>
