@@ -14,5 +14,5 @@ export interface ClassShort {
 export interface ClassDetail extends ClassShort {
   students: StudentShort[];
   teachers: TeacherShort[];
-  assignment: AssignmentShort[];
+  assignments: AssignmentShort[];
 }
