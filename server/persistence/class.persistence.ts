@@ -1,17 +1,11 @@
 import { PaginationParams } from '../util/types/pagination.types';
-import {
-  ClassCreateParams,
-  ClassFilterParams,
-  ClassUpdateParams,
-} from '../util/types/class.types';
+import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from '../util/types/class.types';
 import { Prisma } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { UserEntity } from '../util/types/user.types';
-import {
-  classSelectDetail,
-  classSelectShort,
-} from '../util/selectInput/class.select';
+import { classSelectDetail, classSelectShort } from '../util/selectInput/class.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class ClassPersistence {
   private prisma;
@@ -23,20 +17,13 @@ export class ClassPersistence {
   private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
     return {
       AND: [
-        filters.teacherId
-          ? { teachers: { some: { id: filters.teacherId } } }
-          : {},
-        filters.studentId
-          ? { students: { some: { id: filters.studentId } } }
-          : {},
+        filters.teacherId ? { teachers: { some: { id: filters.teacherId } } } : {},
+        filters.studentId ? { students: { some: { id: filters.studentId } } } : {},
       ],
     };
   }
 
-  public async getClasses(
-    paginationParams: PaginationParams,
-    filters: ClassFilterParams,
-  ) {
+  public async getClasses(paginationParams: PaginationParams, filters: ClassFilterParams) {
     const where: Prisma.ClassWhereInput = this.buildWhereClause(filters);
 
     return searchAndPaginate(
@@ -55,7 +42,7 @@ export class ClassPersistence {
     });
 
     if (!classData) {
-      throw new Error(`Class with id: ${id} was not found`);
+      throw new NotFoundError(40401);
     }
 
     return classData;
@@ -75,20 +62,18 @@ export class ClassPersistence {
     });
   }
 
-  public async updateClass(params: ClassUpdateParams) {
-    const { id, ...data } = params;
-
+  public async updateClass(id: string, params: ClassUpdateParams) {
     return await this.prisma.class.update({
       where: { id },
-      data: data,
+      data: params,
       select: classSelectDetail,
     });
   }
 
-  public async isTeacherFromClass(userId: string, classId: string) {
+  public async isTeacherFromClass(teacherId: string, classId: string) {
     const teacher = await this.prisma.teacher.findFirst({
       where: {
-        userId,
+        id: teacherId,
         classes: {
           some: {
             id: classId,
@@ -97,5 +82,43 @@ export class ClassPersistence {
       },
     });
     return teacher !== null;
+  }
+
+  public async isStudentFromClass(studentId: string, classId: string) {
+    const student = await this.prisma.student.findFirst({
+      where: {
+        id: studentId,
+        classes: {
+          some: {
+            id: classId,
+          },
+        },
+      },
+    });
+    return student !== null;
+  }
+
+  public async removeTeacherFromClass(classId: string, teacherId: string) {
+    return await this.prisma.class.update({
+      where: { id: classId },
+      data: {
+        teachers: {
+          disconnect: { id: teacherId },
+        },
+      },
+      select: classSelectDetail,
+    });
+  }
+
+  public async removeStudentFromClass(classId: string, studentId: string) {
+    return await this.prisma.class.update({
+      where: { id: classId },
+      data: {
+        students: {
+          disconnect: { id: studentId },
+        },
+      },
+      select: classSelectDetail,
+    });
   }
 }

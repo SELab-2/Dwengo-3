@@ -1,4 +1,4 @@
-import { Discussion, PrismaClient, Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import {
   DiscussionCreateParams,
@@ -13,6 +13,7 @@ import {
   discussionSelectShort,
 } from '../util/selectInput/discussion.select';
 import { Uuid } from '../util/types/assignment.types';
+import { NotFoundError } from '../util/types/error.types';
 
 export class DiscussionPersistence {
   private prisma: PrismaClient;
@@ -45,7 +46,7 @@ export class DiscussionPersistence {
     });
 
     if (!discussion) {
-      throw new Error(`Discussion with id: ${id} was not found`);
+      throw new NotFoundError(40410);
     }
 
     return discussion;
@@ -53,6 +54,7 @@ export class DiscussionPersistence {
 
   public async createDiscussion(
     params: DiscussionCreateParams,
+    memberIds: string[],
   ): Promise<DiscussionDetail> {
     return this.prisma.discussion.create({
       data: {
@@ -62,7 +64,7 @@ export class DiscussionPersistence {
           },
         },
         members: {
-          connect: params.members.map((member) => ({ id: member })),
+          connect: memberIds.map((member) => ({ id: member })),
         },
       },
       select: discussionSelectDetail,

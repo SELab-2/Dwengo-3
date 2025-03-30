@@ -13,6 +13,7 @@ import {
   assignmentSelectDetail,
   assignmentSelectShort,
 } from '../util/selectInput/assignment.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class AssignmentPersistence {
   public async getAssignments(
@@ -71,15 +72,13 @@ export class AssignmentPersistence {
     });
 
     if (!assignment) {
-      throw new Error(`Assignment with id: ${id} was not found`);
+      throw new NotFoundError(40408);
     }
 
     return assignment;
   }
 
-  public async createAssignment(
-    params: AssignmentCreateParams,
-  ): Promise<AssignmentDetail> {
+  public async createAssignment(params: AssignmentCreateParams): Promise<AssignmentDetail> {
     //create assignment
     const assignment = await PrismaSingleton.instance.assignment.create({
       data: {

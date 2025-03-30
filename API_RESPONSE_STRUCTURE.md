@@ -128,6 +128,7 @@ Onderstaande attributen worden gereturned wanneer het minimale informatie vereis
 - `keywords [string]` (deze wil je namelijk zien als je filtert op strings)
 - `targetAges [int]` (deze wil je ook zien als je filtert op targetAges)
 - `difficulty`
+
 ---
 
 ## LearningPathNode (detail)
@@ -203,7 +204,7 @@ Er bestaat momenteel nog geen endpoint van groups
 ## Group (short)
 
 - `id`
-- `nodeIndex`
+- `[nodeIndex]` (de index van de reeds gemaakte nodes)
 - `assignemntId`
 - `name`
 

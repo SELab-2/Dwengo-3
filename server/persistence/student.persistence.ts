@@ -2,12 +2,9 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import {
-  StudentFilterParams,
-  StudentIncludeParams,
-  StudentUpdateParams,
-} from '../util/types/student.types';
+import { StudentFilterParams, StudentIncludeParams } from '../util/types/student.types';
 import { studentSelectDetail } from '../util/selectInput/student.select';
+import { NotFoundError } from '../util/types/error.types';
 
 /**
  * Persistence class for Student model.
@@ -61,12 +58,7 @@ export class StudentPersistence {
       ],
     };
 
-    return searchAndPaginate(
-      this.prisma.student,
-      whereClause,
-      pagination,
-      include,
-    );
+    return searchAndPaginate(this.prisma.student, whereClause, pagination, include);
   }
 
   /**
@@ -83,7 +75,7 @@ export class StudentPersistence {
     });
 
     if (!student) {
-      throw new Error(`Student with id: ${id} was not found`);
+      throw new NotFoundError(40403);
     }
 
     return student;
@@ -102,41 +94,20 @@ export class StudentPersistence {
     });
   }
 
-  /**
-   * Update a student's classes and groups.
-   *
-   * @remarks This method only updates the classes and groups of the student.
-   * @remarks The returned student data includes the updated classes and groups.
-   *
-   * @param params - The data to update the student with.
-   * @returns - The updated student data.
-   */
-  public async updateStudent(params: StudentUpdateParams) {
-    return await this.prisma.student.update({
-      where: { id: params.id },
-      data: {
-        classes: {
-          connect: params.classes?.map((classId) => ({ id: classId })),
-        },
+  public async getStudentUserIdsByGroupId(groupId: string) {
+    const students = await this.prisma.student.findMany({
+      where: {
         groups: {
-          connect: params.groups?.map((groupId) => ({ id: groupId })),
+          some: {
+            id: groupId,
+          },
         },
       },
-      include: {
-        classes: true,
-        groups: true,
+      select: {
+        userId: true,
       },
     });
-  }
 
-  /**
-   * Delete a student by their ID.
-   *
-   * @param id - The ID of the student to delete.
-   */
-  public async deleteStudent(id: string) {
-    await this.prisma.student.delete({
-      where: { id },
-    });
+    return students.map((student) => student.userId);
   }
 }

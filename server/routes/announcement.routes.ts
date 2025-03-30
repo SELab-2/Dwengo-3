@@ -13,30 +13,17 @@ export class AnnouncementController {
   }
 
   private getAnnouncements = async (req: Request, res: Response) => {
-    res.json(
-      await this.announcementDomain.getAnnouncements(
-        req.query,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.announcementDomain.getAnnouncements(req.query, await getUserFromReq(req)));
   };
 
   private getAnnouncementById = async (req: Request, res: Response) => {
     res.json(
-      await this.announcementDomain.getAnnouncementById(
-        req.params.id,
-        await getUserFromReq(req),
-      ),
+      await this.announcementDomain.getAnnouncementById(req.params.id, await getUserFromReq(req)),
     );
   };
 
   private createAnnouncement = async (req: Request, res: Response) => {
-    res.json(
-      await this.announcementDomain.createAnnouncement(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
+    res.json(await this.announcementDomain.createAnnouncement(req.body, await getUserFromReq(req)));
   };
 
   private updateAnnouncement = async (req: Request, res: Response) => {

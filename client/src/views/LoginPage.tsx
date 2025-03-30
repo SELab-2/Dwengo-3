@@ -4,20 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 import { GoogleLogin } from '@react-oauth/google';
 import { MarginSize } from '../util/size';
+import { AppRoutes } from '../util/routes';
 
 function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate('/register'); // Redirect to the register page
+    navigate(AppRoutes.register); // Redirect to the register page
   };
 
   function handleSuccess() {
     // TODO: handle the api call
 
     // Redirect to the home page
-    navigate('/');
+    navigate(AppRoutes.home);
   }
 
   function handleError() {
@@ -39,22 +40,13 @@ function LoginPage() {
             {t('welcomeMessage')}
           </Typography>
           <Divider sx={{ mb: MarginSize.xsmall }} />
-          <GoogleLogin
-            onSuccess={handleSuccess}
-            onError={handleError}
-            useOneTap
-          ></GoogleLogin>
+          <GoogleLogin onSuccess={handleSuccess} onError={handleError} useOneTap></GoogleLogin>
           <Divider sx={{ mt: MarginSize.xsmall }} />
           <Typography variant="h6">{t('or')} </Typography>
           <Divider />
           <LoginForm />
           <Divider sx={{ mb: MarginSize.xsmall }} />
-          <Button
-            fullWidth
-            variant="outlined"
-            color="primary"
-            onClick={handleRegisterClick}
-          >
+          <Button fullWidth variant="outlined" color="primary" onClick={handleRegisterClick}>
             {t('register')}
           </Button>
         </Paper>

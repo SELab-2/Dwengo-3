@@ -11,6 +11,7 @@ import {
   announcementSelectShort,
 } from '../util/selectInput/announcement.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
 
 //TODO : import prisma client from singleton
 
@@ -47,17 +48,15 @@ export class AnnouncementPersistence {
   }
 
   public async getAnnouncementById(id: string) {
-    const announcement = await PrismaSingleton.instance.announcement.findUnique(
-      {
-        where: {
-          id: id,
-        },
-        select: announcementSelectDetail,
+    const announcement = await PrismaSingleton.instance.announcement.findUnique({
+      where: {
+        id: id,
       },
-    );
+      select: announcementSelectDetail,
+    });
 
     if (!announcement) {
-      throw new Error(`Announcement with id: ${id} was not found`);
+      throw new NotFoundError(40408);
     }
 
     return announcement;
@@ -87,36 +86,25 @@ export class AnnouncementPersistence {
     return announcement;
   }
 
-  public async updateAnnouncement(
-    id: string,
-    announcementUpdateParams: AnnouncementUpdateParams,
-  ) {
-    const updatedAnnouncement =
-      await PrismaSingleton.instance.announcement.update({
-        where: { id: id },
-        data: announcementUpdateParams,
-        select: announcementSelectDetail,
-      });
+  public async updateAnnouncement(id: string, announcementUpdateParams: AnnouncementUpdateParams) {
+    const updatedAnnouncement = await PrismaSingleton.instance.announcement.update({
+      where: { id: id },
+      data: announcementUpdateParams,
+      select: announcementSelectDetail,
+    });
     return updatedAnnouncement;
   }
 
-  public async checkAnnouncementIsFromTeacher(
-    announcementId: string,
-    teacherId: string,
-  ) {
-    const announcement = await PrismaSingleton.instance.announcement.findUnique(
-      {
-        where: {
-          id: announcementId,
-          teacherId: teacherId,
-        },
+  public async checkAnnouncementIsFromTeacher(announcementId: string, teacherId: string) {
+    const announcement = await PrismaSingleton.instance.announcement.findUnique({
+      where: {
+        id: announcementId,
+        teacherId: teacherId,
       },
-    );
+    });
 
     if (!announcement) {
-      throw new Error(
-        `Announcement with id: ${announcementId} does not belong to teacher with id: ${teacherId}`,
-      );
+      throw new BadRequestError(40037);
     }
   }
 }

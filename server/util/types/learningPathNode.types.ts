@@ -9,9 +9,7 @@ export const LearningPathNodeCreateSchema = z.object({
   instruction: z.string().optional(),
 });
 
-export type LearningPathNodeCreateParams = z.infer<
-  typeof LearningPathNodeCreateSchema
->;
+export type LearningPathNodeCreateParams = z.infer<typeof LearningPathNodeCreateSchema>;
 
 export type LearningPathNodeShort = {
   id: Uuid;

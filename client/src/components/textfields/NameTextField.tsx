@@ -1,13 +1,7 @@
 import { TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-function NameTextField({
-  name,
-  setName,
-}: {
-  name: string;
-  setName: (name: string) => void;
-}) {
+function NameTextField({ name, setName }: { name: string; setName: (name: string) => void }) {
   const { t } = useTranslation();
 
   return (
