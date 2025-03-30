@@ -13,12 +13,12 @@ import {
   Avatar,
 } from '@mui/material';
 import { Class as ClassIcon, Person as PersonIcon } from '@mui/icons-material';
-import { LearningPath } from '../util/types/learningPath.types';
+import { LearningPathDetail } from '../util/types/learningPath.types';
 
 interface ClassGroupCardProps {
   className: string;
   teacherName: string;
-  learningPaths: LearningPath[];
+  learningPaths: LearningPathDetail[];
 }
 
 const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
@@ -68,22 +68,28 @@ const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
                   primary={
                     <Box display="flex" justifyContent="space-between">
                       <Typography fontWeight="medium">{path.title}</Typography>
-                      <Chip label={path.date} size="small" variant="outlined" sx={{ ml: 1 }} />
+                      <Chip
+                        label={'10/03/2025'}
+                        /* TODO: replace with actual value */ size="small"
+                        variant="outlined"
+                        sx={{ ml: 1 }}
+                      />
                     </Box>
                   }
                   secondary={
                     <Box mt={1}>
                       <LinearProgress
                         variant="determinate"
-                        value={path.progress}
+                        value={10} //TODO: replace with actual progress value
                         sx={{
                           height: 8,
                           borderRadius: 4,
                           mb: 1,
                         }}
                       />
+                      {/* TODO: replace with actual progress value */}
                       <Typography variant="caption" color="text.secondary">
-                        {`${path.progress}% completed`}
+                        {`${10}% completed`}
                       </Typography>
                     </Box>
                   }

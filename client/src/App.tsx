@@ -6,7 +6,6 @@ import RegisterPage from './views/RegisterPage';
 import theme from './util/theme';
 import './util/i18n';
 import HomePage from './views/HomePage';
-import ProtectedRoutes from './components/ProtectedRoutes';
 import ErrorPage from './views/ErrorPage';
 import FooterBar from './components/FooterBar';
 import MainAppBar from './components/MainAppBar';
