@@ -8,6 +8,13 @@ export interface UserShort {
   role: ClassRoleEnum;
 }
 
+export interface UserDetail extends UserShort {
+  username: string;
+  email: string;
+  student?: StudentShort;
+  teacher?: TeacherShort;
+}
+
 export interface StudentShort {
   id: string;
   name: string;
