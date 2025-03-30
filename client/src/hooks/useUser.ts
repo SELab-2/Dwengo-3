@@ -10,7 +10,7 @@ import { ApiRoutes } from '../util/routes';
  * @param groupId - The ID of the group to filter the students.
  * @returns
  */
-export function useStudent(userId: string | null, classId: string | null, groupId: string | null) {
+export function useStudent(userId?: string, classId?: string, groupId?: string) {
   return useQuery({
     queryKey: ['student', userId],
     queryFn: async () => {
@@ -35,7 +35,7 @@ export function useStudent(userId: string | null, classId: string | null, groupI
  * @groupId - The ID of the group to filter the teacher.
  * @returns The query object containing the teacher data.
  */
-export function useTeacher(userId: string | null, classId: string | null, groupId: string | null) {
+export function useTeacher(userId?: string, classId?: string, groupId?: string) {
   return useQuery({
     queryKey: ['teacher', userId],
     queryFn: async () => {

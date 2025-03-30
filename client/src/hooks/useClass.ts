@@ -3,18 +3,20 @@ import apiClient from '../api';
 import { ApiRoutes } from '../util/routes';
 
 /**
- * Fetches the list of classes for a given user.
+ * Fetches a list of classes based on the provided student and teacher IDs.
  *
- * @param userId - The ID of the user whose classes are to be fetched.
+ * @param studentId - The ID of the student whose classes are to be fetched.
+ * @param teacherId - The ID of the teacher whose classes are to be fetched.
  * @returns The query object containing the class data.
  */
-export function useClass(userId: string) {
+export function useClass(studentId?: string, teacherId?: string) {
   return useQuery({
-    queryKey: ['class', userId],
+    queryKey: ['class', studentId, teacherId],
     queryFn: async () => {
       const response = await apiClient.get(ApiRoutes.class.list, {
         params: {
-          userId,
+          studentId,
+          teacherId,
         },
       });
       return response.data;

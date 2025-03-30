@@ -1,6 +1,24 @@
+import { LearningPathNodeShort } from './learningPathNode.types';
+
 // TODO: edit this type and add other relevant types
-export interface LearningPath {
+export interface LearningPathShort {
+  id: string;
   title: string;
-  date: string;
-  progress: number;
+  targetAges: number[];
+  keywords: string[];
+  image: string;
+  description: string;
+}
+
+export interface LearningPathDetail {
+  id: string;
+  hruid: string;
+  language: string;
+  title: string;
+  description: string;
+  image: string;
+  ownerId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  learningPathNodes: LearningPathNodeShort[];
 }

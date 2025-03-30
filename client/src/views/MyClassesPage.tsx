@@ -4,11 +4,20 @@ import { useAuth } from '../hooks/useAuth';
 import ClassGroupCard from '../components/ClassCard';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../hooks/useClass';
+import { ClassRoleEnum } from '../util/types/class.types';
+import { useStudent, useTeacher } from '../hooks/useUser';
 
 function MyClassesPage() {
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { data: classes } = useClass(user?.id ?? '');
+
+  if (user?.role === ClassRoleEnum.STUDENT) {
+    const { data: student } = useStudent(user?.id ?? '');
+    const { data: classes } = useClass(student?.id ?? '');
+  } else {
+    const { data: teacher } = useTeacher(user?.id ?? '');
+    const { data: classes } = useClass(teacher?.id ?? '');
+  }
 
   console.log(classes);
 
