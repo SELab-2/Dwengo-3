@@ -38,13 +38,13 @@ export class ClassJoinRequestDomain {
 
     const classJoinRequestFilter = ClassJoinRequestFilterSchema.parse(query);
 
-    // Atleast one of them will be non null because of the checks in the zod scheme.
+    // At least one of them will be non-null because of the checks in the zod scheme.
     const { classId, userId } = classJoinRequestFilter;
 
     // Teacher checks:
     if (user.role === ClassRoleEnum.TEACHER) {
       if (!user.teacher) {
-        throw new Error('User must be a teacher to retrieve join requests for their classes.');
+        throw new BadRequestError(40006);
       }
 
       // If userId is provided, it must match the teacher's own userId
