@@ -42,7 +42,7 @@ export class AssignmentSubmissionDomain {
 
     if (filters.favoriteId) {
       const favorite = await this.favoritesPersistence.getFavoriteById(filters.favoriteId);
-      if (favorite.userId != user.id) {
+      if (favorite.user.id != user.id) {
         throw new BadRequestError(40043);
       }
     }

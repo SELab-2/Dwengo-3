@@ -30,7 +30,7 @@ export class FavoritesDomain {
   public async getFavoriteById(id: string, user: UserEntity) {
     const favorite = await this.favoritesPersistence.getFavoriteById(id);
 
-    if (favorite.userId != user.id) {
+    if (favorite.user.id != user.id) {
       throw new BadRequestError(40042);
     }
 
@@ -45,7 +45,7 @@ export class FavoritesDomain {
   public async deleteFavorite(id: string, user: UserEntity) {
     const favorite = await this.favoritesPersistence.getFavoriteById(id);
 
-    if (favorite.userId != user.id) {
+    if (favorite.user.id != user.id) {
       throw new BadRequestError(40042);
     }
 
