@@ -33,22 +33,28 @@ export class TeacherController {
      *       - Teacher
      *     summary: Get list of teachers
      *     description: Fetches a list of teachers filtered by optional query parameters.
-     *     requestBody:
-     *       required: false
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               userId:
-     *                 type: string
-     *                 format: uuid
-     *               classId:
-     *                 type: string
-     *                 format: uuid
-     *               assignmentId:
-     *                 type: string
-     *                 format: uuid
+     *     parameters:
+     *       - name: userId
+     *         in: query
+     *         description: Filter by user ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: classId
+     *         in: query
+     *         description: Filter by class ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: assignmentId
+     *         in: query
+     *         description: Filter by assignment ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
      *     responses:
      *       200:
      *         description: A list of teachers
