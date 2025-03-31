@@ -39,10 +39,10 @@ describe('user domain', () => {
                 loginRequest = { email: testUsers[0].email, password: testUsers[0].password }
             });
         });
-        test('existing user login passes', async () => {
+        test('existing user passes', async () => {
             await expect(userDomain.loginUser(loginRequest)).resolves.toBeDefined()
         });
-        test('nonexisting user login fails', async () => {
+        test('nonexisting user fails', async () => {
             loginRequest = { ...loginRequest, email: 'user0@example.com' }
             await expect(userDomain.loginUser(loginRequest)).rejects.toThrow()
         });
