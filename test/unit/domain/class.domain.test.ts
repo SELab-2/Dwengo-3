@@ -23,6 +23,8 @@ vi.mock('../../../server/persistence/class.persistence', () => ({
 }));
 
 const classDomain = new ClassDomain()
+
+// test data
 let userTeacher: UserEntity = { 
     ...testUsers[0], 
     role: testUsers[0].role as ClassRoleEnum ,
@@ -53,7 +55,7 @@ let updateClassInvalidIdParams = { id: 'id', name: 'class0' }
 let updateClassInvalidNameParams = { id: 'id', name: '' }
 let updateClassTeacherDoesntBelongParams = { id: testClasses[1].id, name: 'class0' }
 
-// Tests
+// tests
 describe('class domain', () => {
     beforeEach(() => {
         vi.resetAllMocks();

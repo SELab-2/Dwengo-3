@@ -197,6 +197,94 @@
         "page": "1",
         "pageSize": "10"
     },
+    "testAssignments": [
+        {
+            "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
+            "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+            "teacherId": "3b06702b-1111-2222-3333-444455556666",
+            "classId": "8b07803c-4444-5555-6666-777788889999"
+        },
+        {
+            "id": "6e312a15-dcc0-45d3-8660-17c749910839",
+            "learningPathId": "91aa27dc-2c50-5e6e-b789-769de70cf653",
+            "teacherId": "3b06702b-2222-3333-4444-555566667777",
+            "classId": "8b07853c-4444-5555-6666-777788889999"
+        }
+    ],
+    "testLearningPaths": [
+        {
+            "id": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+            "hruid": "lp0",
+            "language": "nl",
+            "description": "This is a description"
+          },
+          {
+            "id": "91aa27dc-2c50-5e6e-b789-769de70cf653",
+            "hruid": "lp1",
+            "language": "en",
+            "description": "This is another description"
+          },
+          {
+            "id": "a2bb38ed-3d61-6f7f-c890-87aef81df764",
+            "hruid": "lp2",
+            "language": "fr",
+            "description": "A different learning path description"
+          }
+    ],
+    "testGroups": [
+        {
+            "id": "11e237ff-aa67-4859-ab1d-3d12731899b6",
+            "name": "group1",
+            "assignmentId": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
+            "students": [
+                {
+                    "id": "6f7g8h9i-6666-7777-8888-999900001111",
+                    "username": "user6",
+                    "email": "user6@example.com",
+                    "password": "password6",
+                    "surname": "Garcia",
+                    "name": "Sophia",
+                    "role": "STUDENT"
+                  },
+                  {
+                    "id": "7g8h9i0j-7777-8888-9999-000011112222",
+                    "username": "user7",
+                    "email": "user7@example.com",
+                    "password": "password7",
+                    "surname": "Martinez",
+                    "name": "James",
+                    "role": "STUDENT"
+                  }
+            ],
+            "assignment": {
+                "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
+                "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+                "teacherId": "3b06702b-1111-2222-3333-444455556666",
+                "classId": "8b07803c-4444-5555-6666-777788889999",
+                "class": {
+                    "id": "8b07803c-4444-5555-6666-777788889999",
+                    "name": "class1",
+                    "students": [
+                      {
+                          "id": "4c07803c-1111-2222-3333-444455556666",
+                          "userId": "6f7g8h9i-6666-7777-8888-999900001111"
+                        },
+                        {
+                          "id": "4c07803c-2222-3333-4444-555566667777",
+                          "userId": "7g8h9i0j-7777-8888-9999-000011112222"
+                        }
+                    ],
+                    "teachers": [
+                      {
+                          "id": "3b06702b-1111-2222-3333-444455556666",
+                          "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+                        }
+                    ]
+                  }
+            },
+            "progress": []
+        }
+    ],
     "testKeywords": [
         { "keyword": "keyword1" },
         { "keyword": "keyword2" }
@@ -243,8 +331,5 @@
         },
         "available": true,
         "content": "content"
-    },
-    "testAssignment": {
-
     }
 }
