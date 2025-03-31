@@ -69,8 +69,9 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       maxAge: 1000 * 60 * 60 * 5, // 5 hours
+      path: '',
     },
   }),
 );

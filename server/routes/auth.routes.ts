@@ -33,6 +33,7 @@ function isValidRoleUrl(req: Request): boolean {
  * @param next - The next middleware function
  */
 export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
+  console.debug('Cookie:', req.cookies);
   if (req.isAuthenticated()) {
     return next();
   }
