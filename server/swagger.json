@@ -851,6 +851,9 @@
           },
           "learningPathNode": {
             "$ref": "#/components/schemas/LearningPathNodeShort"
+          },
+          "favorite": {
+            "$ref": "#/components/schemas/FavoriteShort"
           }
         }
       },
@@ -1546,6 +1549,12 @@
             "description": "The ID of the group submitting the assignment.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
           },
+          "favoriteId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the favorite to which the submission belongs",
+            "example": "770e8400-e29b-41d4-a716-446655440000"
+          },
           "nodeId": {
             "type": "string",
             "format": "uuid",
@@ -1571,7 +1580,31 @@
             "description": "The submission data, either a string for MULTIPLE_CHOICE or an object for FILE."
           }
         },
-        "required": ["groupId", "nodeId", "submissionType", "submission"]
+        "required": ["nodeId", "submissionType", "submission"]
+      },
+
+      "SubmissionUpdate": {
+        "type": "object",
+        "properties": {
+          "submissionType": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "FILE"],
+            "description": "The type of submission. MULTIPLE_CHOICE expects a string, FILE expects an object."
+          },
+          "submission": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "For MULTIPLE_CHOICE submission type, this should be a string representing the selected answer.",
+                "example": "A"
+              },
+              {
+                "$ref": "#/components/schemas/FileSubmissionSchema"
+              }
+            ],
+            "description": "The submission data, either a string for MULTIPLE_CHOICE or an object for FILE."
+          }
+        }
       },
 
       "FavoriteCreate": {
