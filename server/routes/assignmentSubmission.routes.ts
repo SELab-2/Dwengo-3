@@ -79,7 +79,11 @@ export class AssignmentSubmissionController {
      *         description: Unauthorized, user not authenticated
      */
     this.router.put('/', this.upload.single('file'), this.createAssignmentSubmission.bind(this));
-    this.router.patch('/', this.upload.single('file'), this.updateAssignmentSubmission.bind(this)); //TODO change 'file' to the correct field name
+    this.router.patch(
+      '/:id',
+      this.upload.single('file'),
+      this.updateAssignmentSubmission.bind(this),
+    ); //TODO change 'file' to the correct field name
   }
 
   private async getAssignmentSubmission(req: Request, res: Response): Promise<void> {

@@ -61,4 +61,13 @@ export class FavoritesPersistence {
       select: FavoriteSelectDetail,
     });
   }
+
+  public async updateProgress(id: string, new_progress: number[]) {
+    return await PrismaSingleton.instance.favorite.update({
+      where: { id: id },
+      data: {
+        progress: new_progress,
+      },
+    });
+  }
 }

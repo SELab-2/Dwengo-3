@@ -172,6 +172,10 @@ export class BadRequestError extends APIError {
         return 'All users must belong to the same group...';
       case 40042:
         return "Can't fetch favorites from other user...";
+      case 40043:
+        return "Can't fetch assignmentSubmissions that are not yours";
+      case 40044:
+        return "Can't submit to a non-favorited learningPath";
       default:
         return 'Bad request...';
     }

@@ -191,23 +191,26 @@ enum SubmissionType {
 
 model AssignmentSubmission {
   id             String           @id @default(uuid())
-  groupId        String
+  groupId        String?
+  favoriteId     String?
   nodeId         String
   submissionType SubmissionType
   submission     Json
   node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  group          Group            @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  group          Group?           @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  favorite       Favorite?        @relation(fields: [favoriteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([groupId, nodeId])
 }
 
 model Favorite {
-  id             String       @id @default(uuid())
-  userId         String
-  learningPathId String
-  progress       Int[]        @default([]) // indeces of completed nodes
-  learningPath   LearningPath @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user           User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                    String       @id @default(uuid())
+  userId                String
+  learningPathId        String
+  progress              Int[]        @default([]) // indeces of completed nodes
+  learningPath          LearningPath @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                  User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  assignmentSubmissions AssignmentSubmission[]
 }
 
 model Discussion {
