@@ -254,11 +254,7 @@ router.delete(
   },
 );
 
-router.get('/me', (req: Request, res: Response) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
+router.get('/me', isAuthenticated, (req: Request, res: Response) => {
   // Return the authenticated user's data
-  return res.json(req.user);
+  res.json(req.user);
 });
