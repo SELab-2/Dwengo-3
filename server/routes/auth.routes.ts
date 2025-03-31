@@ -235,7 +235,11 @@ router.get(
     passport.authenticate('google')(req, res, next);
   },
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (process.env.NODE_ENV === 'development') {
+      res.redirect('http://localhost:5173');
+    } else {
+      res.redirect('https://sel2-3.ugent.be');
+    }
   },
 );
 
