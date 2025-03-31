@@ -60,7 +60,7 @@ export class AssignmentSubmissionController {
      *         name: groupId
      *         schema:
      *           type: string
-     *         description: Filter favorites by groupId
+     *         description: Filter by groupId
      *       - in: query
      *         name: favoriteId
      *         schema:
@@ -148,6 +148,10 @@ export class AssignmentSubmissionController {
      *     responses:
      *       200:
      *         description: Submission successfully created
+     *          content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/SubmissionDetail'
      *       400:
      *         description: Bad request due to invalid parameters
      *       401:
