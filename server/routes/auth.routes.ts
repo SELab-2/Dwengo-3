@@ -37,7 +37,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
     return next();
   }
 
-  throw new AuthorizationError(-1, 'User is not authenticated');
+  return next(new AuthorizationError(-1, 'User is not authenticated'));
 }
 
 /**
@@ -55,7 +55,7 @@ export function isNotAuthenticated(req: Request, res: Response, next: NextFuncti
   if (req.isUnauthenticated()) {
     return next();
   }
-  throw new AuthorizationError(-1, 'User is already authenticated');
+  return next(new AuthorizationError(-1, 'User is already authenticated'));
 }
 
 export const router = express.Router();
@@ -243,16 +243,19 @@ router.get(
   },
 );
 
-router.delete(
-  '/logout',
-  (req: Request, res: Response, next: NextFunction) => {
-    req.logout((err) => next(err));
-  },
-  (req: Request, res: Response) => {
-    res.clearCookie('connect.sid', { maxAge: 0 });
-    res.status(200).json({ message: 'Logout successful' });
-  },
-);
+router.delete('/logout', (req: Request, res: Response, next: NextFunction) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    else {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        res.status(200).json({
+          message: 'Logout successful',
+        });
+      });
+    }
+  });
+});
 
 router.get('/me', isAuthenticated, (req: Request, res: Response) => {
   // Return the authenticated user's data
