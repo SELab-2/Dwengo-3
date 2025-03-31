@@ -26,10 +26,8 @@ import { AppRoutes } from './util/routes';
 const queryClient = new QueryClient();
 
 function App() {
-  // TODO: fill in GoogleClientId
-
   return (
-    <GoogleOAuthProvider clientId="TODO">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''}>
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>

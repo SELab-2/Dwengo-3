@@ -26,17 +26,18 @@ export const AppRoutes = {
 export const ApiRoutes = {
   // Auth
   login: {
-    student: '/api/auth/student/login',
-    teacher: '/api/auth/teacher/login',
+    google: {
+      student: '/api/auth/student/login/google',
+      teacher: '/api/auth/teacher/login/google',
+    },
+    student: '/api/auth/student/login/local',
+    teacher: '/api/auth/teacher/login/local',
   },
   register: {
     student: '/api/auth/student/register',
     teacher: '/api/auth/teacher/register',
   },
-  logout: {
-    student: '/api/auth/student/logout',
-    teacher: '/api/auth/teacher/logout',
-  },
+  logout: '/api/auth/logout',
 
   // Announcement
   announcement: {

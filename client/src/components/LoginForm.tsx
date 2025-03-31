@@ -4,7 +4,7 @@ import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useAuth, useLogin } from '../hooks/useAuth';
+import { useAuth, useGoogleLogin, useLogin } from '../hooks/useAuth';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
@@ -20,9 +20,24 @@ function LoginForm() {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isStudent, setIsStudent] = useState<boolean>(true);
+  const [isStudent, setIsStudent] = useState<boolean>(false);
 
   const loginMutation = useLogin();
+  const googleLoginMutation = useGoogleLogin();
+
+  const handleGoogleLogin = () => {
+    googleLoginMutation.mutate(isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, {
+      onSuccess: (response: UserDetail) => {
+        // Set the user in the auth context
+        login(response);
+        // Redirect to the home page
+        navigate(AppRoutes.home);
+      },
+      onError: (error) => {
+        setError(error.message);
+      },
+    });
+  };
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -61,6 +76,13 @@ function LoginForm() {
         sx={{ mt: MarginSize.tiny, mb: MarginSize.xsmall }}
       >
         {t('login')}
+      </Button>
+      <Button
+        fullWidth
+        sx={{ mt: MarginSize.tiny, mb: MarginSize.xsmall }}
+        onClick={handleGoogleLogin}
+      >
+        Login with Google
       </Button>
     </Box>
   );

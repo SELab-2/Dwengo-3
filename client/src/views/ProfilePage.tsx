@@ -33,7 +33,7 @@ function ProfilePage() {
   const { logout } = useAuth();
 
   const handleLogout = () => {
-    logoutMutation.mutateAsync(user!, {
+    logoutMutation.mutateAsync(undefined, {
       onSuccess: () => {
         // Clear user data and tokens
         logout();
