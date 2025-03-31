@@ -1,8 +1,7 @@
-import { Prisma } from '@prisma/client';
 import { learningPathSelectShort } from './learningPath.select';
 import { userSelectShort } from './user.select';
 
-export const FavoriteSelectDetail: Prisma.FavoriteSelect = {
+export const FavoriteSelectDetail = {
   id: true,
   userId: true,
   learningPathId: true,
@@ -15,7 +14,7 @@ export const FavoriteSelectDetail: Prisma.FavoriteSelect = {
   },
 };
 
-export const FavoriteSelectShort: Prisma.FavoriteSelect = {
+export const FavoriteSelectShort = {
   id: true,
   userId: true,
   learningPathId: true,
