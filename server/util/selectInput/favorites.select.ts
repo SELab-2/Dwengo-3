@@ -3,8 +3,6 @@ import { userSelectShort } from './user.select';
 
 export const FavoriteSelectDetail = {
   id: true,
-  userId: true,
-  learningPathId: true,
   progress: true,
   learningPath: {
     select: learningPathSelectShort,
