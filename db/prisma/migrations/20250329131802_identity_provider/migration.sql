@@ -5,6 +5,9 @@ CREATE TYPE "ContentTypeEnum" AS ENUM ('text/plain', 'text/markdown', 'image/ima
 CREATE TYPE "ClassRole" AS ENUM ('TEACHER', 'STUDENT');
 
 -- CreateEnum
+CREATE TYPE "AuthProvider" AS ENUM ('LOCAL', 'GOOGLE');
+
+-- CreateEnum
 CREATE TYPE "SubmissionType" AS ENUM ('MULTIPLE_CHOICE', 'FILE', 'READ');
 
 -- CreateTable
@@ -84,6 +87,7 @@ CREATE TABLE "LearningPath" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
+    "provider" "AuthProvider" NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,

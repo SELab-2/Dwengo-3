@@ -1,17 +1,19 @@
 import { Router, Request, Response } from 'express';
 import { AssignmentSubmissionDomain } from '../domain/assignmentSubmission.domain';
 import multer, { Multer } from 'multer';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 
 export class AssignmentSubmissionController {
   public router: Router;
   private assignmentSubmissionsDomain: AssignmentSubmissionDomain;
   private upload: Multer;
   private acceptedMimeTypes: string[];
+  private readonly userDomain: UserDomain;
 
   public constructor() {
     this.router = Router();
     this.assignmentSubmissionsDomain = new AssignmentSubmissionDomain();
+    this.userDomain = new UserDomain();
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
         cb(null, './submission_files/');
@@ -84,7 +86,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.getAssignmentSubmissions(
         req.query,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
       ),
     );
   }
@@ -93,7 +95,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.getAssignmentSubmissionById(
         req.params.id,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
       ),
     );
   }
@@ -102,7 +104,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.createAssignmentSubmission(
         req,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
       ),
     );
   }
@@ -124,7 +126,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.updateAssignmentSubmission(
         req,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
       ),
     );
   }

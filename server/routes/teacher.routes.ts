@@ -1,19 +1,21 @@
 import { Router, Request, Response } from 'express';
 import { TeacherDomain } from '../domain/teacher.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 
 export class TeacherController {
   public router: Router;
   private teacherDomain: TeacherDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.teacherDomain = new TeacherDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private getTeachers = async (req: Request, res: Response) => {
-    res.json(await this.teacherDomain.getTeachers(req.query, await getUserFromReq(req)));
+    res.json(await this.teacherDomain.getTeachers(req.query, this.userDomain.getUserFromReq(req)));
   };
 
   private getTeacherById = async (req: Request, res: Response) => {

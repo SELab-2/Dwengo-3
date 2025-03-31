@@ -1,14 +1,16 @@
 import { Router, Request, Response } from 'express';
 import { MessageDomain } from '../domain/message.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 
 export class MessageController {
   public router: Router;
   private messageDomain: MessageDomain;
+  private readonly userDomain: UserDomain;
 
   public constructor() {
     this.router = Router();
     this.messageDomain = new MessageDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -114,14 +116,16 @@ export class MessageController {
   }
 
   private async getMessages(req: Request, res: Response): Promise<void> {
-    res.json(await this.messageDomain.getMessages(req.query, await getUserFromReq(req)));
+    res.json(await this.messageDomain.getMessages(req.query, this.userDomain.getUserFromReq(req)));
   }
 
   private async createMessage(req: Request, res: Response): Promise<void> {
-    res.json(await this.messageDomain.createMessage(req.body, await getUserFromReq(req)));
+    res.json(await this.messageDomain.createMessage(req.body, this.userDomain.getUserFromReq(req)));
   }
 
   private async deleteMessage(req: Request, res: Response): Promise<void> {
-    res.json(await this.messageDomain.deleteMessage(req.params.id, await getUserFromReq(req)));
+    res.json(
+      await this.messageDomain.deleteMessage(req.params.id, this.userDomain.getUserFromReq(req)),
+    );
   }
 }
