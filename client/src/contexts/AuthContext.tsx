@@ -43,9 +43,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     // Clear user from context
     setUser(null);
-
-    // Call the logout API to invalidate the session
-    apiClient.post(ApiRoutes.logout);
   };
 
   return (
