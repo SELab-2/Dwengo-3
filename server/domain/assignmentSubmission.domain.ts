@@ -44,7 +44,10 @@ export class AssignmentSubmissionDomain {
     return submission;
   }
 
-  public async createAssignmentSubmission(req: Request, user: UserEntity): Promise<AssignmentSubmissionDetail> {
+  public async createAssignmentSubmission(
+    req: Request,
+    user: UserEntity,
+  ): Promise<AssignmentSubmissionDetail> {
     if (user.role !== ClassRole.STUDENT) {
       throw new BadRequestError(40033);
     }
@@ -79,7 +82,10 @@ export class AssignmentSubmissionDomain {
     return this.assignmentSubmissionPersistence.createAssignmentSubmission(data);
   }
 
-  public async updateAssignmentSubmission(req: Request, user: UserEntity): Promise<AssignmentSubmissionDetail> {
+  public async updateAssignmentSubmission(
+    req: Request,
+    user: UserEntity,
+  ): Promise<AssignmentSubmissionDetail> {
     if (user.role !== ClassRole.STUDENT) {
       throw new BadRequestError(40033);
     }

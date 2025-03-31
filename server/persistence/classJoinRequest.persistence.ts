@@ -6,12 +6,16 @@ import {
   ClassJoinRequestFilterParams,
 } from '../util/types/classJoinRequest.types';
 import { ClassRole, Prisma } from '@prisma/client';
-import { ClassRoleEnum, UserEntity, UserShort } from '../util/types/user.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinRequest.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { getUserById } from './auth/users.persistance';
+import { UsersPersistence } from './auth/users.persistence';
 
 export class ClassJoinRequestPersistence {
+  private usersPersistence: UsersPersistence;
+  public constructor() {
+    this.usersPersistence = new UsersPersistence();
+  }
   public async createClassJoinRequest(data: ClassJoinRequestCreateParams, user: UserEntity) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {
@@ -76,7 +80,7 @@ export class ClassJoinRequestPersistence {
           },
         });
       // Add the student/teacher to the class.
-      const user = await getUserById(classJoinRequest.userId);
+      const user = await this.usersPersistence.getUserById(classJoinRequest.userId);
       if (!user) {
         throw new Error("User not found");
       }

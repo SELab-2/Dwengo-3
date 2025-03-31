@@ -11,6 +11,7 @@ import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
+import { AppRoutes } from '../util/routes';
 
 function RegisterForm() {
   const { t } = useTranslation();
@@ -46,7 +47,7 @@ function RegisterForm() {
           register(response);
 
           // Redirect to the home page
-          navigate('/');
+          navigate(AppRoutes.home);
         },
         onError: (error) => setError(error.message),
       },

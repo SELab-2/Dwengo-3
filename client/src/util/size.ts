@@ -23,3 +23,11 @@ export const ComponentSize = {
   xlarge: 120,
   huge: 150,
 };
+
+export const FontSize = {
+  small: 12,
+  medium: 16,
+  large: 20,
+  xlarge: 24,
+  huge: 32,
+};

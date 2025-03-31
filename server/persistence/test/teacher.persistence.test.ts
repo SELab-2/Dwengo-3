@@ -3,13 +3,14 @@ import { ClassShort } from "../../util/types/class.types";
 import { FullUserType } from "../../util/types/user.types";
 import { TeacherPersistence } from "../teacher.persistence";
 import { deleteAllData, insertClassesWithStudents } from "./testData";
-import { getUserById } from "../auth/users.persistance";
 import { PrismaSingleton } from "../prismaSingleton";
+import { UsersPersistence } from "../auth/users.persistence";
 
 
 const teachers: FullUserType[] = [];
 const classes: ClassShort[] = [];
 const teacherPersistence: TeacherPersistence = new TeacherPersistence();
+const usersPersistence: UsersPersistence = new UsersPersistence();
 
 describe("teacher persistence test", () => {
     beforeAll(async () => {
@@ -17,7 +18,7 @@ describe("teacher persistence test", () => {
         const teacherPromises = [];
         for (const classData of classesDetail) {
             for (const teacher of classData.teachers) {
-                teacherPromises.push(getUserById(teacher.userId));
+                teacherPromises.push(usersPersistence.getUserById(teacher.userId));
             }
             classes.push({name: classData.name, id: classData.id});
         }

@@ -1,5 +1,4 @@
-import { ClassRoleEnum, UserEntity } from '../../util/types/user.types';
-import { saveUser } from '../auth/users.persistance';
+import { AuthenticationProvider, ClassRoleEnum, FullUserType, UserEntity } from '../../util/types/user.types';
 import { PrismaSingleton } from '../prismaSingleton';
 import { ClassPersistence } from '../class.persistence';
 import { ClassDetail } from '../../util/types/class.types';
@@ -39,6 +38,8 @@ import { StudentPersistence } from '../student.persistence';
 import { TeacherPersistence } from '../teacher.persistence';
 import { MessageCreateParams, MessageDetail } from '../../util/types/message.types';
 import { MessagePersistence } from '../message.persistence';
+import { UsersPersistence } from '../auth/users.persistence';
+import { RegisterParams } from '../../util/types/auth.types';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence =
@@ -62,9 +63,10 @@ const assignemntSubmissionPersistence: AssignmentSubmissionPersistence =
 const studentPersistence: StudentPersistence = new StudentPersistence();
 const teacherPersistence: TeacherPersistence = new TeacherPersistence();
 const messagePersistence: MessagePersistence = new MessagePersistence();
+const usersPersistence: UsersPersistence = new UsersPersistence();
 
-export const insertStudents = async (): Promise<UserEntity[]> => {
-  const users = [
+export const insertStudents = async (): Promise<FullUserType[]> => {
+  const users: RegisterParams[] = [
     {
       username: 'student1',
       email: 'student1@test.com',
@@ -72,6 +74,7 @@ export const insertStudents = async (): Promise<UserEntity[]> => {
       surname: 'student1',
       name: 'student1',
       role: ClassRoleEnum.STUDENT,
+      provider: AuthenticationProvider.LOCAL
     },
     {
       username: 'student2',
@@ -80,13 +83,14 @@ export const insertStudents = async (): Promise<UserEntity[]> => {
       surname: 'student2',
       name: 'student2',
       role: ClassRoleEnum.STUDENT,
+      provider: AuthenticationProvider.LOCAL
     },
   ];
-  return Promise.all(users.map((user) => saveUser(user)));
+  return Promise.all(users.map((user) => usersPersistence.saveUser(user)));
 };
 
-const insertTeachers = async (): Promise<UserEntity[]> => {
-  const users = [
+const insertTeachers = async (): Promise<FullUserType[]> => {
+  const users: RegisterParams[] = [
     {
       username: 'teacher1',
       email: 'teacher1@test.com',
@@ -94,6 +98,7 @@ const insertTeachers = async (): Promise<UserEntity[]> => {
       surname: 'teacher1',
       name: 'teacher1',
       role: ClassRoleEnum.TEACHER,
+      provider: AuthenticationProvider.LOCAL
     },
     {
       username: 'teacher2',
@@ -102,12 +107,13 @@ const insertTeachers = async (): Promise<UserEntity[]> => {
       surname: 'teacher2',
       name: 'teacher2',
       role: ClassRoleEnum.TEACHER,
+      provider: AuthenticationProvider.LOCAL
     },
   ];
-  return Promise.all(users.map((user) => saveUser(user)));
+  return Promise.all(users.map((user) => usersPersistence.saveUser(user)));
 };
 
-export const insertUsers = async (): Promise<UserEntity[]> => {
+export const insertUsers = async (): Promise<FullUserType[]> => {
   const [students, teachers] = await Promise.all([
     insertStudents(),
     insertTeachers(),
@@ -116,13 +122,14 @@ export const insertUsers = async (): Promise<UserEntity[]> => {
 };
 
 export const insertClasses = async (): Promise<ClassDetail[]> => {
-  const teacher = await saveUser({
+  const teacher = await usersPersistence.saveUser({
     username: 'teacher3',
     email: 'teacher3@test.com',
     password: 'password',
     surname: 'teacher3',
     name: 'teacher3',
     role: ClassRoleEnum.TEACHER,
+    provider: AuthenticationProvider.LOCAL
   });
   const classes = [
     {
@@ -137,7 +144,7 @@ export const insertClasses = async (): Promise<ClassDetail[]> => {
   ];
   return Promise.all(
     classes.map((classData) =>
-      classPersistence.createClass(classData, teacher),
+      classPersistence.createClass(classData, teacher as UserEntity),
     ),
   );
 };
@@ -153,7 +160,7 @@ export const insertClassJoinRequests = async (): Promise<
       students.map((student) =>
         classJoinRequestPersistence.createClassJoinRequest(
           { classId: classData.id },
-          student,
+          student as UserEntity,
         ),
       ),
     ),
@@ -161,7 +168,7 @@ export const insertClassJoinRequests = async (): Promise<
       teachers.map((teacher) =>
         classJoinRequestPersistence.createClassJoinRequest(
           { classId: classData.id },
-          teacher,
+          teacher as UserEntity,
         ),
       ),
     ),

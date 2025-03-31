@@ -7,10 +7,9 @@ import {
   DiscussionShort,
 } from '../util/types/discussion.types';
 import { UserEntity } from '../util/types/user.types';
-import { checkIfUserIsInGroup, checkIfUsersAreInSameGroup } from '../util/cookie-checks/cookieChecks.util';
+import { checkIfUserIsInGroup } from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { Uuid } from '../util/types/assignment.types';
-import { TeacherFilterParams } from '../util/types/teacher.types';
 import { TeacherPersistence } from '../persistence/teacher.persistence';
 import { StudentPersistence } from '../persistence/student.persistence';
 
@@ -50,10 +49,14 @@ export class DiscussionDomain {
     // This includes all the group members and the teachers in the class
 
     // get the group members userIds
-    const groupMemberUserIds: string[] = await this.studentPersistence.getStudentUserIdsByGroupId(data.groupId);
+    const groupMemberUserIds: string[] = await this.studentPersistence.getStudentUserIdsByGroupId(
+      data.groupId,
+    );
 
     // get the teacherIds
-    const teacherIds: string[] = await this.teacherPersistence.getTeacherUserIdsByGroupId(data.groupId);
+    const teacherIds: string[] = await this.teacherPersistence.getTeacherUserIdsByGroupId(
+      data.groupId,
+    );
 
     const memberIds = groupMemberUserIds.concat(teacherIds);
 
