@@ -1,4 +1,144 @@
 {
+    "testUsers": [
+    {
+      "id": "1a2b3c4d-1111-2222-3333-444455556666",
+      "username": "user1",
+      "email": "user1@example.com",
+      "password": "password1",
+      "surname": "Smith",
+      "name": "John",
+      "role": "TEACHER"
+    },
+    {
+      "id": "2b3c4d5e-2222-3333-4444-555566667777",
+      "username": "user2",
+      "email": "user2@example.com",
+      "password": "password2",
+      "surname": "Johnson",
+      "name": "Emma",
+      "role": "TEACHER"
+    },
+    {
+      "id": "3c4d5e6f-3333-4444-5555-666677778888",
+      "username": "user3",
+      "email": "user3@example.com",
+      "password": "password3",
+      "surname": "Brown",
+      "name": "Liam",
+      "role": "TEACHER"
+    },
+    {
+      "id": "4d5e6f7g-4444-5555-6666-777788889999",
+      "username": "user4",
+      "email": "user4@example.com",
+      "password": "password4",
+      "surname": "Williams",
+      "name": "Olivia",
+      "role": "TEACHER"
+    },
+    {
+      "id": "5e6f7g8h-5555-6666-7777-888899990000",
+      "username": "user5",
+      "email": "user5@example.com",
+      "password": "password5",
+      "surname": "Jones",
+      "name": "Noah",
+      "role": "TEACHER"
+    },
+    {
+      "id": "6f7g8h9i-6666-7777-8888-999900001111",
+      "username": "user6",
+      "email": "user6@example.com",
+      "password": "password6",
+      "surname": "Garcia",
+      "name": "Sophia",
+      "role": "STUDENT"
+    },
+    {
+      "id": "7g8h9i0j-7777-8888-9999-000011112222",
+      "username": "user7",
+      "email": "user7@example.com",
+      "password": "password7",
+      "surname": "Martinez",
+      "name": "James",
+      "role": "STUDENT"
+    },
+    {
+      "id": "8h9i0j1k-8888-9999-0000-111122223333",
+      "username": "user8",
+      "email": "user8@example.com",
+      "password": "password8",
+      "surname": "Davis",
+      "name": "Mia",
+      "role": "STUDENT"
+    },
+    {
+      "id": "9i0j1k2l-9999-0000-1111-222233334444",
+      "username": "user9",
+      "email": "user9@example.com",
+      "password": "password9",
+      "surname": "Rodriguez",
+      "name": "Benjamin",
+      "role": "STUDENT"
+    },
+    {
+      "id": "0j1k2l3m-0000-1111-2222-333344445555",
+      "username": "user10",
+      "email": "user10@example.com",
+      "password": "password10",
+      "surname": "Wilson",
+      "name": "Charlotte",
+      "role": "STUDENT"
+    }
+    ],
+    "testTeachers": [
+    {
+      "id": "3b06702b-1111-2222-3333-444455556666",
+      "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+    },
+    {
+      "id": "3b06702b-2222-3333-4444-555566667777",
+      "userId": "2b3c4d5e-2222-3333-4444-555566667777"
+    },
+    {
+      "id": "3b06702b-3333-4444-5555-666677778888",
+      "userId": "3c4d5e6f-3333-4444-5555-666677778888"
+    },
+    {
+      "id": "3b06702b-4444-5555-6666-777788889999",
+      "userId": "4d5e6f7g-4444-5555-6666-777788889999"
+    },
+    {
+      "id": "3b06702b-5555-6666-7777-888899990000",
+      "userId": "5e6f7g8h-5555-6666-7777-888899990000"
+    }
+    ],
+    "testStudents": [
+    {
+      "id": "4c07803c-1111-2222-3333-444455556666",
+      "userId": "6f7g8h9i-6666-7777-8888-999900001111"
+    },
+    {
+      "id": "4c07803c-2222-3333-4444-555566667777",
+      "userId": "7g8h9i0j-7777-8888-9999-000011112222"
+    },
+    {
+      "id": "4c07803c-3333-4444-5555-666677778888",
+      "userId": "8h9i0j1k-8888-9999-0000-111122223333"
+    },
+    {
+      "id": "4c07803c-4444-5555-6666-777788889999",
+      "userId": "9i0j1k2l-9999-0000-1111-222233334444"
+    },
+    {
+      "id": "4c07803c-5555-6666-7777-888899990000",
+      "userId": "0j1k2l3m-0000-1111-2222-333344445555"
+    }
+    ],
+    "testKeywords": [
+        { "keyword": "keyword1" },
+        { "keyword": "keyword2" }
+    ],
     "testLearningObject": {
         "hruid": "test-v1",
         "uuid": "bfba889e-f642-4f05-8286-04ed116be3ce",
@@ -6,7 +146,7 @@
         "language": "nl",
         "title": "This is a titleeeee",
         "description": "This is a description",
-        "contentType": "text/markdown",
+        "contentType": "TEXT_MARKDOWN",
         "target_ages": [
             4,
             3
@@ -33,17 +173,16 @@
         "difficulty": 3,
         "estimated_time": 20,
         "return_value": {
-                "callback_url":"url/callback",
-                "callback_schema":{
-                "att":"test",
-                "att2":"test2"
+                "callback_url": "url/callback",
+                "callback_schema": {
+                "att": "test",
+                "att2": "test2"
             }
         },
         "available": true,
-        "content": "content",
-        "keywords": [
-            "keyword1",
-            "keyword2"
-        ]
+        "content": "content"
+    },
+    "testAssignment": {
+
     }
 }
