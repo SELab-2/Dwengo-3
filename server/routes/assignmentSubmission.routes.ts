@@ -148,7 +148,7 @@ export class AssignmentSubmissionController {
      *     responses:
      *       200:
      *         description: Submission successfully created
-     *          content:
+     *         content:
      *           application/json:
      *             schema:
      *               $ref: '#/components/schemas/SubmissionDetail'
