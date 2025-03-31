@@ -1,6 +1,5 @@
 import { Request } from 'express';
 import { RegisterParams } from '../util/types/auth.types';
-import * as persistence from '../persistence/auth/users.persistence';
 import { AuthProvider, ClassRole, User } from '@prisma/client';
 import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';

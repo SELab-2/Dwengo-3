@@ -1,5 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../util/routes';
 
 function ErrorPage() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function ErrorPage() {
       <Typography variant="h5" gutterBottom>
         Page Not Found
       </Typography>
-      <Button variant="contained" color="primary" onClick={() => navigate('/')}>
+      <Button variant="contained" color="primary" onClick={() => navigate(AppRoutes.home)}>
         Go to Home
       </Button>
     </Box>
