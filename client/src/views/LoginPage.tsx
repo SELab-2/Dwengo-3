@@ -39,11 +39,7 @@ function LoginPage() {
           <Typography variant="h5" gutterBottom>
             {t('welcomeMessage')}
           </Typography>
-          <Divider sx={{ mb: MarginSize.xsmall }} />
-          <GoogleLogin onSuccess={handleSuccess} onError={handleError} useOneTap></GoogleLogin>
-          <Divider sx={{ mt: MarginSize.xsmall }} />
-          <Typography variant="h6">{t('or')} </Typography>
-          <Divider />
+          <Divider sx={{ mb: MarginSize.tiny }} />
           <LoginForm />
           <Divider sx={{ mb: MarginSize.xsmall }} />
           <Button fullWidth variant="outlined" color="primary" onClick={handleRegisterClick}>

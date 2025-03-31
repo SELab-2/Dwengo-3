@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Divider } from '@mui/material';
 import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
 import { ApiRoutes, AppRoutes } from '../util/routes';
 import { UserDetail } from '../util/types/user.types';
+import GoogleLoginButton from './GoogleLoginButton';
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -58,9 +59,12 @@ function LoginForm() {
 
   return (
     <Box component="form" onSubmit={handleLoginSubmit} sx={{ mt: 0 }}>
+      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
+      <Divider sx={{ mb: MarginSize.xsmall }} />
+      <GoogleLoginButton onClick={handleGoogleLogin}></GoogleLoginButton>
+      <Divider sx={{ mt: MarginSize.xsmall }} />
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
-      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
       <Button
         type="submit"
         fullWidth
@@ -68,13 +72,6 @@ function LoginForm() {
         sx={{ mt: MarginSize.tiny, mb: MarginSize.xsmall }}
       >
         {t('login')}
-      </Button>
-      <Button
-        fullWidth
-        sx={{ mt: MarginSize.tiny, mb: MarginSize.xsmall }}
-        onClick={handleGoogleLogin}
-      >
-        Login with Google
       </Button>
     </Box>
   );

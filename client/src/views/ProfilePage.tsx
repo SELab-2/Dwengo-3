@@ -74,7 +74,7 @@ function ProfilePage() {
                 {user?.name} {user?.surname}
               </Typography>
               <Typography variant="subtitle1" color="text.secondary">
-                {user?.role === 'STUDENT' ? 'Leerling' : 'Leerkracht'}
+                {user?.role === 'STUDENT' ? t('student') : t('teacher')}
               </Typography>
             </Box>
           </Box>
