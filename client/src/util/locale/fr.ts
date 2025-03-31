@@ -22,6 +22,7 @@ export const fr = {
     myLearningPaths: 'Parcours d’apprentissage',
     profile: 'Profil',
     myClasses: 'Mes classes',
+    createClass: 'Créer une classe',
     edit: 'Modifier',
     delete: 'Supprimer',
     deleteAccount: 'Supprimer le compte',

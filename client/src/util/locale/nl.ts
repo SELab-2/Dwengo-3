@@ -22,6 +22,7 @@ export const nl = {
     myLearningPaths: 'Mijn leerpaden',
     profile: 'Profiel',
     myClasses: 'Mijn klassen',
+    createClass: 'Maak een klas aan',
     edit: 'Bewerken',
     delete: 'Verwijderen',
     deleteAccount: 'Account verwijderen',

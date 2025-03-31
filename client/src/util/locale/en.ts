@@ -1,3 +1,5 @@
+import { create } from 'domain';
+
 export const en = {
   translation: {
     yes: 'Yes',
@@ -22,6 +24,7 @@ export const en = {
     myLearningPaths: 'Learning Paths',
     profile: 'Profile',
     myClasses: 'My Classes',
+    createClass: 'Create Class',
     edit: 'Edit',
     delete: 'Delete',
     deleteAccount: 'Delete account',
