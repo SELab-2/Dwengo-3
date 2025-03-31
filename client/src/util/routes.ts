@@ -39,6 +39,9 @@ export const ApiRoutes = {
   },
   logout: '/api/auth/logout',
 
+  // Me (get the logged in user)
+  me: '/api/auth/me',
+
   // Announcement
   announcement: {
     list: '/api/announcement',

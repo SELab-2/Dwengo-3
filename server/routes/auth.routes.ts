@@ -253,3 +253,12 @@ router.delete(
     res.status(200).json({ message: 'Logout successful' });
   },
 );
+
+router.get('/me', (req: Request, res: Response) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  // Return the authenticated user's data
+  return res.json(req.user);
+});

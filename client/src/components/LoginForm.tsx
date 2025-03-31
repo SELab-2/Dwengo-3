@@ -4,12 +4,12 @@ import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useAuth, useGoogleLogin, useLogin } from '../hooks/useAuth';
+import { useAuth, useLogin } from '../hooks/useAuth';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
-import { AppRoutes } from '../util/routes';
+import { ApiRoutes, AppRoutes } from '../util/routes';
 import { UserDetail } from '../util/types/user.types';
 
 function LoginForm() {
@@ -23,20 +23,12 @@ function LoginForm() {
   const [isStudent, setIsStudent] = useState<boolean>(false);
 
   const loginMutation = useLogin();
-  const googleLoginMutation = useGoogleLogin();
 
   const handleGoogleLogin = () => {
-    googleLoginMutation.mutate(isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, {
-      onSuccess: (response: UserDetail) => {
-        // Set the user in the auth context
-        login(response);
-        // Redirect to the home page
-        navigate(AppRoutes.home);
-      },
-      onError: (error) => {
-        setError(error.message);
-      },
-    });
+    // Redirect to the Google login page
+    window.location.href =
+      'http://localhost:3001' +
+      (isStudent ? ApiRoutes.login.google.student : ApiRoutes.login.google.teacher);
   };
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
