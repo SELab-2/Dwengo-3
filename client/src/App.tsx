@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { LoginPage } from './views/LoginPage';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 import ProfilePage from './views/ProfilePage';
 import RegisterPage from './views/RegisterPage';
 import theme from './util/theme';
@@ -27,11 +27,11 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''}>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={theme}>
-            <Router>
+    <BrowserRouter>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID ?? ''}>
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={theme}>
               <MainAppBar></MainAppBar>
               <ErrorProvider>
                 <Routes>
@@ -64,12 +64,12 @@ function App() {
                   <Route path="*" element={<ErrorPage />} />
                 </Routes>
               </ErrorProvider>
-            </Router>
-            <FooterBar></FooterBar>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </AuthProvider>
-    </GoogleOAuthProvider>
+              <FooterBar></FooterBar>
+            </ThemeProvider>
+          </QueryClientProvider>
+        </AuthProvider>
+      </GoogleOAuthProvider>
+    </BrowserRouter>
   );
 }
 
