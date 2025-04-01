@@ -19,7 +19,7 @@ export const fr = {
     registerAs: 'S’inscrire en tant que',
     alreadyHaveAccount: 'Vous avez déjà un compte?',
     learningThemes: 'Thèmes d’apprentissage',
-    myLearningPaths: 'Parcours d’apprentissage',
+    myLearningPaths: 'Mon parcours d’apprentissage',
     profile: 'Profil',
     myClasses: 'Mes classes',
     edit: 'Modifier',
@@ -30,5 +30,9 @@ export const fr = {
     deleteAccountSuccess: 'Votre compte a été supprimé avec succès.',
     settings: 'Paramètres',
     memberSince: 'Membre depuis',
+    favorites: 'Favoris',
+    continue: 'Continuer',
+    view_edit: 'Voir/Modifier',
+    assignments: 'Devoirs',
   },
 };

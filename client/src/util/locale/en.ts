@@ -30,5 +30,9 @@ export const en = {
     deleteAccountSuccess: 'Your account has been successfully deleted.',
     settings: 'Settings',
     memberSince: 'Member since',
+    favorites: 'Favorites',
+    continue: 'Continue',
+    view_edit: 'View/Edit',
+    assignments: 'Assignments',
   },
 };

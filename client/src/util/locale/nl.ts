@@ -29,5 +29,9 @@ export const nl = {
     deleteAccountSuccess: 'Je account is succesvol verwijderd.',
     settings: 'Instellingen',
     memberSince: 'Lid sinds',
+    favorites: 'Favorieten',
+    continue: 'Ga verder',
+    view_edit: 'Bekijk/Bewerk',
+    assignments: 'Opdrachten',
   },
 };
