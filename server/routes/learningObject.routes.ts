@@ -211,7 +211,7 @@ export class LearningObjectController {
      *         schema:
      *           type: string
      *           format: uuid
-     *         description: The unique identifier of the learning object to update.
+     *         description: The unique identifier of the learning object to delete.
      *     responses:
      *       204:
      *         description: Learning object deleted successfully.

@@ -85,15 +85,15 @@ describe('assignmentSubmission routes test', () => {
 
   describe('PATCH /assignmentSubmission', () => {
     test('Responds on updateAssignmentSubmission', async () => {
+      const id = '550e8400-e29b-41d4-a716-446655440000';
       const body = {
-        id: '550e8400-e29b-41d4-a716-446655440000',
         submissionType: 'MULTIPLE_CHOICE',
         submission: 'multiplechoice',
       };
       const expected = { endpoint: 'updateAssignmentSubmission' };
       mockAssignmentSubmissionDomain.updateAssignmentSubmission.mockResolvedValue(expected);
 
-      await agent.patch(`${route}`).send(body).expect(200, expected);
+      await agent.patch(`${route}/${id}`).send(body).expect(200, expected);
 
       expect(mockAssignmentSubmissionDomain.updateAssignmentSubmission).toHaveBeenCalledWith(
         expect.objectContaining({ body }),

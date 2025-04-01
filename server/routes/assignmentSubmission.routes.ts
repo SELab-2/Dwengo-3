@@ -45,7 +45,82 @@ export class AssignmentSubmissionController {
   }
 
   private initializeRoutes(): void {
+    /**
+     * @swagger
+     * /api/assignmentSubmission:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - AssignmentSubmission
+     *     summary: Get assignmentSubmissions
+     *     description: Retrieve a list of assignmentSubmissions based on filters
+     *     parameters:
+     *       - in: query
+     *         name: groupId
+     *         schema:
+     *           type: string
+     *         description: Filter by groupId
+     *       - in: query
+     *         name: favoriteId
+     *         schema:
+     *           type: string
+     *         description: Filter by favoriteId
+     *       - in: query
+     *         name: nodeId
+     *         schema:
+     *           type: string
+     *         description: Filter by nodeId
+     *     responses:
+     *       200:
+     *         description: A list of assignmentSubmissions matching the filters.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/SubmissionShort'
+     *       400:
+     *         description: Bad request due to invalid input or no filters provided.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     */
     this.router.get('/', this.getAssignmentSubmission.bind(this));
+    /**
+     * @swagger
+     * /api/assignmentsubmission/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - AssignmentSubmission
+     *     summary: Get an assignmentSubmission by ID
+     *     description: Gets the content of a specific assignmentSubmission selected by its UUID.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the assignmentSubmission.
+     *     responses:
+     *       200:
+     *         description: AssignmentSubmission fetched successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/SubmissionDetail'
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: AssignmentSubmission not found.
+     */
     this.router.get('/:id', this.getAssignmentById.bind(this));
     /**
      * @swagger
@@ -73,13 +148,59 @@ export class AssignmentSubmissionController {
      *     responses:
      *       200:
      *         description: Submission successfully created
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/SubmissionDetail'
      *       400:
      *         description: Bad request due to invalid parameters
      *       401:
      *         description: Unauthorized, user not authenticated
      */
     this.router.put('/', this.upload.single('file'), this.createAssignmentSubmission.bind(this));
-    this.router.patch('/', this.upload.single('file'), this.updateAssignmentSubmission.bind(this)); //TODO change 'file' to the correct field name
+    /**
+     * @swagger
+     * /api/assignmentSubmission/{id}:
+     *   patch:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - AssignmentSubmission
+     *     summary: Update an assignmentSubmission
+     *     description: Updates an existing assignmentSubmission with the provided data.
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the assignmentSubmission.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/SubmissionUpdate'
+     *     responses:
+     *       200:
+     *         description: AssignmentSubmission updated successfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/SubmissionDetail'
+     *       400:
+     *         description: Bad request due to invalid input.
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Announcement not found.
+     */
+    this.router.patch(
+      '/:id',
+      this.upload.single('file'),
+      this.updateAssignmentSubmission.bind(this),
+    ); //TODO change 'file' to the correct field name
   }
 
   private async getAssignmentSubmission(req: Request, res: Response): Promise<void> {
