@@ -1,3 +1,4 @@
+import { setEngine } from 'crypto';
 import { learningPathSelectShort } from './learningPath.select';
 import { userSelectShort } from './user.select';
 
@@ -15,6 +16,8 @@ export const FavoriteSelectDetail = {
 export const FavoriteSelectShort = {
   id: true,
   userId: true,
-  learningPathId: true,
   progress: true,
+  learningPath: {
+    select: learningPathSelectShort,
+  },
 };

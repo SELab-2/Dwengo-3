@@ -1003,12 +1003,6 @@
             "description": "The userId of the user that made the favorite",
             "example": "660e8400-e29b-41d4-a716-446655440000"
           },
-          "learningPathId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the favorited learningPath",
-            "example": "770e8400-e29b-41d4-a716-446655440000"
-          },
           "progress": {
             "type": "array",
             "description": "A list of the indexes of the already completed nodes",
@@ -1016,6 +1010,10 @@
               "type": "integer"
             },
             "example": [0, 1, 2, 4]
+          },
+          "learningPath": {
+            "description": "The favorited learningPath",
+            "$ref": "#/components/schemas/LearningPathShort"
           }
         }
       },
