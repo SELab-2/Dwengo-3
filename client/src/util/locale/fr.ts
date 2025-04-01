@@ -1,3 +1,5 @@
+import { create } from "domain";
+
 export const fr = {
   translation: {
     yes: 'Oui',
@@ -34,5 +36,11 @@ export const fr = {
     continue: 'Continuer',
     view_edit: 'Voir/Modifier',
     assignments: 'Devoirs',
+    createAssignment: 'Créer un nouveau devoir',
+    description: 'Description',
+    keywords: 'Mots-clés',
+    learningPath: "Parcours d'apprentissage",
+    groupSize: 'Taille du groupe',
+    group: 'Groupe',
   },
 };

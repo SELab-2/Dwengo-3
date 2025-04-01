@@ -34,5 +34,11 @@ export const en = {
     continue: 'Continue',
     view_edit: 'View/Edit',
     assignments: 'Assignments',
+    createAssignment: 'Create new assignment',
+    description: 'Description',
+    keywords: 'Keywords',
+    learningPath: 'Learning Path',
+    groupSize: 'Group Size',
+    group: 'Group',
   },
 };

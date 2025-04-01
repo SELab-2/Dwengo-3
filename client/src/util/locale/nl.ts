@@ -33,5 +33,11 @@ export const nl = {
     continue: 'Ga verder',
     view_edit: 'Bekijk/Bewerk',
     assignments: 'Opdrachten',
+    createAssignment: 'Niewe opdracht aanmaken',
+    description: 'Beschrijving',
+    keywords: 'Trefwoorden',
+    learningPath: 'Leerpad',
+    groupSize: 'Groepsgrootte',
+    group: 'Groep',
   },
 };
