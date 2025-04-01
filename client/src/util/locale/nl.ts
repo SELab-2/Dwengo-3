@@ -33,5 +33,7 @@ export const nl = {
     continue: 'Ga verder',
     view_edit: 'Bekijk/Bewerk',
     assignments: 'Opdrachten',
+    announcements: 'Aankondigingen',
+    createNewAnnouncement: 'Nieuwe aankondiging maken',
   },
 };

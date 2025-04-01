@@ -34,5 +34,7 @@ export const fr = {
     continue: 'Continuer',
     view_edit: 'Voir/Modifier',
     assignments: 'Devoirs',
+    announcements: 'Annonces',
+    createNewAnnouncement: 'Créer une nouvelle annonce',
   },
 };
