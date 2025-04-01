@@ -23,25 +23,37 @@ const classData = {
 };
 
 const studentsData = [
-  { id: 1, name: 'Roshnie Soetens', progress: 70 },
-  { id: 2, name: 'Charmayne Breijer', progress: 50 },
-  { id: 3, name: 'Soulaiman Bosland', progress: 30 },
-  { id: 4, name: 'Ouassima Wiltink', progress: 60 },
-  { id: 5, name: 'Davey Kraft', progress: 80 },
-  { id: 6, name: 'Franciscus de Bruin', progress: 45 },
-  { id: 7, name: 'Florence Rijsbergen', progress: 55 },
-  { id: 8, name: 'Seher van den Doel', progress: 20 },
+  { id: '1', name: 'Roshnie Soetens', progress: 70 },
+  { id: '2', name: 'Charmayne Breijer', progress: 50 },
+  { id: '3', name: 'Soulaiman Bosland', progress: 30 },
+  { id: '4', name: 'Ouassima Wiltink', progress: 60 },
+  { id: '5', name: 'Davey Kraft', progress: 80 },
+  { id: '6', name: 'Franciscus de Bruin', progress: 45 },
+  { id: '7', name: 'Florence Rijsbergen', progress: 55 },
+  { id: '8', name: 'Seher van den Doel', progress: 20 },
 ];
 
 const admissionRequests = [
-  { id: 1, name: 'Wichert van de Pol' },
-  { id: 2, name: 'Elton Sas' },
-  { id: 3, name: 'Jens van de Kleut' },
+  { id: '1', name: 'Wichert van de Pol' },
+  { id: '2', name: 'Elton Sas' },
+  { id: '3', name: 'Jens van de Kleut' },
 ];
 
 function ClassDashboardPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
+
+  const handleApproveRequest = (id: string) => {
+    // TODO
+    alert('TODO: Request approved');
+  };
+
+  const handleRemoveRequest = (id: string) => {
+    // TODO
+    alert('TODO: Request removed');
+  };
+
+  // TODO add links for students and teachers profiles, and details for students progress
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
@@ -72,7 +84,10 @@ function ClassDashboardPage() {
             <Button
               variant="contained"
               sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
-              onClick={() => alert('Navigate to Edit Class Page')} // Replace with actual navigation
+              onClick={() => {
+                // TODO: add link to edit class page
+                alert('TODO: Navigate to Edit Class Page');
+              }} // Replace with actual navigation
             >
               {t('editClassGroup')}
             </Button>
@@ -98,7 +113,16 @@ function ClassDashboardPage() {
                     value={student.progress}
                     sx={{ flex: 3, height: 8, borderRadius: 5 }}
                   />
-                  <Button variant="contained">{t('details')}</Button>
+                  <Button
+                    variant="contained"
+                    onClick={
+                      // TODO: add link to student assignment progress
+                      // Replace with actual navigation
+                      () => alert(`TODO: View progress details for ${student.name}`)
+                    }
+                  >
+                    {t('details')}
+                  </Button>
                 </Box>
               ))}
             </Stack>
@@ -118,10 +142,18 @@ function ClassDashboardPage() {
                     <Typography sx={{ flex: 1, color: 'blue', cursor: 'pointer' }}>
                       {request.name}
                     </Typography>
-                    <Button variant="contained" sx={{ bgcolor: 'green', color: 'white' }}>
+                    <Button
+                      variant="contained"
+                      sx={{ bgcolor: 'green', color: 'white' }}
+                      onClick={() => handleApproveRequest(request.id)}
+                    >
                       {t('approve')}
                     </Button>
-                    <Button variant="contained" sx={{ bgcolor: 'red', color: 'white' }}>
+                    <Button
+                      variant="contained"
+                      sx={{ bgcolor: 'red', color: 'white' }}
+                      onClick={() => handleRemoveRequest(request.id)}
+                    >
                       {t('remove')}
                     </Button>
                   </Box>
