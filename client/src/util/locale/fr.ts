@@ -43,5 +43,7 @@ export const fr = {
     approve: 'Approuver',
     remove: 'Supprimer',
     editClassGroup: 'Modifier le groupe de classe',
+    coTeachers: 'Co-enseignants',
+    notes: 'Remarques',
   },
 };
