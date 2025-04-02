@@ -1,36 +1,38 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import { useState } from "react";
 
 interface BasicSelectProps {
     labelName: string;
     options: string[];
     required?: boolean;
-    state?: [string, React.Dispatch<React.SetStateAction<string>>];
+    state?: [string | null, React.Dispatch<React.SetStateAction<string | null>>];
 };
 
 function BasicSelect({labelName, options, required, state}: BasicSelectProps) {
-    const [option, setOption] = state ?? useState<string>('');
-    const handleChange = (event: SelectChangeEvent) => {
-        setOption(event.target.value);
-    };
+    const [value, setValue] = state ?? useState<string | null>(null);
+    const [inputValue, setInputValue] = useState('');
 
     return (
-        <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel required={required} id="demo-simple-select-label">{labelName}</InputLabel>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={option}
-                label={labelName}
-                onChange={handleChange}
-            >
-                {options.map((option) => (
-                    <MenuItem key={option} value={option}>
-                        {option}
-                    </MenuItem>
-                ))}
-            </Select>
-        </FormControl>
+        <Autocomplete
+            value={value}
+            onChange={(_, newValue: string | null) => {
+            setValue(newValue);
+            }}
+            inputValue={inputValue}
+            onInputChange={(_, newInputValue) => {
+            setInputValue(newInputValue);
+            }}
+            options={options}
+            renderInput={(params) => (
+                <TextField
+                    required={required}
+                    {...params}
+                    label={labelName}
+                    fullWidth
+                    margin="normal"
+                />
+            )}
+        />
     );
 }
 

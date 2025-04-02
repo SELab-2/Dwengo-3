@@ -84,7 +84,7 @@ function AssignmentCreatePage() {
     const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
     const [groupSize, setGroupSize] = useState(1);
     const [filteredLearningPaths, setFilteredLearningPaths] = useState<string[]>(learningPaths.map((path) => path.title));
-    const [selectedLearningPath, setSelectedLearningPath] = useState<string>('');
+    const [selectedLearningPath, setSelectedLearningPath] = useState<string | null>('');
 
     useEffect(() => {
         const updatedPaths = learningPaths
@@ -92,8 +92,7 @@ function AssignmentCreatePage() {
             .map(path => path.title);
             
         setFilteredLearningPaths(updatedPaths);
-
-        if (!updatedPaths.includes(selectedLearningPath)) {
+        if (selectedLearningPath && !updatedPaths.includes(selectedLearningPath)) {
             setSelectedLearningPath("");
         }
     }, [selectedKeywords]);
