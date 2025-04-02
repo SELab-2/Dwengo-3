@@ -12,6 +12,11 @@ interface AnnouncementCardProps {
 const AnnouncementCard = ({ title, date, teacher, content }: AnnouncementCardProps) => {
   const theme = useTheme();
 
+  const handleClick = () => {
+    // Handle click event
+    alert('Card clicked!, should route to detail page');
+  };
+
   return (
     <Card sx={{ mb: 2, borderRadius: 2, overflow: 'hidden' }}>
       <Box
@@ -20,7 +25,7 @@ const AnnouncementCard = ({ title, date, teacher, content }: AnnouncementCardPro
         {/* Avatar can be replaced with an icon or image */}
         <Avatar sx={{ bgcolor: '#ffffff', color: '#333', mr: 2 }}>😊</Avatar>
         <Box>
-          <Typography variant="h6" fontWeight="bold">
+          <Typography variant="h6" fontWeight="bold" onClick={handleClick}>
             {title}
           </Typography>
           <Typography variant="body2" color={theme.palette.text.secondary}>
