@@ -8,7 +8,7 @@ import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 // TODO: get this data from the api
 const announcementsData = [
   {
-    id: 1,
+    id: '1',
     title: 'Begin van schooljaar',
     date: '16/02/2025 - 19:45',
     teacher: 'Leerkracht 1',
@@ -19,7 +19,7 @@ const announcementsData = [
   },
 
   {
-    id: 2,
+    id: '2',
     title: 'Voorbereiding',
     date: '16/02/2025 - 19:45',
     teacher: 'Leerkracht 2',
@@ -27,7 +27,7 @@ const announcementsData = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Voorbereiding',
     date: '16/02/2025 - 19:45',
     teacher: 'Leerkracht 2',
@@ -35,7 +35,7 @@ const announcementsData = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Voorbereiding',
     date: '16/02/2025 - 19:45',
     teacher: 'Leerkracht 2',
@@ -43,7 +43,7 @@ const announcementsData = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Voorbereiding',
     date: '16/02/2025 - 19:45',
     teacher: 'Leerkracht 2',
@@ -51,7 +51,7 @@ const announcementsData = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Voorbereiding',
     date: '16/02/2025 - 19:45',
     teacher: 'Leerkracht 2',
@@ -59,7 +59,7 @@ const announcementsData = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
   },
   {
-    id: 2,
+    id: '2',
     title: 'Voorbereiding',
     date: '16/02/2025 - 19:45',
     teacher: 'Leerkracht 2',
@@ -131,7 +131,7 @@ function AnnouncementsPage() {
         >
           <Stack spacing={2}>
             {announcementsList.map((announcement) => (
-              <AnnouncementCard key={announcement.id} {...announcement} />
+              <AnnouncementCard {...announcement} />
             ))}
           </Stack>
         </Box>
