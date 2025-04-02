@@ -109,7 +109,7 @@ function AnnouncementsPage() {
           <Typography variant="h6" gutterBottom>
             {t('announcements')}
           </Typography>
-          {user?.student && (
+          {user?.teacher && (
             <Button
               variant="contained"
               sx={{ backgroundColor: theme.palette.primary.main }}
@@ -124,7 +124,7 @@ function AnnouncementsPage() {
         </Box>
         <Box
           sx={{
-            maxHeight: { xs: 500, sm: 800 }, // Adjust height for mobile
+            maxHeight: { xs: 475, sm: 800 }, // Adjust height for mobile
             overflowY: 'auto',
             px: { xs: 1, sm: 2 }, // Add padding on mobile for better spacing
           }}
