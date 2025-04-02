@@ -22,7 +22,7 @@ import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
 import { AppRoutes } from './util/routes';
-import AnnouncementsPage from './views/AnnouncementPage';
+import AnnouncementsPage from './views/AnnouncementsPage';
 
 const queryClient = new QueryClient();
 

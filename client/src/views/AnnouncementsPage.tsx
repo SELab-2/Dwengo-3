@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { Typography, Box, Button, useTheme, Paper, Stack } from '@mui/material';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth.ts';
 import { useTranslation } from 'react-i18next';
-import AnnouncementCard from '../components/AnnouncementCard';
+import AnnouncementCard from '../components/AnnouncementCard.tsx';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 
 // TODO: get this data from the api
