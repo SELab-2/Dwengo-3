@@ -1,4 +1,6 @@
 import { Box, Card, Typography, useTheme } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../util/routes';
 
 interface DiscussionCardProps {
   id: string;
@@ -6,10 +8,10 @@ interface DiscussionCardProps {
 
 const DiscussionCard = ({ id }: DiscussionCardProps) => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    // Handle click event
-    alert('Card clicked!, should route to detail page');
+    navigate(AppRoutes.discussion(id));
   };
 
   return (

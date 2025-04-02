@@ -24,6 +24,7 @@ import LearningThemePage from './views/LearningThemePage';
 import { AppRoutes } from './util/routes';
 import AnnouncementsPage from './views/AnnouncementPage';
 import DiscussionsPage from './views/DiscussionsPage.tsx';
+import DiscussionPage from './views/DiscussionPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,10 @@ function App() {
                     <Route
                       path={AppRoutes.classDiscussions(':classId')}
                       element={<DiscussionsPage />}
+                    />
+                    <Route
+                      path={AppRoutes.discussion(':discussionId')}
+                      element={<DiscussionPage />}
                     />
                   </Route>
 

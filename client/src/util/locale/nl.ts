@@ -45,5 +45,6 @@ export const nl = {
     coTeachers: 'Co-leerkrachten',
     notes: 'Opmerkingen',
     createNewAnnouncement: 'Nieuwe aankondiging maken',
+    createNewDiscussionMessage: 'Plaats een nieuw bericht',
   },
 };
