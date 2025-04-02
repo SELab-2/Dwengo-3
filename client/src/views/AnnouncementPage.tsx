@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Typography, Box, Button, useTheme } from '@mui/material';
+import { Typography, Box, Button, useTheme, Paper, Stack } from '@mui/material';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import AnnouncementCard from '../components/AnnouncementCard';
@@ -65,38 +65,6 @@ const announcementsData = [
     content:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
   },
-  {
-    id: 2,
-    title: 'Voorbereiding',
-    date: '16/02/2025 - 19:45',
-    teacher: 'Leerkracht 2',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  },
-  {
-    id: 2,
-    title: 'Voorbereiding',
-    date: '16/02/2025 - 19:45',
-    teacher: 'Leerkracht 2',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  },
-  {
-    id: 2,
-    title: 'Voorbereiding',
-    date: '16/02/2025 - 19:45',
-    teacher: 'Leerkracht 2',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  },
-  {
-    id: 2,
-    title: 'Voorbereiding',
-    date: '16/02/2025 - 19:45',
-    teacher: 'Leerkracht 2',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  },
 ];
 
 function AnnouncementsPage() {
@@ -108,24 +76,32 @@ function AnnouncementsPage() {
   const announcementsList = useMemo(() => announcementsData, []);
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
+    <Paper sx={{ p: 2, maxWidth: 800, mx: 'auto', mt: 1 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h6" gutterBottom>
           {t('announcements')}
         </Typography>
         {user?.teacher && (
-          <Button variant="contained" sx={{ backgroundColor: theme.palette.primary.main }}>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: theme.palette.primary.main }}
+            onClick={() => {
+              //TODO: Add functionality to create a new announcement
+              alert('Create new announcement');
+            }}
+          >
             {t('createNewAnnouncement')}
           </Button>
         )}
       </Box>
-      {/* Scrollable box*/}
-      <Box sx={{ maxHeight: 700, overflowY: 'auto' }}>
-        {announcementsList.map((ann) => (
-          <AnnouncementCard key={ann.id} {...ann} />
-        ))}
+      <Box sx={{ maxHeight: 800, overflowY: 'auto' }}>
+        <Stack spacing={2}>
+          {announcementsList.map((announcement) => (
+            <AnnouncementCard key={announcement.id} {...announcement} />
+          ))}
+        </Stack>
       </Box>
-    </Box>
+    </Paper>
   );
 }
 export default AnnouncementsPage;
