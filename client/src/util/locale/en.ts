@@ -43,6 +43,8 @@ export const en = {
     approve: 'Approve',
     remove: 'Remove',
     editClassGroup: 'Edit Class Group',
+    coTeachers: 'Co-teachers',
+    notes: 'Notes',
     createNewAnnouncement: 'Create new announcement',
   },
 };

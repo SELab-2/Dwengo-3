@@ -42,6 +42,8 @@ export const nl = {
     approve: 'Goedkeuren',
     remove: 'Verwijderen',
     editClassGroup: 'Klasgroep bewerken',
+    coTeachers: 'Co-leerkrachten',
+    notes: 'Opmerkingen',
     createNewAnnouncement: 'Nieuwe aankondiging maken',
   },
 };
