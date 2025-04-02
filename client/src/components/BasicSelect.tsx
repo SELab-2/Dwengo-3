@@ -5,10 +5,11 @@ interface BasicSelectProps {
     labelName: string;
     options: string[];
     required?: boolean;
+    state?: [string, React.Dispatch<React.SetStateAction<string>>];
 };
 
-function BasicSelect({labelName, options, required}: BasicSelectProps) {
-    const [option, setOption] = useState('');
+function BasicSelect({labelName, options, required, state}: BasicSelectProps) {
+    const [option, setOption] = state ?? useState<string>('');
     const handleChange = (event: SelectChangeEvent) => {
         setOption(event.target.value);
     };

@@ -5,10 +5,54 @@ import {
 } from "@mui/material";
 import BasicSelect from "../components/BasicSelect";
 import MultipleSelectChip from "../components/MultipleSelectChip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const keywords = ['AI', 'Programmeren', 'Data Science', 'Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision', 'Reinforcement Learning'];
-const learningPaths = [...keywords];
+const learningPaths = [
+    { 
+        id: "1", 
+        title: "Learning Path 1",
+        description: "Description of Learning Path 1",
+        image: "https://via.placeholder.com/150",
+        keywords: ["AI", "Machine Learning"],
+    },
+    { 
+        id: "2", 
+        title: "Learning Path 2",
+        description: "Description of Learning Path 2",
+        image: "https://via.placeholder.com/150",
+        keywords: ["Data Science", "Statistics"],
+    },
+    {
+        id: "3", 
+        title: "Learning Path 3",
+        description: "Description of Learning Path 3",
+        image: "https://via.placeholder.com/150",
+        keywords: ["Web Development", "JavaScript"],
+    },
+    {
+        id: "4", 
+        title: "Learning Path 4",
+        description: "Description of Learning Path 4",
+        image: "https://via.placeholder.com/150",
+        keywords: ["Mobile Development", "React Native"],
+    },
+    {
+        id: "5", 
+        title: "Learning Path 5",
+        description: "Description of Learning Path 5",
+        image: "https://via.placeholder.com/150",
+        keywords: ["Cloud Computing", "AWS"],
+    },
+    {
+        id: "6", 
+        title: "Learning Path 6",
+        description: "Description of Learning Path 6",
+        image: "https://via.placeholder.com/150",
+        keywords: ["Cybersecurity", "Network Security"],
+    }
+];
+
+const keywords = learningPaths.map((path) => path.keywords).flat();
 
 const students = [
     'Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5',
@@ -37,7 +81,22 @@ function AssignmentCreatePage() {
     const { t } = useTranslation();
     const theme = useTheme();
 
+    const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
     const [groupSize, setGroupSize] = useState(1);
+    const [filteredLearningPaths, setFilteredLearningPaths] = useState<string[]>(learningPaths.map((path) => path.title));
+    const [selectedLearningPath, setSelectedLearningPath] = useState<string>('');
+
+    useEffect(() => {
+        const updatedPaths = learningPaths
+            .filter(path => selectedKeywords.length === 0 || path.keywords.some(keyword => selectedKeywords.includes(keyword)))
+            .map(path => path.title);
+            
+        setFilteredLearningPaths(updatedPaths);
+
+        if (!updatedPaths.includes(selectedLearningPath)) {
+            setSelectedLearningPath("");
+        }
+    }, [selectedKeywords]);
 
     const handleGroupSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let value = Number(event.target.value);
@@ -75,8 +134,8 @@ function AssignmentCreatePage() {
 
                 {/* Keywords & Learning Paths */}
                 <Grid2 size={{xs: 12, md: 4, sm: 6}}>
-                    <MultipleSelectChip label={t("keywords")} options={keywords} />
-                    <BasicSelect required labelName={t("learningPath")} options={learningPaths} />
+                    <MultipleSelectChip label={t("keywords")} options={keywords} state={[selectedKeywords, setSelectedKeywords]}/>
+                    <BasicSelect required labelName={t("learningPath")} options={filteredLearningPaths} state={[selectedLearningPath, setSelectedLearningPath]}/>
                 </Grid2>
 
                 {/* Group Size & Generated Groups */}
@@ -132,6 +191,7 @@ function AssignmentCreatePage() {
                         backgroundColor: theme.palette.primary.main,
                         width: { xs: "100%", sm: "40%" } // Full width on mobile, auto on larger screens
                     }}
+                    onClick={() => alert("TODO: Save assignment")}
                 >
                     {t('save')}
                 </Button>
