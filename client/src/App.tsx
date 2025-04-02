@@ -23,6 +23,7 @@ import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
 import { AppRoutes } from './util/routes';
 import AnnouncementsPage from './views/AnnouncementPage';
+import DiscussionsPage from './views/DiscussionsPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -66,8 +67,10 @@ function App() {
                       element={<AnnouncementsPage />}
                     />
                     // TODO: PAGINA linken!!!
-                    <Route path={AppRoutes.classDiscussions(':classId')} element={undefined} />
-                    // TODO: PAGINA linken!!!
+                    <Route
+                      path={AppRoutes.classDiscussions(':classId')}
+                      element={<DiscussionsPage />}
+                    />
                   </Route>
 
                   {/* Redirect all other routes to an errorpage */}
