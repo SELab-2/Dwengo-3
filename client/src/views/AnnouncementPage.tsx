@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
-import { Typography, Box, Button, useTheme } from '@mui/material';
+import { Typography, Box, Button, useTheme, Paper, Stack } from '@mui/material';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import AnnouncementCard from '../components/AnnouncementCard';
+import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 
 // TODO: get this data from the api
 const announcementsData = [
@@ -65,39 +66,15 @@ const announcementsData = [
     content:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
   },
-  {
-    id: 2,
-    title: 'Voorbereiding',
-    date: '16/02/2025 - 19:45',
-    teacher: 'Leerkracht 2',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  },
-  {
-    id: 2,
-    title: 'Voorbereiding',
-    date: '16/02/2025 - 19:45',
-    teacher: 'Leerkracht 2',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  },
-  {
-    id: 2,
-    title: 'Voorbereiding',
-    date: '16/02/2025 - 19:45',
-    teacher: 'Leerkracht 2',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  },
-  {
-    id: 2,
-    title: 'Voorbereiding',
-    date: '16/02/2025 - 19:45',
-    teacher: 'Leerkracht 2',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  },
 ];
+
+const classData = {
+  id: '1',
+  name: 'Klas - 6 AIT',
+  teachers: ['Marnie Garcia', 'Marvin Kline'],
+  notes:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
+};
 
 function AnnouncementsPage() {
   const { user } = useAuth();
@@ -108,23 +85,57 @@ function AnnouncementsPage() {
   const announcementsList = useMemo(() => announcementsData, []);
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', mt: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h4" gutterBottom>
-          {t('announcements')}
-        </Typography>
-        {user?.teacher && (
-          <Button variant="contained" sx={{ backgroundColor: theme.palette.primary.main }}>
-            {t('createNewAnnouncement')}
-          </Button>
-        )}
-      </Box>
-      {/* Scrollable box*/}
-      <Box sx={{ maxHeight: 700, overflowY: 'auto' }}>
-        {announcementsList.map((ann) => (
-          <AnnouncementCard key={ann.id} {...ann} />
-        ))}
-      </Box>
+    <Box sx={{ minHeight: '100vh', p: 3 }}>
+      <ClassNavigationBar id={classData.id} className={classData.name} />
+      <Paper
+        sx={{
+          p: 2,
+          maxWidth: { xs: '90%', sm: 800 }, // Responsive width
+          width: '100%',
+          mx: 'auto',
+          mt: 1,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+            flexDirection: { xs: 'column', sm: 'row' }, // Stack on mobile
+            gap: 1, // Adds spacing when stacked
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            {t('announcements')}
+          </Typography>
+          {user?.teacher && (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: theme.palette.primary.main }}
+              onClick={() => {
+                //TODO: Add functionality to create a new announcement
+                alert('Create new announcement');
+              }}
+            >
+              {t('createNewAnnouncement')}
+            </Button>
+          )}
+        </Box>
+        <Box
+          sx={{
+            maxHeight: { xs: 475, sm: 800 }, // Adjust height for mobile
+            overflowY: 'auto',
+            px: { xs: 1, sm: 2 }, // Add padding on mobile for better spacing
+          }}
+        >
+          <Stack spacing={2}>
+            {announcementsList.map((announcement) => (
+              <AnnouncementCard key={announcement.id} {...announcement} />
+            ))}
+          </Stack>
+        </Box>
+      </Paper>
     </Box>
   );
 }

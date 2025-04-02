@@ -22,6 +22,7 @@ import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
 import { AppRoutes } from './util/routes';
+import AnnouncementsPage from './views/AnnouncementPage';
 
 const queryClient = new QueryClient();
 
@@ -60,7 +61,10 @@ function App() {
                       path={AppRoutes.classAssignment(':classId', ':assignmentId')}
                       element={<ClassAssignmentPage />}
                     />
-                    <Route path={AppRoutes.classAnnouncements(':classId')} element={undefined} />
+                    <Route
+                      path={AppRoutes.classAnnouncements(':classId')}
+                      element={<AnnouncementsPage />}
+                    />
                     // TODO: PAGINA linken!!!
                     <Route path={AppRoutes.classDiscussions(':classId')} element={undefined} />
                     // TODO: PAGINA linken!!!
