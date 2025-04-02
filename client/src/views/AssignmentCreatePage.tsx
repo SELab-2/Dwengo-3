@@ -1,70 +1,34 @@
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../hooks/useAuth";
-import { Box, Button, Divider, Grid2, List, ListItem, ListItemText, TextField, Typography, useTheme } from "@mui/material";
+import { 
+    Box, Button, Divider, Grid2, List, ListItem, ListItemText, TextField, Typography, useTheme 
+} from "@mui/material";
 import BasicSelect from "../components/BasicSelect";
 import MultipleSelectChip from "../components/MultipleSelectChip";
 import { useState } from "react";
 
-const keywords: string[] = [
-    'AI',
-    'Programmeren',
-    'Data Science',
-    'Machine Learning',
-    'Deep Learning',
-    'NLP',
-    'Computer Vision',
-    'Reinforcement Learning',
-];
+const keywords = ['AI', 'Programmeren', 'Data Science', 'Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision', 'Reinforcement Learning'];
+const learningPaths = [...keywords];
 
-const learningPaths: string[] = [
-    'AI',
-    'Programmeren',
-    'Data Science',
-    'Machine Learning',
-    'Deep Learning',
-    'NLP',
-    'Computer Vision',
-    'Reinforcement Learning',
-];
-
-const students: string[] = [
-    'Student 1',
-    'Student 2',
-    'Student 3',
-    'Student 4',
-    'Student 5',
-    'Student 6',
-    'Student 7',
-    'Student 8',
-    'Student 9',
-    'Student 10',
+const students = [
+    'Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5',
+    'Student 6', 'Student 7', 'Student 8', 'Student 9', 'Student 10',
 ];
 
 function makeRandomGroups(groupSize: number): string[][] {
     const studentsSet = new Set(students);
-    const groups: string[][] = [];
-
-    for (let i=0; i < Math.ceil(students.length / groupSize); i++) {
-        groups.push([]);
-    }
+    const groups: string[][] = Array.from({ length: Math.ceil(students.length / groupSize) }, () => []);
 
     let groupIndex = 0;
     while (studentsSet.size > 0) {
-        // Convert Set to Array to pick a random student
         const studentsArray = Array.from(studentsSet);
         const randomStudentIndex = Math.floor(Math.random() * studentsArray.length);
         const randomStudent = studentsArray[randomStudentIndex];
 
-        // Add student to the current group
         groups[groupIndex].push(randomStudent);
-
-        // Remove the selected student from the set
         studentsSet.delete(randomStudent);
-
-        // Move to the next group
         groupIndex = (groupIndex + 1) % groups.length;
     }
-
     return groups;
 }
 
@@ -73,7 +37,7 @@ function AssignmentCreatePage() {
     const { t } = useTranslation();
     const theme = useTheme();
 
-    const [groupSize, setGroupSize] = useState(1); // Default to 1 group
+    const [groupSize, setGroupSize] = useState(1);
 
     const handleGroupSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let value = Number(event.target.value);
@@ -81,14 +45,15 @@ function AssignmentCreatePage() {
         if (value > students.length) value = students.length;
         setGroupSize(value);
     };
-    
+
     return (
-        <Box sx={{maxWidth: 800, mx: 'auto', mt:4}}>
+        <Box sx={{width:'100%', maxWidth: { xs: '95%', sm: '90%'}, mx: 'auto', mt: 4, p: 2 }}>
             <Typography variant="h4" gutterBottom>
                 {t('createAssignment')}
             </Typography>
             <Grid2 container spacing={2}>
-                <Grid2 size={4}>
+                {/* Assignment Name & Description */}
+                <Grid2 size={{xs: 12, md: 4, sm: 6}}>
                     <TextField 
                         required 
                         id="name-assignment" 
@@ -103,15 +68,19 @@ function AssignmentCreatePage() {
                         variant="outlined"
                         multiline
                         margin="dense"
-                        rows={10}
+                        rows={5}
                         fullWidth
                     />
                 </Grid2>
-                <Grid2 size={4}>
-                    <MultipleSelectChip label={t("keywords")} options={keywords}/>
-                    <BasicSelect required labelName={t("learningPath")} options={learningPaths}/>
+
+                {/* Keywords & Learning Paths */}
+                <Grid2 size={{xs: 12, md: 4, sm: 6}}>
+                    <MultipleSelectChip label={t("keywords")} options={keywords} />
+                    <BasicSelect required labelName={t("learningPath")} options={learningPaths} />
                 </Grid2>
-                <Grid2 size={4}>
+
+                {/* Group Size & Generated Groups */}
+                <Grid2 size={{xs: 12, md: 4, sm: 6}}>
                     <TextField
                         id="group-size"
                         label={t('groupSize')}
@@ -122,10 +91,21 @@ function AssignmentCreatePage() {
                         value={groupSize}
                         onChange={handleGroupSizeChange}
                     />
-                    <List sx={{width: '100%', mt: 1, maxHeight: 300, overflowY: 'auto', border: "1px solid #ddd", borborderRadius: "8px" }}>
+                    
+                    {/* Scrollable Group List */}
+                    <List sx={{
+                        width: '100%',
+                        mt: 1,
+                        maxHeight: 300,
+                        overflowY: 'auto',
+                        border: "1px solid #ddd",
+                        borderRadius: "8px",
+                        p: 1,
+                        bgcolor: "background.paper"
+                    }}>
                         {makeRandomGroups(groupSize).map((group, index) => (
                             <div key={index}>
-                                <ListItem key={index}>
+                                <ListItem>
                                     <ListItemText 
                                         primary={`${t('group')} ${index + 1}`}
                                         secondary={
@@ -137,15 +117,26 @@ function AssignmentCreatePage() {
                                         }
                                     />
                                 </ListItem>
-                                <Divider/>
+                                <Divider /> {/* Add divider between groups */}
                             </div>
                         ))}
                     </List>
                 </Grid2>
             </Grid2>
-            <Button variant="contained" sx={{ mt: 2, backgroundColor: theme.palette.primary.main }}>
-                {t('save')}
-            </Button>
+
+            {/* Save Button */}
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                <Button 
+                    variant="contained" 
+                    sx={{ 
+                        backgroundColor: theme.palette.primary.main,
+                        width: { xs: "100%", sm: "40%" } // Full width on mobile, auto on larger screens
+                    }}
+                >
+                    {t('save')}
+                </Button>
+            </Box>
+
         </Box>
     );
 }
