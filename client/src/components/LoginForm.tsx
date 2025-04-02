@@ -28,7 +28,7 @@ function LoginForm() {
   const handleGoogleLogin = () => {
     // Redirect to the Google login page
     window.location.href =
-      'http://localhost:3001' +
+      import.meta.env.VITE_API_URL +
       (isStudent ? ApiRoutes.login.google.student : ApiRoutes.login.google.teacher);
   };
 
