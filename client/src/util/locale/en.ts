@@ -52,5 +52,8 @@ export const en = {
     coTeachers: 'Co-teachers',
     notes: 'Notes',
     createNewAnnouncement: 'Create new announcement',
+    numberOfTeamsSolved: 'Number of teams solved',
+    save: "Save",
+    newAssignment: "New Assignment",
   },
 };

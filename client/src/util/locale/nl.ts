@@ -51,5 +51,8 @@ export const nl = {
     coTeachers: 'Co-leerkrachten',
     notes: 'Opmerkingen',
     createNewAnnouncement: 'Nieuwe aankondiging maken',
+    numberOfTeamsSolved: 'Aantal teams opgelost',
+    save: 'Opslaan',
+    newAssignment: 'Nieuwe opdracht',
   },
 };

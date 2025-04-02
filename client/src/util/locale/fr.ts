@@ -54,5 +54,8 @@ export const fr = {
     coTeachers: 'Co-enseignants',
     notes: 'Remarques',
     createNewAnnouncement: 'Créer une nouvelle annonce',
+    numberOfTeamsSolved: 'Nombre d’équipes résolues',
+    save: 'Enregistrer',
+    newAssignment: 'Nouveau devoir',
   },
 };
