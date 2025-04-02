@@ -44,5 +44,6 @@ export const nl = {
     editClassGroup: 'Klasgroep bewerken',
     coTeachers: 'Co-leerkrachten',
     notes: 'Opmerkingen',
+    createNewAnnouncement: 'Nieuwe aankondiging maken',
   },
 };

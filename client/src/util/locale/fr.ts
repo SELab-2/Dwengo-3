@@ -45,5 +45,6 @@ export const fr = {
     editClassGroup: 'Modifier le groupe de classe',
     coTeachers: 'Co-enseignants',
     notes: 'Remarques',
+    createNewAnnouncement: 'Créer une nouvelle annonce',
   },
 };
