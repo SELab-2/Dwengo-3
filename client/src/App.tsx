@@ -60,6 +60,10 @@ function App() {
                       path={AppRoutes.classAssignment(':classId', ':assignmentId')}
                       element={<ClassAssignmentPage />}
                     />
+                    <Route path={AppRoutes.classAnnouncements(':classId')} element={undefined} />
+                    // TODO: PAGINA linken!!!
+                    <Route path={AppRoutes.classDiscussions(':classId')} element={undefined} />
+                    // TODO: PAGINA linken!!!
                   </Route>
 
                   {/* Redirect all other routes to an errorpage */}
