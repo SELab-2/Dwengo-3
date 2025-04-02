@@ -131,7 +131,7 @@ function AnnouncementsPage() {
         >
           <Stack spacing={2}>
             {announcementsList.map((announcement) => (
-              <AnnouncementCard {...announcement} />
+              <AnnouncementCard key={announcement.id} {...announcement} />
             ))}
           </Stack>
         </Box>
