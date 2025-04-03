@@ -58,5 +58,8 @@ export const fr = {
     save: 'Enregistrer',
     newAssignment: 'Nouveau devoir',
     deadline: 'Date limite',
+    givenBy: 'Donné par',
+    progression: "Progression",
+    submission: "Soumission"
   },
 };

@@ -56,5 +56,8 @@ export const en = {
     save: "Save",
     newAssignment: "New Assignment",
     deadline: "Deadline",
+    givenBy: "Given by",
+    progression: "Progression",
+    submission: "Submission"
   },
 };

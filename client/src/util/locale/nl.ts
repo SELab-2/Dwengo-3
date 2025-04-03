@@ -55,5 +55,8 @@ export const nl = {
     save: 'Opslaan',
     newAssignment: 'Nieuwe opdracht',
     deadline: 'Deadline',
+    givenBy: "Gegeven door",
+    progression: "Vooruitgang",
+    submission: "Indiening"
   },
 };

@@ -100,6 +100,7 @@ function ClassAssignmentsPage() {
                         padding: { xs: "5px 10px", sm: "8px 16px" }, 
                         minWidth: { xs: "60px", sm: "100px" }
                       }}
+                      onClick={() => navigate(AppRoutes.classAssignment(id!, '1'))} //TODO assignment id
                     >
                       {t('details')}
                     </Button>
