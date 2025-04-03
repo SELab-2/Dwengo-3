@@ -55,5 +55,6 @@ export const en = {
     numberOfTeamsSolved: 'Number of teams solved',
     save: "Save",
     newAssignment: "New Assignment",
+    deadline: "Deadline",
   },
 };

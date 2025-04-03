@@ -54,5 +54,6 @@ export const nl = {
     numberOfTeamsSolved: 'Aantal teams opgelost',
     save: 'Opslaan',
     newAssignment: 'Nieuwe opdracht',
+    deadline: 'Deadline',
   },
 };

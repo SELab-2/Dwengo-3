@@ -7,6 +7,7 @@ import MultipleSelectChip from "../components/MultipleSelectChip";
 import { useEffect, useState } from "react";
 import ClassNavigationBar from "../components/ClassNavigationBar";
 import { useParams } from "react-router-dom";
+import DateTextField from "../components/textfields/DateTextField";
 
 const learningPaths = [
     { 
@@ -132,6 +133,7 @@ function AssignmentCreatePage() {
                             rows={5}
                             fullWidth
                         />
+                        <DateTextField />
                     </Grid2>
 
                     {/* Keywords & Learning Paths */}

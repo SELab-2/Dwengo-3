@@ -57,5 +57,6 @@ export const fr = {
     numberOfTeamsSolved: 'Nombre d’équipes résolues',
     save: 'Enregistrer',
     newAssignment: 'Nouveau devoir',
+    deadline: 'Date limite',
   },
 };

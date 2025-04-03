@@ -62,6 +62,7 @@ function ClassAssignmentsPage() {
                 <TableCell sx={{ minWidth: 200, width: '50%' }}>
                   <Typography variant="h6">{t('numberOfTeamsSolved')}</Typography>
                 </TableCell>
+                <TableCell/>
               </TableRow>
             </TableHead>
 
