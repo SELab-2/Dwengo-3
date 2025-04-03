@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../hooks/useAuth";
 import { 
     Box, Button, Divider, Grid2, List, ListItem, ListItemText, TextField, Typography, useTheme 
 } from "@mui/material";
 import BasicSelect from "../components/BasicSelect";
 import MultipleSelectChip from "../components/MultipleSelectChip";
 import { useEffect, useState } from "react";
+import ClassNavigationBar from "../components/ClassNavigationBar";
+import { useParams } from "react-router-dom";
 
 const learningPaths = [
     { 
@@ -77,7 +78,7 @@ function makeRandomGroups(groupSize: number): string[][] {
 }
 
 function AssignmentCreatePage() {
-    const { user } = useAuth();
+    const { id } = useParams<{ id: string }>();
     const { t } = useTranslation();
     const theme = useTheme();
 
@@ -105,97 +106,100 @@ function AssignmentCreatePage() {
     };
 
     return (
-        <Box sx={{width:'100%', maxWidth: { xs: '95%', sm: '90%'}, mx: 'auto', mt: 4, p: 2 }}>
-            <Typography variant="h4" gutterBottom>
-                {t('createAssignment')}
-            </Typography>
-            <Grid2 container spacing={2}>
-                {/* Assignment Name & Description */}
-                <Grid2 size={{xs: 12, md: 4, sm: 6}}>
-                    <TextField 
-                        required 
-                        id="name-assignment" 
-                        label={t('name')} 
-                        variant="outlined" 
-                        margin="normal"
-                        fullWidth 
-                    />
-                    <TextField
-                        id="description-assignment"
-                        label={t('description')}
-                        variant="outlined"
-                        multiline
-                        margin="dense"
-                        rows={5}
-                        fullWidth
-                    />
+        <Box sx={{ minHeight: '100vh', p: 3 }}>
+            <ClassNavigationBar id={id!} className="Class Name" />
+            <Box sx={{width:'100%', maxWidth: { xs: '95%', sm: '90%'}, mx: 'auto', mt: 4, p: 2 }}>
+                <Typography variant="h4" gutterBottom>
+                    {t('createAssignment')}
+                </Typography>
+                <Grid2 container spacing={2}>
+                    {/* Assignment Name & Description */}
+                    <Grid2 size={{xs: 12, md: 4, sm: 6}}>
+                        <TextField 
+                            required 
+                            id="name-assignment" 
+                            label={t('name')} 
+                            variant="outlined" 
+                            margin="normal"
+                            fullWidth 
+                        />
+                        <TextField
+                            id="description-assignment"
+                            label={t('description')}
+                            variant="outlined"
+                            multiline
+                            margin="dense"
+                            rows={5}
+                            fullWidth
+                        />
+                    </Grid2>
+
+                    {/* Keywords & Learning Paths */}
+                    <Grid2 size={{xs: 12, md: 4, sm: 6}}>
+                        <MultipleSelectChip label={t("keywords")} options={keywords} state={[selectedKeywords, setSelectedKeywords]}/>
+                        <BasicSelect required labelName={t("learningPath")} options={filteredLearningPaths} state={[selectedLearningPath, setSelectedLearningPath]}/>
+                    </Grid2>
+
+                    {/* Group Size & Generated Groups */}
+                    <Grid2 size={{xs: 12, md: 4, sm: 6}}>
+                        <TextField
+                            id="group-size"
+                            label={t('groupSize')}
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                            type="number"
+                            value={groupSize}
+                            onChange={handleGroupSizeChange}
+                        />
+                        
+                        {/* Scrollable Group List */}
+                        <List sx={{
+                            width: '100%',
+                            mt: 1,
+                            maxHeight: 300,
+                            overflowY: 'auto',
+                            border: "1px solid #ddd",
+                            borderRadius: "8px",
+                            p: 1,
+                            bgcolor: "background.paper"
+                        }}>
+                            {makeRandomGroups(groupSize).map((group, index) => (
+                                <div key={index}>
+                                    <ListItem>
+                                        <ListItemText 
+                                            primary={`${t('group')} ${index + 1}`}
+                                            secondary={
+                                                group.map((student) => (
+                                                    <Typography key={student} variant="body2">
+                                                        {student}
+                                                    </Typography>
+                                                ))
+                                            }
+                                        />
+                                    </ListItem>
+                                    <Divider /> {/* Add divider between groups */}
+                                </div>
+                            ))}
+                        </List>
+                    </Grid2>
                 </Grid2>
 
-                {/* Keywords & Learning Paths */}
-                <Grid2 size={{xs: 12, md: 4, sm: 6}}>
-                    <MultipleSelectChip label={t("keywords")} options={keywords} state={[selectedKeywords, setSelectedKeywords]}/>
-                    <BasicSelect required labelName={t("learningPath")} options={filteredLearningPaths} state={[selectedLearningPath, setSelectedLearningPath]}/>
-                </Grid2>
+                {/* Save Button */}
+                <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                    <Button 
+                        variant="contained" 
+                        sx={{ 
+                            backgroundColor: theme.palette.primary.main,
+                            width: { xs: "100%", sm: "40%" } // Full width on mobile, auto on larger screens
+                        }}
+                        onClick={() => alert("TODO: Save assignment")}
+                    >
+                        {t('save')}
+                    </Button>
+                </Box>
 
-                {/* Group Size & Generated Groups */}
-                <Grid2 size={{xs: 12, md: 4, sm: 6}}>
-                    <TextField
-                        id="group-size"
-                        label={t('groupSize')}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        type="number"
-                        value={groupSize}
-                        onChange={handleGroupSizeChange}
-                    />
-                    
-                    {/* Scrollable Group List */}
-                    <List sx={{
-                        width: '100%',
-                        mt: 1,
-                        maxHeight: 300,
-                        overflowY: 'auto',
-                        border: "1px solid #ddd",
-                        borderRadius: "8px",
-                        p: 1,
-                        bgcolor: "background.paper"
-                    }}>
-                        {makeRandomGroups(groupSize).map((group, index) => (
-                            <div key={index}>
-                                <ListItem>
-                                    <ListItemText 
-                                        primary={`${t('group')} ${index + 1}`}
-                                        secondary={
-                                            group.map((student) => (
-                                                <Typography key={student} variant="body2">
-                                                    {student}
-                                                </Typography>
-                                            ))
-                                        }
-                                    />
-                                </ListItem>
-                                <Divider /> {/* Add divider between groups */}
-                            </div>
-                        ))}
-                    </List>
-                </Grid2>
-            </Grid2>
-
-            {/* Save Button */}
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-                <Button 
-                    variant="contained" 
-                    sx={{ 
-                        backgroundColor: theme.palette.primary.main,
-                        width: { xs: "100%", sm: "40%" } // Full width on mobile, auto on larger screens
-                    }}
-                    onClick={() => alert("TODO: Save assignment")}
-                >
-                    {t('save')}
-                </Button>
             </Box>
-
         </Box>
     );
 }

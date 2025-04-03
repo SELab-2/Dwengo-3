@@ -18,6 +18,7 @@ export const AppRoutes = {
   classAssignments: (classId: string) => `/class/${classId}/assignments`,
   classAssignment: (classId: string, assignmentId: string) =>
     `/class/${classId}/assignments/${assignmentId}`,
+  classAssignmentCreate: (classId: string) => `/class/${classId}/assignments/create`,
   classAnnouncements: (classId: string) => `/class/${classId}/announcements`,
   classDiscussions: (classId: string) => `/class/${classId}/discussions`,
 };

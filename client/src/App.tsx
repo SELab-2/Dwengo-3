@@ -23,6 +23,7 @@ import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
 import { AppRoutes } from './util/routes';
 import AnnouncementsPage from './views/AnnouncementPage';
+import AssignmentCreatePage from './views/AssignmentCreatePage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,10 @@ function App() {
                     <Route
                       path={AppRoutes.classAssignments(':classId')}
                       element={<ClassAssignmentsPage />}
+                    />
+                    <Route
+                      path={AppRoutes.classAssignmentCreate(':classId')}
+                      element={<AssignmentCreatePage />} 
                     />
                     <Route
                       path={AppRoutes.classAssignment(':classId', ':assignmentId')}
