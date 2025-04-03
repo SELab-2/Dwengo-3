@@ -1,7 +1,6 @@
 import { Box, Typography, Card, Avatar } from '@mui/material';
-import { MarginSize } from '../util/size';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../util/routes';
 
 const learningThemes = [
   {
@@ -26,26 +25,47 @@ const learningThemes = [
 ];
 
 function LearningThemesPage() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleThemeClick = (themeTitle: string) => {
-    navigate(`/learning-themes/${encodeURIComponent(themeTitle)}`);
+    navigate(`${encodeURI(AppRoutes.learningTheme(themeTitle))}`);
   };
 
   return (
-    <Box sx={{ p: MarginSize.large }}>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, justifyContent: 'center' }}>
+    <Box sx={{ p: 4, textAlign: 'center' }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+          gap: 3,
+          justifyContent: 'center',
+        }}
+      >
         {learningThemes.map(({ title, image }) => (
           <Card
             key={title}
-            sx={{ borderRadius: 2, overflow: 'hidden', width: '300px', cursor: 'pointer' }}
             onClick={() => handleThemeClick(title)}
+            sx={{
+              borderRadius: 3,
+              overflow: 'hidden',
+              cursor: 'pointer',
+              position: 'relative',
+              boxShadow: 4,
+              transition: 'transform 0.3s ease-in-out',
+              '&:hover': { transform: 'scale(1.05)', boxShadow: 6 },
+            }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: '#f5f5f5', p: 2 }}>
-              <Avatar src={image} sx={{ width: 56, height: 56, mr: 2 }} />
+            {/* Theme Image */}
+            <Avatar
+              src={image}
+              variant="square"
+              sx={{ width: '100%', height: 180, objectFit: 'cover' }}
+            />
+
+            {/* Theme Title */}
+            <Box sx={{ p: 2, bgcolor: 'primary.main', color: 'white' }}>
               <Typography variant="h6" fontWeight="bold">
-                {t(title)}
+                {title}
               </Typography>
             </Box>
           </Card>

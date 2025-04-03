@@ -1,4 +1,5 @@
 import { Box, Typography, Card, CardContent, Avatar, Button } from '@mui/material';
+import GroupIcon from '@mui/icons-material/Group';
 import { MarginSize } from '../util/size';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -111,29 +112,63 @@ function LearningPathsOverviewPage() {
           gap: 3,
         }}
       >
-        {filteredPaths.map(({ id, title, image, description }, index) => (
+        {filteredPaths.map(({ id, title, image, description, targetAges }, index) => (
           <Card
             key={id}
             sx={{
               borderRadius: 2,
               overflow: 'hidden',
               cursor: 'pointer',
+              position: 'relative',
               bgcolor: String(
                 Object.values(theme.palette.custom)[
                   index % Object.values(theme.palette.custom).length
                 ],
               ),
+              boxShadow: 3,
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
-              <Avatar src={image} sx={{ width: 56, height: 56, mr: 2 }} />
-              <Typography variant="h6" fontWeight="bold" color="white">
+            {/* Image */}
+            <Box sx={{ position: 'relative' }}>
+              <Avatar
+                src={image}
+                variant="square"
+                sx={{ width: '100%', height: 150, objectFit: 'cover' }}
+              />
+            </Box>
+
+            {/* Content */}
+            <Box sx={{ p: 2, color: 'white' }}>
+              <Typography variant="h6" fontWeight="bold">
                 {t(title)}
               </Typography>
             </Box>
+
             <CardContent>
               <ExpandableDescription description={description} />
             </CardContent>
+
+            {/* Target Age Badge */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 3,
+                right: 3,
+                backgroundColor: theme.palette.primary.main,
+                color: 'black',
+                borderRadius: '8px',
+                borderColor: 'black',
+                px: 1.5,
+                py: 0.5,
+                fontSize: '0.75rem',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+              }}
+            >
+              <GroupIcon sx={{ fontSize: 16 }} /> {targetAges?.join(' - ') || 'N/A'}
+            </Box>
           </Card>
         ))}
       </Box>
@@ -144,13 +179,13 @@ function LearningPathsOverviewPage() {
 function ExpandableDescription({ description }: { description: string }) {
   const [expanded, setExpanded] = useState(false);
   const shortDescription =
-    description.length > 100 ? description.slice(0, 100) + '...' : description;
+    description.length > 100 ? description.slice(0, 97) + '...' : description;
 
   return (
     <>
       <Typography variant="body2">{expanded ? description : shortDescription}</Typography>
       {description.length > 100 && (
-        <Button size="small" onClick={() => setExpanded(!expanded)}>
+        <Button size="small" onClick={() => setExpanded(!expanded)} sx={{ color: 'white' }}>
           {expanded ? 'Read Less' : 'Read More'}
         </Button>
       )}
