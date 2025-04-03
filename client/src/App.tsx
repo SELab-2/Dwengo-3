@@ -16,12 +16,13 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import MyClassesPage from './views/MyClassesPage';
 import MyLearningPathsPage from './views/MyLearningPathsPage';
 import LearningThemesPage from './views/LearningThemesPage';
-import ClassPage from './views/ClassPage';
+import ClassDashboardPage from './views/ClassDashboardPage.tsx';
 import LearningPathPage from './views/LearningPathPage';
 import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
 import { AppRoutes } from './util/routes';
+import AnnouncementsPage from './views/AnnouncementPage';
 
 const queryClient = new QueryClient();
 
@@ -51,7 +52,7 @@ function App() {
                     <Route path={AppRoutes.learningPath(':id')} element={<LearningPathPage />} />
                     <Route path={AppRoutes.learningThemes} element={<LearningThemesPage />} />
                     <Route path={AppRoutes.learningTheme(':id')} element={<LearningThemePage />} />
-                    <Route path={AppRoutes.class(':id')} element={<ClassPage />} />
+                    <Route path={AppRoutes.class(':id')} element={<ClassDashboardPage />} />
                     <Route
                       path={AppRoutes.classAssignments(':classId')}
                       element={<ClassAssignmentsPage />}
@@ -60,6 +61,13 @@ function App() {
                       path={AppRoutes.classAssignment(':classId', ':assignmentId')}
                       element={<ClassAssignmentPage />}
                     />
+                    <Route
+                      path={AppRoutes.classAnnouncements(':classId')}
+                      element={<AnnouncementsPage />}
+                    />
+                    // TODO: PAGINA linken!!!
+                    <Route path={AppRoutes.classDiscussions(':classId')} element={undefined} />
+                    // TODO: PAGINA linken!!!
                   </Route>
 
                   {/* Redirect all other routes to an errorpage */}
