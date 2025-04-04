@@ -120,7 +120,7 @@ passport.use(
         const provider = AuthenticationProvider.LOCAL;
 
         if (user === null) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         if (crypto.createHash('sha256').update(password).digest('base64') !== user.password) {
