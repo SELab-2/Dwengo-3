@@ -49,7 +49,7 @@ export class AssignmentDomain {
     return assignment;
   }
 
-  public async createAssigment(query: any, user: UserEntity): Promise<AssignmentDetail> {
+  public async createAssignment(query: any, user: UserEntity): Promise<AssignmentDetail> {
     if (user.role !== ClassRole.TEACHER) {
       throw new BadRequestError(40012);
     }

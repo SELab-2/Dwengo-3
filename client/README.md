@@ -22,5 +22,4 @@ You can then serve the app using a static file server or deploy it to a hosting 
 To enable authentication on the frontend, create a `.env` file in `client/`. Add the following environment variables
 to it:
 
-- `VITE_GOOGLE_CLIENT_ID` - The value is the same as used in the `.env` of the server (`GOOGLE_CLIENT_ID`)
 - `VITE_API_URL` - The root url to the API.

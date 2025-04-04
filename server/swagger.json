@@ -851,6 +851,9 @@
           },
           "learningPathNode": {
             "$ref": "#/components/schemas/LearningPathNodeShort"
+          },
+          "favorite": {
+            "$ref": "#/components/schemas/FavoriteShort"
           }
         }
       },
@@ -981,6 +984,64 @@
             "type": "string",
             "description": "The title of the announcement.",
             "example": "Important announcement"
+          }
+        }
+      },
+
+      "FavoriteShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the favorite",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The userId of the user that made the favorite",
+            "example": "660e8400-e29b-41d4-a716-446655440000"
+          },
+          "progress": {
+            "type": "array",
+            "description": "A list of the indexes of the already completed nodes",
+            "items": {
+              "type": "integer"
+            },
+            "example": [0, 1, 2, 4]
+          },
+          "learningPath": {
+            "description": "The favorited learningPath",
+            "$ref": "#/components/schemas/LearningPathShort"
+          }
+        }
+      },
+
+      "FavoriteDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the favorite",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "progress": {
+            "type": "array",
+            "description": "A list of the indexes of the already completed nodes",
+            "items": {
+              "type": "integer"
+            },
+            "example": [0, 1, 2, 4]
+          },
+          "learningPath": {
+            "description": "The favorited learningPath",
+            "$ref": "#/components/schemas/LearningPathShort"
+          },
+          "user": {
+            "description": "The user that made the favorite",
+            "$ref": "#/components/schemas/UserShort"
           }
         }
       },
@@ -1486,6 +1547,12 @@
             "description": "The ID of the group submitting the assignment.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
           },
+          "favoriteId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the favorite to which the submission belongs",
+            "example": "770e8400-e29b-41d4-a716-446655440000"
+          },
           "nodeId": {
             "type": "string",
             "format": "uuid",
@@ -1511,8 +1578,46 @@
             "description": "The submission data, either a string for MULTIPLE_CHOICE or an object for FILE."
           }
         },
-        "required": ["groupId", "nodeId", "submissionType", "submission"]
+        "required": ["nodeId", "submissionType", "submission"]
       },
+
+      "SubmissionUpdate": {
+        "type": "object",
+        "properties": {
+          "submissionType": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "FILE"],
+            "description": "The type of submission. MULTIPLE_CHOICE expects a string, FILE expects an object."
+          },
+          "submission": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "For MULTIPLE_CHOICE submission type, this should be a string representing the selected answer.",
+                "example": "A"
+              },
+              {
+                "$ref": "#/components/schemas/FileSubmissionSchema"
+              }
+            ],
+            "description": "The submission data, either a string for MULTIPLE_CHOICE or an object for FILE."
+          }
+        }
+      },
+
+      "FavoriteCreate": {
+        "type": "object",
+        "properties": {
+          "learningPathId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the learningPath you want to favorite",
+            "example": "550e8400-e29b-41d4-a716-446655440002"
+          }
+        },
+        "required": ["learningPathId"]
+      },
+
       "FileSubmissionSchema": {
         "type": "object",
         "properties": {

@@ -147,7 +147,7 @@ export class AssignmentController {
 
   private async createAssignment(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.assignmentDomain.createAssigment(req.body, this.userDomain.getUserFromReq(req)),
+      await this.assignmentDomain.createAssignment(req.body, this.userDomain.getUserFromReq(req)),
     );
   }
 }
