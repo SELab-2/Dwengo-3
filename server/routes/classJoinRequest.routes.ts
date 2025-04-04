@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import { ClassJoinRequestDomain } from '../domain/classJoinRequest.domain';
 import { UserDomain } from '../domain/user.domain';
 import { ClassRoleEnum } from '../util/types/user.types';
+import { isAuthenticated } from './auth.routes';
 
 export class ClassJoinRequestController {
   public router: Router;
@@ -78,7 +79,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/studentRequest', this.createJoinRequest);
+    this.router.put('/studentRequest', isAuthenticated, this.createJoinRequest);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -103,7 +104,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/teacherRequest', this.createJoinRequest);
+    this.router.put('/teacherRequest', isAuthenticated, this.createJoinRequest);
     /**
      * @swagger
      * /api/class/studentRequest:
@@ -150,7 +151,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/studentRequest', this.getStudentJoinRequests);
+    this.router.get('/studentRequest', isAuthenticated, this.getStudentJoinRequests);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -197,7 +198,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/teacherRequest', this.getTeacherJoinRequests);
+    this.router.get('/teacherRequest', isAuthenticated, this.getTeacherJoinRequests);
     /**
      * @swagger
      * /api/class/studentRequest:
@@ -222,7 +223,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.post('/studentRequest', this.handleJoinRequest);
+    this.router.post('/studentRequest', isAuthenticated, this.handleJoinRequest);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -247,6 +248,6 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.post('/teacherRequest', this.handleJoinRequest);
+    this.router.post('/teacherRequest', isAuthenticated, this.handleJoinRequest);
   }
 }

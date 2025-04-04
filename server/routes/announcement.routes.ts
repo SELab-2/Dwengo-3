@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { AnnouncementDomain } from '../domain/announcement.domain';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class AnnouncementController {
   public router: Router;
@@ -80,7 +81,7 @@ export class AnnouncementController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createAnnouncement);
+    this.router.put('/', isAuthenticated, this.createAnnouncement);
     /**
      * @swagger
      * /api/announcement:
@@ -126,7 +127,7 @@ export class AnnouncementController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/', this.getAnnouncements);
+    this.router.get('/', isAuthenticated, this.getAnnouncements);
     /**
      * @swagger
      * /api/announcement/{id}:
@@ -157,7 +158,7 @@ export class AnnouncementController {
      *       404:
      *         description: Announcement not found.
      */
-    this.router.get('/:id', this.getAnnouncementById);
+    this.router.get('/:id', isAuthenticated, this.getAnnouncementById);
     /**
      * @swagger
      * /api/announcement/{id}:
@@ -198,6 +199,6 @@ export class AnnouncementController {
      *       404:
      *         description: Announcement not found.
      */
-    this.router.patch('/:id', this.updateAnnouncement);
+    this.router.patch('/:id', isAuthenticated, this.updateAnnouncement);
   }
 }

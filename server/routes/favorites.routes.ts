@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { UserDomain } from '../domain/user.domain';
 import { FavoritesDomain } from '../domain/favorites.domain';
 import { FavoriteFilterParams } from '../util/types/favorites.types';
+import { isAuthenticated } from './auth.routes';
 
 export class FavoritesController {
   public router: Router;
@@ -77,7 +78,7 @@ export class FavoritesController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/', this.getFavorites);
+    this.router.get('/', isAuthenticated, this.getFavorites);
     /**
      * @swagger
      * /api/favorites/{id}:
@@ -108,7 +109,7 @@ export class FavoritesController {
      *       404:
      *         description: Favorite not found.
      */
-    this.router.get('/:id', this.getFavoriteById);
+    this.router.get('/:id', isAuthenticated, this.getFavoriteById);
     /**
      * @swagger
      * /api/favorites:
@@ -137,7 +138,7 @@ export class FavoritesController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createFavorite);
+    this.router.put('/', isAuthenticated, this.createFavorite);
     /**
      * @swagger
      * /api/favorites/{id}:
@@ -168,6 +169,6 @@ export class FavoritesController {
      *       404:
      *         description: Favorite not found.
      */
-    this.router.delete('/:id', this.deleteFavorite);
+    this.router.delete('/:id', isAuthenticated, this.deleteFavorite);
   }
 }

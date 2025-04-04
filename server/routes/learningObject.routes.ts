@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { LearningObjectDomain } from '../domain/learningObject.domain';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningObjectController {
   public router: Router;
@@ -80,7 +81,7 @@ export class LearningObjectController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createLearningObject);
+    this.router.put('/', isAuthenticated, this.createLearningObject);
     /**
      * @swagger
      * /api/learningObject:
@@ -125,7 +126,7 @@ export class LearningObjectController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/', this.getLearningObjects);
+    this.router.get('/', isAuthenticated, this.getLearningObjects);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -156,7 +157,7 @@ export class LearningObjectController {
      *       404:
      *         description: Learning object not found.
      */
-    this.router.get('/:id', this.getLearningObjectById);
+    this.router.get('/:id', isAuthenticated, this.getLearningObjectById);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -193,7 +194,7 @@ export class LearningObjectController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.patch('/:id', this.updateLearningObject);
+    this.router.patch('/:id', isAuthenticated, this.updateLearningObject);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -220,6 +221,6 @@ export class LearningObjectController {
      *       404:
      *         description: Learning object not found.
      */
-    this.router.delete('/:id', this.deleteLearningObject);
+    this.router.delete('/:id', isAuthenticated, this.deleteLearningObject);
   }
 }

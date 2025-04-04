@@ -160,6 +160,7 @@ passport.deserializeUser(async (id: string, done) => {
 
 router.get(
   '/student/login/google',
+  isNotAuthenticated,
   passport.authenticate('google', {
     scope: ['email', 'profile'],
     session: true,
@@ -168,6 +169,7 @@ router.get(
 
 router.get(
   '/teacher/login/google',
+  isNotAuthenticated,
   passport.authenticate('google', {
     scope: ['email', 'profile'],
     session: true,
@@ -176,6 +178,7 @@ router.get(
 
 router.post(
   '/student/login/local',
+  isNotAuthenticated,
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
     res.status(200).json(req.user);
@@ -184,53 +187,63 @@ router.post(
 
 router.post(
   '/teacher/login/local',
+  isNotAuthenticated,
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
     res.status(200).json(req.user);
   },
 );
 
-router.put('/student/register', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
+router.put(
+  '/student/register',
+  isNotAuthenticated,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
 
-    const user: UserEntity = await userDomain.createUser({
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-      provider: AuthenticationProvider.LOCAL,
-      role: ClassRoleEnum.STUDENT,
-      surname: req.body.surname,
-      username: req.body.username,
-    });
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
+      const user: UserEntity = await userDomain.createUser({
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        provider: AuthenticationProvider.LOCAL,
+        role: ClassRoleEnum.STUDENT,
+        surname: req.body.surname,
+        username: req.body.username,
+      });
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
-router.put('/teacher/register', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
+router.put(
+  '/teacher/register',
+  isNotAuthenticated,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
 
-    const user: UserEntity = await userDomain.createUser({
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-      provider: AuthenticationProvider.LOCAL,
-      role: ClassRoleEnum.TEACHER,
-      surname: req.body.surname,
-      username: req.body.username,
-    });
+      const user: UserEntity = await userDomain.createUser({
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        provider: AuthenticationProvider.LOCAL,
+        role: ClassRoleEnum.TEACHER,
+        surname: req.body.surname,
+        username: req.body.username,
+      });
 
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 router.get(
   '/callback/google',
+  isNotAuthenticated,
   (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('google')(req, res, next);
   },
@@ -241,6 +254,7 @@ router.get(
 
 router.delete(
   '/logout',
+  isAuthenticated,
   (req: Request, res: Response, next: NextFunction) => {
     req.logout((err) => next(err));
   },

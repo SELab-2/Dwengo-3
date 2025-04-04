@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { LearningPathNodeTransitionDomain } from '../domain/learningPathNodeTransition.domain';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningPathNodeTransitionController {
   public router: Router;
@@ -52,6 +53,6 @@ export class LearningPathNodeTransitionController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createLearningPathNodeTransition);
+    this.router.put('/', isAuthenticated, this.createLearningPathNodeTransition);
   }
 }
