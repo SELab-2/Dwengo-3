@@ -3,7 +3,7 @@ export interface LearningObjectShort {
   title: string;
   language: string;
   estimatedTime: number;
-  kewords: string[];
+  keywords: string[];
   targetAges: number[];
 }
 

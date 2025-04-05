@@ -17,7 +17,7 @@ const themeKeywordsMap = {
 // TODO: Get data from endpoint
 const learningPaths = [
   {
-    id: '1',
+    id: '0',
     title: 'Introduction to AI in Climate',
     targetAges: [12, 13, 14],
     keywords: ['AI', 'Climate'],
@@ -100,6 +100,7 @@ function LearningPathsOverviewPage() {
   const { id } = useParams();
   const { t } = useTranslation();
 
+  // TODO: Fetch learning paths based on the theme ID (or corresponding keywords) from the backend
   const filteredPaths = learningPaths.filter((path) =>
     themeKeywordsMap[id as keyof typeof themeKeywordsMap]?.some((keyword: string) =>
       path.keywords.includes(keyword),
@@ -116,43 +117,41 @@ function LearningPathsOverviewPage() {
         }}
       >
         {filteredPaths.map(({ id, title, image, description, targetAges }, index) => (
-          <Link to={AppRoutes.learningPath(id)} key={id} style={{ textDecoration: 'none' }}>
-            <Card
-              sx={{
-                borderRadius: 2,
-                overflow: 'hidden',
-                position: 'relative',
-                bgcolor: String(
-                  Object.values(theme.palette.custom)[
-                    index % Object.values(theme.palette.custom).length
-                  ],
-                ),
-                boxShadow: 3,
-              }}
+          <Card
+            key={id}
+            sx={{
+              borderRadius: 2,
+              overflow: 'hidden',
+              position: 'relative',
+              bgcolor: String(
+                Object.values(theme.palette.custom)[
+                  index % Object.values(theme.palette.custom).length
+                ],
+              ),
+              boxShadow: 3,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Link
+              to={AppRoutes.learningPath(id)}
+              style={{ textDecoration: 'none' }}
+              onClick={(e) => e.stopPropagation()}
             >
-              <Box sx={{ position: 'relative' }}>
-                <Avatar
-                  src={image}
-                  variant="square"
-                  sx={{ width: '100%', height: 150, objectFit: 'cover' }}
-                />
-              </Box>
+              <Avatar
+                src={image}
+                variant="square"
+                sx={{ width: '100%', height: 150, objectFit: 'cover' }}
+              />
+            </Link>
 
-              <Box sx={{ p: 2, color: 'white' }}>
-                <Typography variant="h6" fontWeight="bold">
-                  {t(title)}
-                </Typography>
-              </Box>
-
-              <CardContent>
-                <ExpandableDescription description={description} />
-              </CardContent>
-
+            <Link
+              to={AppRoutes.learningPath(id)}
+              style={{ textDecoration: 'none', position: 'absolute', top: 3, right: 3 }}
+              onClick={(e) => e.stopPropagation()}
+            >
               <Box
                 sx={{
-                  position: 'absolute',
-                  top: 3,
-                  right: 3,
                   backgroundColor: theme.palette.primary.main,
                   color: 'black',
                   borderRadius: '8px',
@@ -168,8 +167,18 @@ function LearningPathsOverviewPage() {
               >
                 <GroupIcon sx={{ fontSize: 16 }} /> {targetAges?.join(' - ') || 'N/A'}
               </Box>
-            </Card>
-          </Link>
+            </Link>
+
+            <Box sx={{ p: 2, color: 'white' }}>
+              <Typography variant="h6" fontWeight="bold">
+                {t(title)}
+              </Typography>
+            </Box>
+
+            <CardContent>
+              <ExpandableDescription description={description} />
+            </CardContent>
+          </Card>
         ))}
       </Box>
     </Box>
@@ -188,7 +197,8 @@ function ExpandableDescription({ description }: { description: string }) {
         <Button
           size="small"
           onClick={(e) => {
-            e.preventDefault(); // Prevent <Link> navigation when toggling
+            e.preventDefault(); // Prevent navigation on click, so that it only expands the description
+            e.stopPropagation(); // Prevent click bubbling
             setExpanded(!expanded);
           }}
           sx={{ color: 'white' }}
