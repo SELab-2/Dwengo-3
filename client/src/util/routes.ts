@@ -19,6 +19,7 @@ export const AppRoutes = {
   classAssignment: (classId: string, assignmentId: string) =>
     `/class/${classId}/assignments/${assignmentId}`,
   classAnnouncements: (classId: string) => `/class/${classId}/announcements`,
+  announcement: (announcementId: string) => `/announcement/${announcementId}`,
   classDiscussions: (classId: string) => `/class/${classId}/discussions`,
   discussion: (discussionId: string) => `/discussion/${discussionId}`,
 };
