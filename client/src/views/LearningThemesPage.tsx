@@ -2,6 +2,7 @@ import { Box, Typography, Card, Avatar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/routes';
 
+// TODO: Get data from endpoint
 const learningThemes = [
   {
     title: 'AI in Climate',
