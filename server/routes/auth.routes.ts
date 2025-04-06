@@ -6,7 +6,7 @@ import passport from 'passport';
 import { UserDomain } from '../domain/user.domain';
 import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
-import { AuthorizationError, BadRequestError } from '../util/types/error.types';
+import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
 
 const userDomain = new UserDomain();
 
@@ -37,7 +37,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
     return next();
   }
 
-  throw new AuthorizationError(-1, 'User is not authenticated');
+  throw new AuthorizationError(40301);
 }
 
 /**
@@ -55,7 +55,7 @@ export function isNotAuthenticated(req: Request, res: Response, next: NextFuncti
   if (req.isUnauthenticated()) {
     return next();
   }
-  throw new AuthorizationError(-1, 'User is already authenticated');
+  throw new AuthorizationError(40302);
 }
 
 export const router = express.Router();
@@ -120,24 +120,23 @@ passport.use(
         const provider = AuthenticationProvider.LOCAL;
 
         if (user === null) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         if (crypto.createHash('sha256').update(password).digest('base64') !== user.password) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         if (user.role !== role) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         if (user.provider !== provider) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         return done(null, user);
       } catch (error) {
-        console.error(error);
         return done(error);
       }
     },
@@ -149,8 +148,7 @@ passport.deserializeUser(async (id: string, done) => {
   try {
     const user: UserEntity | null = await userDomain.getUserById(id);
 
-    // todo: change to error types
-    if (user === null) return new Error('User not found');
+    if (user === null) return done(new NotFoundError(40405), false);
 
     return done(null, user);
   } catch (error) {
@@ -235,17 +233,29 @@ router.get(
     passport.authenticate('google')(req, res, next);
   },
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (process.env.NODE_ENV === 'development') {
+      res.redirect('http://localhost:5173');
+    } else {
+      res.redirect('https://sel2-3.ugent.be');
+    }
   },
 );
 
-router.delete(
-  '/logout',
-  (req: Request, res: Response, next: NextFunction) => {
-    req.logout((err) => next(err));
-  },
-  (req: Request, res: Response) => {
-    res.clearCookie('connect.sid', { maxAge: 0 });
-    res.status(200).json({ message: 'Logout successful' });
-  },
-);
+router.delete('/logout', (req: Request, res: Response, next: NextFunction) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    else {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        res.status(200).json({
+          message: 'Logout successful',
+        });
+      });
+    }
+  });
+});
+
+router.get('/me', isAuthenticated, (req: Request, res: Response) => {
+  // Return the authenticated user's data
+  res.json(req.user);
+});

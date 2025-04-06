@@ -72,6 +72,7 @@ app.use(
       httpOnly: true,
       sameSite: 'strict',
       maxAge: 1000 * 60 * 60 * 5, // 5 hours
+      path: '/',
     },
   }),
 );

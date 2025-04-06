@@ -5,7 +5,6 @@ import { ClassRoleEnum } from '../util/types/class.types';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { ApiRoutes } from '../util/routes';
-import { UserDetail } from '../util/types/user.types';
 
 // Custom hook to access the auth context
 export const useAuth = () => {
@@ -42,16 +41,26 @@ export function useLogin() {
   });
 }
 
-export function useLogout() {
+export function useGoogleLogin() {
   return useMutation({
-    mutationFn: async (data: UserDetail) => {
-      if (data.role === ClassRoleEnum.STUDENT) {
-        const response = await apiClient.post(ApiRoutes.logout.student);
+    mutationFn: async (userRole: ClassRoleEnum) => {
+      if (userRole === ClassRoleEnum.STUDENT) {
+        const response = await apiClient.get(ApiRoutes.login.google.student);
         return response.data;
       } else {
-        const response = await apiClient.post(ApiRoutes.logout.teacher);
+        const response = await apiClient.get(ApiRoutes.login.google.teacher);
         return response.data;
       }
+    },
+  });
+}
+
+export function useLogout() {
+  // TODO: other logout method
+  return useMutation({
+    mutationFn: async () => {
+      const response = await apiClient.delete(ApiRoutes.logout);
+      return response.data;
     },
   });
 }

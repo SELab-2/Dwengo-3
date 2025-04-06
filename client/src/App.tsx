@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { LoginPage } from './views/LoginPage';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import ProfilePage from './views/ProfilePage';
 import RegisterPage from './views/RegisterPage';
 import theme from './util/theme';
@@ -12,7 +12,6 @@ import MainAppBar from './components/MainAppBar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { ErrorProvider } from './contexts/ErrorContext';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import MyClassesPage from './views/MyClassesPage';
 import MyLearningPathsPage from './views/MyLearningPathsPage';
 import LearningThemesPage from './views/LearningThemesPage';
@@ -28,20 +27,17 @@ import AnnouncementDetailpage from './views/AnnouncementPage';
 const queryClient = new QueryClient();
 
 function App() {
-  // TODO: fill in GoogleClientId
-
   return (
-    <GoogleOAuthProvider clientId="TODO">
+    <BrowserRouter>
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>
-            <Router>
-              <MainAppBar></MainAppBar>
-              <ErrorProvider>
-                <Routes>
-                  {/* Public Routes */}
-                  <Route path={AppRoutes.login} element={<LoginPage />} />
-                  <Route path={AppRoutes.register} element={<RegisterPage />} />
+            <MainAppBar></MainAppBar>
+            <ErrorProvider>
+              <Routes>
+                {/* Public Routes */}
+                <Route path={AppRoutes.login} element={<LoginPage />} />
+                <Route path={AppRoutes.register} element={<RegisterPage />} />
 
                   {/* Protected Routes */}
                   {/* TODO: Wrap the protected routes in a ProtectedRoutes component, deleted this for production ease */}
@@ -74,16 +70,16 @@ function App() {
                     // TODO: PAGINA linken!!!
                   </Route>
 
-                  {/* Redirect all other routes to an errorpage */}
-                  <Route path="*" element={<ErrorPage />} />
-                </Routes>
-              </ErrorProvider>
-            </Router>
+
+                {/* Redirect all other routes to an errorpage */}
+                <Route path="*" element={<ErrorPage />} />
+              </Routes>
+            </ErrorProvider>
             <FooterBar></FooterBar>
           </ThemeProvider>
         </QueryClientProvider>
       </AuthProvider>
-    </GoogleOAuthProvider>
+    </BrowserRouter>
   );
 }
 
