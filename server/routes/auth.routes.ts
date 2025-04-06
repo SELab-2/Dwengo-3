@@ -81,10 +81,7 @@ passport.use(
     ) => {
       try {
         let user: UserEntity | null = await userDomain.getUserById(profile.id);
-        const role = req.path.includes('teacher') ? ClassRoleEnum.TEACHER : ClassRoleEnum.STUDENT;
-
-        console.debug(role);
-        console.debug(req.path);
+        const role = req.query.state as ClassRoleEnum;
 
         if (user === null) {
           user = await userDomain.createUser({
@@ -166,6 +163,7 @@ router.get(
   passport.authenticate('google', {
     scope: ['email', 'profile'],
     session: true,
+    state: ClassRoleEnum.STUDENT,
   }),
 );
 
@@ -175,6 +173,7 @@ router.get(
   passport.authenticate('google', {
     scope: ['email', 'profile'],
     session: true,
+    state: ClassRoleEnum.TEACHER,
   }),
 );
 
@@ -246,9 +245,7 @@ router.put(
 router.get(
   '/callback/google',
   isNotAuthenticated,
-  (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('google')(req, res, next);
-  },
+  passport.authenticate('google'),
   (req: Request, res: Response) => {
     if (process.env.NODE_ENV === 'development') {
       res.redirect('http://localhost:5173');
