@@ -19,6 +19,7 @@ export const AppRoutes = {
   classAssignment: (classId: string, assignmentId: string) =>
     `/class/${classId}/assignments/${assignmentId}`,
   classAnnouncements: (classId: string) => `/class/${classId}/announcements`,
+  announcement: (announcementId: string) => `/announcement/${announcementId}`,
   classDiscussions: (classId: string) => `/class/${classId}/discussions`,
 };
 
@@ -28,17 +29,21 @@ export const AppRoutes = {
 export const ApiRoutes = {
   // Auth
   login: {
-    student: '/api/auth/student/login',
-    teacher: '/api/auth/teacher/login',
+    google: {
+      student: '/api/auth/student/login/google',
+      teacher: '/api/auth/teacher/login/google',
+    },
+    student: '/api/auth/student/login/local',
+    teacher: '/api/auth/teacher/login/local',
   },
   register: {
     student: '/api/auth/student/register',
     teacher: '/api/auth/teacher/register',
   },
-  logout: {
-    student: '/api/auth/student/logout',
-    teacher: '/api/auth/teacher/logout',
-  },
+  logout: '/api/auth/logout',
+
+  // Me (get the logged in user)
+  me: '/api/auth/me',
 
   // Announcement
   announcement: {

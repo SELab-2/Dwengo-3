@@ -16,3 +16,10 @@ npm run build
 
 This will create a production-ready build of the app in the `dist` directory.
 You can then serve the app using a static file server or deploy it to a hosting service.
+
+## Authentication
+
+To enable authentication on the frontend, create a `.env` file in `client/`. Add the following environment variables
+to it:
+
+- `VITE_API_URL` - The root url to the API.

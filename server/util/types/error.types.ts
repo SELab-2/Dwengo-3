@@ -34,6 +34,19 @@ export class AuthorizationError extends APIError {
   get statusCode(): number {
     return 403;
   }
+
+  get message(): string {
+    switch (this.errorCode) {
+      case 40301:
+        return 'User is not authenticated';
+      case 40302:
+        return 'User is already authenticated';
+      case 40303:
+        return 'Invalid credentials';
+      default:
+        return 'Unauthorized...';
+    }
+  }
 }
 
 export class NotFoundError extends APIError {
