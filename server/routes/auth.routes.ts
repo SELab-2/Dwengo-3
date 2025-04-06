@@ -83,6 +83,9 @@ passport.use(
         let user: UserEntity | null = await userDomain.getUserById(profile.id);
         const role = req.path.includes('teacher') ? ClassRoleEnum.TEACHER : ClassRoleEnum.STUDENT;
 
+        console.debug(role);
+        console.debug(req.path);
+
         if (user === null) {
           user = await userDomain.createUser({
             id: profile.id,
