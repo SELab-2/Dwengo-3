@@ -10,8 +10,7 @@ import { LearningPathDetail } from '../util/types/learningPath.types';
 
 interface MultipleChoice {
   question: string;
-  options: string[];
-  answer: string;
+  answers: string[];
 }
 
 // Mock data for fetching node and learning object details
@@ -26,14 +25,43 @@ const LearningPathNodeDetailData = [
       {
         id: '0',
         learningPathNodeId: '0',
-        condition: 'If the user has completed the previous task.',
+        condition: 'answer == German',
         toNodeIndex: 1,
+      },
+      {
+        id: '2',
+        learningPathNodeId: '0',
+        condition: 'answer == Dutch',
+        toNodeIndex: 2,
       },
     ],
   },
+  {
+    id: '1',
+    learningPathId: '1',
+    learningObjectId: '1',
+    instruction: '',
+    index: 1,
+    transitions: [
+      {
+        id: '1',
+        learningPathNodeId: '1',
+        condition: 'answer == Dutch',
+        toNodeIndex: 2,
+      },
+    ],
+  },
+  {
+    id: '2',
+    learningPathId: '2',
+    learningObjectId: '2',
+    instruction: '',
+    index: 2,
+    transitions: [],
+  },
 ];
 
-const LearningObjectDetailData: [LearningObjectDetail] = [
+const LearningObjectDetailData: LearningObjectDetail[] = [
   {
     id: '0',
     hruid: '0',
@@ -57,12 +85,62 @@ const LearningObjectDetailData: [LearningObjectDetail] = [
     content: 'This is the actual content of the lesson.',
     keywords: ['programming', 'coding', 'technology'],
     multipleChoice: JSON.parse(
-      '{"question": "Which of the following is a programming language?", "options": ["Java", "HTML", "CSS", "Python"], "answer": "Java"}',
+      '{"question": "Which of the following is not a programming language?", "answers": ["Java", "HTML", "Dutch", "CSS", "Python", "German"]}',
     ),
+  },
+  {
+    id: '1',
+    hruid: '1',
+    version: 1,
+    title: 'Introduction to Programming',
+    description: 'This module introduces basic programming concepts and practices.',
+    contentType: 'test',
+    contentLocation: 'https://example.com/content',
+    targetAges: [12, 13, 14],
+    teacherExclusive: false,
+    skosConcepts: [],
+    educationalGoals: JSON.parse('[]'),
+    licence: '',
+    difficulty: 2,
+    available: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    copyright: '2023',
+    returnValue: JSON.parse('{"success": true}'),
+    estimatedTime: 40,
+    content: 'This is the actual content of the lesson.',
+    keywords: ['language', 'coding'],
+    multipleChoice: JSON.parse(
+      '{"question": "Which of the following is a spoken language?", "answers": ["Dutch", "Java", "HTML", "CSS", "Python"]}',
+    ),
+  },
+  {
+    id: '2',
+    hruid: '2',
+    version: 1,
+    title: 'Introduction to Programming',
+    description: 'This module introduces basic programming concepts and practices.',
+    contentType: 'test',
+    contentLocation: 'https://example.com/content',
+    targetAges: [12, 13, 14],
+    teacherExclusive: false,
+    skosConcepts: [],
+    educationalGoals: JSON.parse('[]'),
+    licence: '',
+    difficulty: 2,
+    available: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    copyright: '2023',
+    returnValue: JSON.parse('{"success": true}'),
+    estimatedTime: 40,
+    content: 'This is the actual content of the lesson.',
+    keywords: ['language', 'coding'],
+    multipleChoice: JSON.parse('null'),
   },
 ];
 
-const LearningPathDetailData: [LearningPathDetail] = [
+const LearningPathDetailData: LearningPathDetail[] = [
   {
     id: '0',
     hruid: '0',
@@ -81,6 +159,28 @@ const LearningPathDetailData: [LearningPathDetail] = [
           title: 'Introduction to Programming',
           language: 'nl',
           estimatedTime: 120,
+          keywords: ['programming', 'coding'],
+          targetAges: [12, 13, 14],
+        },
+      },
+      {
+        id: '1',
+        learningObject: {
+          id: '1',
+          title: 'Introduction to Programming',
+          language: 'nl',
+          estimatedTime: 40,
+          keywords: ['programming', 'coding'],
+          targetAges: [12, 13, 14],
+        },
+      },
+      {
+        id: '2',
+        learningObject: {
+          id: '2',
+          title: 'Introduction to Programming',
+          language: 'nl',
+          estimatedTime: 40,
           keywords: ['programming', 'coding'],
           targetAges: [12, 13, 14],
         },
@@ -119,6 +219,35 @@ function LearningPathPage() {
     null,
   );
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [progress, setProgress] = useState<number[]>([0]);
+
+  const handleSetActiveIndex = (newIndex: number) => {
+    // Don't allow users to simply "skip" questions by going to the next one.
+    if (newIndex <= Math.max(...progress)) {
+      setActiveIndex(newIndex);
+    }
+  };
+
+  const handleAnswerClick = (answer: string) => {
+    if (!learningPathNodeDetail) return;
+
+    const transition = learningPathNodeDetail.transitions.find((t) => {
+      const match = t.condition.match(/answer\s*==\s*(.+)/);
+      const expected = match?.[1]?.replace(/['"]+/g, '').trim();
+      return expected === answer;
+    });
+
+    if (transition) {
+      const nextIndex = transition.toNodeIndex;
+      // If users go through the questions multiple times, don't add the index a second time to the progress.
+      if (!progress.includes(nextIndex)) {
+        setProgress((prev) => [...prev, nextIndex]);
+      }
+      setActiveIndex(nextIndex);
+    } else {
+      alert('No valid transition for this answer.');
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -143,8 +272,7 @@ function LearningPathPage() {
   }
 
   const totalSteps = learningPath.learningPathNodes.length;
-  const progress = Math.round((activeIndex / totalSteps) * 100);
-
+  const maxIndex = learningPath.learningPathNodes.length - 1;
   const multipleChoice = learningObjectDetail.multipleChoice as unknown as MultipleChoice;
 
   return (
@@ -160,15 +288,23 @@ function LearningPathPage() {
         {learningPath.learningPathNodes.map((node: LearningPathNodeShort, index: number) => (
           <Box
             key={node.id}
-            onClick={() => setActiveIndex(index)}
+            onClick={() => handleSetActiveIndex(index)}
             p={1}
             mb={1}
-            bgcolor={index === activeIndex ? '#aaffaa' : 'white'}
+            bgcolor={
+              index === activeIndex
+                ? 'grey' // Color for active node
+                : index < Math.max(...progress)
+                  ? progress.includes(index)
+                    ? 'lightgreen' // Color for completed nodes
+                    : 'lightblue' // Color for skipped nodes
+                  : 'white' // Color for unvisited nodes
+            }
             borderRadius="4px"
             sx={{ cursor: 'pointer' }}
           >
             <Typography fontWeight="bold">{node.learningObject.title}</Typography>
-            <Typography variant="caption">{learningObjectDetail.estimatedTime} min</Typography>
+            <Typography variant="caption">{node.learningObject.estimatedTime} min</Typography>
           </Box>
         ))}
       </Box>
@@ -178,8 +314,14 @@ function LearningPathPage() {
         <Typography variant="h5" mb={1}>
           {learningPath.title}
         </Typography>
-        <LinearProgress variant="determinate" value={progress} sx={{ mb: 2 }} />
-        <Typography variant="caption">{progress}% completed</Typography>
+        <LinearProgress
+          variant="determinate"
+          value={(Math.max(...progress) / maxIndex) * 100}
+          sx={{ mb: 2 }}
+        />
+        <Typography variant="caption">
+          {(Math.max(...progress) / maxIndex) * 100}% completed
+        </Typography>
 
         <Paper elevation={2} sx={{ p: 3, mt: 2, flex: 1 }}>
           <Typography variant="h6">{learningObjectDetail.title}</Typography>
@@ -191,20 +333,26 @@ function LearningPathPage() {
           <Typography mt={2} fontWeight="bold">
             Question: {multipleChoice.question}
           </Typography>
-          <ul>
-            {multipleChoice.options.map((option: string, index: number) => (
-              <li key={index}>{option}</li>
+          <Box mt={1}>
+            {multipleChoice.answers.map((option: string, index: number) => (
+              <Button
+                key={index}
+                variant="outlined"
+                onClick={() => handleAnswerClick(option)}
+                sx={{ m: 0.5 }}
+              >
+                {option}
+              </Button>
             ))}
-          </ul>
+          </Box>
         </Paper>
-
         <Box mt={2} display="flex" justifyContent="space-between">
-          <Button disabled={activeIndex === 0} onClick={() => setActiveIndex((i) => i - 1)}>
+          <Button disabled={activeIndex === 0} onClick={() => setActiveIndex(activeIndex - 1)}>
             &lt; Previous
           </Button>
           <Button
             disabled={activeIndex === totalSteps - 1}
-            onClick={() => setActiveIndex((i) => i + 1)}
+            onClick={() => handleSetActiveIndex(activeIndex + 1)}
           >
             Next &gt;
           </Button>
