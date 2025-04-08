@@ -236,6 +236,7 @@ model Announcement {
   title     String
   content   String
   classId   String
+  createdAt DateTime
   class     Class   @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   teacherId String
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
