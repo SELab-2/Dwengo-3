@@ -1,4 +1,4 @@
-import express, { Express, NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { Profile, Strategy as GoogleStrategy, VerifyCallback } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
@@ -7,7 +7,6 @@ import { UserDomain } from '../domain/user.domain';
 import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
-import { nextTick } from 'node:process';
 
 const userDomain = new UserDomain();
 
