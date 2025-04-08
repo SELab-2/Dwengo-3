@@ -55,7 +55,8 @@ export class AnnouncementPersistence {
           : {},
         filters.timestamp
           ? {
-              createdAt: filterType(filters.timestampFilterType!!), // must be present by constraint on AnnouncementByFilterParams
+              // must be present by constraint on AnnouncementByFilterParams
+              createdAt: filterType(filters.timestampFilterType!!),
             }
           : {},
       ],
