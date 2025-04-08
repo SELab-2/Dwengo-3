@@ -184,7 +184,7 @@ router.post(
 
     req.login(req.user!, (err) => {
       if (err) {
-        // TODO: Handle error
+        throw new AuthorizationError(-1);
       }
 
       // If login is successful, send the user data as a response
@@ -199,12 +199,12 @@ router.post(
   (req: Request, res: Response) => {
     if (!req.user) {
       // Throw an error if the credentials are invalid
-      new AuthorizationError(40303);
+      throw new AuthorizationError(40303);
     }
 
     req.login(req.user!, (err) => {
       if (err) {
-        // TODO: Handle error
+        throw new AuthorizationError(-1);
       }
 
       // If login is successful, send the user data as a response
