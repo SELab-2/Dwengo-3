@@ -3,6 +3,7 @@ import {
   AnnouncementByFilterParams,
   AnnouncementCreatePersistenceParams,
   AnnouncementUpdateParams,
+  FilterType,
 } from '../util/types/announcement.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
@@ -20,6 +21,23 @@ export class AnnouncementPersistence {
     filters: AnnouncementByFilterParams,
     paginationParams: PaginationParams,
   ) {
+    const filterType = (filter: FilterType) => {
+      switch (filter) {
+        case FilterType.AFTER:
+          return {
+            gt: filters.timestamp,
+          };
+        case FilterType.BEFORE:
+          return {
+            lt: filters.timestamp,
+          };
+        case FilterType.EQUAL:
+          return {
+            equals: filters.timestamp,
+          };
+      }
+    };
+
     const whereClause: Prisma.AnnouncementWhereInput = {
       AND: [
         filters.classId ? { classId: filters.classId } : {},
@@ -33,6 +51,11 @@ export class AnnouncementPersistence {
                   },
                 },
               },
+            }
+          : {},
+        filters.timestamp
+          ? {
+              createdAt: filterType(filters.timestampFilterType!!), // must be present by constraint on AnnouncementByFilterParams
             }
           : {},
       ],
@@ -67,7 +90,7 @@ export class AnnouncementPersistence {
     teacherId: string,
   ) {
     const { classId, ...data } = announcementCreateParams;
-    const announcement = await PrismaSingleton.instance.announcement.create({
+    return await PrismaSingleton.instance.announcement.create({
       data: {
         ...data,
         class: {
@@ -83,16 +106,14 @@ export class AnnouncementPersistence {
       },
       select: announcementSelectDetail,
     });
-    return announcement;
   }
 
   public async updateAnnouncement(id: string, announcementUpdateParams: AnnouncementUpdateParams) {
-    const updatedAnnouncement = await PrismaSingleton.instance.announcement.update({
+    return await PrismaSingleton.instance.announcement.update({
       where: { id: id },
       data: announcementUpdateParams,
       select: announcementSelectDetail,
     });
-    return updatedAnnouncement;
   }
 
   public async checkAnnouncementIsFromTeacher(announcementId: string, teacherId: string) {

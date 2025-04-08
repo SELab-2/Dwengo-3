@@ -1,15 +1,34 @@
 import { z } from 'zod';
 
+export enum FilterType {
+  BEFORE,
+  AFTER,
+  EQUAL,
+}
+
 export const AnnouncementFilterSchema = z
   .object({
     classId: z.string().uuid().optional(),
     teacherId: z.string().uuid().optional(),
     studentId: z.string().uuid().optional(),
+    timestamp: z.date().optional(),
+    timestampFilterType: z.nativeEnum(FilterType).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: 'At least one filter must be provided.',
     path: [],
-  });
+  })
+  .refine(
+    (data) => {
+      const a = data.timestamp === undefined && data.timestampFilterType === undefined;
+      const b = data.timestamp !== undefined && data.timestampFilterType !== undefined;
+      return a || b;
+    },
+    {
+      message: 'timestamp and timestampFilterType must be provided together',
+      path: [],
+    },
+  );
 
 export const AnnouncementCreatePersistenceSchema = z.object({
   title: z.string().min(1, 'Title must be a non-empty string').trim(),
