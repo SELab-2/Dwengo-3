@@ -7,6 +7,7 @@ import { UserDomain } from '../domain/user.domain';
 import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
+import { nextTick } from 'node:process';
 
 const userDomain = new UserDomain();
 
@@ -176,7 +177,19 @@ router.post(
   '/student/login/local',
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (!req.user) {
+      // Throw an error if the credentials are invalid
+      new AuthorizationError(40303);
+    }
+
+    req.login(req.user!, (err) => {
+      if (err) {
+        // TODO: Handle error
+      }
+
+      // If login is successful, send the user data as a response
+      res.status(200).json(req.user);
+    });
   },
 );
 
@@ -184,7 +197,19 @@ router.post(
   '/teacher/login/local',
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (!req.user) {
+      // Throw an error if the credentials are invalid
+      new AuthorizationError(40303);
+    }
+
+    req.login(req.user!, (err) => {
+      if (err) {
+        // TODO: Handle error
+      }
+
+      // If login is successful, send the user data as a response
+      res.status(200).json(req.user);
+    });
   },
 );
 
