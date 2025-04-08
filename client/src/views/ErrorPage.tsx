@@ -21,11 +21,7 @@ function ErrorPage() {
       <Typography variant="h5" gutterBottom>
         Page Not Found
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => navigate(AppRoutes.home)}
-      >
+      <Button variant="contained" color="primary" onClick={() => navigate(AppRoutes.home)}>
         Go to Home
       </Button>
     </Box>

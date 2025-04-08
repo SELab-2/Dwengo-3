@@ -33,7 +33,7 @@ function ProfilePage() {
   const { logout } = useAuth();
 
   const handleLogout = () => {
-    logoutMutation.mutateAsync(user!, {
+    logoutMutation.mutateAsync(undefined, {
       onSuccess: () => {
         // Clear user data and tokens
         logout();
@@ -74,7 +74,7 @@ function ProfilePage() {
                 {user?.name} {user?.surname}
               </Typography>
               <Typography variant="subtitle1" color="text.secondary">
-                {user?.role === 'STUDENT' ? 'Leerling' : 'Leerkracht'}
+                {user?.role === 'STUDENT' ? t('student') : t('teacher')}
               </Typography>
             </Box>
           </Box>

@@ -1,14 +1,16 @@
 import { Router, Response, Request } from 'express';
 import { AssignmentDomain } from '../domain/assignment.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 
 export class AssignmentController {
   public router: Router;
   private assignmentDomain: AssignmentDomain;
+  private readonly userDomain: UserDomain;
 
   public constructor() {
     this.router = Router();
     this.assignmentDomain = new AssignmentDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -129,16 +131,23 @@ export class AssignmentController {
   }
 
   private async getAssignments(req: Request, res: Response): Promise<void> {
-    res.json(await this.assignmentDomain.getAssignments(req.query, await getUserFromReq(req)));
+    res.json(
+      await this.assignmentDomain.getAssignments(req.query, this.userDomain.getUserFromReq(req)),
+    );
   }
 
   private async getAssignmentById(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.assignmentDomain.getAssignmentById(req.params.id, await getUserFromReq(req)),
+      await this.assignmentDomain.getAssignmentById(
+        req.params.id,
+        this.userDomain.getUserFromReq(req),
+      ),
     );
   }
 
   private async createAssignment(req: Request, res: Response): Promise<void> {
-    res.json(await this.assignmentDomain.createAssigment(req.body, await getUserFromReq(req)));
+    res.json(
+      await this.assignmentDomain.createAssignment(req.body, this.userDomain.getUserFromReq(req)),
+    );
   }
 }

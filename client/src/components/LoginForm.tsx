@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Divider } from '@mui/material';
 import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
@@ -9,8 +9,9 @@ import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
-import { AppRoutes } from '../util/routes';
+import { ApiRoutes, AppRoutes } from '../util/routes';
 import { UserDetail } from '../util/types/user.types';
+import GoogleLoginButton from './GoogleLoginButton';
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -20,9 +21,16 @@ function LoginForm() {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isStudent, setIsStudent] = useState<boolean>(true);
+  const [isStudent, setIsStudent] = useState<boolean>(false);
 
   const loginMutation = useLogin();
+
+  const handleGoogleLogin = () => {
+    // Redirect to the Google login page
+    window.location.href =
+      import.meta.env.VITE_API_URL +
+      (isStudent ? ApiRoutes.login.google.student : ApiRoutes.login.google.teacher);
+  };
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,9 +59,12 @@ function LoginForm() {
 
   return (
     <Box component="form" onSubmit={handleLoginSubmit} sx={{ mt: 0 }}>
+      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
+      <Divider sx={{ mb: MarginSize.xsmall }} />
+      <GoogleLoginButton onClick={handleGoogleLogin}></GoogleLoginButton>
+      <Divider sx={{ mt: MarginSize.xsmall }} />
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
-      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
       <Button
         type="submit"
         fullWidth

@@ -18,9 +18,7 @@ const TabIndex: { [key: string]: number } = {
 function MainAppBar() {
   const location = useLocation();
   const { t } = useTranslation();
-  const [selectedTab, setSelectedTab] = useState(
-    TabIndex[location.pathname] ?? false,
-  );
+  const [selectedTab, setSelectedTab] = useState(TabIndex[location.pathname] ?? false);
 
   if ([AppRoutes.login, AppRoutes.register].includes(location.pathname)) {
     return <LoginAppBar />;

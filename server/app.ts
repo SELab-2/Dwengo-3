@@ -1,8 +1,9 @@
-import cookieParser from 'cookie-parser';
-import * as http2 from 'node:http2';
-import { router as auth, verifyCookie } from './routes/auth.router';
-import express, { Express, NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
+
+dotenv.config({ path: '../.env' });
+
+import { router as auth } from './routes/auth.routes';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import { ClassController } from './routes/class.routes';
 import { LearningPathController } from './routes/learningPath.routes';
 import { LearningPathNodeController } from './routes/learningPathNode.routes';
@@ -18,13 +19,14 @@ import * as swaggerDocument from './swagger.json';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { StudentController } from './routes/student.routes';
 import { TeacherController } from './routes/teacher.routes';
+import passport from 'passport';
+import session from 'express-session';
 import { errorHandling } from './errorHandling';
 import cors from 'cors';
-
-dotenv.config({ path: '../.env' });
+import { FavoritesController } from './routes/favorites.routes';
 
 export const app: Express = express();
-const port = process.env.PORT || 3001;
+const port = 3001;
 
 // Allow requests from frontend
 // TODO: change this for production
@@ -56,21 +58,26 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 }
 
-// cookie validating middleware
-app.use(cookieParser(), async (req: Request, res: Response, next: NextFunction) => {
-  const verified = await verifyCookie(req.cookies['DWENGO_SESSION']);
-  if (!verified) {
-    const path = req.path;
+if (process.env.SESSION_SECRET === undefined) {
+  throw new Error('Secret for cookies not present');
+}
 
-    // TODO: MOET HERSCHREVEN WORDEN!!!
-    if (path.indexOf('/auth') == -1) {
-      // TODO: redirect to login page, but only when header is set to redirect
-      res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send('unauthorized');
-      return;
-    }
-  }
-  next();
-});
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: 'strict',
+      maxAge: 1000 * 60 * 60 * 5, // 5 hours
+      path: '/',
+    },
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
 
 const apiRouter = express.Router();
@@ -95,6 +102,7 @@ apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().rout
 apiRouter.use('/auth', auth);
 apiRouter.use('/discussion', new DiscussionController().router);
 apiRouter.use('/message', new MessageController().router);
+apiRouter.use('/favorites', new FavoritesController().router);
 
 // Error handling middleware
 app.use(errorHandling);

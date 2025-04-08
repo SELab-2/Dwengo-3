@@ -8,6 +8,7 @@ import {
 } from '../util/types/class.types';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { BadRequestError, NotFoundError } from '../util/types/error.types';
+import { compareUserIdWithFilterId } from '../util/cookie-checks/cookieChecks.util';
 
 export class ClassDomain {
   private classPersistence;
@@ -22,18 +23,8 @@ export class ClassDomain {
 
     // Validate and parse class filters
     const filters = ClassFilterSchema.parse(query);
-    const { studentId, teacherId } = filters;
 
-    if (!studentId && !teacherId) {
-      throw new BadRequestError(40003);
-    }
-
-    if (
-      (studentId && user.role === ClassRoleEnum.STUDENT && user.student?.id !== studentId) ||
-      (teacherId && user.role === ClassRoleEnum.TEACHER && user.teacher?.id !== teacherId)
-    ) {
-      throw new BadRequestError(40004);
-    }
+    await compareUserIdWithFilterId(user, filters.studentId, filters.teacherId);
 
     return await this.classPersistence.getClasses(pagination, filters);
   }

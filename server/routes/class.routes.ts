@@ -1,33 +1,41 @@
 import { Request, Response, Router } from 'express';
 import { ClassDomain } from '../domain/class.domain';
 import { ClassJoinRequestController } from './classJoinRequest.routes';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 
 export class ClassController {
   public router: Router;
   private classDomain: ClassDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.classDomain = new ClassDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private getClasses = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.getClasses(req.query, await getUserFromReq(req)));
+    res.json(await this.classDomain.getClasses(req.query, this.userDomain.getUserFromReq(req)));
   };
 
   private getClassById = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.getClassById(req.params.id, await getUserFromReq(req)));
+    res.json(
+      await this.classDomain.getClassById(req.params.id, this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private createClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.createClass(req.body, await getUserFromReq(req)));
+    res.json(await this.classDomain.createClass(req.body, this.userDomain.getUserFromReq(req)));
   };
 
   private updateClass = async (req: Request, res: Response) => {
     res.json(
-      await this.classDomain.updateClass(req.params.id, req.body, await getUserFromReq(req)),
+      await this.classDomain.updateClass(
+        req.params.id,
+        req.body,
+        this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
@@ -35,7 +43,7 @@ export class ClassController {
     await this.classDomain.removeTeacherFromClass(
       req.params.id,
       req.params.teacherId,
-      await getUserFromReq(req),
+      this.userDomain.getUserFromReq(req),
     );
     res.status(200).send();
   };
@@ -44,7 +52,7 @@ export class ClassController {
     await this.classDomain.removeStudentFromClass(
       req.params.id,
       req.params.studentId,
-      await getUserFromReq(req),
+      this.userDomain.getUserFromReq(req),
     );
     res.status(200).send();
   };

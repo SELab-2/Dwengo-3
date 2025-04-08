@@ -1,20 +1,25 @@
 import { Request, Response, Router } from 'express';
 import { LearningObjectDomain } from '../domain/learningObject.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 
 export class LearningObjectController {
   public router: Router;
   private learningObjectDomain: LearningObjectDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.learningObjectDomain = new LearningObjectDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private createLearningObject = async (req: Request, res: Response) => {
     res.json(
-      await this.learningObjectDomain.createLearningObject(req.body, await getUserFromReq(req)),
+      await this.learningObjectDomain.createLearningObject(
+        req.body,
+        this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
@@ -31,7 +36,7 @@ export class LearningObjectController {
       await this.learningObjectDomain.updateLearningObject(
         req.params.id,
         req.body,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -40,7 +45,7 @@ export class LearningObjectController {
     res.json(
       await this.learningObjectDomain.deleteLearningObject(
         req.params.id,
-        await getUserFromReq(req),
+        this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -206,7 +211,7 @@ export class LearningObjectController {
      *         schema:
      *           type: string
      *           format: uuid
-     *         description: The unique identifier of the learning object to update.
+     *         description: The unique identifier of the learning object to delete.
      *     responses:
      *       204:
      *         description: Learning object deleted successfully.
