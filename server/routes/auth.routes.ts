@@ -184,6 +184,7 @@ router.post(
 
     req.login(req.user!, (err) => {
       if (err) {
+        // todo: better error message?
         throw new AuthorizationError(-1);
       }
 
@@ -204,6 +205,7 @@ router.post(
 
     req.login(req.user!, (err) => {
       if (err) {
+        // todo: better error message?
         throw new AuthorizationError(-1);
       }
 
