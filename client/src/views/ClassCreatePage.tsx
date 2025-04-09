@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useCreateClass } from '../hooks/useClass';
 import { ClassDetail } from '../util/types/class.types';
 import { useNavigate } from 'react-router-dom';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 import { useError } from '../hooks/useError';
 
 function ClassCreatePage() {

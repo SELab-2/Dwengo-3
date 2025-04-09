@@ -3,7 +3,7 @@ import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 import { useClasses, useClassesByIds } from '../hooks/useClass';
 import { useTranslation } from 'react-i18next';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 import { ClassShort } from '../util/types/class.types';
 import ClassCard from '../components/ClassCard';
 

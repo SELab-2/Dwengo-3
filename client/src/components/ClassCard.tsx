@@ -14,8 +14,9 @@ import {
 import { Class as ClassIcon, Person as PersonIcon } from '@mui/icons-material';
 import { ClassDetail } from '../util/types/class.types';
 import { useNavigate } from 'react-router-dom';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 function ClassCard({
   classDetails,
@@ -24,6 +25,7 @@ function ClassCard({
   classDetails: ClassDetail;
 }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // TODO: replace with actual learning paths
   let learningPaths = [
@@ -72,18 +74,26 @@ function ClassCard({
               <ListItem sx={{ px: 0, py: 1.5 }}>
                 <ListItemText
                   primary={
-                    <Box display="flex" justifyContent="space-between">
-                      <Typography fontWeight="medium">{path.title}</Typography>
+                    <Typography
+                      component="div" // Render Typography as a <div> instead of a <p>
+                      sx={{ display: 'flex', justifyContent: 'space-between' }}
+                    >
+                      <Typography fontWeight="medium" component="span">
+                        {path.title}
+                      </Typography>
                       <Chip
                         label={path.deadline} /* TODO: replace with actual value */
                         size="small"
                         variant="outlined"
                         sx={{ ml: 1 }}
                       />
-                    </Box>
+                    </Typography>
                   }
                   secondary={
-                    <Box mt={1}>
+                    <Typography
+                      component="div" // Render Typography as a <div> instead of a <p>
+                      sx={{ mt: 1 }}
+                    >
                       <LinearProgress
                         variant="determinate"
                         value={path.progress} //TODO: replace with actual progress value
@@ -93,11 +103,10 @@ function ClassCard({
                           mb: 1,
                         }}
                       />
-                      {/* TODO: replace with actual progress value */}
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" color="text.secondary" component="span">
                         {`${path.progress}% completed`}
                       </Typography>
-                    </Box>
+                    </Typography>
                   }
                 />
               </ListItem>
@@ -114,7 +123,7 @@ function ClassCard({
               }}
             >
               <Typography variant="body2" color="text.secondary">
-                There are no assignments yet
+                {t('noAssignments')}
               </Typography>
             </Box>
           )}
