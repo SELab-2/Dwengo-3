@@ -104,6 +104,20 @@ function ClassCard({
               {index < learningPaths.length - 1 && <Divider />}
             </React.Fragment>
           ))}
+          {learningPaths.length === 0 && (
+            <Box
+              sx={{
+                height: 120, // Reserve space equivalent to 2 learning paths
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                There are no assignments yet
+              </Typography>
+            </Box>
+          )}
         </List>
       </CardContent>
     </Card>

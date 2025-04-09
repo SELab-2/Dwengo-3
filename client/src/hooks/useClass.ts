@@ -11,7 +11,7 @@ import { PaginatedData } from '../util/types/general.types';
  * @param teacherId - The ID of the teacher whose classes are to be fetched.
  * @returns The query object containing the class data.
  */
-export function useClass(studentId?: string, teacherId?: string) {
+export function useClasses(studentId?: string, teacherId?: string) {
   return useQuery({
     queryKey: ['class', studentId, teacherId],
     queryFn: async () => {
