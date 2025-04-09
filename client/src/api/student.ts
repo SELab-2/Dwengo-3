@@ -1,4 +1,5 @@
 import { ApiRoutes } from '../api/api.routes';
+import { PaginatedData } from '../util/types/general.types';
 import { StudentDetail, StudentShort } from '../util/types/user.types';
 import apiClient from './apiClient';
 
@@ -19,7 +20,7 @@ export async function fetchStudents(userId?: string, classId?: string, groupId?:
     },
   });
 
-  const result: StudentShort[] = response.data;
+  const result: PaginatedData<StudentShort> = response.data;
 
   return result;
 }

@@ -1,6 +1,7 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
 import { ClassDetail, ClassShort } from '../util/types/class.types';
+import { PaginatedData } from '../util/types/general.types';
 
 /**
  * Fetches a list of classes based on the provided student or teacher IDs.
@@ -17,7 +18,7 @@ export async function fetchClasses(studentId?: string, teacherId?: string) {
     },
   });
 
-  const result: ClassShort[] = response.data;
+  const result: PaginatedData<ClassShort> = response.data;
 
   return result;
 }
