@@ -17,7 +17,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import ForumIcon from '@mui/icons-material/Forum';
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppRoutes } from '../util/routes.ts';
+import { AppRoutes } from '../util/app.routes.ts';
 import { useTheme } from '@mui/material/styles';
 import React, { useState } from 'react';
 

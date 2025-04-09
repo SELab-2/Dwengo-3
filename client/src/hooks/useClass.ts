@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../api';
-import { ApiRoutes } from '../util/routes';
+import apiClient from '../api/api';
+import { ApiRoutes } from '../api/api.routes';
 
 /**
  * Fetches a list of classes based on the provided student and teacher IDs.

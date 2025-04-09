@@ -7,7 +7,7 @@ import ProfileIcon from './icons/ProfileIcon';
 import { ComponentSize, FontSize } from '../util/size';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 const TabIndex: { [key: string]: number } = {
   [AppRoutes.learningThemes]: 0,

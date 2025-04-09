@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../api';
-import { ApiRoutes } from '../util/routes';
+import apiClient from '../api/api';
+import { ApiRoutes } from '../api/api.routes';
 
 /**
  * Fetches the list of students for the given parameters.

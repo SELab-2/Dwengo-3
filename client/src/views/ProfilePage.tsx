@@ -22,7 +22,7 @@ import { useAuth, useLogout } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import NotLoggedIn from '../components/NotLoggedIn';
 import { useNavigate } from 'react-router-dom';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 function ProfilePage() {
   // TODO: call to API to get user data?
