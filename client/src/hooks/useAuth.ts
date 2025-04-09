@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import apiClient from '../api/api';
+import apiClient from '../api/apiClient';
 import { LoginData, RegisterData } from '../util/types/auth.types';
 import { ClassRoleEnum } from '../util/types/class.types';
 import { useContext } from 'react';

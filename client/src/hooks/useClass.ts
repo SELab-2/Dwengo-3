@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../api/api';
-import { ApiRoutes } from '../api/api.routes';
+import { fetchClassById, fetchClasses } from '../api/class';
 
 /**
  * Fetches a list of classes based on the provided student and teacher IDs.
@@ -13,13 +12,7 @@ export function useClass(studentId?: string, teacherId?: string) {
   return useQuery({
     queryKey: ['class', studentId, teacherId],
     queryFn: async () => {
-      const response = await apiClient.get(ApiRoutes.class.list, {
-        params: {
-          studentId,
-          teacherId,
-        },
-      });
-      return response.data;
+      return await fetchClasses(studentId, teacherId);
     },
     enabled: !!studentId || !!teacherId,
     refetchOnWindowFocus: false,
@@ -36,8 +29,7 @@ export function useClassById(classId: string) {
   return useQuery({
     queryKey: ['class', classId],
     queryFn: async () => {
-      const response = await apiClient.get(ApiRoutes.class.get(classId));
-      return response.data;
+      return await fetchClassById(classId);
     },
     enabled: !!classId,
     refetchOnWindowFocus: false,

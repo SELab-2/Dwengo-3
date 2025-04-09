@@ -1,7 +1,7 @@
 import { createContext, useState, ReactNode, useEffect } from 'react';
 import { AuthContextType } from '../util/types/auth.types';
 import { UserDetail } from '../util/types/user.types';
-import apiClient from '../api/api';
+import apiClient from '../api/apiClient';
 import { ApiRoutes } from '../api/api.routes';
 import { useLocation } from 'react-router-dom';
 

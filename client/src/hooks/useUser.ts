@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import apiClient from '../api/api';
-import { ApiRoutes } from '../api/api.routes';
+import { fetchStudents } from '../api/student';
+import { fetchTeachers } from '../api/teacher';
 
 /**
  * Fetches the list of students for the given parameters.
@@ -14,14 +14,7 @@ export function useStudent(userId?: string, classId?: string, groupId?: string) 
   return useQuery({
     queryKey: ['student', userId],
     queryFn: async () => {
-      const response = await apiClient.get(ApiRoutes.student.list, {
-        params: {
-          userId,
-          classId,
-          groupId,
-        },
-      });
-      return response.data;
+      return await fetchStudents(userId, classId, groupId);
     },
     enabled: !!userId || !!classId || !!groupId,
     refetchOnWindowFocus: false,
@@ -40,14 +33,7 @@ export function useTeacher(userId?: string, classId?: string, groupId?: string) 
   return useQuery({
     queryKey: ['teacher', userId],
     queryFn: async () => {
-      const response = await apiClient.get(ApiRoutes.teacher.list, {
-        params: {
-          userId,
-          classId,
-          groupId,
-        },
-      });
-      return response.data;
+      return await fetchTeachers(userId, classId, groupId);
     },
     enabled: !!userId || !!classId || !!groupId,
     refetchOnWindowFocus: false,
