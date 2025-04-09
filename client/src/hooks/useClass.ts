@@ -1,6 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import apiClient from '../api';
 import { ApiRoutes } from '../util/routes';
+import { ClassDetail, ClassShort } from '../util/types/class.types';
+import { PaginatedData } from '../util/types/general.types';
 
 /**
  * Fetches a list of classes based on the provided student and teacher IDs.
@@ -19,7 +21,10 @@ export function useClass(studentId?: string, teacherId?: string) {
           teacherId,
         },
       });
-      return response.data;
+
+      const result: PaginatedData<ClassShort> = response.data;
+
+      return result;
     },
     enabled: !!studentId || !!teacherId,
     refetchOnWindowFocus: false,
@@ -37,9 +42,60 @@ export function useClassById(classId: string) {
     queryKey: ['class', classId],
     queryFn: async () => {
       const response = await apiClient.get(ApiRoutes.class.get(classId));
-      return response.data;
+
+      const result: ClassDetail = response.data;
+
+      return result;
     },
     enabled: !!classId,
     refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Fetches multiple classes by their IDs.
+ *
+ * @param classIds - The IDs of the classes to be fetched.
+ * @returns The query object containing the classes data.
+ */
+export function useClassesByIds(classIds: string[]) {
+  return useQuery({
+    queryKey: ['classes', classIds],
+    queryFn: async () => {
+      let result: Array<ClassDetail> = [];
+
+      await Promise.all(
+        classIds.map(async (classId) => {
+          const response = await apiClient.get(ApiRoutes.class.get(classId));
+
+          const classDetails: ClassDetail = response.data;
+
+          result.push(classDetails);
+        }),
+      );
+
+      return result;
+    },
+    enabled: !!classIds.length,
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Creates a new class with the provided class name.
+ *
+ * @returns The mutation object for creating the class.
+ */
+export function useCreateClass() {
+  return useMutation({
+    mutationFn: async (className: string) => {
+      const response = await apiClient.put(ApiRoutes.class.create, {
+        name: className,
+      });
+
+      const result: ClassDetail = response.data;
+
+      return result;
+    },
   });
 }

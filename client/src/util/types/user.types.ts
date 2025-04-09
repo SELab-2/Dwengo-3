@@ -17,8 +17,10 @@ export interface UserDetail extends UserShort {
 
 export interface StudentShort {
   id: string;
-  name: string;
-  surname: string;
+  user: {
+    name: string;
+    surname: string;
+  };
 }
 
 export interface StudentDetail extends StudentShort {
@@ -29,8 +31,10 @@ export interface StudentDetail extends StudentShort {
 
 export interface TeacherShort {
   id: string;
-  name: string;
-  surname: string;
+  user: {
+    name: string;
+    surname: string;
+  };
 }
 
 export interface TeacherDetail extends TeacherShort {

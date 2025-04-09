@@ -34,12 +34,11 @@ function LoginForm() {
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
     loginMutation.mutate(
       {
-        email: data.get('email') as string,
-        password: data.get('password') as string,
+        email: email,
+        password: password,
         role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, //TODO: Change this to the correct role
       },
       {

@@ -1,5 +1,5 @@
-import { TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import CustomTextField from './CustomTextField';
 
 function SurameTextField({
   surname,
@@ -10,20 +10,7 @@ function SurameTextField({
 }) {
   const { t } = useTranslation();
 
-  return (
-    <TextField
-      margin="normal"
-      required
-      fullWidth
-      id="surname"
-      label={t('surname')}
-      name="surname"
-      type="text"
-      autoFocus
-      value={surname}
-      onChange={(e) => setSurname(e.target.value)}
-    />
-  );
+  return <CustomTextField value={surname} setValue={setSurname} translation={t('surname')} />;
 }
 
 export default SurameTextField;

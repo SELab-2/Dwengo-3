@@ -1,31 +1,36 @@
-import React from 'react';
 import {
   Card,
   CardContent,
   Typography,
-  LinearProgress,
   Box,
-  Chip,
   Divider,
+  Avatar,
   List,
   ListItem,
+  Chip,
+  LinearProgress,
   ListItemText,
-  Avatar,
 } from '@mui/material';
 import { Class as ClassIcon, Person as PersonIcon } from '@mui/icons-material';
-import { LearningPathDetail } from '../util/types/learningPath.types';
+import { ClassDetail } from '../util/types/class.types';
+import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../util/routes';
+import React from 'react';
 
-interface ClassGroupCardProps {
-  className: string;
-  teacherName: string;
-  learningPaths: LearningPathDetail[];
-}
+function ClassCard({
+  classDetails,
+  // TODO: include assignments
+}: {
+  classDetails: ClassDetail;
+}) {
+  const navigate = useNavigate();
 
-const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
-  className,
-  teacherName,
-  learningPaths,
-}) => {
+  // TODO: replace with actual learning paths
+  let learningPaths = [
+    { title: 'Learning Path 1', deadline: '10/03/2025', progress: 40 },
+    { title: 'Learning Path 2', deadline: '25/04/2025', progress: 65 },
+  ];
+
   return (
     <Card
       sx={{
@@ -37,6 +42,7 @@ const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
           transition: 'box-shadow 0.3s ease-in-out',
         },
       }}
+      onClick={() => navigate(AppRoutes.class(classDetails.id))}
     >
       <CardContent>
         {/* Header with class name and teacher */}
@@ -46,12 +52,12 @@ const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
           </Avatar>
           <Box>
             <Typography variant="h6" component="div" fontWeight="bold">
-              {className}
+              {classDetails.name}
             </Typography>
             <Box display="flex" alignItems="center" mt={0.5}>
               <PersonIcon fontSize="small" color="action" sx={{ mr: 1 }} />
               <Typography variant="body2" color="text.secondary">
-                {teacherName}
+                {classDetails.teachers[0].user.name + ' ' + classDetails.teachers[0].user.surname}
               </Typography>
             </Box>
           </Box>
@@ -69,8 +75,8 @@ const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
                     <Box display="flex" justifyContent="space-between">
                       <Typography fontWeight="medium">{path.title}</Typography>
                       <Chip
-                        label={'10/03/2025'}
-                        /* TODO: replace with actual value */ size="small"
+                        label={path.deadline} /* TODO: replace with actual value */
+                        size="small"
                         variant="outlined"
                         sx={{ ml: 1 }}
                       />
@@ -80,7 +86,7 @@ const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
                     <Box mt={1}>
                       <LinearProgress
                         variant="determinate"
-                        value={10} //TODO: replace with actual progress value
+                        value={path.progress} //TODO: replace with actual progress value
                         sx={{
                           height: 8,
                           borderRadius: 4,
@@ -89,7 +95,7 @@ const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
                       />
                       {/* TODO: replace with actual progress value */}
                       <Typography variant="caption" color="text.secondary">
-                        {`${10}% completed`}
+                        {`${path.progress}% completed`}
                       </Typography>
                     </Box>
                   }
@@ -102,6 +108,6 @@ const ClassGroupCard: React.FC<ClassGroupCardProps> = ({
       </CardContent>
     </Card>
   );
-};
+}
 
-export default ClassGroupCard;
+export default ClassCard;

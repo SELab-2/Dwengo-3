@@ -1,10 +1,9 @@
-import { create } from 'domain';
-
 export const en = {
   translation: {
     yes: 'Yes',
     no: 'No',
     or: 'Or',
+    fillInRequired: 'Fill in the required fields',
     email: 'Email address',
     name: 'Name',
     surname: 'Surname',
@@ -27,6 +26,7 @@ export const en = {
     myLearningPaths: 'Learning Paths',
     profile: 'Profile',
     myClasses: 'My Classes',
+    className: 'Class name',
     createClass: 'Create Class',
     edit: 'Edit',
     delete: 'Delete',
