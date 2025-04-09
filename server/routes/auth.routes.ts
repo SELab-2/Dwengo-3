@@ -1,4 +1,4 @@
-import express, { Express, NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { Profile, Strategy as GoogleStrategy, VerifyCallback } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
@@ -176,7 +176,20 @@ router.post(
   '/student/login/local',
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (!req.user) {
+      // Throw an error if the credentials are invalid
+      new AuthorizationError(40303);
+    }
+
+    req.login(req.user!, (err) => {
+      if (err) {
+        // todo: better error message?
+        throw new AuthorizationError(-1);
+      }
+
+      // If login is successful, send the user data as a response
+      res.status(200).json(req.user);
+    });
   },
 );
 
@@ -184,7 +197,20 @@ router.post(
   '/teacher/login/local',
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (!req.user) {
+      // Throw an error if the credentials are invalid
+      throw new AuthorizationError(40303);
+    }
+
+    req.login(req.user!, (err) => {
+      if (err) {
+        // todo: better error message?
+        throw new AuthorizationError(-1);
+      }
+
+      // If login is successful, send the user data as a response
+      res.status(200).json(req.user);
+    });
   },
 );
 

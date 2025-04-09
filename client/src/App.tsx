@@ -20,7 +20,7 @@ import LearningPathPage from './views/LearningPathPage';
 import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
-import { AppRoutes } from './util/routes';
+import { AppRoutes } from './util/app.routes.ts';
 import AnnouncementsPage from './views/AnnouncementsPage';
 import AnnouncementDetailpage from './views/AnnouncementPage';
 import ClassCreatePage from './views/ClassCreatePage.tsx';
