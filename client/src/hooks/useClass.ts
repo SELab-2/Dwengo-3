@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { fetchClassById, fetchClasses } from '../api/class';
-import { ClassDetail } from '../util/types/class.types';
+import { fetchClassById, fetchClasses, fetchPopulatedClassById } from '../api/class';
+import { ClassDetail, PopulatedClass } from '../util/types/class.types';
 import { ApiRoutes } from '../api/api.routes';
 import apiClient from '../api/apiClient';
+import { fetchNestedData } from '../api/util';
 
 /**
  * Fetches a list of classes based on the provided student and teacher IDs.
@@ -49,17 +50,7 @@ export function useClassesByIds(classIds: string[]) {
   return useQuery({
     queryKey: ['classes', classIds],
     queryFn: async () => {
-      let result: Array<ClassDetail> = [];
-
-      await Promise.all(
-        classIds.map(async (classId) => {
-          const response = await apiClient.get(ApiRoutes.class.get(classId));
-
-          const classDetails: ClassDetail = response.data;
-
-          result.push(classDetails);
-        }),
-      );
+      const result: ClassDetail[] = await fetchNestedData(classIds, fetchClassById);
 
       return result;
     },
@@ -84,5 +75,101 @@ export function useCreateClass() {
 
       return result;
     },
+  });
+}
+
+/**
+ * Fetches a populated class by its ID.
+ *
+ * @param classId - The ID of the class to be fetched.
+ * @param populateTeachers - Whether to populate the teachers in the response.
+ * @param populateStudents - Whether to populate the students in the response.
+ * @param populateAssignments - Whether to populate the assignments in the response.
+ * @param populateAssignmentLearningPaths - Whether to populate the learning paths of the assignments in the response.
+ * @returns The query object containing the populated class data.
+ *
+ * @remarks `populateAssignmentLearningPaths` is only used if `populateAssignments` is true.
+ */
+export function usePopulatedClassById(
+  classId: string,
+  populateTeachers?: boolean,
+  populateStudents?: boolean,
+  populateAssignments?: boolean,
+  populateAssignmentLearningPaths?: boolean,
+) {
+  return useQuery({
+    queryKey: [
+      'class',
+      classId,
+      populateTeachers,
+      populateStudents,
+      populateAssignments,
+      populateAssignmentLearningPaths,
+    ],
+    queryFn: async () => {
+      return await fetchPopulatedClassById(
+        classId,
+        populateTeachers,
+        populateStudents,
+        populateAssignments,
+        populateAssignmentLearningPaths,
+      );
+    },
+    enabled: !!classId,
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Fetches multiple populated classes by their IDs.
+ *
+ * @param classIds - The IDs of the classes to be fetched.
+ * @param populateTeachers - Whether to populate the teachers in the response.
+ * @param populateStudents - Whether to populate the students in the response.
+ * @param populateAssignments - Whether to populate the assignments in the response.
+ * @param populateAssignmentLearningPaths - Whether to populate the learning paths of the assignments in the response.
+ * @returns The query object containing the populated classes data.
+ *
+ * @remarks `populateAssignmentLearningPaths` is only used if `populateAssignments` is true.
+ */
+export function usePopulatedClassesById(
+  classIds: string[],
+  options?: {
+    populateTeachers?: boolean;
+    populateStudents?: boolean;
+    populateAssignments?: boolean;
+    populateAssignmentLearningPaths?: boolean;
+  },
+) {
+  const {
+    populateTeachers,
+    populateStudents,
+    populateAssignments,
+    populateAssignmentLearningPaths,
+  } = options || {};
+  return useQuery({
+    queryKey: [
+      'classes',
+      classIds,
+      populateTeachers,
+      populateStudents,
+      populateAssignments,
+      populateAssignmentLearningPaths,
+    ],
+    queryFn: async () => {
+      const result: PopulatedClass[] = await fetchNestedData(classIds, (classId) =>
+        fetchPopulatedClassById(
+          classId,
+          populateTeachers,
+          populateStudents,
+          populateAssignments,
+          populateAssignmentLearningPaths,
+        ),
+      );
+
+      return result;
+    },
+    enabled: !!classIds.length,
+    refetchOnWindowFocus: false,
   });
 }

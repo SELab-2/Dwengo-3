@@ -1,5 +1,5 @@
-import { AssignmentShort } from './assignment.types';
-import { StudentShort, TeacherShort } from './user.types';
+import { AssignmentDetail, AssignmentShort, PopulatedAssignment } from './assignment.types';
+import { StudentDetail, StudentShort, TeacherDetail, TeacherShort } from './user.types';
 
 export const enum ClassRoleEnum {
   STUDENT = 'STUDENT',
@@ -15,4 +15,10 @@ export interface ClassDetail extends ClassShort {
   students: StudentShort[];
   teachers: TeacherShort[];
   assignments: AssignmentShort[];
+}
+
+export interface PopulatedClass extends ClassShort {
+  students: StudentShort[] | StudentDetail[];
+  teachers: TeacherShort[] | TeacherDetail[];
+  assignments: AssignmentShort[] | AssignmentDetail[] | PopulatedAssignment[];
 }

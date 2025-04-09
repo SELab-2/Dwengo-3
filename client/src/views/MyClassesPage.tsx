@@ -23,6 +23,8 @@ function MyClassesPage() {
   const classesDetails =
     useClassesByIds(classes?.map((classShort: ClassShort) => classShort.id) ?? []).data ?? [];
 
+  //TODO: Use the populated classes by id hook
+
   return (
     <Box
       sx={{
