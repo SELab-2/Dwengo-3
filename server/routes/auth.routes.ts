@@ -81,7 +81,7 @@ passport.use(
     ) => {
       try {
         let user: UserEntity | null = await userDomain.getUserById(profile.id);
-        const role = req.path.includes('teacher') ? ClassRoleEnum.TEACHER : ClassRoleEnum.STUDENT;
+        const role = req.query.state as ClassRoleEnum;
 
         if (user === null) {
           user = await userDomain.createUser({
@@ -158,22 +158,27 @@ passport.deserializeUser(async (id: string, done) => {
 
 router.get(
   '/student/login/google',
+  isNotAuthenticated,
   passport.authenticate('google', {
     scope: ['email', 'profile'],
     session: true,
+    state: ClassRoleEnum.STUDENT,
   }),
 );
 
 router.get(
   '/teacher/login/google',
+  isNotAuthenticated,
   passport.authenticate('google', {
     scope: ['email', 'profile'],
     session: true,
+    state: ClassRoleEnum.TEACHER,
   }),
 );
 
 router.post(
   '/student/login/local',
+  isNotAuthenticated,
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
     if (!req.user) {
@@ -195,6 +200,7 @@ router.post(
 
 router.post(
   '/teacher/login/local',
+  isNotAuthenticated,
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
     if (!req.user) {
@@ -214,50 +220,57 @@ router.post(
   },
 );
 
-router.put('/student/register', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
+router.put(
+  '/student/register',
+  isNotAuthenticated,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
 
-    const user: UserEntity = await userDomain.createUser({
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-      provider: AuthenticationProvider.LOCAL,
-      role: ClassRoleEnum.STUDENT,
-      surname: req.body.surname,
-      username: req.body.username,
-    });
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
+      const user: UserEntity = await userDomain.createUser({
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        provider: AuthenticationProvider.LOCAL,
+        role: ClassRoleEnum.STUDENT,
+        surname: req.body.surname,
+        username: req.body.username,
+      });
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
-router.put('/teacher/register', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
+router.put(
+  '/teacher/register',
+  isNotAuthenticated,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
 
-    const user: UserEntity = await userDomain.createUser({
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-      provider: AuthenticationProvider.LOCAL,
-      role: ClassRoleEnum.TEACHER,
-      surname: req.body.surname,
-      username: req.body.username,
-    });
+      const user: UserEntity = await userDomain.createUser({
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        provider: AuthenticationProvider.LOCAL,
+        role: ClassRoleEnum.TEACHER,
+        surname: req.body.surname,
+        username: req.body.username,
+      });
 
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 router.get(
   '/callback/google',
-  (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('google')(req, res, next);
-  },
+  isNotAuthenticated,
+  passport.authenticate('google'),
   (req: Request, res: Response) => {
     if (process.env.NODE_ENV === 'development') {
       res.redirect('http://localhost:5173');
@@ -267,7 +280,7 @@ router.get(
   },
 );
 
-router.delete('/logout', (req: Request, res: Response, next: NextFunction) => {
+router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: NextFunction) => {
   req.logout((err) => {
     if (err) return next(err);
     else {

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { TeacherDomain } from '../domain/teacher.domain';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class TeacherController {
   public router: Router;
@@ -72,7 +73,7 @@ export class TeacherController {
      *       401:
      *         description: Unauthorized
      */
-    this.router.get('/', this.getTeachers);
+    this.router.get('/', isAuthenticated, this.getTeachers);
     /**
      * @swagger
      * /api/teacher/{id}:
@@ -99,6 +100,6 @@ export class TeacherController {
      *       404:
      *         description: Teacher not found.
      */
-    this.router.get('/:id', this.getTeacherById);
+    this.router.get('/:id', isAuthenticated, this.getTeacherById);
   }
 }
