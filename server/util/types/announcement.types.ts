@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export enum FilterType {
-  BEFORE,
-  AFTER,
-  EQUAL,
+  BEFORE = 'BEFORE',
+  AFTER = 'AFTER',
+  EQUAL = 'EQUAL',
 }
 
 export const AnnouncementFilterSchema = z
@@ -11,7 +11,7 @@ export const AnnouncementFilterSchema = z
     classId: z.string().uuid().optional(),
     teacherId: z.string().uuid().optional(),
     studentId: z.string().uuid().optional(),
-    timestamp: z.date().optional(),
+    timestamp: z.string().optional(),
     timestampFilterType: z.nativeEnum(FilterType).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {

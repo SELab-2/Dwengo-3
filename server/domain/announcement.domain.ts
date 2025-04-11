@@ -24,7 +24,9 @@ export class AnnouncementDomain {
 
   public async getAnnouncements(query: AnnouncementByFilterParams, user: UserEntity) {
     const pagination = PaginationFilterSchema.parse(query);
+    if (query.timestamp) query.timestamp = new Date(query.timestamp);
     const filter = AnnouncementFilterSchema.parse(query);
+    console.debug(typeof filter.timestamp);
 
     // check if classId is used, user belongs to class
     if (query.classId) {
