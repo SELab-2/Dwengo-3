@@ -6,12 +6,12 @@ export enum FilterType {
   EQUAL = 'EQUAL',
 }
 
-export const AnnouncementFilterSchema = z
+export const AnnouncementFilterQuerySchema = z
   .object({
     classId: z.string().uuid().optional(),
     teacherId: z.string().uuid().optional(),
     studentId: z.string().uuid().optional(),
-    timestamp: z.string().optional(),
+    timestamp: z.coerce.number().optional(),
     timestampFilterType: z.nativeEnum(FilterType).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
@@ -29,6 +29,14 @@ export const AnnouncementFilterSchema = z
       path: [],
     },
   );
+
+export const AnnouncementFilterSchema = z.object({
+  classId: z.string().uuid().optional(),
+  teacherId: z.string().uuid().optional(),
+  studentId: z.string().uuid().optional(),
+  timestamp: z.date().optional(),
+  timestampFilterType: z.nativeEnum(FilterType).optional(),
+});
 
 export const AnnouncementCreatePersistenceSchema = z.object({
   title: z.string().min(1, 'Title must be a non-empty string').trim(),
@@ -49,6 +57,7 @@ export const AnnouncementUpdateSchema = z.object({
   content: z.string().min(1, 'Content must be a non-empty string').trim().optional(),
 });
 
+export type AnnouncementByFilterQueryParams = z.infer<typeof AnnouncementFilterQuerySchema>;
 export type AnnouncementByFilterParams = z.infer<typeof AnnouncementFilterSchema>;
 export type AnnouncementCreatePersistenceParams = z.infer<
   typeof AnnouncementCreatePersistenceSchema

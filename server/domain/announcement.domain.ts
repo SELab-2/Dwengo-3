@@ -2,9 +2,10 @@ import { AnnouncementPersistence } from '../persistence/announcement.persistence
 import { ClassDomain } from './class.domain';
 import {
   AnnouncementByFilterParams,
+  AnnouncementByFilterQueryParams,
   AnnouncementCreateDomainParams,
   AnnouncementCreateDomainSchema,
-  AnnouncementFilterSchema,
+  AnnouncementFilterQuerySchema,
   AnnouncementUpdateParams,
   AnnouncementUpdateSchema,
   TeacherIdSchema,
@@ -22,11 +23,16 @@ export class AnnouncementDomain {
     this.classDomain = new ClassDomain();
   }
 
-  public async getAnnouncements(query: AnnouncementByFilterParams, user: UserEntity) {
+  public async getAnnouncements(query: AnnouncementByFilterQueryParams, user: UserEntity) {
     const pagination = PaginationFilterSchema.parse(query);
-    if (query.timestamp) query.timestamp = new Date(query.timestamp);
-    const filter = AnnouncementFilterSchema.parse(query);
-    console.debug(typeof filter.timestamp);
+    const filterQuery: AnnouncementByFilterQueryParams = AnnouncementFilterQuerySchema.parse(query);
+    const filter: AnnouncementByFilterParams = {
+      classId: filterQuery.classId,
+      teacherId: filterQuery.teacherId,
+      studentId: filterQuery.studentId,
+      timestamp: filterQuery.timestamp ? new Date(filterQuery.timestamp) : undefined,
+      timestampFilterType: filterQuery.timestampFilterType,
+    };
 
     // check if classId is used, user belongs to class
     if (query.classId) {
