@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { DiscussionDomain } from '../domain/discussion.domain';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class DiscussionController {
   public router: Router;
@@ -53,7 +54,7 @@ export class DiscussionController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.get('/', this.getDiscussions.bind(this));
+    this.router.get('/', isAuthenticated, this.getDiscussions.bind(this));
     /**
      * @swagger
      * /api/discussion/{id}:
@@ -84,7 +85,7 @@ export class DiscussionController {
      *       404:
      *         description: Discussion not found.
      */
-    this.router.get('/:id', this.getDiscussionById.bind(this));
+    this.router.get('/:id', isAuthenticated, this.getDiscussionById.bind(this));
     /**
      * @swagger
      * /api/discussion:
@@ -113,7 +114,7 @@ export class DiscussionController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.put('/', this.createDiscussion.bind(this));
+    this.router.put('/', isAuthenticated, this.createDiscussion.bind(this));
   }
 
   private async getDiscussions(req: Request, res: Response): Promise<void> {
