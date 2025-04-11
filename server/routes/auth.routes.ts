@@ -156,6 +156,18 @@ passport.deserializeUser(async (id: string, done) => {
   }
 });
 
+/**
+ * @swagger
+ * /login/student/google:
+ *   post:
+ *     tags:
+ *      - auth
+ *     summary: Login as student through Google
+ *     description: Login as student using Google provider
+ *     responses:
+ *       302:
+ *         description: Redirect to google login page
+ */
 router.get(
   '/student/login/google',
   isNotAuthenticated,
@@ -166,6 +178,18 @@ router.get(
   }),
 );
 
+/**
+ * @swagger
+ * /login/teacher/google:
+ *   post:
+ *     tags:
+ *      - auth
+ *     summary: Login as teacher using Google
+ *     description: Login as teacher using Google provider
+ *     responses:
+ *       302:
+ *         description: Redirect to google login page
+ */
 router.get(
   '/teacher/login/google',
   isNotAuthenticated,
@@ -176,6 +200,60 @@ router.get(
   }),
 );
 
+/**
+ * @swagger
+ * /login/student/local:
+ *   post:
+ *     tags:
+ *      - auth
+ *     summary: Login as student using local credentials
+ *     description: Login as student using username and password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 provider:
+ *                   type: string
+ *       403:
+ *         description: Already logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 router.post(
   '/student/login/local',
   isNotAuthenticated,
@@ -198,6 +276,60 @@ router.post(
   },
 );
 
+/**
+ * @swagger
+ * /login/teacher/local:
+ *   post:
+ *     tags:
+ *      - auth
+ *     summary: Login as teacher using local credentials
+ *     description: Login as teacher using username and password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 provider:
+ *                   type: string
+ *       403:
+ *         description: Already logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 router.post(
   '/teacher/login/local',
   isNotAuthenticated,
@@ -220,6 +352,69 @@ router.post(
   },
 );
 
+/**
+ * @swagger
+ * /student/register:
+ *   put:
+ *     tags:
+ *      - auth
+ *     summary: Register a new student using local credentials
+ *     description: Register a new student using username, password, name, surname and email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - email
+ *               - name
+ *               - surname
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               surname:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 provider:
+ *                   type: string
+ *       403:
+ *         description: Already logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 router.put(
   '/student/register',
   isNotAuthenticated,
@@ -243,6 +438,69 @@ router.put(
   },
 );
 
+/**
+ * @swagger
+ * /teacher/register:
+ *   put:
+ *     tags:
+ *      - auth
+ *     summary: Register a new student using local credentials
+ *     description: Register a new student using username, password, name, surname and email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - email
+ *               - name
+ *               - surname
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               surname:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 provider:
+ *                   type: string
+ *       403:
+ *         description: Already logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 router.put(
   '/teacher/register',
   isNotAuthenticated,
@@ -280,6 +538,34 @@ router.get(
   },
 );
 
+/**
+ * @swagger
+ * /logout:
+ *   delete:
+ *     tags:
+ *       - auth
+ *     summary: Logout the current user
+ *     description: Logs out the authenticated user and destroys the session.
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: NextFunction) => {
   req.logout((err) => {
     if (err) return next(err);
@@ -294,7 +580,32 @@ router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: Ne
   });
 });
 
+/**
+ * @swagger
+ * /me:
+ *   get:
+ *     tags:
+ *       - auth
+ *     summary: Get the current user's data
+ *     description: Returns the data of the authenticated user.
+ *     responses:
+ *       200:
+ *         description: User data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 router.get('/me', isAuthenticated, (req: Request, res: Response) => {
   // Return the authenticated user's data
-  res.json(req.user);
+  res.json(req.user as UserEntity);
 });
