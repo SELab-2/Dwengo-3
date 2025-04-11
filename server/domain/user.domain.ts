@@ -86,6 +86,8 @@ export class UserDomain {
    * @throws If the user is not authenticated or the user data is malformed.
    */
   getUserFromReq(req: Request): UserEntity {
+    console.debug(req.user!! as UserEntity);
+
     return req.user!! as UserEntity;
   }
 
