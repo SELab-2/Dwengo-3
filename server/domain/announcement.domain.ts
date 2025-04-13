@@ -37,7 +37,7 @@ export class AnnouncementDomain {
 
     // check if classId is used, user belongs to class
     if (query.classId) {
-      this.classDomain.checkUserBelongsToClass(user, query.classId);
+      await this.classDomain.checkUserBelongsToClass(user, query.classId);
     }
 
     // check if teacherId is used, it can not get other teacher announcements
