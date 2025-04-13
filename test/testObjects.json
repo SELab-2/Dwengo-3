@@ -219,6 +219,22 @@
             }
         }
     ],
+    "testAnnnouncements": [
+      {
+        "id": "07cca202-e34c-459a-b289-56a383231cdd",
+        "title": "announcement1",
+        "content": "content",
+        "classId": "8b07803c-4444-5555-6666-777788889999",
+        "teacherId": "3b06702b-1111-2222-3333-444455556666"
+      },
+      {
+        "id": "07cca202-e34c-459a-b289-56a383231cee",
+        "title": "announcement2",
+        "content": "content",
+        "classId": "8b07853c-4444-5555-6666-777788889999",
+        "teacherId": "3b06702b-2222-3333-4444-555566667777"
+      }
+    ],
     "testLearningPaths": [
         {
             "id": "82ff18cb-1b49-4d5d-a678-658cd69be542",
