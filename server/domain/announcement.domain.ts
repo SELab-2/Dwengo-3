@@ -113,13 +113,13 @@ export class AnnouncementDomain {
     );
   }
 
-  private async checkUserIsTeacher(user: UserEntity) {
+  private checkUserIsTeacher(user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
       throw new Error('User is not a teacher.');
     }
   }
 
-  private async checkUserIsStudent(user: UserEntity) {
+  private checkUserIsStudent(user: UserEntity) {
     if (user.role !== ClassRoleEnum.STUDENT) {
       throw new Error('User is not a student.');
     }
