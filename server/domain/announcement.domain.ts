@@ -105,7 +105,7 @@ export class AnnouncementDomain {
 
     this.checkUserIsTeacher(user);
     const teacherId = TeacherIdSchema.parse(user.teacher?.id);
-    this.announcementPersistence.checkAnnouncementIsFromTeacher(id, teacherId);
+    await this.announcementPersistence.checkAnnouncementIsFromTeacher(id, teacherId);
 
     return this.announcementPersistence.updateAnnouncement(
       id,
