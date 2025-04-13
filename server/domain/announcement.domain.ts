@@ -66,7 +66,7 @@ export class AnnouncementDomain {
       await this.announcementPersistence.getAnnouncementById(id);
 
     const classId = announcement.classId;
-    this.classDomain.checkUserBelongsToClass(user, classId);
+    await this.classDomain.checkUserBelongsToClass(user, classId);
     return announcement;
   }
 
@@ -80,7 +80,7 @@ export class AnnouncementDomain {
     }
 
     this.checkUserIsTeacher(user);
-    this.classDomain.checkUserBelongsToClass(user, query.classId);
+    await this.classDomain.checkUserBelongsToClass(user, query.classId);
 
     const teacherIdParseResult = TeacherIdSchema.safeParse(user.teacher?.id);
     if (!teacherIdParseResult.success) {
