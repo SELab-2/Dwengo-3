@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import {  } from '../../testObjects.json';
 import { ClassDomain } from '../../../server/domain/class.domain';
 import { testClasses, testPaginationFilter, testTeachers, testStudents, testUsers } from '../../testObjects.json';
 import { ClassRoleEnum, UserEntity } from '../../../server/util/types/user.types';
