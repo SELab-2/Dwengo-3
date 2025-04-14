@@ -34,8 +34,8 @@ export class DiscussionDomain {
     );
     const filters = parseResult.dataSchema;
     const checks = filters.groupIds
-      ? filters.groupIds.map((groupId) =>
-          checkIfUserIsInGroup(user, groupId, this.groupPersistence),
+      ? filters.groupIds.map(async (groupId) =>
+          await checkIfUserIsInGroup(user, groupId, this.groupPersistence),
         )
       : [];
     await Promise.all(checks);
@@ -64,8 +64,8 @@ export class DiscussionDomain {
       throw parseResult.error;
     }
     const data = parseResult.data;
-    checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
-    checkIfUsersAreInSameGroup(
+    await checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
+    await checkIfUsersAreInSameGroup(
       data.members,
       data.groupId,
       this.groupPersistence,
