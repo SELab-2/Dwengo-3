@@ -68,9 +68,9 @@ export class MessageDomain {
     );
     if (
       (user.role === ClassRole.TEACHER &&
-        user.student!.userId !== message.sender.id) ||
+        user.teacher!.userId !== message.sender.id) ||
       (user.role === ClassRole.STUDENT &&
-        user.teacher!.userId !== message.sender.id)
+        user.student!.userId !== message.sender.id)
     ) {
       throw new Error('You can only delete your own messages');
     }
