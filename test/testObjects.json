@@ -429,5 +429,12 @@
         "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae6",
         "instruction": "instruction2"
       }
+    ],
+    "testLearningPathNodeTransitions": [
+      {
+        "id": "fea5d839-c551-49a7-8e4c-d33179743133",
+        "learningPathNodeId": "661a7044-68e3-46b2-9968-b23d95499c47",
+        "toNodeIndex": 1
+      }
     ]
 }
