@@ -46,7 +46,7 @@
       "role": "TEACHER"
     },
     {
-      "id": "6f7g8h9i-6666-7777-8888-999900001111",
+      "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
       "username": "user6",
       "email": "user6@example.com",
       "password": "password6",
@@ -55,7 +55,7 @@
       "role": "STUDENT"
     },
     {
-      "id": "7g8h9i0j-7777-8888-9999-000011112222",
+      "id": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17",
       "username": "user7",
       "email": "user7@example.com",
       "password": "password7",
@@ -116,11 +116,11 @@
     "testStudents": [
     {
       "id": "4c07803c-1111-2222-3333-444455556666",
-      "userId": "6f7g8h9i-6666-7777-8888-999900001111"
+      "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
     },
     {
       "id": "4c07803c-2222-3333-4444-555566667777",
-      "userId": "7g8h9i0j-7777-8888-9999-000011112222"
+      "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
     },
     {
       "id": "4c07803c-3333-4444-5555-666677778888",
@@ -142,11 +142,11 @@
       "students": [
         {
             "id": "4c07803c-1111-2222-3333-444455556666",
-            "userId": "6f7g8h9i-6666-7777-8888-999900001111"
+            "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
           },
           {
             "id": "4c07803c-2222-3333-4444-555566667777",
-            "userId": "7g8h9i0j-7777-8888-9999-000011112222"
+            "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
           }
       ],
       "teachers": [
@@ -264,24 +264,14 @@
             "name": "group1",
             "assignmentId": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
             "students": [
-                {
-                    "id": "6f7g8h9i-6666-7777-8888-999900001111",
-                    "username": "user6",
-                    "email": "user6@example.com",
-                    "password": "password6",
-                    "surname": "Garcia",
-                    "name": "Sophia",
-                    "role": "STUDENT"
-                  },
-                  {
-                    "id": "7g8h9i0j-7777-8888-9999-000011112222",
-                    "username": "user7",
-                    "email": "user7@example.com",
-                    "password": "password7",
-                    "surname": "Martinez",
-                    "name": "James",
-                    "role": "STUDENT"
-                  }
+              {
+                "id": "4c07803c-1111-2222-3333-444455556666",
+                "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+              },
+              {
+                "id": "4c07803c-2222-3333-4444-555566667777",
+                "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+              }
             ],
             "assignment": {
                 "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
@@ -294,11 +284,11 @@
                     "students": [
                       {
                           "id": "4c07803c-1111-2222-3333-444455556666",
-                          "userId": "6f7g8h9i-6666-7777-8888-999900001111"
+                          "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
                         },
                         {
                           "id": "4c07803c-2222-3333-4444-555566667777",
-                          "userId": "7g8h9i0j-7777-8888-9999-000011112222"
+                          "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
                         }
                     ],
                     "teachers": [
@@ -435,6 +425,25 @@
         "id": "fea5d839-c551-49a7-8e4c-d33179743133",
         "learningPathNodeId": "661a7044-68e3-46b2-9968-b23d95499c47",
         "toNodeIndex": 1
+      }
+    ],
+    "testDiscussions": [
+      {
+        "id": "de671ef9-fbed-4263-846f-7c5ab8f39dc7",
+        "groupId": "11e237ff-aa67-4859-ab1d-3d12731899b6",
+        "members": [
+          "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+          "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+        ],
+        "group": {
+          "id": "11e237ff-aa67-4859-ab1d-3d12731899b6",
+          "name": "group1"
+        }
+      }
+    ],
+    "testMessages": [
+      {
+
       }
     ]
 }
