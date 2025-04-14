@@ -443,7 +443,19 @@
     ],
     "testMessages": [
       {
-
+        "id": 1,
+        "discussionId": "de671ef9-fbed-4263-846f-7c5ab8f39dc7",
+        "content": "content",
+        "senderId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+        "sender": {
+          "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+          "username": "user6",
+          "email": "user6@example.com",
+          "password": "password6",
+          "surname": "Garcia",
+          "name": "Sophia",
+          "role": "STUDENT"
+        }
       }
     ]
 }
