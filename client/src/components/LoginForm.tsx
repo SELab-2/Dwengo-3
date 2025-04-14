@@ -9,7 +9,8 @@ import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
-import { ApiRoutes, AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
+import { ApiRoutes } from '../api/api.routes';
 import { UserDetail } from '../util/types/user.types';
 import GoogleLoginButton from './GoogleLoginButton';
 
