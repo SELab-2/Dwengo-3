@@ -101,7 +101,7 @@ let existingGroups = testGroups;
 let existingAssignments = testAssignments;
 
 let createAssigmentParams = {
-    groups: [[testUsers[0].id, testUsers[1].id]],
+    groups: [[testStudents[0].id, testStudents[1].id]],
     classId: testClasses[0].id,
     teacherId: testTeachers[0].id,
     learningPathId: testLearningPaths[0].id,
@@ -136,7 +136,7 @@ let createAssigmentUnexistingClassParams = {
 };
 let createAssigmentStudentNotInClassParams = {
     ...createAssigmentParams,
-    group: [['4c07803c-5555-6666-7777-888899990000']],
+    groups: [['4c07803c-5555-6666-7777-888899990000']],
 };
 
 describe('assignment domain', () => {
@@ -168,14 +168,12 @@ describe('assignment domain', () => {
       });
     });
     describe('getAssignments', () => {
-        /* TODO bug in code gevonden
         test('valid query params and user student belongs to group passes', async () => {
             await expect(assignmentDomain.getAssignments(getAssignmentsStudentQuery, userStudent)).resolves.not.toThrow()
         });
         test('valid query params and user teacher belongs to class passes', async () => {
             await expect(assignmentDomain.getAssignments(getAssignmentsTeacherQuery, userTeacher)).resolves.not.toThrow()
         });
-        */
         test('empty query fails', async () => {
             await expect(assignmentDomain.getAssignments(getAssignmentsEmptyQuery, userStudent)).rejects.toThrow()
         });
@@ -194,14 +192,6 @@ describe('assignment domain', () => {
         test('invalid pagination param fails', async () => {
             await expect(assignmentDomain.getAssignments(getAssignmentsInvalidPaginationQuery, userStudent)).rejects.toThrow()
         });
-        /* TODO wordt niet deftig getest
-        test('student user fetches with teacherId fails', async () => {
-            await expect(assignmentDomain.getAssignments(getAssignmentsTeacherQuery, userStudent)).rejects.toThrow()
-        });
-        test('teacher user fetches with studentId fails', async () => {
-            await expect(assignmentDomain.getAssignments(getAssignmentsStudentQuery, userTeacher)).rejects.toThrow()
-        });
-        */
     });
     describe('getAssignmentById', () => {
         test('valid id student belongs to class passes', async () => {
@@ -221,7 +211,6 @@ describe('assignment domain', () => {
         });
     });
     describe('createAssignment', () => {
-        /* TODO checkIfUsersAreInSameClass errors worden niet opgevangen door vitest
         test('valid params and teacher belongs to class passes', async () => {
             await expect(assignmentDomain.createAssigment(createAssigmentParams, userTeacher)).resolves.not.toThrow()
         });
@@ -255,6 +244,5 @@ describe('assignment domain', () => {
         test('student in groups does not belong to class fails', async () => {
             await expect(assignmentDomain.createAssigment(createAssigmentStudentNotInClassParams, userTeacher)).rejects.toThrow()
         });
-        */
     });
 });

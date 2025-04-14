@@ -77,7 +77,7 @@ export class AssignmentDomain {
     }
     const data = parseResult.data;
     data.teacherId = user.teacher!.id;
-    checkIfUsersAreInSameClass(
+    await checkIfUsersAreInSameClass(
       data.groups,
       data.classId,
       data.teacherId!,

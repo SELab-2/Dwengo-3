@@ -99,6 +99,7 @@ export const checkIfUsersAreInSameClass = async (
   const classStudentIds = new Set(
     classData.students.map((student) => student.id),
   );
+  
 
   // Ensure all students in each group belong to the class
   const check = groups.every((group) =>
@@ -130,9 +131,6 @@ export const checkIfUsersAreInSameGroup = async (
   const teacherIds = new Set(
     groupData.assignment.class.teachers.map((teacher) => teacher.userId),
   ); //Teachers can see all groups of the class
-  console.log(groupData)
-  console.log(groupStudendtIds)
-  console.log(teacherIds)
   const check = users.every(
     (user) => groupStudendtIds.has(user) || teacherIds.has(user),
   );
