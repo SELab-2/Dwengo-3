@@ -69,7 +69,7 @@ export const checkIfUserIsInGroup = async (
 
   if (user.role === ClassRole.TEACHER) {
     const isTeacherOfThisGroup = groupData.assignment.class.teachers.some(
-      (teacher) => teacher.id === user.id,
+      (teacher) => teacher.userId === user.id,
     );
     if (!isTeacherOfThisGroup) {
       throw new Error("Can't fetch groups you're not a teacher of.");
@@ -77,7 +77,7 @@ export const checkIfUserIsInGroup = async (
   }
   if (user.role === ClassRole.STUDENT) {
     const isStudentOfThisGroup = groupData.students.some(
-      (student) => student.id === user.id,
+      (student) => student.userId === user.id,
     );
     if (!isStudentOfThisGroup) {
       throw new Error("Can't fetch groups you're not a student of.");
@@ -130,6 +130,9 @@ export const checkIfUsersAreInSameGroup = async (
   const teacherIds = new Set(
     groupData.assignment.class.teachers.map((teacher) => teacher.userId),
   ); //Teachers can see all groups of the class
+  console.log(groupData)
+  console.log(groupStudendtIds)
+  console.log(teacherIds)
   const check = users.every(
     (user) => groupStudendtIds.has(user) || teacherIds.has(user),
   );
