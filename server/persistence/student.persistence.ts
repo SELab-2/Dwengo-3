@@ -65,7 +65,6 @@ export class StudentPersistence {
    * Get a student by their ID.
    *
    * @param id - The ID of the student to fetch.
-   * @param include - Optional `include` clause for related models.
    * @returns The student data.
    */
   public async getStudentById(id: string) {

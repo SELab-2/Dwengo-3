@@ -26,7 +26,7 @@ function isValidRoleUrl(req: Request): boolean {
  * A middleware function that checks if the user is authenticated.
  *
  * If the user is authenticated, `next()` is called.
- * Otherwise, an error is thrown.
+ * Otherwise, an AuthorizationError is thrown.
  *
  * @param req - The Express request object
  * @param res - The Express response object
@@ -45,7 +45,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
  * Used to allow users to call register and login endpoints.
  *
  * If the user is not authenticated, `next()` is called.
- * Otherwise, an error is thrown.
+ * Otherwise, an AuthorizationError is thrown.
  *
  * @param req - The Express request object
  * @param res - The Express response object
