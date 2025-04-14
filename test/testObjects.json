@@ -240,18 +240,21 @@
             "id": "82ff18cb-1b49-4d5d-a678-658cd69be542",
             "hruid": "lp0",
             "language": "nl",
+            "title": "title0",
             "description": "This is a description"
           },
           {
             "id": "91aa27dc-2c50-5e6e-b789-769de70cf653",
             "hruid": "lp1",
             "language": "en",
+            "title": "title1",
             "description": "This is another description"
           },
           {
             "id": "a2bb38ed-3d61-6f7f-c890-87aef81df764",
             "hruid": "lp2",
             "language": "fr",
+            "title": "title2",
             "description": "A different learning path description"
           }
     ],
@@ -313,7 +316,9 @@
         { "keyword": "keyword1" },
         { "keyword": "keyword2" }
     ],
-    "testLearningObject": {
+    "testLearningObjects": [
+      {
+        "id": "3388e211-d585-4ee0-8556-34958491fae5",
         "hruid": "test-v1",
         "uuid": "bfba889e-f642-4f05-8286-04ed116be3ce",
         "version": 3,
@@ -354,6 +359,75 @@
             }
         },
         "available": true,
-        "content": "content"
-    }
+        "content": "content",
+        "learningPathNodes": [
+          {
+            "id": "661a7044-68e3-46b2-9968-b23d95499c46",
+            "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+            "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae5",
+            "instruction": "instruction1"
+          }
+        ]
+    },
+    {
+      "id": "3388e211-d585-4ee0-8556-34958491fae6",
+      "hruid": "test-v2",
+      "uuid": "bfba889e-f642-4f05-8286-04ed116be3cf",
+      "version": 3,
+      "language": "fr",
+      "title": "This is a titleeeee",
+      "description": "This is a description",
+      "contentType": "TEXT_MARKDOWN",
+      "target_ages": [
+          4,
+          3
+      ],
+      "teacher_exclusive": true,
+      "skos_concepts": [
+          "http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen"
+      ],
+      "educational_goals": [
+          {
+              "_id": "61510999f505a74ccc1f2da6",
+              "source": "Source2",
+              "id": "id2"
+          }
+      ],
+      "copyright": "Copyright by dwengo",
+      "licence": "CC BY",
+      "difficulty": 3,
+      "estimated_time": 20,
+      "return_value": {
+              "callback_url": "url/callback",
+              "callback_schema": {
+              "att": "test",
+              "att2": "test2"
+          }
+      },
+      "available": true,
+      "content": "content",
+      "learningPathNodes": [
+        {
+          "id": "661a7044-68e3-46b2-9968-b23d95499c47",
+          "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+          "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae6",
+          "instruction": "instruction2"
+        }
+      ]
+  }
+    ],
+    "testLearningPathNodes": [
+      {
+        "id": "661a7044-68e3-46b2-9968-b23d95499c46",
+        "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+        "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae5",
+        "instruction": "instruction1"
+      },
+      {
+        "id": "661a7044-68e3-46b2-9968-b23d95499c47",
+        "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+        "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae6",
+        "instruction": "instruction2"
+      }
+    ]
 }

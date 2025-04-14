@@ -120,16 +120,16 @@ describe('learningObject domain', () => {
   */
   describe('deleteLearningObject', () => {
     test('existing learningobject and no nodes passes', async () => {
+      mockLearningObjectPeristence.getLearningObjectById.mockImplementation((id: string) => {
+        return { ...testLearningObjects[0], learningPathNodes: [] };
+      });
       await expect(learningObjectDomain.deleteLearningObject(deleteLearningObjectId, userTeacher)).resolves.not.toThrow()
     });
     test('nonexisting learningobject fails', async () => {
       await expect(learningObjectDomain.deleteLearningObject(deleteLearningObjectUnexistingId, userStudent)).rejects.toThrow()
     });
     test('existing nodes fails', async () => {
-      mockLearningObjectPeristence.getLearningObjectById.mockImplementation((id: string) => {
-        return { ...testLearningObjects[0], learningPathNodes: ['node'] };
-      });
-      await expect(learningObjectDomain.deleteLearningObject(deleteLearningObjectUnexistingId, userStudent)).rejects.toThrow()
+      await expect(learningObjectDomain.deleteLearningObject(deleteLearningObjectId, userStudent)).rejects.toThrow()
     });
   });
 });
