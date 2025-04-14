@@ -35,6 +35,11 @@ let userTeacher: UserEntity = {
   role: testUsers[0].role as ClassRoleEnum ,
   teacher: testTeachers[0]
 };
+let userTeacherNotFirstClass: UserEntity = { 
+  ...testUsers[1], 
+  role: testUsers[1].role as ClassRoleEnum ,
+  teacher: testTeachers[1]
+};
 let userStudent: UserEntity = { 
   ...testUsers[5], 
   role: testUsers[5].role as ClassRoleEnum, 
