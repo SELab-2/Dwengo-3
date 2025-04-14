@@ -95,14 +95,10 @@ export class UserDomain {
     };
 
     const classes = await this.classDomain.getClasses(filter, req.user!! as UserEntity);
-    const user = {
+    return {
       ...(req.user as UserEntity),
       classes: classes.data,
     };
-
-    console.debug(user);
-
-    return user;
   }
 
   /**
