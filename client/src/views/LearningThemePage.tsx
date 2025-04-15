@@ -4,7 +4,7 @@ import { MarginSize } from '../util/size';
 import { Link, useParams } from 'react-router-dom';
 import theme from '../util/theme';
 import { AppRoutes } from '../util/app.routes';
-import { useLearningPath } from '../hooks/useLearningPaths';
+import { useLearningPath } from '../hooks/useLearningPath';
 import { useState } from 'react';
 
 const themeKeywordsMap = {
@@ -33,8 +33,6 @@ function LearningPathsOverviewPage() {
   if (!data) {
     return <div>No data available</div>;
   }
-
-  console.log(data.data);
 
   return (
     <Box sx={{ p: MarginSize.large, maxHeight: '80vh', overflowY: 'auto' }}>

@@ -25,11 +25,11 @@ export function useLearningPath(keywords?: string[], ages?: number[]) {
  * @param id - The ID of the learningPath to be fetched.
  * @returns The query object containing the learningPath data.
  */
-export function useLearningPathById(id: string) {
+export function useLearningPathById(id?: string) {
   return useQuery({
     queryKey: ['learningPath', id],
     queryFn: async () => {
-      return await fetchLearningPathById(id);
+      return await fetchLearningPathById(id!);
     },
     enabled: !!id,
     refetchOnWindowFocus: false,
