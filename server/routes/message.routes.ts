@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { MessageDomain } from '../domain/message.domain';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class MessageController {
   public router: Router;
@@ -52,7 +53,7 @@ export class MessageController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.get('/', this.getMessages.bind(this));
+    this.router.get('/', isAuthenticated, this.getMessages.bind(this));
     /**
      * @swagger
      * /api/message:
@@ -81,7 +82,7 @@ export class MessageController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.put('/', this.createMessage.bind(this));
+    this.router.put('/', isAuthenticated, this.createMessage.bind(this));
     /**
      * @swagger
      * /api/message/{id}:
@@ -112,7 +113,7 @@ export class MessageController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.delete('/:id', this.deleteMessage.bind(this));
+    this.router.delete('/:id', isAuthenticated, this.deleteMessage.bind(this));
   }
 
   private async getMessages(req: Request, res: Response): Promise<void> {

@@ -11,7 +11,7 @@ import { ClassRoleEnum } from '../util/types/class.types';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 function RegisterForm() {
   const { t } = useTranslation();

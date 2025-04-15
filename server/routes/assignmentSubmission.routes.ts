@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { AssignmentSubmissionDomain } from '../domain/assignmentSubmission.domain';
 import multer, { Multer } from 'multer';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class AssignmentSubmissionController {
   public router: Router;
@@ -90,7 +91,7 @@ export class AssignmentSubmissionController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/', this.getAssignmentSubmission.bind(this));
+    this.router.get('/', isAuthenticated, this.getAssignmentSubmission.bind(this));
     /**
      * @swagger
      * /api/assignmentsubmission/{id}:
@@ -121,7 +122,7 @@ export class AssignmentSubmissionController {
      *       404:
      *         description: AssignmentSubmission not found.
      */
-    this.router.get('/:id', this.getAssignmentById.bind(this));
+    this.router.get('/:id', isAuthenticated, this.getAssignmentById.bind(this));
     /**
      * @swagger
      * /api/assignmentSubmission:
@@ -157,7 +158,12 @@ export class AssignmentSubmissionController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.put('/', this.upload.single('file'), this.createAssignmentSubmission.bind(this));
+    this.router.put(
+      '/',
+      isAuthenticated,
+      this.upload.single('file'),
+      this.createAssignmentSubmission.bind(this),
+    );
     /**
      * @swagger
      * /api/assignmentSubmission/{id}:
@@ -198,6 +204,7 @@ export class AssignmentSubmissionController {
      */
     this.router.patch(
       '/:id',
+      isAuthenticated,
       this.upload.single('file'),
       this.updateAssignmentSubmission.bind(this),
     ); //TODO change 'file' to the correct field name

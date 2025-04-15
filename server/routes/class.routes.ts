@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import { ClassDomain } from '../domain/class.domain';
 import { ClassJoinRequestController } from './classJoinRequest.routes';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class ClassController {
   public router: Router;
@@ -102,7 +103,7 @@ export class ClassController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.get('/', this.getClasses);
+    this.router.get('/', isAuthenticated, this.getClasses);
 
     /**
      * @swagger
@@ -134,7 +135,7 @@ export class ClassController {
      *       404:
      *         description: Class not found.
      */
-    this.router.get('/:id', this.getClassById);
+    this.router.get('/:id', isAuthenticated, this.getClassById);
 
     /**
      * @swagger
@@ -168,7 +169,7 @@ export class ClassController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.put('/', this.createClass);
+    this.router.put('/', isAuthenticated, this.createClass);
 
     /**
      * @swagger
@@ -206,7 +207,7 @@ export class ClassController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.patch('/:id', this.updateClass);
+    this.router.patch('/:id', isAuthenticated, this.updateClass);
 
     /**
      * @swagger
@@ -241,7 +242,7 @@ export class ClassController {
      *       404:
      *         description: Class or teacher not found.
      */
-    this.router.delete('/:id/teacher/:teacherId', this.deleteTeacherFromClass);
+    this.router.delete('/:id/teacher/:teacherId', isAuthenticated, this.deleteTeacherFromClass);
 
     /**
      * @swagger
@@ -276,6 +277,6 @@ export class ClassController {
      *       404:
      *         description: Class or student not found.
      */
-    this.router.delete('/:id/student/:studentId', this.deleteStudentFromClass);
+    this.router.delete('/:id/student/:studentId', isAuthenticated, this.deleteStudentFromClass);
   }
 }

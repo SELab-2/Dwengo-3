@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { LearningPathNodeDomain } from '../domain/learningPathNode.domain';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningPathNodeController {
   public router: Router;
@@ -56,7 +57,7 @@ export class LearningPathNodeController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createLearningPathNode);
+    this.router.put('/', isAuthenticated, this.createLearningPathNode);
     /**
      * @swagger
      * /api/learningPathNode/{id}:
@@ -87,6 +88,6 @@ export class LearningPathNodeController {
      *       404:
      *         description: LearningPathNode not found.
      */
-    this.router.get('/:id', this.getLearningPathNodeById);
+    this.router.get('/:id', isAuthenticated, this.getLearningPathNodeById);
   }
 }
