@@ -49,5 +49,6 @@ export const fr = {
     coTeachers: 'Co-enseignants',
     notes: 'Remarques',
     createNewAnnouncement: 'Créer une nouvelle annonce',
+    loading: 'Chargement...',
   },
 };
