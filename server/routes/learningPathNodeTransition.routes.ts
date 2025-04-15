@@ -19,7 +19,7 @@ export class LearningPathNodeTransitionController {
     res.json(
       await this.LearningPathNodeTransitionDomain.createLearningPathNodeTransition(
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };

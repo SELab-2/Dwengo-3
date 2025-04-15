@@ -16,7 +16,9 @@ export class TeacherController {
   }
 
   private getTeachers = async (req: Request, res: Response) => {
-    res.json(await this.teacherDomain.getTeachers(req.query, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.teacherDomain.getTeachers(req.query, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private getTeacherById = async (req: Request, res: Response) => {

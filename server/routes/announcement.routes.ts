@@ -19,7 +19,7 @@ export class AnnouncementController {
     res.json(
       await this.announcementDomain.getAnnouncements(
         req.query,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -28,7 +28,7 @@ export class AnnouncementController {
     res.json(
       await this.announcementDomain.getAnnouncementById(
         req.params.id,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -37,7 +37,7 @@ export class AnnouncementController {
     res.json(
       await this.announcementDomain.createAnnouncement(
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -47,7 +47,7 @@ export class AnnouncementController {
       await this.announcementDomain.updateAnnouncement(
         req.params.id,
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
