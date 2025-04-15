@@ -86,7 +86,7 @@ const studentsData: StudentShort[] = [
 ];
 
 function makeRandomGroups(groupSize: number): StudentShort[][] {
-  // Get all unique students by field
+  // work with copy of the array as to not change the original student list
   const copied_students = studentsData.map((student) => ({ ...student }));
   const shuffled = copied_students.sort(() => Math.random() - 0.5); // shuffle the students array randomly
 
