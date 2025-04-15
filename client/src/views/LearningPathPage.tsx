@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Typography, LinearProgress, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import {
-  LearningPathNodeDetail,
-  LearningPathNodeShort,
-} from '../util/types/learningPathNode.types';
+import { LearningPathNodeDetail } from '../util/types/learningPathNode.types';
 import { LearningObjectDetail } from '../util/types/learningObject';
 import { LearningPathDetail } from '../util/types/learningPath.types';
 
@@ -14,7 +11,7 @@ interface MultipleChoice {
 }
 
 // Mock data for fetching node and learning object details
-const LearningPathNodeDetailData = [
+const LearningPathNodeDetailData: LearningPathNodeDetail[] = [
   {
     id: '0',
     learningPathId: '0',
@@ -136,7 +133,7 @@ const LearningObjectDetailData: LearningObjectDetail[] = [
     estimatedTime: 40,
     content: 'This is the actual content of the lesson.',
     keywords: ['language', 'coding'],
-    multipleChoice: JSON.parse('null'),
+    multipleChoice: JSON.parse('{"question": "Are you doing well?", "answers": ["Yes", "No"]}'),
   },
 ];
 
@@ -212,24 +209,27 @@ const fetchLearningPathDetail = async (id: string): Promise<LearningPathDetail> 
 
 function LearningPathPage() {
   const { id } = useParams<{ id: string }>();
+
   const [learningPath, setLearningPath] = useState<LearningPathDetail | null>(null);
   const [learningPathNodeDetail, setLearningPathNodeDetail] =
     useState<LearningPathNodeDetail | null>(null);
   const [learningObjectDetail, setLearningObjectDetail] = useState<LearningObjectDetail | null>(
     null,
   );
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState<number[]>([0]);
 
+  const totalSteps = learningPath?.learningPathNodes.length || 0;
+  const maxIndex = totalSteps - 1;
+
   const handleSetActiveIndex = (newIndex: number) => {
-    // Don't allow users to simply "skip" questions by going to the next one.
     if (newIndex <= Math.max(...progress)) {
       setActiveIndex(newIndex);
     }
   };
 
-  const handleAnswerClick = (answer: string) => {
-    if (!learningPathNodeDetail) return;
+  const handleAnswerClick = (answer: string): boolean => {
+    if (!learningPathNodeDetail) return false;
 
     const transition = learningPathNodeDetail.transitions.find((t) => {
       const match = t.condition.match(/answer\s*==\s*(.+)/);
@@ -239,13 +239,12 @@ function LearningPathPage() {
 
     if (transition) {
       const nextIndex = transition.toNodeIndex;
-      // If users go through the questions multiple times, don't add the index a second time to the progress.
       if (!progress.includes(nextIndex)) {
         setProgress((prev) => [...prev, nextIndex]);
       }
-      setActiveIndex(nextIndex);
+      return true;
     } else {
-      alert('No valid transition for this answer.');
+      return false;
     }
   };
 
@@ -256,57 +255,54 @@ function LearningPathPage() {
   }, [id]);
 
   useEffect(() => {
-    if (learningPath && learningPath.learningPathNodes[activeIndex]) {
-      const nodeId = learningPath.learningPathNodes[activeIndex].id;
-      fetchLearningPathNodeDetail(nodeId).then((nodeDetail) => {
+    const loadNodeDetails = async () => {
+      if (learningPath?.learningPathNodes[activeIndex]) {
+        const nodeId = learningPath.learningPathNodes[activeIndex].id;
+        const nodeDetail = await fetchLearningPathNodeDetail(nodeId);
         setLearningPathNodeDetail(nodeDetail);
 
-        // Fetch the Learning Object Detail based on the learningObjectId in the node
-        fetchLearningObjectDetail(nodeDetail.learningObjectId).then(setLearningObjectDetail);
-      });
-    }
+        const objectDetail = await fetchLearningObjectDetail(nodeDetail.learningObjectId);
+        setLearningObjectDetail(objectDetail);
+      }
+    };
+
+    loadNodeDetails();
   }, [learningPath, activeIndex]);
 
   if (!learningPath || !learningPathNodeDetail || !learningObjectDetail) {
     return <Typography>Loading...</Typography>;
   }
 
-  const totalSteps = learningPath.learningPathNodes.length;
-  const maxIndex = learningPath.learningPathNodes.length - 1;
   const multipleChoice = learningObjectDetail.multipleChoice as unknown as MultipleChoice;
+  const currentProgress = (Math.max(...progress) / maxIndex) * 100;
 
   return (
     <Box display="flex" height="100%">
       {/* Sidebar */}
-      <Box
-        width="200px"
-        p={2}
-        sx={(theme) => ({
-          bgcolor: theme.palette.custom.color6,
+      <Box width="200px" p={2} sx={(theme) => ({ bgcolor: theme.palette.custom.color6 })}>
+        {learningPath.learningPathNodes.map((node, index) => {
+          const isCompleted = progress.includes(index);
+          const isVisited = index < Math.max(...progress);
+
+          let bgcolor = 'white';
+          if (index === activeIndex) bgcolor = 'grey';
+          else if (isVisited) bgcolor = isCompleted ? 'lightgreen' : 'lightblue';
+
+          return (
+            <Box
+              key={node.id}
+              onClick={() => handleSetActiveIndex(index)}
+              p={1}
+              mb={1}
+              bgcolor={bgcolor}
+              borderRadius="4px"
+              sx={{ cursor: 'pointer' }}
+            >
+              <Typography fontWeight="bold">{node.learningObject.title}</Typography>
+              <Typography variant="caption">{node.learningObject.estimatedTime} min</Typography>
+            </Box>
+          );
         })}
-      >
-        {learningPath.learningPathNodes.map((node: LearningPathNodeShort, index: number) => (
-          <Box
-            key={node.id}
-            onClick={() => handleSetActiveIndex(index)}
-            p={1}
-            mb={1}
-            bgcolor={
-              index === activeIndex
-                ? 'grey' // Color for active node
-                : index < Math.max(...progress)
-                  ? progress.includes(index)
-                    ? 'lightgreen' // Color for completed nodes
-                    : 'lightblue' // Color for skipped nodes
-                  : 'white' // Color for unvisited nodes
-            }
-            borderRadius="4px"
-            sx={{ cursor: 'pointer' }}
-          >
-            <Typography fontWeight="bold">{node.learningObject.title}</Typography>
-            <Typography variant="caption">{node.learningObject.estimatedTime} min</Typography>
-          </Box>
-        ))}
       </Box>
 
       {/* Main Content */}
@@ -314,14 +310,8 @@ function LearningPathPage() {
         <Typography variant="h5" mb={1}>
           {learningPath.title}
         </Typography>
-        <LinearProgress
-          variant="determinate"
-          value={(Math.max(...progress) / maxIndex) * 100}
-          sx={{ mb: 2 }}
-        />
-        <Typography variant="caption">
-          {(Math.max(...progress) / maxIndex) * 100}% completed
-        </Typography>
+        <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 2 }} />
+        <Typography variant="caption">{currentProgress.toFixed(1)}% completed</Typography>
 
         <Paper elevation={2} sx={{ p: 3, mt: 2, flex: 1 }}>
           <Typography variant="h6">{learningObjectDetail.title}</Typography>
@@ -329,12 +319,12 @@ function LearningPathPage() {
             {learningObjectDetail.description}
           </Typography>
 
-          {/* Add multiple choice or other content as needed */}
           <Typography mt={2} fontWeight="bold">
             Question: {multipleChoice.question}
           </Typography>
+
           <Box mt={1}>
-            {multipleChoice.answers.map((option: string, index: number) => (
+            {multipleChoice.answers.map((option, index) => (
               <Button
                 key={index}
                 variant="outlined"
@@ -346,12 +336,13 @@ function LearningPathPage() {
             ))}
           </Box>
         </Paper>
+
         <Box mt={2} display="flex" justifyContent="space-between">
           <Button disabled={activeIndex === 0} onClick={() => setActiveIndex(activeIndex - 1)}>
             &lt; Previous
           </Button>
           <Button
-            disabled={activeIndex === totalSteps - 1}
+            disabled={activeIndex === maxIndex}
             onClick={() => handleSetActiveIndex(activeIndex + 1)}
           >
             Next &gt;

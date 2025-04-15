@@ -1,6 +1,6 @@
 import { Box, Typography, Card, Avatar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 // TODO: Get data from endpoint
 const learningThemes = [

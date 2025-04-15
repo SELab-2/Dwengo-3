@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import theme from '../util/theme';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 const themeKeywordsMap = {
   'AI in Climate': ['AI', 'Climate'],
