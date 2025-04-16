@@ -1,7 +1,7 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
-import { ClassDetail, ClassShort } from '../util/types/class.types';
-import { PaginatedData } from '../util/types/general.types';
+import { ClassDetail, ClassShort } from '../util/interfaces/class.interfaces';
+import { PaginatedData } from '../util/interfaces/general.interfaces';
 
 /**
  * Fetches a list of classes based on the provided student or teacher IDs.
