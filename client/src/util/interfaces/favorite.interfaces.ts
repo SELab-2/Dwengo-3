@@ -10,7 +10,7 @@ export interface FavoriteShort {
 
 export interface FavoriteDetail {
   id: string;
-  progres: number[];
+  progress: number[];
   learningPath: LearningPathShort;
   user: UserShort;
 }
