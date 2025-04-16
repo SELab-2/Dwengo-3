@@ -8,6 +8,9 @@ export const groupSelectShort: Prisma.GroupSelect = {
   progress: true,
   assignmentId: true,
   name: true,
+  students: {
+    select: studentSelectShort,
+  },
 };
 
 export const groupSelectDetail: Prisma.GroupSelect = {
