@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { LoginPage } from './views/LoginPage';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProfilePage from './views/ProfilePage';
 import RegisterPage from './views/RegisterPage';
 import theme from './util/theme';
@@ -20,13 +20,11 @@ import LearningPathPage from './views/LearningPathPage';
 import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
-import { AppRoutes } from './util/app.routes.ts';
-import { AppRoutes } from './util/routes';
-import DiscussionsPage from './views/DiscussionsPage.tsx';
 import DiscussionPage from './views/DiscussionPage.tsx';
 import AnnouncementsPage from './views/AnnouncementsPage';
 import AnnouncementDetailpage from './views/AnnouncementPage';
 import { Box } from '@mui/material';
+import { AppRoutes } from './util/app.routes.ts';
 
 const queryClient = new QueryClient();
 

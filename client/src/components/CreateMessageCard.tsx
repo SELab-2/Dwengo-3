@@ -1,9 +1,9 @@
 import React, { JSX, useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ApiRoutes } from '../util/routes.ts';
+import { ApiRoutes } from '../api/api.routes.ts';
 import { useMutation } from '@tanstack/react-query';
-import apiClient from '../api.ts';
+import apiClient from '../api/apiClient.ts';
 import { useError } from '../hooks/useError.ts';
 import { useAuth } from '../hooks/useAuth.ts';
 
