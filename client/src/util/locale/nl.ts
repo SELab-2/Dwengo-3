@@ -46,5 +46,7 @@ export const nl = {
     notes: 'Opmerkingen',
     createNewAnnouncement: 'Nieuwe aankondiging maken',
     createNewDiscussionMessage: 'Plaats een nieuw bericht',
+    send: 'Verzenden',
+    cancel: 'Annuleren',
   },
 };

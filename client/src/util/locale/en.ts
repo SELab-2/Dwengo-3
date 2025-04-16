@@ -47,5 +47,7 @@ export const en = {
     notes: 'Notes',
     createNewAnnouncement: 'Create new announcement',
     createNewDiscussionMessage: 'Post a new message',
+    send: 'Send',
+    cancel: 'Cancel',
   },
 };

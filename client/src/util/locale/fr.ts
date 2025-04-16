@@ -47,5 +47,7 @@ export const fr = {
     notes: 'Remarques',
     createNewAnnouncement: 'Créer une nouvelle annonce',
     createNewDiscussionMessage: 'envoyer un nouveau message',
+    send: 'Soumettre',
+    cancel: 'Annuler',
   },
 };

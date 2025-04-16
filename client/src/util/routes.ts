@@ -30,8 +30,8 @@ export const AppRoutes = {
 export const ApiRoutes = {
   // Auth
   login: {
-    student: '/api/auth/student/login/local',
-    teacher: '/api/auth/teacher/login/local',
+    student: '/api/auth/student/login',
+    teacher: '/api/auth/teacher/login',
   },
   register: {
     student: '/api/auth/student/register',
