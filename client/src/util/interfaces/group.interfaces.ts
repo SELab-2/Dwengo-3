@@ -7,6 +7,7 @@ export interface GroupShort {
   progress: number[];
   assignmentId: string;
   name: string;
+  students: StudentShort[];
 }
 
 export interface GroupDetail {
