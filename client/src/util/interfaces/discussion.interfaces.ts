@@ -6,7 +6,7 @@ export interface DiscussionShort {
   id: string;
 }
 
-export interface DiscussionDetail extends DiscussionShort {
+export interface DiscussionDetail {
   id: string;
   group: GroupShort;
   members: UserShort[];

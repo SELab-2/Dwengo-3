@@ -7,8 +7,11 @@ export interface StudentShort {
   surname: string;
 }
 
-export interface StudentDetail extends StudentShort {
-  userID: string;
+export interface StudentDetail {
+  id: string;
+  name: string;
+  surname: string;
+  userId: string;
   classes: ClassShort[];
   groups: GroupShort[];
 }

@@ -6,7 +6,10 @@ export interface TeacherShort {
   surname: string;
 }
 
-export interface TeacherDetail extends TeacherShort {
+export interface TeacherDetail {
+  id: string;
+  name: string;
+  surname: string;
   userId: string;
   classes: ClassShort[];
 }
