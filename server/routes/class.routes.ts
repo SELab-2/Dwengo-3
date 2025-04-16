@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import { ClassDomain } from '../domain/class.domain';
 import { ClassJoinRequestController } from './classJoinRequest.routes';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class ClassController {
   public router: Router;
@@ -16,17 +17,21 @@ export class ClassController {
   }
 
   private getClasses = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.getClasses(req.query, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.classDomain.getClasses(req.query, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private getClassById = async (req: Request, res: Response) => {
     res.json(
-      await this.classDomain.getClassById(req.params.id, this.userDomain.getUserFromReq(req)),
+      await this.classDomain.getClassById(req.params.id, await this.userDomain.getUserFromReq(req)),
     );
   };
 
   private createClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.createClass(req.body, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.classDomain.createClass(req.body, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private updateClass = async (req: Request, res: Response) => {
@@ -34,7 +39,7 @@ export class ClassController {
       await this.classDomain.updateClass(
         req.params.id,
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -43,7 +48,7 @@ export class ClassController {
     await this.classDomain.removeTeacherFromClass(
       req.params.id,
       req.params.teacherId,
-      this.userDomain.getUserFromReq(req),
+      await this.userDomain.getUserFromReq(req),
     );
     res.status(200).send();
   };
@@ -52,7 +57,7 @@ export class ClassController {
     await this.classDomain.removeStudentFromClass(
       req.params.id,
       req.params.studentId,
-      this.userDomain.getUserFromReq(req),
+      await this.userDomain.getUserFromReq(req),
     );
     res.status(200).send();
   };
@@ -102,7 +107,7 @@ export class ClassController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.get('/', this.getClasses);
+    this.router.get('/', isAuthenticated, this.getClasses);
 
     /**
      * @swagger
@@ -134,7 +139,7 @@ export class ClassController {
      *       404:
      *         description: Class not found.
      */
-    this.router.get('/:id', this.getClassById);
+    this.router.get('/:id', isAuthenticated, this.getClassById);
 
     /**
      * @swagger
@@ -168,7 +173,7 @@ export class ClassController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.put('/', this.createClass);
+    this.router.put('/', isAuthenticated, this.createClass);
 
     /**
      * @swagger
@@ -206,7 +211,7 @@ export class ClassController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.patch('/:id', this.updateClass);
+    this.router.patch('/:id', isAuthenticated, this.updateClass);
 
     /**
      * @swagger
@@ -241,7 +246,7 @@ export class ClassController {
      *       404:
      *         description: Class or teacher not found.
      */
-    this.router.delete('/:id/teacher/:teacherId', this.deleteTeacherFromClass);
+    this.router.delete('/:id/teacher/:teacherId', isAuthenticated, this.deleteTeacherFromClass);
 
     /**
      * @swagger
@@ -276,6 +281,6 @@ export class ClassController {
      *       404:
      *         description: Class or student not found.
      */
-    this.router.delete('/:id/student/:studentId', this.deleteStudentFromClass);
+    this.router.delete('/:id/student/:studentId', isAuthenticated, this.deleteStudentFromClass);
   }
 }

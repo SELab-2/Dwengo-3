@@ -1,7 +1,7 @@
 import { Card, CardContent, Avatar, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 interface AnnouncementCardProps {
   id: string;
