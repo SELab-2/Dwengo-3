@@ -29,14 +29,14 @@ export class MessageDomain {
 
     if (filters.discussionId) {
       // this checks if user is part of the discussion
-      await this.discussionDomain.getDiscussions({ id: filters.discussionId }, user);
+      await this.discussionDomain.getDiscussions({ groupIds: [filters.discussionId] }, user);
     }
     return this.messagePersistence.getMessages(filters, parseResult.dataPagination);
   }
 
   public async createMessage(query: any, user: UserEntity): Promise<MessageDetail> {
     const data = MessageCreateSchema.parse(query);
-    await this.discussionDomain.getDiscussions({ id: data.discussionId }, user); //this checks if user is part of the discussion
+    // await this.discussionDomain.getDiscussions({ groupIds: [data.discussionId] }, user); //this checks if user is part of the discussion
     if (user.role === ClassRole.TEACHER) {
       data.senderId = user.teacher!.userId;
     } else if (user.role == ClassRole.STUDENT) {
