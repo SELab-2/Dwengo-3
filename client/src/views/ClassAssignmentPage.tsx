@@ -15,13 +15,9 @@ import { useParams } from 'react-router-dom';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useTranslation } from 'react-i18next';
 import DateTypography from '../components/DateTypography';
-import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
 import GroupListDialog from '../components/GroupListDialog';
 import { useState } from 'react';
-import { title } from 'process';
 import { StudentShort } from '../util/types/user.types';
-import { LearningPathShort } from '../util/types/learningPath.types';
 
 const assignment = {
   name: 'Opdracht 1',

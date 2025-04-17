@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { UserDomain } from '../domain/user.domain';
 import { FavoritesDomain } from '../domain/favorites.domain';
 import { FavoriteFilterParams } from '../util/types/favorites.types';
+import { isAuthenticated } from './auth.routes';
 
 export class FavoritesController {
   public router: Router;
@@ -17,27 +18,35 @@ export class FavoritesController {
 
   private getFavorites = async (req: Request, res: Response) => {
     const query = req.query as FavoriteFilterParams;
-    res.json(await this.favoritesDomain.getFavorites(query, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.favoritesDomain.getFavorites(query, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private getFavoriteById = async (req: Request, res: Response) => {
     res.json(
       await this.favoritesDomain.getFavoriteById(
         req.params.id,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
 
   private createFavorite = async (req: Request, res: Response) => {
     res.json(
-      await this.favoritesDomain.createFavorite(req.body, this.userDomain.getUserFromReq(req)),
+      await this.favoritesDomain.createFavorite(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
   private deleteFavorite = async (req: Request, res: Response) => {
     res.json(
-      await this.favoritesDomain.deleteFavorite(req.params.id, this.userDomain.getUserFromReq(req)),
+      await this.favoritesDomain.deleteFavorite(
+        req.params.id,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
@@ -77,7 +86,7 @@ export class FavoritesController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/', this.getFavorites);
+    this.router.get('/', isAuthenticated, this.getFavorites);
     /**
      * @swagger
      * /api/favorites/{id}:
@@ -108,7 +117,7 @@ export class FavoritesController {
      *       404:
      *         description: Favorite not found.
      */
-    this.router.get('/:id', this.getFavoriteById);
+    this.router.get('/:id', isAuthenticated, this.getFavoriteById);
     /**
      * @swagger
      * /api/favorites:
@@ -137,7 +146,7 @@ export class FavoritesController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createFavorite);
+    this.router.put('/', isAuthenticated, this.createFavorite);
     /**
      * @swagger
      * /api/favorites/{id}:
@@ -168,6 +177,6 @@ export class FavoritesController {
      *       404:
      *         description: Favorite not found.
      */
-    this.router.delete('/:id', this.deleteFavorite);
+    this.router.delete('/:id', isAuthenticated, this.deleteFavorite);
   }
 }

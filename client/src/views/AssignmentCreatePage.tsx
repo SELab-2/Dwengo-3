@@ -136,7 +136,7 @@ function AssignmentCreatePage() {
   const handleGroupSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = Number(event.target.value);
     // Ensure value is at least 1 and smaller than students.length
-    value = Math.min(Math.max(1, value), students.length);
+    value = Math.min(Math.max(1, value), studentsData.length);
     setGroupSize(value);
   };
 

@@ -1,20 +1,31 @@
 import { Card, CardContent, Avatar, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../util/app.routes';
 
 interface AnnouncementCardProps {
+  id: string;
   title: string;
   date: string;
   teacher: string;
   content: string;
+  // actionButtons: React.ReactNode;
 }
 
 // TODO : use colorSchema for colors
-const AnnouncementCard = ({ title, date, teacher, content }: AnnouncementCardProps) => {
+const AnnouncementCard = ({
+  id,
+  title,
+  date,
+  teacher,
+  content,
+  // actionButtons,  /* TODO: This is needed to place an edit button on the card when on the detail page and when the user is a teacher */
+}: AnnouncementCardProps) => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    // Handle click event
-    alert('Card clicked!, should route to detail page');
+    navigate(AppRoutes.announcement(id));
   };
 
   return (

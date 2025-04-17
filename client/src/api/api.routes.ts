@@ -1,45 +1,24 @@
 /**
- * This constant contains the routes for the application.
- */
-export const AppRoutes = {
-  // Public Routes
-  login: '/login',
-  register: '/register',
-
-  // Protected Routes
-  home: '/',
-  profile: '/profile',
-  myClasses: '/classes',
-  myLearningPaths: '/learning-paths',
-  learningPath: (id: string) => `/learning-paths/${id}`,
-  learningThemes: '/learning-themes',
-  learningTheme: (id: string) => `/learning-themes/${id}`,
-  class: (id: string) => `/class/${id}`,
-  classAssignments: (classId: string) => `/class/${classId}/assignments`,
-  classAssignment: (classId: string, assignmentId: string) =>
-    `/class/${classId}/assignments/${assignmentId}`,
-  classAssignmentCreate: (classId: string) => `/class/${classId}/assignments/create`,
-  classAnnouncements: (classId: string) => `/class/${classId}/announcements`,
-  classDiscussions: (classId: string) => `/class/${classId}/discussions`,
-};
-
-/**
  * This constant contains the API routes for the application.
  */
 export const ApiRoutes = {
   // Auth
   login: {
-    student: '/api/auth/student/login',
-    teacher: '/api/auth/teacher/login',
+    google: {
+      student: '/api/auth/student/login/google',
+      teacher: '/api/auth/teacher/login/google',
+    },
+    student: '/api/auth/student/login/local',
+    teacher: '/api/auth/teacher/login/local',
   },
   register: {
     student: '/api/auth/student/register',
     teacher: '/api/auth/teacher/register',
   },
-  logout: {
-    student: '/api/auth/student/logout',
-    teacher: '/api/auth/teacher/logout',
-  },
+  logout: '/api/auth/logout',
+
+  // Me (get the logged in user)
+  me: '/api/auth/me',
 
   // Announcement
   announcement: {

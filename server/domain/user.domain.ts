@@ -5,6 +5,8 @@ import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types
 import * as crypto from 'node:crypto';
 import { BadRequestError } from '../util/types/error.types';
 import { UsersPersistence } from '../persistence/auth/users.persistence';
+import { ClassFilterParams, ClassShort } from '../util/types/class.types';
+import { ClassDomain } from './class.domain';
 
 export class UserDomain {
   private readonly providerMap = {
@@ -18,6 +20,7 @@ export class UserDomain {
   };
 
   private readonly persistence = new UsersPersistence();
+  private readonly classDomain = new ClassDomain();
 
   async createUser(userData: RegisterParams): Promise<UserEntity> {
     if ((await this.persistence.getUserByEmail(userData.email)) !== null) {
@@ -85,8 +88,17 @@ export class UserDomain {
    * @returns The authenticated user as a UserEntity.
    * @throws If the user is not authenticated or the user data is malformed.
    */
-  getUserFromReq(req: Request): UserEntity {
-    return req.user!! as UserEntity;
+  async getUserFromReq(req: Request): Promise<UserEntity & { classes: ClassShort[] }> {
+    const filter: ClassFilterParams = {
+      teacherId: (req.user as UserEntity).teacher?.id,
+      studentId: (req.user as UserEntity).student?.id,
+    };
+
+    const classes = await this.classDomain.getClasses(filter, req.user!! as UserEntity);
+    return {
+      ...(req.user as UserEntity),
+      classes: classes.data,
+    };
   }
 
   /**

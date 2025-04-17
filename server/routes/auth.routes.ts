@@ -1,4 +1,4 @@
-import express, { Express, NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { Profile, Strategy as GoogleStrategy, VerifyCallback } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
@@ -6,7 +6,7 @@ import passport from 'passport';
 import { UserDomain } from '../domain/user.domain';
 import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
-import { AuthorizationError, BadRequestError } from '../util/types/error.types';
+import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
 
 const userDomain = new UserDomain();
 
@@ -37,7 +37,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
     return next();
   }
 
-  throw new AuthorizationError(-1, 'User is not authenticated');
+  throw new AuthorizationError(40301);
 }
 
 /**
@@ -55,7 +55,7 @@ export function isNotAuthenticated(req: Request, res: Response, next: NextFuncti
   if (req.isUnauthenticated()) {
     return next();
   }
-  throw new AuthorizationError(-1, 'User is already authenticated');
+  throw new AuthorizationError(40302);
 }
 
 export const router = express.Router();
@@ -81,7 +81,7 @@ passport.use(
     ) => {
       try {
         let user: UserEntity | null = await userDomain.getUserById(profile.id);
-        const role = req.path.includes('teacher') ? ClassRoleEnum.TEACHER : ClassRoleEnum.STUDENT;
+        const role = req.query.state as ClassRoleEnum;
 
         if (user === null) {
           user = await userDomain.createUser({
@@ -120,24 +120,23 @@ passport.use(
         const provider = AuthenticationProvider.LOCAL;
 
         if (user === null) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         if (crypto.createHash('sha256').update(password).digest('base64') !== user.password) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         if (user.role !== role) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         if (user.provider !== provider) {
-          return done(new AuthorizationError(-1, 'Invalid credentials'));
+          return done(new AuthorizationError(40303));
         }
 
         return done(null, user);
       } catch (error) {
-        console.error(error);
         return done(error);
       }
     },
@@ -149,8 +148,7 @@ passport.deserializeUser(async (id: string, done) => {
   try {
     const user: UserEntity | null = await userDomain.getUserById(id);
 
-    // todo: change to error types
-    if (user === null) return new Error('User not found');
+    if (user === null) return done(new NotFoundError(40405), false);
 
     return done(null, user);
   } catch (error) {
@@ -160,92 +158,143 @@ passport.deserializeUser(async (id: string, done) => {
 
 router.get(
   '/student/login/google',
+  isNotAuthenticated,
   passport.authenticate('google', {
     scope: ['email', 'profile'],
     session: true,
+    state: ClassRoleEnum.STUDENT,
   }),
 );
 
 router.get(
   '/teacher/login/google',
+  isNotAuthenticated,
   passport.authenticate('google', {
     scope: ['email', 'profile'],
     session: true,
+    state: ClassRoleEnum.TEACHER,
   }),
 );
 
 router.post(
   '/student/login/local',
+  isNotAuthenticated,
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (!req.user) {
+      // Throw an error if the credentials are invalid
+      new AuthorizationError(40303);
+    }
+
+    req.login(req.user!, (err) => {
+      if (err) {
+        // todo: better error message?
+        throw new AuthorizationError(-1);
+      }
+
+      // If login is successful, send the user data as a response
+      res.status(200).json(req.user);
+    });
   },
 );
 
 router.post(
   '/teacher/login/local',
+  isNotAuthenticated,
   passport.authenticate('local', { session: true }),
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (!req.user) {
+      // Throw an error if the credentials are invalid
+      throw new AuthorizationError(40303);
+    }
+
+    req.login(req.user!, (err) => {
+      if (err) {
+        // todo: better error message?
+        throw new AuthorizationError(-1);
+      }
+
+      // If login is successful, send the user data as a response
+      res.status(200).json(req.user);
+    });
   },
 );
 
-router.put('/student/register', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
+router.put(
+  '/student/register',
+  isNotAuthenticated,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
 
-    const user: UserEntity = await userDomain.createUser({
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-      provider: AuthenticationProvider.LOCAL,
-      role: ClassRoleEnum.STUDENT,
-      surname: req.body.surname,
-      username: req.body.username,
-    });
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
+      const user: UserEntity = await userDomain.createUser({
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        provider: AuthenticationProvider.LOCAL,
+        role: ClassRoleEnum.STUDENT,
+        surname: req.body.surname,
+        username: req.body.username,
+      });
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
-router.put('/teacher/register', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
+router.put(
+  '/teacher/register',
+  isNotAuthenticated,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
 
-    const user: UserEntity = await userDomain.createUser({
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-      provider: AuthenticationProvider.LOCAL,
-      role: ClassRoleEnum.TEACHER,
-      surname: req.body.surname,
-      username: req.body.username,
-    });
+      const user: UserEntity = await userDomain.createUser({
+        email: req.body.email,
+        name: req.body.name,
+        password: req.body.password,
+        provider: AuthenticationProvider.LOCAL,
+        role: ClassRoleEnum.TEACHER,
+        surname: req.body.surname,
+        username: req.body.username,
+      });
 
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 router.get(
   '/callback/google',
-  (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('google')(req, res, next);
-  },
+  isNotAuthenticated,
+  passport.authenticate('google'),
   (req: Request, res: Response) => {
-    res.status(200).json(req.user);
+    if (process.env.NODE_ENV === 'development') {
+      res.redirect('http://localhost:5173');
+    } else {
+      res.redirect('https://sel2-3.ugent.be');
+    }
   },
 );
 
-router.delete(
-  '/logout',
-  (req: Request, res: Response, next: NextFunction) => {
-    req.logout((err) => next(err));
-  },
-  (req: Request, res: Response) => {
-    res.clearCookie('connect.sid', { maxAge: 0 });
-    res.status(200).json({ message: 'Logout successful' });
-  },
-);
+router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: NextFunction) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    else {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        res.status(200).json({
+          message: 'Logout successful',
+        });
+      });
+    }
+  });
+});
+
+router.get('/me', isAuthenticated, (req: Request, res: Response) => {
+  // Return the authenticated user's data
+  res.json(req.user);
+});

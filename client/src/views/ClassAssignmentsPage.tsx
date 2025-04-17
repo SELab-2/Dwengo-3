@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  LinearProgress,
   Paper,
   Table,
   TableBody,
@@ -13,8 +12,8 @@ import {
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AppRoutes } from '../util/routes';
 import ClassNavigationBar from '../components/ClassNavigationBar';
+import { AppRoutes } from '../util/app.routes';
 
 const assignments = [
   {
