@@ -38,8 +38,8 @@ describe("assignmentSubmission persistence test", () => {
     describe("test get assignmentSubmissions", () => {
         test("request with existing groupId responds correctly", async () => {
             for (const submission of submissions) {
-                const req = assignemntSubmissionPersistence.getAssignmentSubmissions({groupId: submission.group.id}, {page: 1, pageSize: 10, skip: 0});
-                const exptectedSubmissions = submissions.filter((sub) => sub.group.id === submission.group.id).map((sub) => ({
+                const req = assignemntSubmissionPersistence.getAssignmentSubmissions({groupId: submission.group!.id}, {page: 1, pageSize: 10, skip: 0});
+                const exptectedSubmissions = submissions.filter((sub) => sub.group!.id === submission.group!.id).map((sub) => ({
                     id: sub.id
                 }));
                 expect(exptectedSubmissions).not.toEqual([]);
@@ -49,7 +49,7 @@ describe("assignmentSubmission persistence test", () => {
 
         test("request with existing nodeId and groupId responds correctly", async () => {
             for (const submission of submissions) {
-                const req = assignemntSubmissionPersistence.getAssignmentSubmissions({groupId: submission.group.id, nodeId: submission.node.id}, {page: 1, pageSize: 10, skip: 0});
+                const req = assignemntSubmissionPersistence.getAssignmentSubmissions({groupId: submission.group!.id, nodeId: submission.node.id}, {page: 1, pageSize: 10, skip: 0});
                 const expectedSubmission = {id: submission.id};
                 await expect(req).resolves.toStrictEqual({data: [expectedSubmission], totalPages: 1});
             }
@@ -70,10 +70,9 @@ describe("assignmentSubmission persistence test", () => {
                         filePath: "files-submissions/atoitjklfnqfn.txt"
                     } as FileSubmission;
                 }
-                const req = assignemntSubmissionPersistence.updateAssignmentSubmission({
+                const req = assignemntSubmissionPersistence.updateAssignmentSubmission(submission.id, {
                     submissionType: submission.submissionType,
-                    submission: newSubmission!,
-                    id: submission.id
+                    submission: newSubmission!
                 });
                 submission.submission = newSubmission!;
                 await expect(req).resolves.toStrictEqual(submission);

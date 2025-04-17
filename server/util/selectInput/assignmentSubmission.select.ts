@@ -5,7 +5,7 @@ import { FavoriteSelectShort } from './favorites.select';
 
 export const assignmentSubmissionSelectDetail = {
   id: true,
-  submissionType: true
+  submissionType: true,
   submission: true,
   group: {
     select: groupSelectShort,
