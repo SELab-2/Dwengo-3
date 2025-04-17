@@ -34,6 +34,24 @@ function LearningPathsOverviewPage() {
     return <div>No data available</div>;
   }
 
+  const targetAgesRange = (index: number) => {
+    const nodes = data.data[index].learningPathNodes;
+    let ages: number[] = [];
+
+    for (const node of nodes) {
+      if (node.learningObject?.targetAges) {
+        ages = ages.concat(node.learningObject.targetAges);
+      }
+    }
+
+    if (ages.length === 0) return 'N/A';
+
+    const minAge = Math.min(...ages);
+    const maxAge = Math.max(...ages);
+
+    return `${minAge} - ${maxAge}`;
+  };
+
   return (
     <Box sx={{ p: MarginSize.large, maxHeight: '80vh', overflowY: 'auto' }}>
       <Box
@@ -43,7 +61,7 @@ function LearningPathsOverviewPage() {
           gap: 3,
         }}
       >
-        {data!.data.map(({ id, title, image, description, targetAges }, index) => (
+        {data.data.map(({ id, title, image, description }, index) => (
           <Card
             key={id}
             sx={{
@@ -92,7 +110,7 @@ function LearningPathsOverviewPage() {
                   gap: 0.5,
                 }}
               >
-                <GroupIcon sx={{ fontSize: 16 }} /> {targetAges?.join(' - ') || 'N/A'}
+                <GroupIcon sx={{ fontSize: 16 }} /> {targetAgesRange(index)}
               </Box>
             </Link>
 

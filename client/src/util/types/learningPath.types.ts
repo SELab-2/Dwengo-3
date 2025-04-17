@@ -4,8 +4,14 @@ import { LearningPathNodeShort } from './learningPathNode.types';
 export interface LearningPathShort {
   id: string;
   title: string;
-  targetAges: number[];
-  keywords: string[];
+  learningPathNodes: {
+    learningObject: {
+      targetAges: number[];
+      keywords: {
+        keyword: string;
+      }[];
+    };
+  }[];
   image: string;
   description: string;
 }

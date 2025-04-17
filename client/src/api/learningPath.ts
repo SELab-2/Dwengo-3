@@ -19,6 +19,7 @@ export async function fetchLearningPaths(keywords?: string[], ages?: number[]) {
   });
 
   const result: PaginatedData<LearningPathShort> = response.data;
+  console.log('Learning Paths:', result);
 
   return result;
 }
