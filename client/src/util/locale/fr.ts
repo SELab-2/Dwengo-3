@@ -50,5 +50,7 @@ export const fr = {
     notes: 'Remarques',
     createNewAnnouncement: 'Créer une nouvelle annonce',
     loading: 'Chargement...',
+    incorrectAnswer: 'Mauvaise réponse. Essayez encore.',
+    completePreviousSteps: 'Veuillez compléter les étapes précédentes avant de continuer.',
   },
 };

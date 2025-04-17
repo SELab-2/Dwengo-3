@@ -50,5 +50,7 @@ export const en = {
     notes: 'Notes',
     createNewAnnouncement: 'Create new announcement',
     loading: 'Loading...',
+    incorrectAnswer: 'Wrong answer. Try again.',
+    completePreviousSteps: 'Please complete the previous steps before proceeding.',
   },
 };

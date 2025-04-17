@@ -49,5 +49,7 @@ export const nl = {
     notes: 'Opmerkingen',
     createNewAnnouncement: 'Nieuwe aankondiging maken',
     loading: 'Laden...',
+    incorrectAnswer: 'Verkeerd antwoord. Probeer opnieuw.',
+    completePreviousSteps: 'Voltooi de vorige stappen voordat je verdergaat.',
   },
 };
