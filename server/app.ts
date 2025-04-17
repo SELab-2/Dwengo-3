@@ -23,6 +23,7 @@ import passport from 'passport';
 import session from 'express-session';
 import { errorHandling } from './errorHandling';
 import cors from 'cors';
+import { FavoritesController } from './routes/favorites.routes';
 
 export const app: Express = express();
 const port = 3001;
@@ -69,8 +70,9 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
       maxAge: 1000 * 60 * 60 * 5, // 5 hours
+      path: '/',
     },
   }),
 );
@@ -100,6 +102,7 @@ apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().rout
 apiRouter.use('/auth', auth);
 apiRouter.use('/discussion', new DiscussionController().router);
 apiRouter.use('/message', new MessageController().router);
+apiRouter.use('/favorites', new FavoritesController().router);
 
 // Error handling middleware
 app.use(errorHandling);

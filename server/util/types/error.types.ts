@@ -34,6 +34,19 @@ export class AuthorizationError extends APIError {
   get statusCode(): number {
     return 403;
   }
+
+  get message(): string {
+    switch (this.errorCode) {
+      case 40301:
+        return 'User is not authenticated';
+      case 40302:
+        return 'User is already authenticated';
+      case 40303:
+        return 'Invalid credentials';
+      default:
+        return 'Unauthorized...';
+    }
+  }
 }
 
 export class NotFoundError extends APIError {
@@ -74,6 +87,8 @@ export class NotFoundError extends APIError {
         return 'LearningPathNode not found...';
       case 40413:
         return 'Group not found...';
+      case 40414:
+        return 'Favorite not found...';
       default:
         return 'Not found...';
     }
@@ -168,6 +183,12 @@ export class BadRequestError extends APIError {
         return 'All students in a group must belong to the same class...';
       case 40041:
         return 'All users must belong to the same group...';
+      case 40042:
+        return "Can't fetch favorites from other user...";
+      case 40043:
+        return "Can't fetch assignmentSubmissions that are not yours...";
+      case 40044:
+        return "Can't submit to a non-favorited learningPath...";
       default:
         return 'Bad request...';
     }

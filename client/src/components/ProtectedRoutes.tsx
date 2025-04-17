@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 /**
  * Component that renders child routes if authenticated, otherwise redirects to login

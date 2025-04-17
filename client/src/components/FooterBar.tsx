@@ -9,8 +9,6 @@ function FooterBar() {
         color: 'white',
         textAlign: 'center',
         py: 2, // Padding on the y-axis
-        position: 'fixed',
-        bottom: 0,
         width: '100%',
       }}
     >
