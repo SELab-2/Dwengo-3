@@ -1,6 +1,6 @@
 import { Dialog, DialogTitle, List, ListItem, ListItemText } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { StudentShort } from '../util/types/user.types';
+import { StudentShort } from '../util/interfaces/student.interfaces';
 
 interface GroupListDialogProps {
   students: StudentShort[];
@@ -15,8 +15,8 @@ function GroupListDialog({ students, open, onClose }: GroupListDialogProps) {
       <DialogTitle>{t('students')}</DialogTitle>
       <List sx={{ pt: 0 }}>
         {students.map((student) => (
-          <ListItem key={student.name}>
-            <ListItemText primary={`${student.name} ${student.surname}`} />
+          <ListItem key={student.user.name}>
+            <ListItemText primary={`${student.user.name} ${student.user.surname}`} />
           </ListItem>
         ))}
       </List>
