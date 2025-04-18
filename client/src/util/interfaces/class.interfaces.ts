@@ -1,5 +1,6 @@
-import { AssignmentDetail, AssignmentShort, PopulatedAssignment } from './assignment.types';
-import { StudentDetail, StudentShort, TeacherDetail, TeacherShort } from './user.types';
+import { AssignmentShort, AssignmentDetail, PopulatedAssignment } from './assignment.interfaces';
+import { StudentShort, StudentDetail } from './student.interfaces';
+import { TeacherShort, TeacherDetail } from './teacher.interfaces';
 
 export const enum ClassRoleEnum {
   STUDENT = 'STUDENT',
@@ -11,7 +12,9 @@ export interface ClassShort {
   name: string;
 }
 
-export interface ClassDetail extends ClassShort {
+export interface ClassDetail {
+  id: string;
+  name: string;
   students: StudentShort[];
   teachers: TeacherShort[];
   assignments: AssignmentShort[];

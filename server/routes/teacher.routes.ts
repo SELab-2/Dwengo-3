@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { TeacherDomain } from '../domain/teacher.domain';
 import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class TeacherController {
   public router: Router;
@@ -15,7 +16,9 @@ export class TeacherController {
   }
 
   private getTeachers = async (req: Request, res: Response) => {
-    res.json(await this.teacherDomain.getTeachers(req.query, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.teacherDomain.getTeachers(req.query, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private getTeacherById = async (req: Request, res: Response) => {
@@ -72,7 +75,7 @@ export class TeacherController {
      *       401:
      *         description: Unauthorized
      */
-    this.router.get('/', this.getTeachers);
+    this.router.get('/', isAuthenticated, this.getTeachers);
     /**
      * @swagger
      * /api/teacher/{id}:
@@ -99,6 +102,6 @@ export class TeacherController {
      *       404:
      *         description: Teacher not found.
      */
-    this.router.get('/:id', this.getTeacherById);
+    this.router.get('/:id', isAuthenticated, this.getTeacherById);
   }
 }

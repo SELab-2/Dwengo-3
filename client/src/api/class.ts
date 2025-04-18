@@ -1,12 +1,13 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
-import { ClassDetail, ClassShort, PopulatedClass } from '../util/types/class.types';
-import { PaginatedData } from '../util/types/general.types';
+import { ClassDetail, ClassShort, PopulatedClass } from '../util/interfaces/class.interfaces';
+import { PaginatedData } from '../util/interfaces/general.interfaces';
 import { fetchNestedData } from './util';
 import { fetchAssignmentById } from './assignment';
 import { fetchLearningPathById } from './learningpath';
 import { fetchStudentById } from './student';
 import { fetchTeacherById } from './teacher';
+import { AssignmentDetail } from '../util/interfaces/assignment.interfaces';
 
 /**
  * Fetches a list of classes based on the provided student or teacher IDs.
@@ -84,10 +85,10 @@ export async function fetchPopulatedClassById(
 
   // Populate the assignments
   if (populateAssignments && result.assignments) {
-    result.assignments = await fetchNestedData(
+    result.assignments = (await fetchNestedData(
       classDetail.assignments.map((assignment) => assignment.id),
       fetchAssignmentById,
-    );
+    )) as AssignmentDetail[];
 
     // Populate the learning paths of the assignments
     if (populateAssignmentLearningPaths) {

@@ -7,7 +7,7 @@ import SurnameTextField from './textfields/SurnameTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useRegister } from '../hooks/useAuth';
-import { ClassRoleEnum } from '../util/types/class.types';
+import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';

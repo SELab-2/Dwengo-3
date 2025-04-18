@@ -12,7 +12,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { Class as ClassIcon, Person as PersonIcon } from '@mui/icons-material';
-import { ClassDetail } from '../util/types/class.types';
+import { ClassDetail } from '../util/interfaces/class.interfaces';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import React from 'react';
