@@ -13,7 +13,7 @@ import {
   Avatar,
 } from '@mui/material';
 import { Class as ClassIcon, Person as PersonIcon } from '@mui/icons-material';
-import { LearningPathDetail } from '../util/types/learningPath.types';
+import { LearningPathDetail } from '../util/interfaces/learningPath.interfaces';
 
 interface ClassGroupCardProps {
   className: string;

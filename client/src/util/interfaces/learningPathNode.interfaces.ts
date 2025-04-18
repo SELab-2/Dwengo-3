@@ -1,5 +1,5 @@
-import { LearningObjectShort } from './learningObject';
-import { LearningPathNodeTransitionDetail } from './LearningPathNodeTransition.types';
+import { LearningObjectShort } from './learningObject.interfaces';
+import { LearningPathNodeTransitionDetail } from './LearningPathNodeTransition.interfaces';
 
 export interface LearningPathNodeShort {
   id: string;

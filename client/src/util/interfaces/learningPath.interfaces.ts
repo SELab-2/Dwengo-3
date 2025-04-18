@@ -1,11 +1,15 @@
-import { LearningPathNodeShort } from './learningPathNode.types';
+import { keyword } from './keyword.interfaces';
+import { LearningPathNodeShort } from './learningPathNode.interfaces';
 
-// TODO: edit this type and add other relevant types
 export interface LearningPathShort {
   id: string;
   title: string;
-  targetAges: number[];
-  keywords: string[];
+  learningPathNodes: {
+    learningObject: {
+      targetAges: number[];
+      keywords: keyword[];
+    };
+  }[];
   image: string;
   description: string;
 }
