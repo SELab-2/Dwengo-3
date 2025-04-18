@@ -63,7 +63,7 @@ export const ApiRoutes = {
     },
     teacher: {
       create: '/api/class/teacherRequest',
-      List: '/api/class/teacherRequest',
+      list: '/api/class/teacherRequest',
       reply: '/api/class/teacherRequest',
     },
   },
