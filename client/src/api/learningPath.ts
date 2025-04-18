@@ -1,6 +1,10 @@
 import apiClient from './apiClient';
 import { ApiRoutes } from './api.routes';
-import { LearningPathDetail, LearningPathShort } from '../util/interfaces/learningPath.interfaces';
+import {
+  LearningPathCreate,
+  LearningPathDetail,
+  LearningPathShort,
+} from '../util/interfaces/learningPath.interfaces';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
 
 /**
@@ -35,4 +39,21 @@ export async function fetchLearningPathById(id: string) {
   const result: LearningPathDetail = response.data;
 
   return result;
+}
+
+/**
+ * Creates a new learningPath
+ *
+ * @param data - The date of the learningPath to be created
+ * @returns The learningPath details or false
+ */
+export async function createLearningPath(data: LearningPathCreate) {
+  const response = await apiClient.put(ApiRoutes.learningPath.create, {
+    data,
+  });
+
+  if (response.status == 200) {
+    return response.data;
+  }
+  return false;
 }

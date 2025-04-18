@@ -46,7 +46,7 @@ export async function createLearningObject(data: LearningObjectCreate) {
  * @param targetAges - A list of targetAges on which to filter
  * @returns A paginated list of learningObjects
  */
-export async function fetchLearningObjects(keywords: string[], targetAges: number[]) {
+export async function fetchLearningObjects(keywords?: string[], targetAges?: number[]) {
   const response = await apiClient.get(ApiRoutes.learningObject.list, {
     params: {
       keywords,
