@@ -1,5 +1,5 @@
-import { ClassRoleEnum } from './class.types';
-import { UserDetail } from './user.types';
+import { ClassRoleEnum } from './class.interfaces';
+import { UserDetail } from './user.interfaces';
 
 export interface LoginData {
   email: string;

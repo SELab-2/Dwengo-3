@@ -18,27 +18,35 @@ export class FavoritesController {
 
   private getFavorites = async (req: Request, res: Response) => {
     const query = req.query as FavoriteFilterParams;
-    res.json(await this.favoritesDomain.getFavorites(query, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.favoritesDomain.getFavorites(query, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private getFavoriteById = async (req: Request, res: Response) => {
     res.json(
       await this.favoritesDomain.getFavoriteById(
         req.params.id,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
 
   private createFavorite = async (req: Request, res: Response) => {
     res.json(
-      await this.favoritesDomain.createFavorite(req.body, this.userDomain.getUserFromReq(req)),
+      await this.favoritesDomain.createFavorite(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
   private deleteFavorite = async (req: Request, res: Response) => {
     res.json(
-      await this.favoritesDomain.deleteFavorite(req.params.id, this.userDomain.getUserFromReq(req)),
+      await this.favoritesDomain.deleteFavorite(
+        req.params.id,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 

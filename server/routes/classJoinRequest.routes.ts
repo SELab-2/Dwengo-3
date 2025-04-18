@@ -20,7 +20,7 @@ export class ClassJoinRequestController {
     res.json(
       await this.classJoinRequestDomain.createClassJoinRequest(
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -29,7 +29,7 @@ export class ClassJoinRequestController {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
         req.query,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
         ClassRoleEnum.STUDENT,
       ),
     );
@@ -39,7 +39,7 @@ export class ClassJoinRequestController {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
         req.query,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
         ClassRoleEnum.TEACHER,
       ),
     );
@@ -49,7 +49,7 @@ export class ClassJoinRequestController {
     res.json(
       await this.classJoinRequestDomain.handleJoinRequest(
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };

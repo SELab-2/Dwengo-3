@@ -16,12 +16,17 @@ export class StudentController {
   }
 
   private getStudents = async (req: Request, res: Response) => {
-    res.json(await this.studentDomain.getStudents(req.query, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.studentDomain.getStudents(req.query, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private getStudentById = async (req: Request, res: Response) => {
     res.json(
-      await this.studentDomain.getStudentById(req.params.id, this.userDomain.getUserFromReq(req)),
+      await this.studentDomain.getStudentById(
+        req.params.id,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 

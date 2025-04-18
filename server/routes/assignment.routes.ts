@@ -133,7 +133,10 @@ export class AssignmentController {
 
   private async getAssignments(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.assignmentDomain.getAssignments(req.query, this.userDomain.getUserFromReq(req)),
+      await this.assignmentDomain.getAssignments(
+        req.query,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   }
 
@@ -141,14 +144,17 @@ export class AssignmentController {
     res.json(
       await this.assignmentDomain.getAssignmentById(
         req.params.id,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   }
 
   private async createAssignment(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.assignmentDomain.createAssignment(req.body, this.userDomain.getUserFromReq(req)),
+      await this.assignmentDomain.createAssignment(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   }
 }

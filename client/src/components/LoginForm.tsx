@@ -5,13 +5,13 @@ import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useLogin } from '../hooks/useAuth';
-import { ClassRoleEnum } from '../util/types/class.types';
+import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
 import { AppRoutes } from '../util/app.routes';
 import { ApiRoutes } from '../api/api.routes';
-import { UserDetail } from '../util/types/user.types';
+import { UserDetail } from '../util/interfaces/user.interfaces';
 import GoogleLoginButton from './GoogleLoginButton';
 
 function LoginForm() {

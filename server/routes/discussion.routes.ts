@@ -119,7 +119,10 @@ export class DiscussionController {
 
   private async getDiscussions(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.discussionDomain.getDiscussions(req.query, this.userDomain.getUserFromReq(req)),
+      await this.discussionDomain.getDiscussions(
+        req.query,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   }
 
@@ -127,14 +130,17 @@ export class DiscussionController {
     res.json(
       await this.discussionDomain.getDiscussionById(
         req.params.id,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   }
 
   private async createDiscussion(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.discussionDomain.createDiscussion(req.body, this.userDomain.getUserFromReq(req)),
+      await this.discussionDomain.createDiscussion(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   }
 }

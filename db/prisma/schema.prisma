@@ -92,7 +92,7 @@ model LearningPath {
   owner             User?              @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   learningPathNodes LearningPathNode[]
   assignments       Assignment[]
-  favorite          Favorite[]
+  favorites         Favorite[]
 
   @@unique([hruid, language])
 }
@@ -121,8 +121,8 @@ model User {
   classJoinRequests ClassJoinRequest[]
   messages          Message[]
   discussions       Discussion[]
-  LearningPath      LearningPath[]
-  favorite          Favorite[]
+  LearningPaths     LearningPath[]
+  favorites         Favorite[]
 }
 
 model Student {
@@ -148,9 +148,9 @@ model Class {
   name              String             @default("New class")
   students          Student[]
   teachers          Teacher[]
-  assignment        Assignment[]
+  assignments       Assignment[]
   classJoinRequests ClassJoinRequest[]
-  Announcement      Announcement[]
+  Announcements     Announcement[]
 }
 
 model ClassJoinRequest {
@@ -204,12 +204,12 @@ model AssignmentSubmission {
 }
 
 model Favorite {
-  id                    String       @id @default(uuid())
+  id                    String                 @id @default(uuid())
   userId                String
   learningPathId        String
-  progress              Int[]        @default([]) // indeces of completed nodes
-  learningPath          LearningPath @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user                  User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  progress              Int[]                  @default([]) // indeces of completed nodes
+  learningPath          LearningPath           @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                  User                   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignmentSubmissions AssignmentSubmission[]
 }
 
@@ -236,6 +236,7 @@ model Announcement {
   title     String
   content   String
   classId   String
+  createdAt DateTime @default(now()) @db.Timestamp
   class     Class   @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   teacherId String
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)

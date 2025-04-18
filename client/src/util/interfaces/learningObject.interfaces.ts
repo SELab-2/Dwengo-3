@@ -1,9 +1,11 @@
+import { keyword } from './keyword.interfaces';
+
 export interface LearningObjectShort {
   id: string;
   title: string;
   language: string;
   estimatedTime: number;
-  keywords: string[];
+  kewords: keyword[];
   targetAges: number[];
 }
 
@@ -11,6 +13,7 @@ export interface LearningObjectDetail {
   id: string;
   hruid: string;
   version: number;
+  language: string;
   title: string;
   description: string;
   contentType: string;
@@ -29,5 +32,5 @@ export interface LearningObjectDetail {
   updatedAt: Date;
   content: string;
   multipleChoice: JSON;
-  keywords: string[];
+  keywords: keyword[];
 }

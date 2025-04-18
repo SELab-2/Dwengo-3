@@ -27,7 +27,7 @@ export class LearningPathController {
     res.json(
       await this.learningPathDomain.createLearningPath(
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
