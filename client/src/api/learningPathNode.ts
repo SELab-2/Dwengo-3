@@ -1,6 +1,6 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
-import { LearningPathNodeDetail } from '../util/types/learningPathNode.types';
+import { LearningPathNodeDetail } from '../util/interfaces/learningPathNode.interfaces';
 
 /**
  * Fetches a LearningPathNode by its ID.

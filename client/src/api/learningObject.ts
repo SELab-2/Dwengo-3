@@ -1,6 +1,6 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
-import { LearningObjectDetail } from '../util/types/learningObject';
+import { LearningObjectDetail } from '../util/interfaces/learningObject.interfaces';
 
 /**
  * Fetches a LearningObject by its ID.
