@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import DateTypography from '../components/DateTypography';
 import GroupListDialog from '../components/GroupListDialog';
 import { useState } from 'react';
-import { StudentShort } from '../util/types/user.types';
+import { StudentShort } from '../util/interfaces/student.interfaces';
 
 const assignment = {
   name: 'Opdracht 1',

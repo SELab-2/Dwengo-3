@@ -3,7 +3,7 @@ import {
   Box,
   Button,
   Divider,
-  Grid2,
+  Grid,
   List,
   ListItem,
   ListItemText,
@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useParams } from 'react-router-dom';
 import DateTextField from '../components/textfields/DateTextField';
-import { StudentShort } from '../util/types/user.types';
+import { StudentShort } from '../util/interfaces/student.interfaces';
 
 const learningPaths = [
   {
@@ -147,9 +147,9 @@ function AssignmentCreatePage() {
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {/* Assignment Name & Description */}
-          <Grid2 size={{ xs: 12, md: 4, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 4, sm: 6 }}>
             <TextField
               required
               id="name-assignment"
@@ -168,10 +168,10 @@ function AssignmentCreatePage() {
               fullWidth
             />
             <DateTextField />
-          </Grid2>
+          </Grid>
 
           {/* Keywords & Learning Paths */}
-          <Grid2 size={{ xs: 12, md: 4, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 4, sm: 6 }}>
             <MultipleSelectChip
               label={t('keywords')}
               options={keywords}
@@ -183,10 +183,10 @@ function AssignmentCreatePage() {
               options={filteredLearningPaths}
               state={[selectedLearningPath, setSelectedLearningPath]}
             />
-          </Grid2>
+          </Grid>
 
           {/* Group Size & Generated Groups */}
-          <Grid2 size={{ xs: 12, md: 4, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 4, sm: 6 }}>
             <TextField
               id="group-size"
               label={t('groupSize')}
@@ -227,8 +227,8 @@ function AssignmentCreatePage() {
                 </div>
               ))}
             </List>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
 
         {/* Save Button */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
