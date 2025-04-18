@@ -75,6 +75,14 @@ export const ApiRoutes = {
     get: (id: string) => `/api/discussion/${id}`,
   },
 
+  // Favorites
+  favorites: {
+    create: '/api/favorites',
+    list: '/api/favorites',
+    get: (id: string) => `/api/favorites/${id}`,
+    delete: (id: string) => `/api/favorites/${id}`,
+  },
+
   // LearningObject
   learningObject: {
     list: '/api/learningObject',
