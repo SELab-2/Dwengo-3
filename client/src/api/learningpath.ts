@@ -1,7 +1,7 @@
 import apiClient from './apiClient';
 import { ApiRoutes } from './api.routes';
-import { LearningPathDetail, LearningPathShort } from '../util/types/learningPath.types';
-import { PaginatedData } from '../util/types/general.types';
+import { LearningPathDetail, LearningPathShort } from '../util/interfaces/learningPath.interfaces';
+import { PaginatedData } from '../util/interfaces/general.interfaces';
 
 /**
  * Fetches a list of learning paths based on the provided keywords and age range.

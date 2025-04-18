@@ -3,7 +3,7 @@ import { useState } from 'react';
 import CustomTextField from '../components/textfields/CustomTextField';
 import { useTranslation } from 'react-i18next';
 import { useCreateClass } from '../hooks/useClass';
-import { ClassDetail } from '../util/types/class.types';
+import { ClassDetail } from '../util/interfaces/class.interfaces';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { useError } from '../hooks/useError';

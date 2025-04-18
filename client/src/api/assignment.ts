@@ -1,5 +1,5 @@
-import { AssignmentDetail, AssignmentShort } from '../util/types/assignment.types';
-import { PaginatedData } from '../util/types/general.types';
+import { AssignmentDetail, AssignmentShort } from '../util/interfaces/assignment.interfaces';
+import { PaginatedData } from '../util/interfaces/general.interfaces';
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
 

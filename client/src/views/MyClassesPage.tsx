@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useClasses, useClassesByIds } from '../hooks/useClass';
 import { useTranslation } from 'react-i18next';
 import { AppRoutes } from '../util/app.routes';
-import { ClassShort } from '../util/types/class.types';
+import { ClassShort } from '../util/interfaces/class.interfaces';
 import ClassCard from '../components/ClassCard';
 
 function MyClassesPage() {
