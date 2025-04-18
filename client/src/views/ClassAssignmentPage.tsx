@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import DateTypography from '../components/DateTypography';
 import GroupListDialog from '../components/GroupListDialog';
 import { useState } from 'react';
-import { StudentShort } from '../util/types/user.types';
+import { StudentShort } from '../util/interfaces/student.interfaces';
 
 const assignment = {
   name: 'Opdracht 1',
@@ -194,7 +194,7 @@ function ClassAssignmentPage() {
         <Typography variant="h5" gutterBottom>
           {`${t('givenBy')}: ${assignment.teacher.name} ${assignment.teacher.surname}`}
         </Typography>
-        <DateTypography text={`${t('deadline')}: `} date={assignment.deadline} />
+        <DateTypography text={`${t('deadline')}: `} date={assignment.deadline} variant='h5' />
 
         <GroupListDialog students={students} open={open} onClose={() => setOpen(false)} />
 

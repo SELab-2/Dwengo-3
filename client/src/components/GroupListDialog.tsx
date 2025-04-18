@@ -1,6 +1,6 @@
 import { Dialog, DialogTitle, List, ListItem, ListItemText } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { StudentShort } from '../util/types/user.types';
+import { StudentShort } from '../util/interfaces/student.interfaces';
 
 interface GroupListDialogProps {
   students: StudentShort[];

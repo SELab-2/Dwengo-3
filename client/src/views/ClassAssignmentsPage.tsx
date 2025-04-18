@@ -17,7 +17,7 @@ import { AppRoutes } from '../util/app.routes';
 
 const assignments = [
   {
-    id: 1,
+    id: '1',
     learningPath: {
       id: '1',
       title: 'Leerpad 1',
@@ -58,7 +58,7 @@ const assignments = [
     },
   },
   {
-    id: 1,
+    id: '2',
     learningPath: {
       id: '1',
       title: 'Leerpad 2',
@@ -169,7 +169,7 @@ function ClassAssignmentsPage() {
                         padding: { xs: '5px 10px', sm: '8px 16px' },
                         minWidth: { xs: '60px', sm: '100px' },
                       }}
-                      onClick={() => navigate(AppRoutes.classAssignment(id!, '1'))} //TODO assignment id
+                      onClick={() => navigate(AppRoutes.classAssignment(id!, assignment.id))}
                     >
                       {t('details')}
                     </Button>
