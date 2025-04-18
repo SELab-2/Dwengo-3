@@ -13,7 +13,7 @@ import { PaginatedData } from '../util/interfaces/general.interfaces';
  * Creates a new announcement
  *
  * @param announcement - The data of the new announcement.
- * @returns Succesfully created or not.
+ * @returns The announcementdetails or false.
  */
 export async function createAnnouncement(announcement: AnnouncementCreate) {
   const response = await apiClient.put(ApiRoutes.announcement.create, {
@@ -21,7 +21,7 @@ export async function createAnnouncement(announcement: AnnouncementCreate) {
   });
 
   if (response.status == 200 || response.status == 201) {
-    return true;
+    return response.data;
   }
   return false;
 }
@@ -66,7 +66,7 @@ export async function fetchAnnouncementById(announcementId: UUID) {
  *
  * @param announcementId - The id of the announcement to be updated
  * @param data - The new data for the announcement
- * @returns Succesfully updated or not
+ * @returns The announcementdetails or false
  */
 export async function updateAnnouncement(announcementId: UUID, data: AnnouncementUpdate) {
   const response = await apiClient.patch(ApiRoutes.class.update(announcementId), {
@@ -74,7 +74,7 @@ export async function updateAnnouncement(announcementId: UUID, data: Announcemen
   });
 
   if (response.status == 200) {
-    return true;
+    return response.data;
   }
   return false;
 }

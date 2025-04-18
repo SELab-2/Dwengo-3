@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { ClassShort } from './class.interfaces';
 import { GroupShort } from './group.interfaces';
 import { LearningPathShort, LearningPathDetail } from './learningPath.interfaces';
@@ -21,4 +22,11 @@ export interface PopulatedAssignment {
   class: ClassShort;
   groups: GroupShort[];
   learningPath: LearningPathShort | LearningPathDetail;
+}
+
+export interface AssignmentCreate {
+  groups: [UUID];
+  learningPathId: UUID;
+  classId: UUID;
+  teacherId: UUID;
 }

@@ -1,4 +1,8 @@
-import { AssignmentDetail, AssignmentShort } from '../util/interfaces/assignment.interfaces';
+import {
+  AssignmentCreate,
+  AssignmentDetail,
+  AssignmentShort,
+} from '../util/interfaces/assignment.interfaces';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
@@ -44,4 +48,21 @@ export async function fetchAssignmentById(id: string) {
   const result: AssignmentDetail = response.data;
 
   return result;
+}
+
+/**
+ * Create an assignment
+ *
+ * @param data - The data of the assignment to be created
+ * @returns The assignmentdetails or false
+ */
+export async function createAssignment(data: AssignmentCreate) {
+  const response = await apiClient.put(ApiRoutes.assignment.create, {
+    data,
+  });
+
+  if (response.status == 200 || response.status == 201) {
+    return response.data;
+  }
+  return false;
 }
