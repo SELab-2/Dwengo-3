@@ -1,6 +1,6 @@
 import { Box, Card, Typography, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 interface DiscussionCardProps {
   id: string;
