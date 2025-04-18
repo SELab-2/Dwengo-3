@@ -29,7 +29,12 @@ function LearningPathsOverviewPage() {
 
   useEffect(() => {
     if (data?.data?.length ?? 0 > 0) {
-      // Append new data to the existing learningPaths state
+      if (page === 1) {
+        // React keeps the state across page navigation, so when we go back to this page,
+        // we need to reset the learningPaths state.
+        setLearningPaths([]);
+      }
+
       setLearningPaths((prevPaths) => [...prevPaths, ...(data?.data ?? [])]);
     }
   }, [data]);
