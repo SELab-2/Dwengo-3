@@ -25,3 +25,11 @@ export interface PopulatedClass extends ClassShort {
   teachers: TeacherShort[] | TeacherDetail[];
   assignments: AssignmentShort[] | AssignmentDetail[] | PopulatedAssignment[];
 }
+
+export interface ClassCreate {
+  name: string;
+}
+
+export interface ClassUpdate {
+  name?: string;
+}
