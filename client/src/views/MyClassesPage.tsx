@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Grid2, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
-import { useClasses, useClassesByIds } from '../hooks/useClass';
+import { useClasses, usePopulatedClassesById } from '../hooks/useClass';
 import { useTranslation } from 'react-i18next';
 import { AppRoutes } from '../util/app.routes';
 import { ClassShort } from '../util/interfaces/class.interfaces';
@@ -19,11 +19,9 @@ function MyClassesPage() {
   // TODO: How to handle the paginated data?
   const classes = paginatedData?.data ?? [];
 
-  // Fetch the details of the classes using their IDs
-  const classesDetails =
-    useClassesByIds(classes?.map((classShort: ClassShort) => classShort.id) ?? []).data ?? [];
-
-  //TODO: Use the populated classes by id hook
+  const populatedClasses =
+    usePopulatedClassesById(classes?.map((classShort: ClassShort) => classShort.id) ?? []).data ??
+    [];
 
   return (
     <Box
@@ -72,14 +70,14 @@ function MyClassesPage() {
         }}
       >
         {/* Show a label if there are no classes */}
-        {classesDetails.length === 0 && (
+        {populatedClasses.length === 0 && (
           <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
             {t('noClasses')}
           </Typography>
         )}
 
         <Grid2 container spacing={3} justifyContent="center">
-          {classesDetails.map((classDetails) => (
+          {populatedClasses.map((classDetails) => (
             <ClassCard key={classDetails.id} classDetails={classDetails}></ClassCard>
           ))}
         </Grid2>

@@ -12,26 +12,44 @@ import {
   ListItemText,
 } from '@mui/material';
 import { Class as ClassIcon, Person as PersonIcon } from '@mui/icons-material';
-import { ClassDetail } from '../util/interfaces/class.interfaces';
+import { ClassRoleEnum, PopulatedClass } from '../util/interfaces/class.interfaces';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { PopulatedAssignment } from '../util/interfaces/assignment.interfaces';
+import { useAuth } from '../hooks/useAuth';
 
-function ClassCard({
-  classDetails,
-  // TODO: include assignments
-}: {
-  classDetails: ClassDetail;
-}) {
+function ClassCard({ classDetails }: { classDetails: PopulatedClass }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { t } = useTranslation();
 
-  // TODO: replace with actual learning paths
-  let learningPaths = [
-    { title: 'Learning Path 1', deadline: '10/03/2025', progress: 40 },
-    { title: 'Learning Path 2', deadline: '25/04/2025', progress: 65 },
-  ];
+  // TODO: sort according to deadline
+  const assignments = classDetails.assignments as PopulatedAssignment[];
+
+  // Calculate the progress for a specific learning path and user
+  const getProgress = (assignment: PopulatedAssignment) => {
+    if (user?.role === ClassRoleEnum.STUDENT) {
+      // For a student, calculate the progress based on the group they're in
+      const progress =
+        assignment.groups
+          .filter((group) => group.students.some((student) => student.id === user?.student?.id))[0]
+          ?.progress.at(-1) || 0;
+
+      return Math.round((progress / assignment.learningPath.learningPathNodes.length) * 100);
+    } else {
+      // For a teacher, calculate the progress based on all groups in the class
+      const totalProgress = assignment.groups.reduce((acc, group) => {
+        return acc + (group.progress.at(-1) || 0);
+      }, 0);
+      const totalGroups = assignment.groups.length;
+
+      return Math.round(
+        (totalProgress / (totalGroups * assignment.learningPath.learningPathNodes.length)) * 100,
+      );
+    }
+  };
 
   return (
     <Card
@@ -69,51 +87,55 @@ function ClassCard({
 
         {/* Learning paths list */}
         <List disablePadding>
-          {learningPaths.slice(0, 2).map((path, index) => (
-            <React.Fragment key={index}>
-              <ListItem sx={{ px: 0, py: 1.5 }}>
-                <ListItemText
-                  primary={
-                    <Typography
-                      component="div" // Render Typography as a <div> instead of a <p>
-                      sx={{ display: 'flex', justifyContent: 'space-between' }}
-                    >
-                      <Typography fontWeight="medium" component="span">
-                        {path.title}
+          {assignments.slice(0, 2).map((assignment, index) => {
+            const progress = getProgress(assignment);
+
+            return (
+              <React.Fragment key={index}>
+                <ListItem sx={{ px: 0, py: 1.5 }}>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        component="div" // Render Typography as a <div> instead of a <p>
+                        sx={{ display: 'flex', justifyContent: 'space-between' }}
+                      >
+                        <Typography fontWeight="medium" component="span">
+                          {assignment.learningPath.title}
+                        </Typography>
+                        <Chip
+                          label={'10/05/2025'} /* TODO: replace with actual value */
+                          size="small"
+                          variant="outlined"
+                          sx={{ ml: 1 }}
+                        />
                       </Typography>
-                      <Chip
-                        label={path.deadline} /* TODO: replace with actual value */
-                        size="small"
-                        variant="outlined"
-                        sx={{ ml: 1 }}
-                      />
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography
-                      component="div" // Render Typography as a <div> instead of a <p>
-                      sx={{ mt: 1 }}
-                    >
-                      <LinearProgress
-                        variant="determinate"
-                        value={path.progress} //TODO: replace with actual progress value
-                        sx={{
-                          height: 8,
-                          borderRadius: 4,
-                          mb: 1,
-                        }}
-                      />
-                      <Typography variant="caption" color="text.secondary" component="span">
-                        {`${path.progress}% completed`}
+                    }
+                    secondary={
+                      <Typography
+                        component="div" // Render Typography as a <div> instead of a <p>
+                        sx={{ mt: 1 }}
+                      >
+                        <LinearProgress
+                          variant="determinate"
+                          value={progress} //TODO: replace with actual progress value
+                          sx={{
+                            height: 8,
+                            borderRadius: 4,
+                            mb: 1,
+                          }}
+                        />
+                        <Typography variant="caption" color="text.secondary" component="span">
+                          {`${progress}% completed`}
+                        </Typography>
                       </Typography>
-                    </Typography>
-                  }
-                />
-              </ListItem>
-              {index < learningPaths.length - 1 && <Divider />}
-            </React.Fragment>
-          ))}
-          {learningPaths.length === 0 && (
+                    }
+                  />
+                </ListItem>
+                {index < assignments.length - 1 && <Divider />}
+              </React.Fragment>
+            );
+          })}
+          {assignments.length === 0 && (
             <Box
               sx={{
                 height: 120, // Reserve space equivalent to 2 learning paths
