@@ -1,3 +1,5 @@
+import { create } from "domain";
+
 export const fr = {
   translation: {
     yes: 'Oui',
@@ -37,6 +39,12 @@ export const fr = {
     continue: 'Continuer',
     view_edit: 'Voir/Modifier',
     assignments: 'Devoirs',
+    createAssignment: 'Créer un nouveau devoir',
+    description: 'Description',
+    keywords: 'Mots-clés',
+    learningPath: "Parcours d'apprentissage",
+    groupSize: 'Taille du groupe',
+    group: 'Groupe',
     dashboard: 'Tableau de bord',
     announcements: 'Annonces',
     discussions: 'Discussions',
@@ -52,5 +60,12 @@ export const fr = {
     createNewDiscussionMessage: 'envoyer un nouveau message',
     send: 'Soumettre',
     cancel: 'Annuler',
+    numberOfTeamsSolved: 'Nombre d’équipes résolues',
+    save: 'Enregistrer',
+    newAssignment: 'Nouveau devoir',
+    deadline: 'Date limite',
+    givenBy: 'Donné par',
+    progression: "Progression",
+    submission: "Soumission"
   },
 };

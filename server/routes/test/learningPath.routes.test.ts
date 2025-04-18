@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { describe, beforeEach, test, vi, expect } from 'vitest';
+import { describe, beforeEach, test, vi, expect, beforeAll } from 'vitest';
 import { app } from '../../app';
 import { mock } from 'node:test';
 
@@ -25,7 +25,7 @@ const route = '/learningPath';
 const agent = request.agent(app);
 
 describe('learningPath routes test', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     vi.resetAllMocks();
     await agent
       .post('/auth/teacher/login/local')

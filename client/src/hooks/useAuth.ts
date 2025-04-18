@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import apiClient from '../api/apiClient';
-import { LoginData, RegisterData } from '../util/types/auth.types';
-import { ClassRoleEnum } from '../util/types/class.types';
+import { LoginData, RegisterData } from '../util/interfaces/auth.interfaces';
+import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { ApiRoutes } from '../api/api.routes';

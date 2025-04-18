@@ -17,7 +17,7 @@ export const classSelectDetail: Prisma.ClassSelect = {
   students: {
     select: studentSelectShort,
   },
-  assignment: {
+  assignments: {
     select: assignmentSelectShort,
   },
 };

@@ -1,5 +1,5 @@
-import { ClassShort } from './class.types';
-import { UserShort } from './user.types';
+import { ClassShort } from './class.interfaces';
+import { UserShort } from './user.interfaces';
 
 export interface ClassJoinRequestDetail {
   id: string;
