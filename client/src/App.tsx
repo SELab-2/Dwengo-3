@@ -23,6 +23,7 @@ import LearningThemePage from './views/LearningThemePage';
 import { AppRoutes } from './util/app.routes.ts';
 import AnnouncementsPage from './views/AnnouncementsPage';
 import AnnouncementDetailpage from './views/AnnouncementPage';
+import AssignmentCreatePage from './views/AssignmentCreatePage.tsx';
 import { Box } from '@mui/material';
 
 const queryClient = new QueryClient();
@@ -67,6 +68,10 @@ function App() {
                         path={AppRoutes.classAssignments(':classId')}
                         element={<ClassAssignmentsPage />}
                       />
+                    <Route
+                      path={AppRoutes.classAssignmentCreate(':classId')}
+                      element={<AssignmentCreatePage />} 
+                    />
                       <Route
                         path={AppRoutes.classAssignment(':classId', ':assignmentId')}
                         element={<ClassAssignmentPage />}

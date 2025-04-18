@@ -1,6 +1,6 @@
 export interface LearningPathNodeTransitionDetail {
   id: string;
   learningPathNodeId: string;
-  condition: JSON;
+  condition: string;
   toNodeIndex: number;
 }
