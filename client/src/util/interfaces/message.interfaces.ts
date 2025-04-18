@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { UserShort } from './user.interfaces';
 
 export interface MessageShort {
@@ -13,4 +14,9 @@ export interface MessageDetail {
   sender: UserShort;
   discussionId: string;
   createdAt: Date;
+}
+
+export interface MessageCreate {
+  content: string;
+  discussionId: UUID;
 }

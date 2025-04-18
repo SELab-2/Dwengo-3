@@ -46,7 +46,7 @@ export async function fetchFavoriteById(id: UUID) {
  * @param data - The data of the favorite to be created
  * @returns The favoritedetails or false
  */
-export async function createDiscussion(data: FavoriteCreate) {
+export async function createFavorite(data: FavoriteCreate) {
   const response = await apiClient.put(ApiRoutes.favorites.create, {
     data,
   });
