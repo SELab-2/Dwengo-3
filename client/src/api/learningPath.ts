@@ -4,22 +4,30 @@ import { PaginatedData } from '../util/interfaces/general.interfaces';
 import { LearningPathShort, LearningPathDetail } from '../util/interfaces/learningPath.interfaces';
 
 /**
- * Fetches a list of learningPaths based on keywords and ages.
+ * Fetches a list of learningPaths based on keywords, ages, page, and pageSize.
  *
  * @param keywords - The keywords to filter the learningPaths.
  * @param ages - The ages to filter the learningPaths.
+ * @param page - The page number for pagination.
+ * @param pageSize - The number of items per page for pagination.
  * @returns The list of learningPaths.
  */
-export async function fetchLearningPaths(keywords?: string[], ages?: number[]) {
+export async function fetchLearningPaths(
+  keywords?: string[],
+  ages?: number[],
+  page: number = 1,
+  pageSize: number = 10,
+) {
   const response = await apiClient.get(ApiRoutes.learningPath.list, {
     params: {
       keywords,
       ages,
+      page,
+      pageSize,
     },
   });
 
   const result: PaginatedData<LearningPathShort> = response.data;
-  console.log('Learning Paths:', result);
 
   return result;
 }

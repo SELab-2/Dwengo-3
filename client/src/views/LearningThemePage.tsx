@@ -5,7 +5,9 @@ import { Link, useParams } from 'react-router-dom';
 import theme from '../util/theme';
 import { AppRoutes } from '../util/app.routes';
 import { useLearningPath } from '../hooks/useLearningPath';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Masonry from '@mui/lab/Masonry';
+import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
 
 const themeKeywordsMap = {
   'AI in Climate': ['AI', 'Climate'],
@@ -16,26 +18,48 @@ const themeKeywordsMap = {
 
 function LearningPathsOverviewPage() {
   const { id } = useParams();
+  const [page, setPage] = useState(1); // Track current page
+  const [learningPaths, setLearningPaths] = useState<LearningPathShort[]>([]); // Store all loaded paths
   const { data, isLoading, isError, error } = useLearningPath(
     themeKeywordsMap[id as keyof typeof themeKeywordsMap],
-    // TODO: Add functionality in component to filter on ages
     undefined,
+    page,
+    10,
   );
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (data?.data?.length ?? 0 > 0) {
+      // Append new data to the existing learningPaths state
+      setLearningPaths((prevPaths) => [...prevPaths, ...(data?.data ?? [])]);
+    }
+  }, [data]);
 
-  if (isError) {
-    return <div>Error: {error.message}</div>;
-  }
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set()); // Use a Set for multiple expanded IDs
 
-  if (!data) {
-    return <div>No data available</div>;
-  }
+  console.log(page);
+
+  const handleLoadMore = () => {
+    setPage((prevPage) => prevPage + 1); // Increment page number to load more data
+  };
+
+  const handleToggleExpanded = (id: string) => {
+    setExpandedIds((prev) => {
+      const newExpandedIds = new Set(prev);
+      if (newExpandedIds.has(id)) {
+        newExpandedIds.delete(id); // If already expanded, collapse it
+      } else {
+        newExpandedIds.add(id); // If collapsed, expand it
+      }
+      return newExpandedIds;
+    });
+  };
+
+  if (isLoading && page === 1) return <div>Loading...</div>;
+  if (isError) return <div>Error: {error?.message}</div>;
+  if (!data) return <div>No data available</div>;
 
   const targetAgesRange = (index: number) => {
-    const nodes = data.data[index].learningPathNodes;
+    const nodes = learningPaths[index].learningPathNodes;
     let ages: number[] = [];
 
     for (const node of nodes) {
@@ -54,14 +78,11 @@ function LearningPathsOverviewPage() {
 
   return (
     <Box sx={{ p: MarginSize.large, maxHeight: '80vh', overflowY: 'auto' }}>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: 3,
-        }}
+      <Masonry
+        columns={{ xs: 1, sm: 2, md: 3, lg: 5 }} // Responsive columns
+        spacing={3}
       >
-        {data.data.map(({ id, title, image, description }, index) => (
+        {learningPaths.map(({ id, title, image, description }, index) => (
           <Card
             key={id}
             sx={{
@@ -100,7 +121,6 @@ function LearningPathsOverviewPage() {
                   backgroundColor: theme.palette.primary.main,
                   color: 'black',
                   borderRadius: '8px',
-                  borderColor: 'black',
                   px: 1.5,
                   py: 0.5,
                   fontSize: '0.75rem',
@@ -121,17 +141,34 @@ function LearningPathsOverviewPage() {
             </Box>
 
             <CardContent>
-              <ExpandableDescription description={description} />
+              <ExpandableDescription
+                id={id}
+                description={description}
+                expanded={expandedIds.has(id)} // Check if this ID is in the set of expanded IDs
+                onToggle={() => handleToggleExpanded(id)}
+              />
             </CardContent>
           </Card>
         ))}
-      </Box>
+      </Masonry>
+
+      {data.totalPages > page && (
+        <Button onClick={handleLoadMore} sx={{ marginTop: 2, width: '100%' }}>
+          Load More
+        </Button>
+      )}
     </Box>
   );
 }
 
-function ExpandableDescription({ description }: { description: string }) {
-  const [expanded, setExpanded] = useState(false);
+type ExpandableDescriptionProps = {
+  id: string;
+  description: string;
+  expanded: boolean;
+  onToggle: () => void;
+};
+
+function ExpandableDescription({ description, expanded, onToggle }: ExpandableDescriptionProps) {
   const shortDescription =
     description.length > 100 ? description.slice(0, 97) + '...' : description;
 
@@ -142,9 +179,9 @@ function ExpandableDescription({ description }: { description: string }) {
         <Button
           size="small"
           onClick={(e) => {
-            e.preventDefault(); // Prevent navigation on click, so that it only expands the description
-            e.stopPropagation(); // Prevent click bubbling
-            setExpanded(!expanded);
+            e.preventDefault();
+            e.stopPropagation();
+            onToggle();
           }}
           sx={{ color: 'white' }}
         >

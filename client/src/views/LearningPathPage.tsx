@@ -47,6 +47,7 @@ function LearningPathPage() {
   const totalSteps = learningPath.learningPathNodes.length || 0;
   const currentProgress = (furthestIndex / totalSteps) * 100;
   const maxIndex = totalSteps - 1;
+
   const multipleChoice = () => {
     if (!currentObject) return undefined;
     return currentObject.multipleChoice as unknown as MultipleChoice;
