@@ -38,6 +38,9 @@ export const ApiRoutes = {
   // AssignmentSubmission
   assignmentSubmission: {
     create: '/api/assignmentSubmission',
+    list: '/api/assignmentSubmission',
+    get: (id: string) => `/api/assignmentSubmission/${id}`,
+    update: (id: string) => `/api/assignmentSubmission/${id}`,
   },
 
   // Class

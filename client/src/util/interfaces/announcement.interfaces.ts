@@ -20,6 +20,6 @@ export interface AnnouncementCreate {
 }
 
 export interface AnnouncementUpdate {
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
 }
