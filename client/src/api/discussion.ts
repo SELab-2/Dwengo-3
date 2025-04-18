@@ -14,7 +14,7 @@ import apiClient from './apiClient';
  * @param groupIds - A list of the groupIds of which the discussions need to be fetched
  * @returns Paginated data containing the list of discussions.
  */
-export async function fetchDiscussions(groupIds: [UUID]) {
+export async function fetchDiscussions(groupIds: UUID[]) {
   const response = await apiClient.get(ApiRoutes.discussion.list, {
     params: {
       groupIds,
