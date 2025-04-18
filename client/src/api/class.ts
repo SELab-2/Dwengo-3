@@ -14,7 +14,6 @@ import { fetchLearningPathById } from './learningPath';
 import { fetchStudentById } from './student';
 import { fetchTeacherById } from './teacher';
 import { AssignmentDetail } from '../util/interfaces/assignment.interfaces';
-import { UUID } from 'crypto';
 
 /**
  * Fetches a list of classes based on the provided student or teacher IDs.
@@ -23,7 +22,7 @@ import { UUID } from 'crypto';
  * @param teacherId - The ID of the teacher whose classes are to be fetched.
  * @returns The list of classes.
  */
-export async function fetchClasses(studentId?: UUID, teacherId?: UUID) {
+export async function fetchClasses(studentId?: string, teacherId?: string) {
   const response = await apiClient.get(ApiRoutes.class.list, {
     params: {
       studentId,
@@ -42,7 +41,7 @@ export async function fetchClasses(studentId?: UUID, teacherId?: UUID) {
  * @param id - The ID of the class to be fetched.
  * @returns The class details.
  */
-export async function fetchClassById(id: UUID) {
+export async function fetchClassById(id: string) {
   const response = await apiClient.get(ApiRoutes.class.get(id));
 
   const result: ClassDetail = response.data;
@@ -63,7 +62,7 @@ export async function fetchClassById(id: UUID) {
  * @remarks `populateAssignmentLearningPaths` is only used if `populateAssignments` is true.
  */
 export async function fetchPopulatedClassById(
-  classId: UUID,
+  classId: string,
   populateTeachers: boolean = false,
   populateStudents: boolean = false,
   populateAssignments: boolean = false,
@@ -130,7 +129,7 @@ export async function createClass(data: ClassCreate) {
  * @param data - The update-data
  * @returns The classDetails or false
  */
-export async function updateClass(id: UUID, data: ClassUpdate) {
+export async function updateClass(id: string, data: ClassUpdate) {
   const response = await apiClient.patch(ApiRoutes.class.update(id), {
     data,
   });
@@ -148,7 +147,7 @@ export async function updateClass(id: UUID, data: ClassUpdate) {
  * @param studentId - The id of the studen
  * @returns The classDetails or false
  */
-export async function deleteStudentFromClass(classId: UUID, studentId: UUID) {
+export async function deleteStudentFromClass(classId: string, studentId: string) {
   const response = await apiClient.delete(ApiRoutes.class.deleteStudent(classId, studentId));
 
   if (response.status == 200) {
@@ -164,7 +163,7 @@ export async function deleteStudentFromClass(classId: UUID, studentId: UUID) {
  * @param teacherID - The id of the teacher
  * @returns The classDetails or false
  */
-export async function deleteTeacherFromClass(classId: UUID, teacherId: UUID) {
+export async function deleteTeacherFromClass(classId: string, teacherId: string) {
   const response = await apiClient.delete(ApiRoutes.class.deleteTeacher(classId, teacherId));
 
   if (response.status == 200) {

@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import apiClient from './apiClient';
 import { ApiRoutes } from './api.routes';
 import {
@@ -49,7 +48,7 @@ export async function createClassJoinRequestTeacher(data: ClassJoinRequestCreate
  * @param userId - The user of which to fetch the requests
  * @returns A list of classJoinRequest
  */
-export async function getClassJoinRequestsStudent(classId?: UUID, userId?: UUID) {
+export async function getClassJoinRequestsStudent(classId?: string, userId?: string) {
   const response = await apiClient.get(ApiRoutes.classJoinRequest.student.list, {
     params: {
       classId,
@@ -69,7 +68,7 @@ export async function getClassJoinRequestsStudent(classId?: UUID, userId?: UUID)
  * @param userId - The user of which to fetch the requests
  * @returns A list of classJoinRequest
  */
-export async function getClassJoinRequestsTeacher(classId?: UUID, userId?: UUID) {
+export async function getClassJoinRequestsTeacher(classId?: string, userId?: string) {
   const response = await apiClient.get(ApiRoutes.classJoinRequest.teacher.list, {
     params: {
       classId,

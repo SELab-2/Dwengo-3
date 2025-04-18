@@ -7,7 +7,6 @@ import {
   LearningObjectUpdate,
 } from '../util/interfaces/learningObject.interfaces';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
-import { UUID } from 'crypto';
 
 /**
  * Fetches a LearningObject by its ID.
@@ -66,7 +65,7 @@ export async function fetchLearningObjects(keywords?: string[], targetAges?: num
  * @param data - The update-data
  * @returns The learningObject details or false
  */
-export async function updateLearningObject(id: UUID, data: LearningObjectUpdate) {
+export async function updateLearningObject(id: string, data: LearningObjectUpdate) {
   const response = await apiClient.patch(ApiRoutes.learningObject.update(id), {
     data,
   });
@@ -83,7 +82,7 @@ export async function updateLearningObject(id: UUID, data: LearningObjectUpdate)
  * @param id - The id of the learningObject to be deleted
  * @returns The learningObject details or false
  */
-export async function deleteLearningObject(id: UUID) {
+export async function deleteLearningObject(id: string) {
   const response = await apiClient.delete(ApiRoutes.learningObject.delete(id));
 
   if (response.status == 200) {

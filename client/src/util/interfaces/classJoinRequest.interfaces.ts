@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import { ClassShort } from './class.interfaces';
 import { UserShort } from './user.interfaces';
 
@@ -8,16 +7,16 @@ enum decision {
 }
 
 export interface ClassJoinRequestDetail {
-  id: UUID;
+  id: string;
   class: ClassShort;
   user: UserShort;
 }
 
 export interface ClassJoinRequestCreate {
-  classId: UUID;
+  classId: string;
 }
 
 export interface ClassJoinRequestPost {
-  requestId: UUID;
+  requestId: string;
   decision: decision;
 }

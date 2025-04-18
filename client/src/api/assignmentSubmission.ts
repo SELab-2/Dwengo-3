@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
@@ -17,7 +16,7 @@ import {
  * @param nodeId - The learningPathNode of which the assignmentSubmissions need to be fetched
  * @returns A list of assignmentSubmissions
  */
-export async function fetchClasses(groupId?: UUID, favoriteId?: UUID, nodeId?: UUID) {
+export async function fetchClasses(groupId?: string, favoriteId?: string, nodeId?: string) {
   const response = await apiClient.get(ApiRoutes.assignmentSubmission.list, {
     params: {
       groupId,
@@ -54,7 +53,7 @@ export async function createAssignmentSubmission(data: AssignmentSubmissionCreat
  * @param assignmentSubmissionId - The id of the assignmentSubmission to be fetched
  * @returns The details of the assignmentSubmission
  */
-export async function fetchAssignmentSubmissionById(assignmentSubmissionId: UUID) {
+export async function fetchAssignmentSubmissionById(assignmentSubmissionId: string) {
   const response = await apiClient.get(ApiRoutes.assignmentSubmission.get(assignmentSubmissionId));
 
   const result: AssignmentSubmissionDetail = response.data;
@@ -68,7 +67,7 @@ export async function fetchAssignmentSubmissionById(assignmentSubmissionId: UUID
  * @param data - The update-data
  * @returns The AssignmentSubmissionDetails or false
  */
-export async function updateAssignmentSubmission(id: UUID, data: AssignmentSubmissionUpdate) {
+export async function updateAssignmentSubmission(id: string, data: AssignmentSubmissionUpdate) {
   const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), {
     data,
   });

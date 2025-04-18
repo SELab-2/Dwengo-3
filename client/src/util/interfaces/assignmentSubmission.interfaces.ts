@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import { FavoriteShort } from './favorite.interfaces';
 import { GroupShort } from './group.interfaces';
 import { LearningPathNodeShort } from './learningPathNode.interfaces';
@@ -21,9 +20,9 @@ export interface AssignmentSubmissionDetail {
 }
 
 export interface AssignmentSubmissionCreate {
-  groupId?: UUID;
-  favoriteId?: UUID;
-  nodeId: UUID;
+  groupId?: string;
+  favoriteId?: string;
+  nodeId: string;
   submissionType: submissionType;
   submission: string | object;
   file?: string;

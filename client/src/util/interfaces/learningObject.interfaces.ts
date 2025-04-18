@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import { keyword } from './keyword.interfaces';
 
 enum contentType {
@@ -48,7 +47,7 @@ export interface LearningObjectDetail {
 
 export interface LearningObjectCreate {
   hruid: string;
-  uuid: UUID;
+  string: string;
   version: number;
   language: string;
   title: string;

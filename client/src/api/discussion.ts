@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import {
   DiscussionCreate,
   DiscussionDetail,
@@ -14,7 +13,7 @@ import apiClient from './apiClient';
  * @param groupIds - A list of the groupIds of which the discussions need to be fetched
  * @returns Paginated data containing the list of discussions.
  */
-export async function fetchDiscussions(groupIds?: UUID[]) {
+export async function fetchDiscussions(groupIds?: string[]) {
   const response = await apiClient.get(ApiRoutes.discussion.list, {
     params: {
       groupIds,
@@ -32,7 +31,7 @@ export async function fetchDiscussions(groupIds?: UUID[]) {
  * @param id - The ID of the disussion to be fetched.
  * @returns The discussion details.
  */
-export async function fetchDiscussionById(id: UUID) {
+export async function fetchDiscussionById(id: string) {
   const response = await apiClient.get(ApiRoutes.discussion.get(id));
 
   const result: DiscussionDetail = response.data;

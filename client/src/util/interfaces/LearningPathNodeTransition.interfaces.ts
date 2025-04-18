@@ -1,5 +1,3 @@
-import { UUID } from 'crypto';
-
 export interface LearningPathNodeTransitionDetail {
   id: string;
   learningPathNodeId: string;
@@ -8,7 +6,7 @@ export interface LearningPathNodeTransitionDetail {
 }
 
 export interface LearningPathNodeTransitionCreate {
-  learningPathNodeId: UUID;
+  learningPathNodeId: string;
   toNodeIndex: number;
   condition: string;
 }

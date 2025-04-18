@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import { TeacherShort } from './teacher.interfaces';
 
 export interface AnnouncementShort {
@@ -16,7 +15,7 @@ export interface AnnouncementDetail {
 export interface AnnouncementCreate {
   title: string;
   content: string;
-  classId: UUID;
+  classId: string;
 }
 
 export interface AnnouncementUpdate {

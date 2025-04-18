@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import { GroupShort } from './group.interfaces';
 import { MessageDetail } from './message.interfaces';
 import { UserShort } from './user.interfaces';
@@ -15,5 +14,5 @@ export interface DiscussionDetail {
 }
 
 export interface DiscussionCreate {
-  groupId: UUID;
+  groupId: string;
 }

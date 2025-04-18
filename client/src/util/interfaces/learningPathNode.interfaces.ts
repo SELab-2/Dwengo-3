@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import { LearningObjectShort } from './learningObject.interfaces';
 import { LearningPathNodeTransitionDetail } from './LearningPathNodeTransition.interfaces';
 
@@ -17,7 +16,7 @@ export interface LearningPathNodeDetail {
 }
 
 export interface LearningPathNodeCreate {
-  learningPathId: UUID;
-  learningObjectId: UUID;
+  learningPathId: string;
+  learningObjectId: string;
   instruction: string;
 }

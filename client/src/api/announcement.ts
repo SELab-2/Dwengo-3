@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import {
   AnnouncementCreate,
   AnnouncementDetail,
@@ -34,7 +33,7 @@ export async function createAnnouncement(announcement: AnnouncementCreate) {
  * @param studentID - The id of the student whose announcements are to be fetched
  * @returns A list of announcements
  */
-export async function fetchAnnouncements(classId?: UUID, teacherId?: UUID, studentId?: UUID) {
+export async function fetchAnnouncements(classId?: string, teacherId?: string, studentId?: string) {
   const response = await apiClient.get(ApiRoutes.announcement.list, {
     params: {
       classId,
@@ -54,7 +53,7 @@ export async function fetchAnnouncements(classId?: UUID, teacherId?: UUID, stude
  * @param announcementId - The id of the announcement to be fetched
  * @returns The announcementdata
  */
-export async function fetchAnnouncementById(announcementId: UUID) {
+export async function fetchAnnouncementById(announcementId: string) {
   const response = await apiClient.get(ApiRoutes.class.get(announcementId));
 
   const result: AnnouncementDetail = response.data;
@@ -68,7 +67,7 @@ export async function fetchAnnouncementById(announcementId: UUID) {
  * @param data - The new data for the announcement
  * @returns The announcementdetails or false
  */
-export async function updateAnnouncement(announcementId: UUID, data: AnnouncementUpdate) {
+export async function updateAnnouncement(announcementId: string, data: AnnouncementUpdate) {
   const response = await apiClient.patch(ApiRoutes.class.update(announcementId), {
     data,
   });
