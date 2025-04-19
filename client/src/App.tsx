@@ -24,6 +24,7 @@ import DiscussionPage from './views/DiscussionPage.tsx';
 import AnnouncementsPage from './views/AnnouncementsPage';
 import AnnouncementDetailpage from './views/AnnouncementPage';
 import AssignmentCreatePage from './views/AssignmentCreatePage.tsx';
+import ClassStudentDetails from './views/ClassStudentDetails.tsx';
 import { Box } from '@mui/material';
 import { AppRoutes } from './util/app.routes.ts';
 
@@ -65,6 +66,10 @@ function App() {
                         element={<LearningThemePage />}
                       />
                       <Route path={AppRoutes.class(':id')} element={<ClassDashboardPage />} />
+                      <Route
+                        path={AppRoutes.classStudentDetails(':classId', ':studentId')}
+                        element={<ClassStudentDetails />}
+                      />
                       <Route
                         path={AppRoutes.classAssignments(':classId')}
                         element={<ClassAssignmentsPage />}
