@@ -11,14 +11,24 @@ import {
 /**
  * Fetch a list of assignmentSubmissions
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param groupId - The group of which the assignmentSubmissions need to be fetched
  * @param favoriteId - The favorite of which the assignmentSubmissions need to be fetched
  * @param nodeId - The learningPathNode of which the assignmentSubmissions need to be fetched
  * @returns A list of assignmentSubmissions
  */
-export async function fetchClasses(groupId?: string, favoriteId?: string, nodeId?: string) {
+export async function fetchAssignmentSubmissions(
+  groupId?: string,
+  favoriteId?: string,
+  nodeId?: string,
+  page?: number,
+  pageSize?: number,
+) {
   const response = await apiClient.get(ApiRoutes.assignmentSubmission.list, {
     params: {
+      page,
+      pageSize,
       groupId,
       favoriteId,
       nodeId,
@@ -34,17 +44,14 @@ export async function fetchClasses(groupId?: string, favoriteId?: string, nodeId
  * Create an assignmentSubmission
  *
  * @param data - The data of the assignmentSubmission to be created
- * @returns The assignmentSubmissiondetails or false
+ * @returns The assignmentSubmissiondetails
  */
 export async function createAssignmentSubmission(data: AssignmentSubmissionCreate) {
   const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, {
     data,
   });
 
-  if (response.data == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }
 
 /**
@@ -65,15 +72,12 @@ export async function fetchAssignmentSubmissionById(assignmentSubmissionId: stri
  *
  * @param id - The id of the assignmentSubmission to be updated
  * @param data - The update-data
- * @returns The AssignmentSubmissionDetails or false
+ * @returns The AssignmentSubmissionDetails
  */
 export async function updateAssignmentSubmission(id: string, data: AssignmentSubmissionUpdate) {
   const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), {
     data,
   });
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }

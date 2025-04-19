@@ -1,7 +1,7 @@
 import { ClassShort } from './class.interfaces';
 import { UserShort } from './user.interfaces';
 
-enum decision {
+enum Decision {
   'accept',
   'deny',
 }
@@ -18,5 +18,5 @@ export interface ClassJoinRequestCreate {
 
 export interface ClassJoinRequestPost {
   requestId: string;
-  decision: decision;
+  decision: Decision;
 }

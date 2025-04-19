@@ -18,13 +18,22 @@ import { AssignmentDetail } from '../util/interfaces/assignment.interfaces';
 /**
  * Fetches a list of classes based on the provided student or teacher IDs.
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param studentId - The ID of the student whose classes are to be fetched.
  * @param teacherId - The ID of the teacher whose classes are to be fetched.
  * @returns The list of classes.
  */
-export async function fetchClasses(studentId?: string, teacherId?: string) {
+export async function fetchClasses(
+  studentId?: string,
+  teacherId?: string,
+  page?: number,
+  pageSize?: number,
+) {
   const response = await apiClient.get(ApiRoutes.class.list, {
     params: {
+      page,
+      pageSize,
       studentId,
       teacherId,
     },
@@ -111,7 +120,7 @@ export async function fetchPopulatedClassById(
  * Create a new class
  *
  * @param data - The data of the class to be created
- * @returns The classDetails or false
+ * @returns The classDetails
  */
 export async function createClass(data: ClassCreate) {
   const response = await apiClient.put(ApiRoutes.class.create, {
@@ -127,33 +136,27 @@ export async function createClass(data: ClassCreate) {
  *
  * @param id - The id of the class to be updated
  * @param data - The update-data
- * @returns The classDetails or false
+ * @returns The classDetails
  */
 export async function updateClass(id: string, data: ClassUpdate) {
   const response = await apiClient.patch(ApiRoutes.class.update(id), {
     data,
   });
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }
 
 /**
  * Delete a student from a class
  *
  * @param classId - The id of the class
- * @param studentId - The id of the studen
- * @returns The classDetails or false
+ * @param studentId - The id of the student
+ * @returns The classDetails
  */
 export async function deleteStudentFromClass(classId: string, studentId: string) {
   const response = await apiClient.delete(ApiRoutes.class.deleteStudent(classId, studentId));
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }
 
 /**
@@ -161,13 +164,10 @@ export async function deleteStudentFromClass(classId: string, studentId: string)
  *
  * @param classId - The id of the class
  * @param teacherID - The id of the teacher
- * @returns The classDetails or false
+ * @returns The classDetails
  */
 export async function deleteTeacherFromClass(classId: string, teacherId: string) {
   const response = await apiClient.delete(ApiRoutes.class.deleteTeacher(classId, teacherId));
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }

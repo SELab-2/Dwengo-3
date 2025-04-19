@@ -10,13 +10,22 @@ import { PaginatedData } from '../util/interfaces/general.interfaces';
 /**
  * Fetches a list of learning paths based on the provided keywords and age range.
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param keywords - The keywords to filter the learning paths.
  * @param age - The age range to filter the learning paths.
  * @returns Paginated data containing the list of learning paths.
  */
-export async function fetchLearningPaths(keywords?: string[], age?: number[]) {
+export async function fetchLearningPaths(
+  keywords?: string[],
+  age?: number[],
+  page?: number,
+  pageSize?: number,
+) {
   const response = await apiClient.get(ApiRoutes.learningPath.list, {
     params: {
+      page,
+      pageSize,
       keywords,
       age,
     },
@@ -45,15 +54,12 @@ export async function fetchLearningPathById(id: string) {
  * Creates a new learningPath
  *
  * @param data - The date of the learningPath to be created
- * @returns The learningPath details or false
+ * @returns The learningPath details
  */
 export async function createLearningPath(data: LearningPathCreate) {
   const response = await apiClient.put(ApiRoutes.learningPath.create, {
     data,
   });
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }

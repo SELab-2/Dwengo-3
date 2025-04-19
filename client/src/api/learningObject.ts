@@ -25,29 +25,35 @@ export async function fetchLearningObjectById(id: string) {
  * Create a new LearningObject
  *
  * @param data - The data of the learningObject to be created
- * @returns The learningObject details or false
+ * @returns The learningObject details
  */
 export async function createLearningObject(data: LearningObjectCreate) {
   const response = await apiClient.put(ApiRoutes.learningObject.create, {
     data,
   });
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }
 
 /**
  * Fetch a list of learningObjects based on the filters
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param keywords - A list of keywords on which to filter
  * @param targetAges - A list of targetAges on which to filter
  * @returns A paginated list of learningObjects
  */
-export async function fetchLearningObjects(keywords?: string[], targetAges?: number[]) {
+export async function fetchLearningObjects(
+  keywords?: string[],
+  targetAges?: number[],
+  page?: number,
+  pageSize?: number,
+) {
   const response = await apiClient.get(ApiRoutes.learningObject.list, {
     params: {
+      page,
+      pageSize,
       keywords,
       targetAges,
     },
@@ -63,30 +69,24 @@ export async function fetchLearningObjects(keywords?: string[], targetAges?: num
  *
  * @param id - The id of the learningObject to update
  * @param data - The update-data
- * @returns The learningObject details or false
+ * @returns The learningObject details
  */
 export async function updateLearningObject(id: string, data: LearningObjectUpdate) {
   const response = await apiClient.patch(ApiRoutes.learningObject.update(id), {
     data,
   });
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }
 
 /**
  * Delete a learningObject by its Id
  *
  * @param id - The id of the learningObject to be deleted
- * @returns The learningObject details or false
+ * @returns The learningObject details
  */
 export async function deleteLearningObject(id: string) {
   const response = await apiClient.delete(ApiRoutes.learningObject.delete(id));
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }

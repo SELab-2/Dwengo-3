@@ -10,6 +10,8 @@ import apiClient from './apiClient';
 /**
  * Fetches a list of assignments based on the provided class, group, student, and teacher IDs.
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param classId - The ID of the class whose assignments are to be fetched.
  * @param groupId - The ID of the group whose assignments are to be fetched.
  * @param studentId - The ID of the student whose assignments are to be fetched.
@@ -21,9 +23,13 @@ export async function fetchAssignments(
   groupId?: string,
   studentId?: string,
   teacherId?: string,
+  page?: number,
+  pageSize?: number,
 ) {
   const response = await apiClient.get(ApiRoutes.assignment.list, {
     params: {
+      page,
+      pageSize,
       classId,
       groupId,
       studentId,
@@ -54,15 +60,12 @@ export async function fetchAssignmentById(id: string) {
  * Create an assignment
  *
  * @param data - The data of the assignment to be created
- * @returns The assignmentdetails or false
+ * @returns The assignmentdetails
  */
 export async function createAssignment(data: AssignmentCreate) {
   const response = await apiClient.put(ApiRoutes.assignment.create, {
     data,
   });
 
-  if (response.status == 200 || response.status == 201) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }

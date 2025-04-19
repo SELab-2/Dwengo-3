@@ -6,12 +6,16 @@ import apiClient from './apiClient';
 /**
  * Fetches a list of messages based on the provided filters.
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param discussionId - The discussionId of the discussion of which the messages need to be fetched
  * @returns Paginated data containing the list of messages.
  */
-export async function fetchMessages(discussionId?: string) {
+export async function fetchMessages(discussionId?: string, page?: number, pageSize?: number) {
   const response = await apiClient.get(ApiRoutes.message.list, {
     params: {
+      page,
+      pageSize,
       discussionId,
     },
   });
@@ -25,30 +29,24 @@ export async function fetchMessages(discussionId?: string) {
  * Create a message
  *
  * @param data - The data of the message to be created
- * @returns The messagedetails or false
+ * @returns The messagedetails
  */
 export async function createMessage(data: MessageCreate) {
   const response = await apiClient.put(ApiRoutes.message.create, {
     data,
   });
 
-  if (response.status == 200 || response.status == 201) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }
 
 /**
  * Delete a message by its Id
  *
  * @param id - The id of the message to be deleted
- * @returs The messagedetails or false
+ * @returs The messagedetails
  */
 export async function deleteMessage(id: string) {
   const response = await apiClient.delete(ApiRoutes.message.delete(id));
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }

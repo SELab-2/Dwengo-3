@@ -18,10 +18,7 @@ export async function createClassJoinRequestStudent(data: ClassJoinRequestCreate
     data,
   });
 
-  if (response.status == 200) {
-    return true;
-  }
-  return false;
+  return response.data;
 }
 
 /**
@@ -35,22 +32,28 @@ export async function createClassJoinRequestTeacher(data: ClassJoinRequestCreate
     data,
   });
 
-  if (response.status == 200) {
-    return true;
-  }
-  return false;
+  return response.data;
 }
 
 /**
  * Fetch a list of student classJoinRequests
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param classId - The class of which to fetch the requests
  * @param userId - The user of which to fetch the requests
  * @returns A list of classJoinRequest
  */
-export async function getClassJoinRequestsStudent(classId?: string, userId?: string) {
+export async function getClassJoinRequestsStudent(
+  classId?: string,
+  userId?: string,
+  page?: number,
+  pageSize?: number,
+) {
   const response = await apiClient.get(ApiRoutes.classJoinRequest.student.list, {
     params: {
+      page,
+      pageSize,
       classId,
       userId,
     },
@@ -64,13 +67,22 @@ export async function getClassJoinRequestsStudent(classId?: string, userId?: str
 /**
  * Fetch a list of teacher classJoinRequests
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param classId - The class of which to fetch the requests
  * @param userId - The user of which to fetch the requests
  * @returns A list of classJoinRequest
  */
-export async function getClassJoinRequestsTeacher(classId?: string, userId?: string) {
+export async function getClassJoinRequestsTeacher(
+  classId?: string,
+  userId?: string,
+  page?: number,
+  pageSize?: number,
+) {
   const response = await apiClient.get(ApiRoutes.classJoinRequest.teacher.list, {
     params: {
+      page,
+      pageSize,
       classId,
       userId,
     },
@@ -92,10 +104,7 @@ export async function handleClassJoinRequestStudent(data: ClassJoinRequestPost) 
     data,
   });
 
-  if (response.status == 200) {
-    return true;
-  }
-  return false;
+  return response.data;
 }
 
 /**
@@ -109,8 +118,5 @@ export async function handleClassJoinRequestTeacher(data: ClassJoinRequestPost) 
     data,
   });
 
-  if (response.status == 200) {
-    return true;
-  }
-  return false;
+  return response.data;
 }

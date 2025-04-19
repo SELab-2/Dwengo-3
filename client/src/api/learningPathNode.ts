@@ -22,15 +22,12 @@ export async function fetchLearningPathNodeById(id: string) {
  * Create a new LearningPathNode
  *
  * @param data - The data of the LearningPathNode to be created
- * @returns The LearningPathNodedetails or false
+ * @returns The LearningPathNodedetails
  */
 export async function createLearningPathNode(data: LearningPathNodeCreate) {
   const response = await apiClient.put(ApiRoutes.learningPathNode.create, {
     data,
   });
 
-  if (response.status == 200) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }

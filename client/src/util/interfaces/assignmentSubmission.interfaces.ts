@@ -2,7 +2,7 @@ import { FavoriteShort } from './favorite.interfaces';
 import { GroupShort } from './group.interfaces';
 import { LearningPathNodeShort } from './learningPathNode.interfaces';
 
-enum submissionType {
+enum SubmissionType {
   'FILE',
   'MULTIPLE_CHOICE',
 }
@@ -23,12 +23,12 @@ export interface AssignmentSubmissionCreate {
   groupId?: string;
   favoriteId?: string;
   nodeId: string;
-  submissionType: submissionType;
+  submissionType: SubmissionType;
   submission: string | object;
   file?: string;
 }
 
 export interface AssignmentSubmissionUpdate {
-  submissionType?: submissionType;
+  submissionType?: SubmissionType;
   submission?: string | object;
 }

@@ -10,12 +10,16 @@ import apiClient from './apiClient';
 /**
  * Fetches a list of discussions based on the provided filters.
  *
+ * @param page - The pagenumber of the pagination you want to fetch
+ * @param pageSize - The number of items you want to fetch
  * @param groupIds - A list of the groupIds of which the discussions need to be fetched
  * @returns Paginated data containing the list of discussions.
  */
-export async function fetchDiscussions(groupIds?: string[]) {
+export async function fetchDiscussions(groupIds?: string[], page?: number, pageSize?: number) {
   const response = await apiClient.get(ApiRoutes.discussion.list, {
     params: {
+      page,
+      pageSize,
       groupIds,
     },
   });
@@ -43,15 +47,12 @@ export async function fetchDiscussionById(id: string) {
  * Create a discussion
  *
  * @param data - The data of the discussion to be created
- * @returns The discussiondetails or false
+ * @returns The discussiondetails
  */
 export async function createDiscussion(data: DiscussionCreate) {
   const response = await apiClient.put(ApiRoutes.discussion.create, {
     data,
   });
 
-  if (response.status == 200 || response.status == 201) {
-    return response.data;
-  }
-  return false;
+  return response.data;
 }
