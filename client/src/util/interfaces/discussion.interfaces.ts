@@ -12,3 +12,7 @@ export interface DiscussionDetail {
   members: UserShort[];
   messages: MessageDetail[];
 }
+
+export interface DiscussionCreate {
+  groupId: string;
+}

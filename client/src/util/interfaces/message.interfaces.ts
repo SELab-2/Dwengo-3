@@ -14,3 +14,8 @@ export interface MessageDetail {
   discussionId: string;
   createdAt: Date;
 }
+
+export interface MessageCreate {
+  content: string;
+  discussionId: string;
+}
