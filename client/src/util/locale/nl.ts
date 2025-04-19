@@ -54,6 +54,9 @@ export const nl = {
     coTeachers: 'Co-leerkrachten',
     notes: 'Opmerkingen',
     createNewAnnouncement: 'Nieuwe aankondiging maken',
+    loading: 'Laden...',
+    incorrectAnswer: 'Verkeerd antwoord. Probeer opnieuw.',
+    completePreviousSteps: 'Voltooi de vorige stappen voordat je verdergaat.',
     createNewDiscussionMessage: 'Plaats een nieuw bericht',
     send: 'Verzenden',
     cancel: 'Annuleren',
@@ -61,8 +64,8 @@ export const nl = {
     save: 'Opslaan',
     newAssignment: 'Nieuwe opdracht',
     deadline: 'Deadline',
-    givenBy: "Gegeven door",
-    progression: "Vooruitgang",
-    submission: "Indiening"
+    givenBy: 'Gegeven door',
+    progression: 'Vooruitgang',
+    submission: 'Indiening',
   },
 };

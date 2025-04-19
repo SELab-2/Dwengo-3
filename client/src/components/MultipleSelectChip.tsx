@@ -1,13 +1,13 @@
-import { Autocomplete, TextField } from "@mui/material";
-import React, { useState } from "react";
+import { Autocomplete, TextField } from '@mui/material';
+import React, { useState } from 'react';
 
 interface MultipleSelectChipProps {
   label: string;
   options: string[];
   state?: [string[], React.Dispatch<React.SetStateAction<string[]>>];
-};
+}
 
-function MultipleSelectChip({label, options, state}: MultipleSelectChipProps) {
+function MultipleSelectChip({ label, options, state }: MultipleSelectChipProps) {
   const [selectedOptions, setSelectedOptions] = state ?? useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
 
@@ -26,8 +26,8 @@ function MultipleSelectChip({label, options, state}: MultipleSelectChipProps) {
       renderInput={(params) => (
         <TextField {...params} label={label} placeholder={label} fullWidth margin="normal" />
       )}
-      />
+    />
   );
 }
 
-  export default MultipleSelectChip;
+export default MultipleSelectChip;

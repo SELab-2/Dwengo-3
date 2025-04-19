@@ -69,10 +69,10 @@ function App() {
                         path={AppRoutes.classAssignments(':classId')}
                         element={<ClassAssignmentsPage />}
                       />
-                    <Route
-                      path={AppRoutes.classAssignmentCreate(':classId')}
-                      element={<AssignmentCreatePage />} 
-                    />
+                      <Route
+                        path={AppRoutes.classAssignmentCreate(':classId')}
+                        element={<AssignmentCreatePage />}
+                      />
                       <Route
                         path={AppRoutes.classAssignment(':classId', ':assignmentId')}
                         element={<ClassAssignmentPage />}

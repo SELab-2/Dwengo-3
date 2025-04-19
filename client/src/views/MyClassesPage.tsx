@@ -1,4 +1,4 @@
-import { Box, Grid2, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 import { useClass } from '../hooks/useClass';
@@ -28,7 +28,7 @@ function MyClassesPage() {
       <Typography variant="h4">My Classes of {user?.name ?? 'Nobody'}</Typography>
 
       {/* Grid containing the classes of the current user*/}
-      <Grid2 container spacing={3}></Grid2>
+      <Grid container spacing={3}></Grid>
     </Box>
   );
 }

@@ -1,33 +1,29 @@
-import apiClient from './apiClient';
 import { ApiRoutes } from './api.routes';
-import {
-  LearningPathCreate,
-  LearningPathDetail,
-  LearningPathShort,
-} from '../util/interfaces/learningPath.interfaces';
+import apiClient from './apiClient';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
+import { LearningPathShort, LearningPathDetail } from '../util/interfaces/learningPath.interfaces';
 
 /**
- * Fetches a list of learning paths based on the provided keywords and age range.
+ * Fetches a list of learningPaths based on keywords, ages, page, and pageSize.
  *
- * @param page - The pagenumber of the pagination you want to fetch
- * @param pageSize - The number of items you want to fetch
- * @param keywords - The keywords to filter the learning paths.
- * @param age - The age range to filter the learning paths.
- * @returns Paginated data containing the list of learning paths.
+ * @param keywords - The keywords to filter the learningPaths.
+ * @param ages - The ages to filter the learningPaths.
+ * @param page - The page number for pagination.
+ * @param pageSize - The number of items per page for pagination.
+ * @returns The list of learningPaths.
  */
 export async function fetchLearningPaths(
   keywords?: string[],
-  age?: number[],
-  page?: number,
-  pageSize?: number,
+  ages?: number[],
+  page: number = 1,
+  pageSize: number = 10,
 ) {
   const response = await apiClient.get(ApiRoutes.learningPath.list, {
     params: {
+      keywords,
+      ages,
       page,
       pageSize,
-      keywords,
-      age,
     },
   });
 
@@ -37,10 +33,10 @@ export async function fetchLearningPaths(
 }
 
 /**
- * Fetches a learning path by its ID.
+ * Fetches a LearningPath by its ID.
  *
- * @param id - The ID of the learning path to be fetched.
- * @returns The learning path details.
+ * @param id - The ID of the learningPath to be fetched.
+ * @returns The learningPath details.
  */
 export async function fetchLearningPathById(id: string) {
   const response = await apiClient.get(ApiRoutes.learningPath.get(id));
