@@ -142,7 +142,7 @@ function AssignmentCreatePage() {
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={id!} className={classData.name} />
+      <ClassNavigationBar id={classData.id} className={classData.name} />
       <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}

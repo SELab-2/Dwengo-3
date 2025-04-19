@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 
 const classData = {
@@ -41,7 +40,7 @@ const admissionRequests = [
 
 function ClassDashboardPage() {
   const { t } = useTranslation();
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
 
   const handleApproveRequest = (id: string) => {
     // TODO
