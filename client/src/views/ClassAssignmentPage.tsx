@@ -185,7 +185,7 @@ function ClassAssignmentPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={id!} className={classData.name} />
+      <ClassNavigationBar id={classData.id} className={classData.name} />
 
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 1000 }, p: 2 }}>
         <Typography variant="h3" gutterBottom>
