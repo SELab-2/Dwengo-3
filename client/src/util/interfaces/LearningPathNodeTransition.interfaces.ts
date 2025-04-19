@@ -4,3 +4,9 @@ export interface LearningPathNodeTransitionDetail {
   condition: string;
   toNodeIndex: number;
 }
+
+export interface LearningPathNodeTransitionCreate {
+  learningPathNodeId: string;
+  toNodeIndex: number;
+  condition: string;
+}

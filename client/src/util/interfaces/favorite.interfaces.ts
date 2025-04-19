@@ -14,3 +14,7 @@ export interface FavoriteDetail {
   learningPath: LearningPathShort;
   user: UserShort;
 }
+
+export interface FavoriteCreate {
+  learningPathId: string;
+}

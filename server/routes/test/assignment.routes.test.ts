@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { describe, beforeEach, test, vi, expect } from 'vitest';
+import { describe, beforeEach, test, vi, expect, beforeAll } from 'vitest';
 import { app } from '../../app';
 
 // Domain mock
@@ -24,7 +24,7 @@ const route = '/assignment';
 const agent = request.agent(app);
 
 describe('assignment routes test', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     vi.resetAllMocks();
     await agent
       .post('/auth/teacher/login/local')

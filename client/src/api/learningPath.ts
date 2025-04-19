@@ -45,3 +45,17 @@ export async function fetchLearningPathById(id: string) {
 
   return result;
 }
+
+/**
+ * Creates a new learningPath
+ *
+ * @param data - The date of the learningPath to be created
+ * @returns The learningPath details
+ */
+export async function createLearningPath(data: LearningPathCreate) {
+  const response = await apiClient.put(ApiRoutes.learningPath.create, {
+    data,
+  });
+
+  return response.data;
+}
