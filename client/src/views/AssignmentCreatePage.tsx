@@ -18,7 +18,7 @@ import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useNavigate, useParams } from 'react-router-dom';
 import DateTextField from '../components/textfields/DateTextField';
 import { StudentShort } from '../util/interfaces/student.interfaces';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import BackButton from '../components/BackButton.tsx';
 
 const learningPaths = [
   {
@@ -146,14 +146,8 @@ function AssignmentCreatePage() {
     <Box sx={{ minHeight: '100vh', p: 3 }}>
       <ClassNavigationBar id={classData.id} className={classData.name} />
       <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(`/class/${classData.id}/assignments`)}
-          sx={{ mb: 2 }}
-        >
-          {t('back')}
-        </Button>
+        <BackButton link={`/class/${classData.id}/assignments`} />
+
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}
         </Typography>
