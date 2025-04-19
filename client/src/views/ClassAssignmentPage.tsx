@@ -11,13 +11,14 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useTranslation } from 'react-i18next';
 import DateTypography from '../components/DateTypography';
 import GroupListDialog from '../components/GroupListDialog';
 import { useState } from 'react';
 import { StudentShort } from '../util/interfaces/student.interfaces';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const assignment = {
   name: 'Opdracht 1',
@@ -179,6 +180,7 @@ const calculateProgress = (
 function ClassAssignmentPage() {
   const { id, a_id } = useParams<{ id: string; a_id: string }>();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [students, setStudents] = useState<StudentShort[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -188,6 +190,14 @@ function ClassAssignmentPage() {
       <ClassNavigationBar id={classData.id} className={classData.name} />
 
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 1000 }, p: 2 }}>
+        <Button
+          variant="outlined"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate(`/class/${classData.id}/assignments`)}
+          sx={{ mb: 2 }}
+        >
+          {t('back')}
+        </Button>
         <Typography variant="h3" gutterBottom>
           {assignment.name}
         </Typography>

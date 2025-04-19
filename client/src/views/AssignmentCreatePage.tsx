@@ -15,9 +15,10 @@ import BasicSelect from '../components/BasicSelect';
 import MultipleSelectChip from '../components/MultipleSelectChip';
 import { useEffect, useState } from 'react';
 import ClassNavigationBar from '../components/ClassNavigationBar';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import DateTextField from '../components/textfields/DateTextField';
 import { StudentShort } from '../util/interfaces/student.interfaces';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const learningPaths = [
   {
@@ -109,6 +110,7 @@ function AssignmentCreatePage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [groupSize, setGroupSize] = useState(1);
@@ -144,6 +146,14 @@ function AssignmentCreatePage() {
     <Box sx={{ minHeight: '100vh', p: 3 }}>
       <ClassNavigationBar id={classData.id} className={classData.name} />
       <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
+        <Button
+          variant="outlined"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate(`/class/${classData.id}/assignments`)}
+          sx={{ mb: 2 }}
+        >
+          {t('back')}
+        </Button>
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}
         </Typography>

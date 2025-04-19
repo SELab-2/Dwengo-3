@@ -67,5 +67,6 @@ export const nl = {
     givenBy: 'Gegeven door',
     progression: 'Vooruitgang',
     submission: 'Indiening',
+    back: 'Terug',
   },
 };
