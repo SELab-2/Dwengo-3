@@ -29,7 +29,7 @@ export async function createAnnouncement(announcement: AnnouncementCreate) {
  * @param pageSize - The number of items you want to fetch
  * @param classId - The id of the class whose announcements are to be fetched
  * @param teacherId - The id of the teacher whose announcements are to be fetched
- * @param studentID - The id of the student whose announcements are to be fetched
+ * @param studentId - The id of the student whose announcements are to be fetched
  * @returns A list of announcements
  */
 export async function fetchAnnouncements(
