@@ -1,5 +1,3 @@
-import { create } from "domain";
-
 export const fr = {
   translation: {
     yes: 'Oui',
@@ -57,12 +55,18 @@ export const fr = {
     coTeachers: 'Co-enseignants',
     notes: 'Remarques',
     createNewAnnouncement: 'Créer une nouvelle annonce',
+    loading: 'Chargement...',
+    incorrectAnswer: 'Mauvaise réponse. Essayez encore.',
+    completePreviousSteps: 'Veuillez compléter les étapes précédentes avant de continuer.',
+    createNewDiscussionMessage: 'envoyer un nouveau message',
+    send: 'Soumettre',
+    cancel: 'Annuler',
     numberOfTeamsSolved: 'Nombre d’équipes résolues',
     save: 'Enregistrer',
     newAssignment: 'Nouveau devoir',
     deadline: 'Date limite',
     givenBy: 'Donné par',
-    progression: "Progression",
-    submission: "Soumission"
+    progression: 'Progression',
+    submission: 'Soumission',
   },
 };

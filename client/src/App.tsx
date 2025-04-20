@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { LoginPage } from './views/LoginPage';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProfilePage from './views/ProfilePage';
 import RegisterPage from './views/RegisterPage';
 import theme from './util/theme';
@@ -20,11 +20,12 @@ import LearningPathPage from './views/LearningPathPage';
 import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
-import { AppRoutes } from './util/app.routes.ts';
+import DiscussionPage from './views/DiscussionPage.tsx';
 import AnnouncementsPage from './views/AnnouncementsPage';
 import AnnouncementDetailpage from './views/AnnouncementPage';
 import AssignmentCreatePage from './views/AssignmentCreatePage.tsx';
 import { Box } from '@mui/material';
+import { AppRoutes } from './util/app.routes.ts';
 
 const queryClient = new QueryClient();
 
@@ -68,10 +69,10 @@ function App() {
                         path={AppRoutes.classAssignments(':classId')}
                         element={<ClassAssignmentsPage />}
                       />
-                    <Route
-                      path={AppRoutes.classAssignmentCreate(':classId')}
-                      element={<AssignmentCreatePage />} 
-                    />
+                      <Route
+                        path={AppRoutes.classAssignmentCreate(':classId')}
+                        element={<AssignmentCreatePage />}
+                      />
                       <Route
                         path={AppRoutes.classAssignment(':classId', ':assignmentId')}
                         element={<ClassAssignmentPage />}
@@ -86,6 +87,10 @@ function App() {
                       />
                       <Route path={AppRoutes.classDiscussions(':classId')} element={undefined} />
                       {/* TODO: PAGINA linken!!! */}
+                      <Route
+                        path={AppRoutes.discussion(':discussionId')}
+                        element={<DiscussionPage />}
+                      />
                     </Route>
 
                     {/* Redirect all other routes to an errorpage */}

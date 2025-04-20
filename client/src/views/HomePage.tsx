@@ -1,4 +1,4 @@
-import { Box, Grid2, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,7 @@ function HomePage() {
       </Typography>
 
       {/* Grid containing the closest upcoming deadlines*/}
-      <Grid2 container spacing={3}></Grid2>
+      <Grid container spacing={3}></Grid>
     </Box>
   );
 }

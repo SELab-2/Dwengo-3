@@ -26,3 +26,13 @@ export interface LearningPathDetail {
   updatedAt: Date;
   learningPathNodes: LearningPathNodeShort[];
 }
+
+export interface LearningPathCreate {
+  hruid: string;
+  title: string;
+  language: string;
+  description?: string;
+  image?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

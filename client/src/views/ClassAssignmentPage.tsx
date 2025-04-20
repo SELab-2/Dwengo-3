@@ -34,8 +34,8 @@ const assignment = {
       name: 'Groep 1',
       progress: [0, 1, 2],
       students: [
-        { name: 'Liam', surname: 'Janssen', id: '1' },
-        { name: 'Emma', surname: 'Vermeulen', id: '2' },
+        { user: { name: 'Liam', surname: 'Janssen' }, id: '1' },
+        { user: { name: 'Emma', surname: 'Vermeulen' }, id: '2' },
       ],
     },
     {
@@ -43,8 +43,8 @@ const assignment = {
       name: 'Groep 2',
       progress: [0, 1, 2],
       students: [
-        { name: 'Noah', surname: 'Peeters', id: '3' },
-        { name: 'Sophie', surname: 'De Vries', id: '4' },
+        { user: { name: 'Noah', surname: 'Peeters' }, id: '3' },
+        { user: { name: 'Sophie', surname: 'De Vries' }, id: '4' },
       ],
     },
     {
@@ -52,8 +52,8 @@ const assignment = {
       name: 'Groep 3',
       progress: [0, 1, 2],
       students: [
-        { name: 'Lucas', surname: 'Maes', id: '5' },
-        { name: 'Olivia', surname: 'Van den Berg', id: '6' },
+        { user: { name: 'Lucas', surname: 'Maes' }, id: '5' },
+        { user: { name: 'Olivia', surname: 'Van den Berg' }, id: '6' },
       ],
     },
     {
@@ -61,8 +61,8 @@ const assignment = {
       name: 'Groep 4',
       progress: [0, 1, 2],
       students: [
-        { name: 'Daan', surname: 'Hendriks', id: '7' },
-        { name: 'Julie', surname: 'Smeets', id: '8' },
+        { user: { name: 'Daan', surname: 'Hendriks' }, id: '7' },
+        { user: { name: 'Julie', surname: 'Smeets' }, id: '8' },
       ],
     },
     {
@@ -70,8 +70,8 @@ const assignment = {
       name: 'Groep 5',
       progress: [0, 1],
       students: [
-        { name: 'Finn', surname: 'Willems', id: '9' },
-        { name: 'Lotte', surname: 'Claes', id: '10' },
+        { user: { name: 'Finn', surname: 'Willems' }, id: '9' },
+        { user: { name: 'Lotte', surname: 'Claes' }, id: '10' },
       ],
     },
     {
@@ -79,8 +79,8 @@ const assignment = {
       name: 'Groep 6',
       progress: [0, 1, 2],
       students: [
-        { name: 'Milan', surname: 'Jacobs', id: '11' },
-        { name: 'Elise', surname: 'Coppens', id: '12' },
+        { user: { name: 'Milan', surname: 'Jacobs' }, id: '11' },
+        { user: { name: 'Elise', surname: 'Coppens' }, id: '12' },
       ],
     },
     {
@@ -88,8 +88,8 @@ const assignment = {
       name: 'Groep 7',
       progress: [0, 1, 2],
       students: [
-        { name: 'Ruben', surname: 'Goossens', id: '13' },
-        { name: 'Laura', surname: 'Baert', id: '14' },
+        { user: { name: 'Ruben', surname: 'Goossens' }, id: '13' },
+        { user: { name: 'Laura', surname: 'Baert' }, id: '14' },
       ],
     },
     {
@@ -97,8 +97,8 @@ const assignment = {
       name: 'Groep 8',
       progress: [0, 1, 2],
       students: [
-        { name: 'Vince', surname: 'Mertens', id: '15' },
-        { name: 'Sanne', surname: 'Van Dijk', id: '16' },
+        { user: { name: 'Vince', surname: 'Mertens' }, id: '15' },
+        { user: { name: 'Sanne', surname: 'Van Dijk' }, id: '16' },
       ],
     },
     {
@@ -106,8 +106,8 @@ const assignment = {
       name: 'Groep 9',
       progress: [0, 1, 2],
       students: [
-        { name: 'Jens', surname: 'Lemmens', id: '17' },
-        { name: 'Eva', surname: 'De Bruin', id: '18' },
+        { user: { name: 'Jens', surname: 'Lemmens' }, id: '17' },
+        { user: { name: 'Eva', surname: 'De Bruin' }, id: '18' },
       ],
     },
     {
@@ -115,8 +115,8 @@ const assignment = {
       name: 'Groep 10',
       progress: [0, 1, 2],
       students: [
-        { name: 'Timo', surname: 'Van Acker', id: '19' },
-        { name: 'Nina', surname: 'Bosmans', id: '20' },
+        { user: { name: 'Timo', surname: 'Van Acker' }, id: '19' },
+        { user: { name: 'Nina', surname: 'Bosmans' }, id: '20' },
       ],
     },
   ],
@@ -185,7 +185,7 @@ function ClassAssignmentPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={id!} className={classData.name} />
+      <ClassNavigationBar id={classData.id} className={classData.name} />
 
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 1000 }, p: 2 }}>
         <Typography variant="h3" gutterBottom>

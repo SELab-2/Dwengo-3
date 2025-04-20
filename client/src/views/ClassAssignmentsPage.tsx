@@ -15,6 +15,14 @@ import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { AppRoutes } from '../util/app.routes';
 
+const classData = {
+  id: '1',
+  name: 'Klas - 6 AIT',
+  teachers: ['Marnie Garcia', 'Marvin Kline'],
+  notes:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
+};
+
 const assignments = [
   {
     id: '1',
@@ -107,7 +115,7 @@ function ClassAssignmentsPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={id!} className="Class Name" />
+      <ClassNavigationBar id={classData.id} className={classData.name} />
 
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 800 }, p: 2 }}>
         <Typography variant="h4" gutterBottom>

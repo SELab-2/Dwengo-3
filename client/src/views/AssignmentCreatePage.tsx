@@ -3,7 +3,7 @@ import {
   Box,
   Button,
   Divider,
-  Grid2,
+  Grid,
   List,
   ListItem,
   ListItemText,
@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useParams } from 'react-router-dom';
 import DateTextField from '../components/textfields/DateTextField';
-import { StudentShort } from '../util/types/user.types';
+import { StudentShort } from '../util/interfaces/student.interfaces';
 
 const learningPaths = [
   {
@@ -75,14 +75,14 @@ const classData = {
 const keywords = learningPaths.map((path) => path.keywords).flat();
 
 const studentsData: StudentShort[] = [
-  { id: '1', name: 'Roshnie', surname: 'Soetens' },
-  { id: '2', name: 'Charmayne', surname: 'Breijer' },
-  { id: '3', name: 'Soulaiman', surname: 'Bosland' },
-  { id: '4', name: 'Ouassima', surname: 'Wiltink' },
-  { id: '5', name: 'Davey', surname: 'Kraft' },
-  { id: '6', name: 'Franciscus', surname: 'de Bruin' },
-  { id: '7', name: 'Florence', surname: 'Rijsbergen' },
-  { id: '8', name: 'Seher', surname: 'van den Doel' },
+  { id: '1', user: { name: 'Roshnie', surname: 'Soetens' } },
+  { id: '2', user: { name: 'Charmayne', surname: 'Breijer' } },
+  { id: '3', user: { name: 'Soulaiman', surname: 'Bosland' } },
+  { id: '4', user: { name: 'Ouassima', surname: 'Wiltink' } },
+  { id: '5', user: { name: 'Davey', surname: 'Kraft' } },
+  { id: '6', user: { name: 'Franciscus', surname: 'de Bruin' } },
+  { id: '7', user: { name: 'Florence', surname: 'Rijsbergen' } },
+  { id: '8', user: { name: 'Seher', surname: 'van den Doel' } },
 ];
 
 function makeRandomGroups(groupSize: number): StudentShort[][] {
@@ -147,9 +147,9 @@ function AssignmentCreatePage() {
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {/* Assignment Name & Description */}
-          <Grid2 size={{ xs: 12, md: 4, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 4, sm: 6 }}>
             <TextField
               required
               id="name-assignment"
@@ -168,10 +168,10 @@ function AssignmentCreatePage() {
               fullWidth
             />
             <DateTextField />
-          </Grid2>
+          </Grid>
 
           {/* Keywords & Learning Paths */}
-          <Grid2 size={{ xs: 12, md: 4, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 4, sm: 6 }}>
             <MultipleSelectChip
               label={t('keywords')}
               options={keywords}
@@ -183,10 +183,10 @@ function AssignmentCreatePage() {
               options={filteredLearningPaths}
               state={[selectedLearningPath, setSelectedLearningPath]}
             />
-          </Grid2>
+          </Grid>
 
           {/* Group Size & Generated Groups */}
-          <Grid2 size={{ xs: 12, md: 4, sm: 6 }}>
+          <Grid size={{ xs: 12, md: 4, sm: 6 }}>
             <TextField
               id="group-size"
               label={t('groupSize')}
@@ -218,7 +218,7 @@ function AssignmentCreatePage() {
                       primary={`${t('group')} ${index + 1}`}
                       secondary={group.map((student) => (
                         <Typography key={student.id} variant="body2">
-                          {student.name} {student.surname}
+                          {student.user.name} {student.user.surname}
                         </Typography>
                       ))}
                     />
@@ -227,8 +227,8 @@ function AssignmentCreatePage() {
                 </div>
               ))}
             </List>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
 
         {/* Save Button */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
