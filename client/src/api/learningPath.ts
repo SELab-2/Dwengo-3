@@ -1,7 +1,11 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
-import { LearningPathShort, LearningPathDetail } from '../util/interfaces/learningPath.interfaces';
+import {
+  LearningPathShort,
+  LearningPathDetail,
+  LearningPathCreate,
+} from '../util/interfaces/learningPath.interfaces';
 
 /**
  * Fetches a list of learningPaths based on keywords, ages, page, and pageSize.

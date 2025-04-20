@@ -1,5 +1,4 @@
 import { Box, Card, CardContent, Typography, useTheme } from '@mui/material';
-import { ClassRoleEnum } from '../util/types/class.types';
 
 interface MessageCardProps {
   id: string;
