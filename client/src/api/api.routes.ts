@@ -1,29 +1,4 @@
 /**
- * This constant contains the routes for the application.
- */
-export const AppRoutes = {
-  // Public Routes
-  login: '/login',
-  register: '/register',
-
-  // Protected Routes
-  home: '/',
-  profile: '/profile',
-  myClasses: '/classes',
-  myLearningPaths: '/learning-paths',
-  learningPath: (id: string) => `/learning-paths/${id}`,
-  learningThemes: '/learning-themes',
-  learningTheme: (id: string) => `/learning-themes/${id}`,
-  class: (id: string) => `/class/${id}`,
-  classAssignments: (classId: string) => `/class/${classId}/assignments`,
-  classAssignment: (classId: string, assignmentId: string) =>
-    `/class/${classId}/assignments/${assignmentId}`,
-  classAnnouncements: (classId: string) => `/class/${classId}/announcements`,
-  announcement: (announcementId: string) => `/announcement/${announcementId}`,
-  classDiscussions: (classId: string) => `/class/${classId}/discussions`,
-};
-
-/**
  * This constant contains the API routes for the application.
  */
 export const ApiRoutes = {
@@ -63,6 +38,9 @@ export const ApiRoutes = {
   // AssignmentSubmission
   assignmentSubmission: {
     create: '/api/assignmentSubmission',
+    list: '/api/assignmentSubmission',
+    get: (id: string) => `/api/assignmentSubmission/${id}`,
+    update: (id: string) => `/api/assignmentSubmission/${id}`,
   },
 
   // Class
@@ -85,7 +63,7 @@ export const ApiRoutes = {
     },
     teacher: {
       create: '/api/class/teacherRequest',
-      List: '/api/class/teacherRequest',
+      list: '/api/class/teacherRequest',
       reply: '/api/class/teacherRequest',
     },
   },
@@ -95,6 +73,14 @@ export const ApiRoutes = {
     list: '/api/discussion',
     create: '/api/discussion',
     get: (id: string) => `/api/discussion/${id}`,
+  },
+
+  // Favorites
+  favorites: {
+    create: '/api/favorites',
+    list: '/api/favorites',
+    get: (id: string) => `/api/favorites/${id}`,
+    delete: (id: string) => `/api/favorites/${id}`,
   },
 
   // LearningObject

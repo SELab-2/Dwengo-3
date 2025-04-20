@@ -3,7 +3,7 @@ import { Button, Container, Divider, Paper, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 import { MarginSize } from '../util/size';
-import { AppRoutes } from '../util/routes';
+import { AppRoutes } from '../util/app.routes';
 
 function LoginPage() {
   const { t } = useTranslation();

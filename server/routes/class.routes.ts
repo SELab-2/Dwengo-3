@@ -17,17 +17,21 @@ export class ClassController {
   }
 
   private getClasses = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.getClasses(req.query, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.classDomain.getClasses(req.query, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private getClassById = async (req: Request, res: Response) => {
     res.json(
-      await this.classDomain.getClassById(req.params.id, this.userDomain.getUserFromReq(req)),
+      await this.classDomain.getClassById(req.params.id, await this.userDomain.getUserFromReq(req)),
     );
   };
 
   private createClass = async (req: Request, res: Response) => {
-    res.json(await this.classDomain.createClass(req.body, this.userDomain.getUserFromReq(req)));
+    res.json(
+      await this.classDomain.createClass(req.body, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private updateClass = async (req: Request, res: Response) => {
@@ -35,7 +39,7 @@ export class ClassController {
       await this.classDomain.updateClass(
         req.params.id,
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -44,7 +48,7 @@ export class ClassController {
     await this.classDomain.removeTeacherFromClass(
       req.params.id,
       req.params.teacherId,
-      this.userDomain.getUserFromReq(req),
+      await this.userDomain.getUserFromReq(req),
     );
     res.status(200).send();
   };
@@ -53,7 +57,7 @@ export class ClassController {
     await this.classDomain.removeStudentFromClass(
       req.params.id,
       req.params.studentId,
-      this.userDomain.getUserFromReq(req),
+      await this.userDomain.getUserFromReq(req),
     );
     res.status(200).send();
   };

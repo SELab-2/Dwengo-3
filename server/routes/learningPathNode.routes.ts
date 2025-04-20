@@ -19,7 +19,7 @@ export class LearningPathNodeController {
     res.json(
       await this.learningPathNodeDomain.createLearningPathNode(
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };

@@ -1,8 +1,8 @@
 import { createContext, useState, ReactNode, useEffect } from 'react';
-import { AuthContextType } from '../util/types/auth.types';
-import { UserDetail } from '../util/types/user.types';
-import apiClient from '../api';
-import { ApiRoutes } from '../util/routes';
+import { AuthContextType } from '../util/interfaces/auth.interfaces';
+import { UserDetail } from '../util/interfaces/user.interfaces';
+import apiClient from '../api/apiClient';
+import { ApiRoutes } from '../api/api.routes';
 import { useLocation } from 'react-router-dom';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

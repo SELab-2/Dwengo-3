@@ -214,7 +214,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.getAssignmentSubmissions(
         req.query,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   }
@@ -223,7 +223,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.getAssignmentSubmissionById(
         req.params.id,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   }
@@ -232,7 +232,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.createAssignmentSubmission(
         req,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   }
@@ -254,7 +254,7 @@ export class AssignmentSubmissionController {
     res.json(
       await this.assignmentSubmissionsDomain.updateAssignmentSubmission(
         req,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   }

@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import apiClient from '../api';
-import { LoginData, RegisterData } from '../util/types/auth.types';
-import { ClassRoleEnum } from '../util/types/class.types';
+import apiClient from '../api/apiClient';
+import { LoginData, RegisterData } from '../util/interfaces/auth.interfaces';
+import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { ApiRoutes } from '../util/routes';
+import { ApiRoutes } from '../api/api.routes';
 
 // Custom hook to access the auth context
 export const useAuth = () => {

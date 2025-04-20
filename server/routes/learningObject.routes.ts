@@ -19,7 +19,7 @@ export class LearningObjectController {
     res.json(
       await this.learningObjectDomain.createLearningObject(
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -37,7 +37,7 @@ export class LearningObjectController {
       await this.learningObjectDomain.updateLearningObject(
         req.params.id,
         req.body,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -46,7 +46,7 @@ export class LearningObjectController {
     res.json(
       await this.learningObjectDomain.deleteLearningObject(
         req.params.id,
-        this.userDomain.getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };

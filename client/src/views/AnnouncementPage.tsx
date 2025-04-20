@@ -1,5 +1,5 @@
 import { useAuth } from '../hooks/useAuth';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import AnnouncementCard from '../components/AnnouncementCard';
 import { useParams } from 'react-router-dom';
