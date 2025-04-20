@@ -88,7 +88,7 @@ function NavigationBar({ id, className }: { id: string; className: string }) {
             </>
           ) : (
             <Tabs
-              value={activeTab !== -1 ? activeTab : 0}
+              value={activeTab}
               onChange={handleTabChange}
               textColor="inherit"
               indicatorColor="secondary"

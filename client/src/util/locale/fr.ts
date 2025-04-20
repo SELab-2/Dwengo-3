@@ -68,5 +68,6 @@ export const fr = {
     givenBy: 'Donné par',
     progression: 'Progression',
     submission: 'Soumission',
+    back: 'Retourner',
   },
 };

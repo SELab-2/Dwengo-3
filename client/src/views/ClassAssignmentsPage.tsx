@@ -177,7 +177,7 @@ function ClassAssignmentsPage() {
                         padding: { xs: '5px 10px', sm: '8px 16px' },
                         minWidth: { xs: '60px', sm: '100px' },
                       }}
-                      onClick={() => navigate(AppRoutes.classAssignment(id!, '1'))} //TODO assignment id
+                      onClick={() => navigate(AppRoutes.classAssignment(classData.id, '1'))} //TODO assignment id
                     >
                       {t('details')}
                     </Button>
@@ -195,7 +195,7 @@ function ClassAssignmentsPage() {
             sx={{
               width: { xs: '100%', sm: '40%' }, // 📱 Full width on mobile, 40% on larger screens
             }}
-            onClick={() => navigate(AppRoutes.classAssignmentCreate(id!))}
+            onClick={() => navigate(AppRoutes.classAssignmentCreate(classData.id))}
           >
             {t('newAssignment')}
           </Button>
