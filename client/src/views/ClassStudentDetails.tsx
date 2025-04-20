@@ -45,7 +45,7 @@ function ClassStudentDetails() {
           onClick={() => navigate(`/class/${classData.id}`)}
           sx={{ mb: 3 }}
         >
-          {t('back') || 'Back'}
+          {t('back')}
         </Button>
 
         <Typography variant="h4" gutterBottom>
@@ -53,7 +53,7 @@ function ClassStudentDetails() {
         </Typography>
 
         <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-          Opdrachten
+          {t('assignments')}
         </Typography>
 
         <TableContainer component={Paper} sx={{ maxWidth: 900 }}>
@@ -61,13 +61,13 @@ function ClassStudentDetails() {
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <strong>Naam</strong>
+                  <strong>{t('name')}</strong>
                 </TableCell>
                 <TableCell>
-                  <strong>Voortgang</strong>
+                  <strong>{t('progress')}</strong>
                 </TableCell>
                 <TableCell>
-                  <strong>Score</strong>
+                  <strong>{t('score')}</strong>
                 </TableCell>
                 <TableCell />
               </TableRow>
@@ -100,7 +100,7 @@ function ClassStudentDetails() {
                     <TableCell>{`${lp.completed}/${lp.total}`}</TableCell>
                     <TableCell>
                       <Button variant="contained" onClick={() => alert(`Details of ${lp.name}`)}>
-                        Details
+                        {t('details')}
                       </Button>
                     </TableCell>
                   </TableRow>

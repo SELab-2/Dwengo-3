@@ -66,8 +66,9 @@ export const fr = {
     newAssignment: 'Nouveau devoir',
     deadline: 'Date limite',
     givenBy: 'Donné par',
-    progression: 'Progression',
+    progress: 'Progrès',
     submission: 'Soumission',
     back: 'Retourner',
+    score: 'Score',
   },
 };

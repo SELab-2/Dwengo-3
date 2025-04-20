@@ -65,8 +65,9 @@ export const nl = {
     newAssignment: 'Nieuwe opdracht',
     deadline: 'Deadline',
     givenBy: 'Gegeven door',
-    progression: 'Vooruitgang',
+    progress: 'Vooruitgang',
     submission: 'Indiening',
     back: 'Terug',
+    score: 'Score',
   },
 };
