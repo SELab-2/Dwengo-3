@@ -213,14 +213,14 @@ router.get(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Auth/LocalLogin'
+ *             $ref: '#/components/schemas/Login'
  *     responses:
  *       200:
  *         description: Login succesfull, received user data without password
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Auth/UserData'
+ *               $ref: '#/components/schemas/UserData'
  *       403:
  *         description: Already logged in / Invalid credentials
  *         content:
@@ -267,14 +267,14 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Auth/LocalLogin'
+ *             $ref: '#/components/schemas/Login'
  *     responses:
  *       200:
  *         description: User data
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Auth/UserData'
+ *               $ref: '#/components/schemas/UserData'
  *       403:
  *         description: Already logged in / Invalid credentials
  *         content:
@@ -321,14 +321,14 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Auth/RegisterStudent'
+ *             $ref: '#/components/schemas/Register'
  *     responses:
  *       200:
  *         description: Register succesfull, received user data
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Auth/UserData'
+ *               $ref: '#/components/schemas/UserData'
  *       400:
  *         description: User already exists
  *         content:
@@ -386,14 +386,14 @@ router.put(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Auth/RegisterTeacher'
+ *             $ref: '#/components/schemas/Register'
  *     responses:
  *       200:
  *         description: Register succesfull, received user data
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Auth/UserData'
+ *               $ref: '#/components/schemas/UserData'
  *       400:
  *         description: User already exists
  *         content:
@@ -510,7 +510,7 @@ router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: Ne
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Auth/UserData'
+ *               $ref: '#/components/schemas/UserData'
  *       403:
  *         description: Unauthenticated
  *         content:
