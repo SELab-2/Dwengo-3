@@ -79,6 +79,74 @@ export function useCreateClass() {
 }
 
 /**
+ * Fetches populated classes for a student or teacher by their respective IDs.
+ *
+ * @param studentId - The ID of the student whose classes are to be fetched.
+ * @param teacherId - The ID of the teacher whose classes are to be fetched.
+ * @param page - The current page number for pagination.
+ * @param pageSize - The number of items per page for pagination.
+ * @param options - Options to populate additional data (e.g., teachers, students, assignments).
+ * @returns The query object containing the populated class data.
+ */
+export function usePopulatedClasses(
+  studentId?: string,
+  teacherId?: string,
+  page: number = 1,
+  pageSize: number = 10,
+  options?: {
+    populateTeachers?: boolean;
+    populateStudents?: boolean;
+    populateAssignments?: boolean;
+    populateAssignmentLearningPaths?: boolean;
+  },
+) {
+  const {
+    populateTeachers,
+    populateStudents,
+    populateAssignments,
+    populateAssignmentLearningPaths,
+  } = options || {};
+
+  return useQuery({
+    queryKey: [
+      'populatedClasses',
+      studentId,
+      teacherId,
+      page,
+      pageSize,
+      populateTeachers,
+      populateStudents,
+      populateAssignments,
+      populateAssignmentLearningPaths,
+    ],
+    queryFn: async () => {
+      // Fetch paginated classes
+      const paginatedData = await fetchClasses(studentId, teacherId, page, pageSize);
+
+      // Fetch and populate additional data for each class
+      const populatedClasses: PopulatedClass[] = await fetchNestedData(
+        paginatedData.data.map((classShort) => classShort.id),
+        (classId) =>
+          fetchPopulatedClassById(
+            classId,
+            populateTeachers,
+            populateStudents,
+            populateAssignments,
+            populateAssignmentLearningPaths,
+          ),
+      );
+
+      return {
+        ...paginatedData,
+        data: populatedClasses, // Replace the data with populated classes
+      };
+    },
+    enabled: !!studentId || !!teacherId, // Enable the query only if studentId or teacherId is provided
+    refetchOnWindowFocus: false,
+  });
+}
+
+/**
  * Fetches a populated class by its ID.
  *
  * @param classId - The ID of the class to be fetched.

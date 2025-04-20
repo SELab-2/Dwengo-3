@@ -1,11 +1,12 @@
-import { Box, Button, Divider, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
-import { useClasses, usePopulatedClassesById } from '../hooks/useClass';
+import { usePopulatedClasses } from '../hooks/useClass';
 import { useTranslation } from 'react-i18next';
 import { AppRoutes } from '../util/app.routes';
-import { ClassShort } from '../util/interfaces/class.interfaces';
 import ClassCard from '../components/ClassCard';
+import Paginator from '../components/Paginator';
+import { useState } from 'react';
 
 function MyClassesPage() {
   const { user } = useAuth();
@@ -14,14 +15,25 @@ function MyClassesPage() {
   const studentId = user?.student?.id;
   const teacherId = user?.teacher?.id;
 
-  const { data: paginatedData } = useClasses(studentId, teacherId);
+  // State for pagination
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  // TODO: How to handle the paginated data?
+  // Fetch paginated and populated classes
+  const { data: paginatedData, isLoading } = usePopulatedClasses(
+    studentId,
+    teacherId,
+    page,
+    pageSize,
+    {
+      populateTeachers: true,
+      populateAssignments: true,
+      populateAssignmentLearningPaths: true,
+    },
+  );
+
   const classes = paginatedData?.data ?? [];
-
-  const populatedClasses =
-    usePopulatedClassesById(classes?.map((classShort: ClassShort) => classShort.id) ?? []).data ??
-    [];
+  const totalPages = paginatedData?.totalPages ?? 0;
 
   return (
     <Box
@@ -37,10 +49,10 @@ function MyClassesPage() {
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between', // Space between title and button
+          justifyContent: 'space-between',
           alignItems: 'center',
-          width: '100%', // Full width of the container
-          marginBottom: MarginSize.xsmall, // Add spacing below the row
+          width: '100%',
+          marginBottom: MarginSize.xsmall,
         }}
       >
         <Typography variant="h4" sx={{ textAlign: 'left' }}>
@@ -59,29 +71,34 @@ function MyClassesPage() {
         )}
       </Box>
 
-      <Divider sx={{ width: '100%', mb: MarginSize.xsmall }} />
-
-      {/* Grid containing the classes of the current user */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center', // Center the grid horizontally
-          width: '100%',
-        }}
-      >
-        {/* Show a label if there are no classes */}
-        {populatedClasses.length === 0 && (
-          <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
-            {t('noClasses')}
-          </Typography>
-        )}
-
-        <Grid container spacing={3} justifyContent="center">
-          {populatedClasses.map((classDetails) => (
-            <ClassCard key={classDetails.id} classDetails={classDetails}></ClassCard>
-          ))}
-        </Grid>
-      </Box>
+      {/* Show a loading indicator or a message if no classes are available */}
+      {isLoading ? (
+        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
+          {t('loading')}
+        </Typography>
+      ) : classes.length === 0 ? (
+        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
+          {t('noClasses')}
+        </Typography>
+      ) : (
+        // Paginator Component
+        <Paginator
+          data={classes}
+          page={page}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          setPage={setPage}
+          setPageSize={setPageSize}
+          renderItem={(classDetails) => (
+            <ClassCard key={classDetails.id} classDetails={classDetails} />
+          )}
+          renderContainer={(children) => (
+            <Grid container spacing={3} justifyContent="center">
+              {children}
+            </Grid>
+          )}
+        />
+      )}
     </Box>
   );
 }
