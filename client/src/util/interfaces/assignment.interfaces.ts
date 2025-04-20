@@ -15,11 +15,17 @@ export interface AssignmentDetail {
   learningPath: LearningPathShort;
 }
 
-// TODO: add other relevant types
 export interface PopulatedAssignment {
   id: string;
   teacherId: string;
   class: ClassShort;
   groups: GroupShort[];
   learningPath: LearningPathShort | LearningPathDetail;
+}
+
+export interface AssignmentCreate {
+  groups: string[];
+  learningPathId: string;
+  classId: string;
+  teacherId: string;
 }

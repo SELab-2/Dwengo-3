@@ -14,3 +14,9 @@ export interface LearningPathNodeDetail {
   index: number;
   transitions: LearningPathNodeTransitionDetail[];
 }
+
+export interface LearningPathNodeCreate {
+  learningPathId: string;
+  learningObjectId: string;
+  instruction: string;
+}

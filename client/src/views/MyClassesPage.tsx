@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid2, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 import { useClasses, usePopulatedClassesById } from '../hooks/useClass';
@@ -76,11 +76,11 @@ function MyClassesPage() {
           </Typography>
         )}
 
-        <Grid2 container spacing={3} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center">
           {populatedClasses.map((classDetails) => (
             <ClassCard key={classDetails.id} classDetails={classDetails}></ClassCard>
           ))}
-        </Grid2>
+        </Grid>
       </Box>
     </Box>
   );

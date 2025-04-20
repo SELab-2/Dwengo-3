@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Grid,
+  GridLegacy,
   LinearProgress,
   List,
   ListItem,
@@ -59,9 +59,9 @@ function ClassDashboardPage() {
     <Box sx={{ minHeight: '100vh', p: 3 }}>
       <ClassNavigationBar id={classData.id} className={classData.name} />
 
-      <Grid container spacing={3}>
+      <GridLegacy container spacing={3}>
         {/* Left Sidebar (Co-Teachers & Info) */}
-        <Grid item xs={12} md={3}>
+        <GridLegacy item xs={12} md={3}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               {t('coTeachers')}
@@ -92,10 +92,10 @@ function ClassDashboardPage() {
               {t('editClassGroup')}
             </Button>
           </Paper>
-        </Grid>
+        </GridLegacy>
 
         {/* Main Content (Students & Admission Requests) */}
-        <Grid item xs={12} md={9}>
+        <GridLegacy item xs={12} md={9}>
           <Typography variant="h4" sx={{ mt: 3 }}>
             {t('students')}
           </Typography>
@@ -161,8 +161,8 @@ function ClassDashboardPage() {
               </Stack>
             </Paper>
           )}
-        </Grid>
-      </Grid>
+        </GridLegacy>
+      </GridLegacy>
     </Box>
   );
 }
