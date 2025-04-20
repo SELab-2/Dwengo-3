@@ -15,6 +15,148 @@
       }
     },
     "schemas": {
+      "Auth": {
+        "LocalLogin": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "The email of the user.",
+              "example": "example@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "The password of the user.",
+              "example": "password123"
+            }
+          },
+          "required": ["email", "password"]
+        },
+        "RegisterTeacher": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "The username of the user.",
+              "example": "example"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the user.",
+              "example": "John"
+            },
+            "surname": {
+              "type": "string",
+              "description": "The surname of the user.",
+              "example": "Doe"
+            },
+            "email": {
+              "type": "string",
+              "description": "The email of the user.",
+              "example": "example@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "The password of the user.",
+              "example": "password123"
+            },
+            "role": {
+              "type": "string",
+              "description": "The role of the user.",
+              "enum": ["TEACHER"]
+            }
+          }
+        },
+        "RegisterStudent": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "The username of the user.",
+              "example": "example"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the user.",
+              "example": "John"
+            },
+            "surname": {
+              "type": "string",
+              "description": "The surname of the user.",
+              "example": "Doe"
+            },
+            "email": {
+              "type": "string",
+              "description": "The email of the user.",
+              "example": "example@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "The password of the user.",
+              "example": "password123"
+            },
+            "role": {
+              "type": "string",
+              "description": "The role of the user.",
+              "enum": ["STUDENT"]
+            }
+          }
+        },
+        "UserData": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The unique identifier for the user.",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "provider": {
+              "type": "string",
+              "description": "The provider of the user.",
+              "enum": ["LOCAL", "GOOGLE"]
+            },
+            "username": {
+              "type": "string",
+              "description": "The username of the user.",
+              "example": "example"
+            },
+            "email": {
+              "type": "string",
+              "description": "The email of the user.",
+              "example": "example@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "The password of the user.",
+              "example": "password123"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the user.",
+              "example": "John"
+            },
+            "surname": {
+              "type": "string",
+              "description": "The surname of the user.",
+              "example": "Doe"
+            },
+            "role": {
+              "type": "string",
+              "description": "The role of the user.",
+              "enum": ["STUDENT", "TEACHER"]
+            },
+            "teacher": {
+              "description": "The teacher data of the user",
+              "$ref": "#/components/schemas/TeacherShort"
+            },
+            "student": {
+              "description": "The student data of the user",
+              "$ref": "#/components/schemas/StudentShort"
+            }
+          }
+        }
+      },
       "LearningPathCreate": {
         "type": "object",
         "properties": {
@@ -57,7 +199,6 @@
         },
         "required": ["hruid", "language", "title"]
       },
-
       "ClassDetail": {
         "type": "object",
         "properties": {
@@ -111,7 +252,6 @@
           }
         }
       },
-
       "TeacherDetail": {
         "type": "object",
         "properties": {
@@ -167,7 +307,6 @@
           }
         }
       },
-
       "StudentDetail": {
         "type": "object",
         "properties": {
@@ -230,7 +369,6 @@
           }
         }
       },
-
       "LearningPathDetail": {
         "type": "object",
         "properties": {
@@ -331,7 +469,6 @@
           }
         }
       },
-
       "LearningObjectDetail": {
         "type": "object",
         "properties": {
@@ -413,7 +550,11 @@
             "items": {
               "type": "object"
             },
-            "example": [{ "goal": "Understand variables" }]
+            "example": [
+              {
+                "goal": "Understand variables"
+              }
+            ]
           },
           "copyright": {
             "type": "string",
@@ -438,7 +579,9 @@
           "returnValue": {
             "type": "object",
             "description": "Callback url for submission",
-            "example": { "callback": "https://example.com" }
+            "example": {
+              "callback": "https://example.com"
+            }
           },
           "available": {
             "type": "boolean",
@@ -534,7 +677,6 @@
           }
         }
       },
-
       "LearningPathNodeDetail": {
         "type": "object",
         "properties": {
@@ -593,7 +735,6 @@
           }
         }
       },
-
       "LearningPathNodeTransitionDetail": {
         "type": "object",
         "properties": {
@@ -621,7 +762,6 @@
           }
         }
       },
-
       "UserDetail": {
         "type": "object",
         "properties": {
@@ -699,7 +839,6 @@
           }
         }
       },
-
       "ClassJoinRequestDetail": {
         "type": "object",
         "properties": {
@@ -717,7 +856,6 @@
           }
         }
       },
-
       "GroupDetail": {
         "type": "object",
         "properties": {
@@ -783,7 +921,6 @@
           }
         }
       },
-
       "AssignmentDetail": {
         "type": "object",
         "properties": {
@@ -831,7 +968,6 @@
           }
         }
       },
-
       "SubmissionDetail": {
         "type": "object",
         "properties": {
@@ -844,7 +980,9 @@
           "submission": {
             "type": "object",
             "description": "The submission of the student",
-            "example": { "answer": "B" }
+            "example": {
+              "answer": "B"
+            }
           },
           "group": {
             "$ref": "#/components/schemas/GroupShort"
@@ -868,7 +1006,6 @@
           }
         }
       },
-
       "DiscussionDetail": {
         "type": "object",
         "properties": {
@@ -910,7 +1047,6 @@
           }
         }
       },
-
       "MessageDetail": {
         "type": "object",
         "properties": {
@@ -942,7 +1078,6 @@
           }
         }
       },
-
       "AnnouncementDetail": {
         "type": "object",
         "properties": {
@@ -987,7 +1122,6 @@
           }
         }
       },
-
       "FavoriteShort": {
         "type": "object",
         "properties": {
@@ -1017,7 +1151,6 @@
           }
         }
       },
-
       "FavoriteDetail": {
         "type": "object",
         "properties": {
@@ -1045,7 +1178,6 @@
           }
         }
       },
-
       "PaginatedResponse": {
         "type": "object",
         "properties": {
@@ -1061,7 +1193,6 @@
           }
         }
       },
-
       "ClassUpdate": {
         "type": "object",
         "properties": {
@@ -1072,7 +1203,6 @@
           }
         }
       },
-
       "StudentUpdate": {
         "type": "object",
         "properties": {
@@ -1094,7 +1224,6 @@
           }
         }
       },
-
       "LearningPathNodeCreate": {
         "type": "object",
         "properties": {
@@ -1214,7 +1343,11 @@
             "items": {
               "type": "object"
             },
-            "example": [{ "goal": "Understand variables" }]
+            "example": [
+              {
+                "goal": "Understand variables"
+              }
+            ]
           },
           "copyright": {
             "type": "string",
@@ -1239,7 +1372,9 @@
           "returnValue": {
             "type": "object",
             "description": "Callback url for something (i have no idea)",
-            "example": { "callback": "https://example.com" }
+            "example": {
+              "callback": "https://example.com"
+            }
           },
           "available": {
             "type": "boolean",
@@ -1278,7 +1413,9 @@
             "items": {
               "type": "object",
               "properties": {
-                "keyword": { "type": "string" }
+                "keyword": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -1400,7 +1537,6 @@
           }
         }
       },
-
       "AnnouncementCreate": {
         "type": "object",
         "properties": {
@@ -1467,7 +1603,6 @@
         },
         "required": ["requestId", "decision"]
       },
-
       "DiscussionCreate": {
         "type": "object",
         "properties": {
@@ -1480,7 +1615,6 @@
         },
         "required": ["groupId", "members"]
       },
-
       "MessageCreate": {
         "type": "object",
         "properties": {
@@ -1497,7 +1631,6 @@
         },
         "required": ["discussionId", "content"]
       },
-
       "AssignmentCreate": {
         "type": "object",
         "properties": {
@@ -1537,7 +1670,6 @@
         },
         "required": ["groups", "learningPathId", "classId", "teacherId"]
       },
-
       "SubmissionCreate": {
         "type": "object",
         "properties": {
@@ -1580,7 +1712,6 @@
         },
         "required": ["nodeId", "submissionType", "submission"]
       },
-
       "SubmissionUpdate": {
         "type": "object",
         "properties": {
@@ -1604,7 +1735,6 @@
           }
         }
       },
-
       "FavoriteCreate": {
         "type": "object",
         "properties": {
@@ -1617,7 +1747,6 @@
         },
         "required": ["learningPathId"]
       },
-
       "FileSubmissionSchema": {
         "type": "object",
         "properties": {

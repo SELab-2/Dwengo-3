@@ -158,12 +158,12 @@ passport.deserializeUser(async (id: string, done) => {
 
 /**
  * @swagger
- * /login/student/google:
- *   post:
+ * /api/auth/student/login/google:
+ *   get:
  *     tags:
- *      - auth
- *     summary: Login as student through Google
- *     description: Login as student using Google provider
+ *      - Auth
+ *     summary: Login / Register as a student through Google
+ *     description: Redirects to the Google login page to login/register as a student
  *     responses:
  *       302:
  *         description: Redirect to google login page
@@ -180,12 +180,12 @@ router.get(
 
 /**
  * @swagger
- * /login/teacher/google:
- *   post:
+ * /api/auth/teacher/login/google:
+ *   get:
  *     tags:
- *      - auth
- *     summary: Login as teacher using Google
- *     description: Login as teacher using Google provider
+ *      - Auth
+ *     summary: Login / Register as a teacher using Google
+ *     description: Redirects to the Google login page to login/register as a teacher
  *     responses:
  *       302:
  *         description: Redirect to google login page
@@ -202,50 +202,27 @@ router.get(
 
 /**
  * @swagger
- * /login/student/local:
+ * /api/auth/student/login/local:
  *   post:
  *     tags:
- *      - auth
- *     summary: Login as student using local credentials
- *     description: Login as student using username and password
+ *      - Auth
+ *     summary: Login as a student using local credentials
+ *     description: Login as a student using username and password
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
+ *             $ref: '#/components/schemas/Auth/LocalLogin'
  *     responses:
  *       200:
- *         description: User data
+ *         description: Login succesfull, received user data without password
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 username:
- *                   type: string
- *                 email:
- *                   type: string
- *                 name:
- *                   type: string
- *                 surname:
- *                   type: string
- *                 role:
- *                   type: string
- *                 provider:
- *                   type: string
+ *               $ref: '#/components/schemas/Auth/UserData'
  *       403:
- *         description: Already logged in
+ *         description: Already logged in / Invalid credentials
  *         content:
  *           application/json:
  *             schema:
@@ -253,6 +230,7 @@ router.get(
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: User already logged in / Invalid credentials
  */
 router.post(
   '/student/login/local',
@@ -278,50 +256,27 @@ router.post(
 
 /**
  * @swagger
- * /login/teacher/local:
+ * /api/auth/teacher/login/local:
  *   post:
  *     tags:
- *      - auth
- *     summary: Login as teacher using local credentials
- *     description: Login as teacher using username and password
+ *      - Auth
+ *     summary: Login as a teacher using local credentials
+ *     description: Login as a teacher using username and password
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
+ *             $ref: '#/components/schemas/Auth/LocalLogin'
  *     responses:
  *       200:
  *         description: User data
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 username:
- *                   type: string
- *                 email:
- *                   type: string
- *                 name:
- *                   type: string
- *                 surname:
- *                   type: string
- *                 role:
- *                   type: string
- *                 provider:
- *                   type: string
+ *               $ref: '#/components/schemas/Auth/UserData'
  *       403:
- *         description: Already logged in
+ *         description: Already logged in / Invalid credentials
  *         content:
  *           application/json:
  *             schema:
@@ -329,6 +284,7 @@ router.post(
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: User already logged in / Invalid credentials
  */
 router.post(
   '/teacher/login/local',
@@ -354,10 +310,10 @@ router.post(
 
 /**
  * @swagger
- * /student/register:
+ * /api/auth/student/register:
  *   put:
  *     tags:
- *      - auth
+ *      - Auth
  *     summary: Register a new student using local credentials
  *     description: Register a new student using username, password, name, surname and email
  *     requestBody:
@@ -365,48 +321,16 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *               - email
- *               - name
- *               - surname
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *               email:
- *                 type: string
- *               name:
- *                 type: string
- *               surname:
- *                 type: string
+ *             $ref: '#/components/schemas/Auth/RegisterStudent'
  *     responses:
- *       201:
- *         description: User data
+ *       200:
+ *         description: Register succesfull, received user data
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 username:
- *                   type: string
- *                 email:
- *                   type: string
- *                 name:
- *                   type: string
- *                 surname:
- *                   type: string
- *                 role:
- *                   type: string
- *                 provider:
- *                   type: string
- *       403:
- *         description: Already logged in
+ *               $ref: '#/components/schemas/Auth/UserData'
+ *       400:
+ *         description: User already exists
  *         content:
  *           application/json:
  *             schema:
@@ -414,6 +338,17 @@ router.post(
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: User already exists
+ *       403:
+ *         description: User is already authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is already authenticated
  */
 router.put(
   '/student/register',
@@ -440,10 +375,10 @@ router.put(
 
 /**
  * @swagger
- * /teacher/register:
+ * /api/auth/teacher/register:
  *   put:
  *     tags:
- *      - auth
+ *      - Auth
  *     summary: Register a new student using local credentials
  *     description: Register a new student using username, password, name, surname and email
  *     requestBody:
@@ -451,48 +386,16 @@ router.put(
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - username
- *               - password
- *               - email
- *               - name
- *               - surname
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *               email:
- *                 type: string
- *               name:
- *                 type: string
- *               surname:
- *                 type: string
+ *             $ref: '#/components/schemas/Auth/RegisterTeacher'
  *     responses:
- *       201:
- *         description: User data
+ *       200:
+ *         description: Register succesfull, received user data
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 username:
- *                   type: string
- *                 email:
- *                   type: string
- *                 name:
- *                   type: string
- *                 surname:
- *                   type: string
- *                 role:
- *                   type: string
- *                 provider:
- *                   type: string
- *       403:
- *         description: Already logged in
+ *               $ref: '#/components/schemas/Auth/UserData'
+ *       400:
+ *         description: User already exists
  *         content:
  *           application/json:
  *             schema:
@@ -500,6 +403,17 @@ router.put(
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: User already exists
+ *       403:
+ *         description: User is already authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is already authenticated
  */
 router.put(
   '/teacher/register',
@@ -540,10 +454,10 @@ router.get(
 
 /**
  * @swagger
- * /logout:
+ * /api/auth/logout:
  *   delete:
  *     tags:
- *       - auth
+ *       - Auth
  *     summary: Logout the current user
  *     description: Logs out the authenticated user and destroys the session.
  *     responses:
@@ -556,8 +470,9 @@ router.get(
  *               properties:
  *                 message:
  *                   type: string
- *       401:
- *         description: Unauthorized
+ *                   example: Logout successful
+ *       403:
+ *         description: User is not authenticated
  *         content:
  *           application/json:
  *             schema:
@@ -565,6 +480,7 @@ router.get(
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: User is not authenticated
  */
 router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: NextFunction) => {
   req.logout((err) => {
@@ -582,21 +498,21 @@ router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: Ne
 
 /**
  * @swagger
- * /me:
+ * /api/auth/me:
  *   get:
  *     tags:
- *       - auth
+ *       - Auth
  *     summary: Get the current user's data
  *     description: Returns the data of the authenticated user.
  *     responses:
  *       200:
- *         description: User data
+ *         description: Authenticated, received user data
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *         description: Unauthorized
+ *               $ref: '#/components/schemas/Auth/UserData'
+ *       403:
+ *         description: Unauthenticated
  *         content:
  *           application/json:
  *             schema:
@@ -604,6 +520,7 @@ router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: Ne
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: User is not authenticated
  */
 router.get('/me', isAuthenticated, (req: Request, res: Response) => {
   // Return the authenticated user's data
