@@ -20,12 +20,12 @@ import LearningPathPage from './views/LearningPathPage';
 import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
-import DiscussionPage from './views/DiscussionPage.tsx';
 import AnnouncementsPage from './views/AnnouncementsPage';
 import AnnouncementDetailpage from './views/AnnouncementPage';
 import AssignmentCreatePage from './views/AssignmentCreatePage.tsx';
 import { Box } from '@mui/material';
 import { AppRoutes } from './util/app.routes.ts';
+import DiscussionsPage from './views/DiscussionsPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -85,11 +85,9 @@ function App() {
                         path={AppRoutes.announcement(':announcementId')}
                         element={<AnnouncementDetailpage />}
                       />
-                      <Route path={AppRoutes.classDiscussions(':classId')} element={undefined} />
-                      {/* TODO: PAGINA linken!!! */}
                       <Route
-                        path={AppRoutes.discussion(':discussionId')}
-                        element={<DiscussionPage />}
+                        path={AppRoutes.classDiscussions(':classId')}
+                        element={<DiscussionsPage />}
                       />
                     </Route>
 

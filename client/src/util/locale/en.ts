@@ -68,5 +68,6 @@ export const en = {
     givenBy: 'Given by',
     progression: 'Progression',
     submission: 'Submission',
+    back: 'Back',
   },
 };

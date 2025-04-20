@@ -15,9 +15,10 @@ import BasicSelect from '../components/BasicSelect';
 import MultipleSelectChip from '../components/MultipleSelectChip';
 import { useEffect, useState } from 'react';
 import ClassNavigationBar from '../components/ClassNavigationBar';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import DateTextField from '../components/textfields/DateTextField';
 import { StudentShort } from '../util/interfaces/student.interfaces';
+import BackButton from '../components/BackButton.tsx';
 
 const learningPaths = [
   {
@@ -109,6 +110,7 @@ function AssignmentCreatePage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [groupSize, setGroupSize] = useState(1);
@@ -142,8 +144,10 @@ function AssignmentCreatePage() {
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={id!} className={classData.name} />
+      <ClassNavigationBar id={classData.id} className={classData.name} />
       <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
+        <BackButton link={`/class/${classData.id}/assignments`} />
+
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}
         </Typography>

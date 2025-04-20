@@ -23,7 +23,7 @@ const MessageCard = ({ id, content, sender, discussionId, createdAt }: MessageCa
           display: 'flex',
           alignItems: 'center',
           bgcolor: theme.palette.primary.main,
-          p: 2,
+          padding: 1.2,
           justifyContent: 'space-between',
         }}
       >
