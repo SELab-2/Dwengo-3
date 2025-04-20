@@ -2,18 +2,21 @@ import { Box, Typography, TableContainer, Paper, Table, TableHead, TableRow, Tab
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import ClassNavigationBar from "../components/ClassNavigationBar";
-import { AppRoutes } from "../util/app.routes";
 import { useState } from "react";
 import { StudentShort } from "../util/interfaces/student.interfaces";
 import DateTypography from "../components/DateTypography";
 import GroupListDialog from "../components/GroupListDialog";
+import { AssignmentDetail } from "../util/interfaces/assignment.interfaces";
 
-const assignments = [
+
+//TODO: remove this mock data and replace it with a call to the backend and add deadline to the backend and frontend
+const assignments: AssignmentDetail[] = [
     {
       id: '1',
-      deadline: new Date(),
+      //deadline: new Date(),
       groups: [
         {
+            id: '1',
             assignmentId: '1',
             name: 'Groep 1',
             progress: [0, 1, 2],
@@ -32,41 +35,47 @@ const assignments = [
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
         ],
       },
+      class: {
+        id: '1',
+        name: 'Klas 1',
+      },
+      teacherId: '1',
     },
     {
       id: '2',
-      deadline: new Date(),
+      //deadline: new Date(),
       groups: [
         {
+            id: '2',
             assignmentId: '2',
             name: 'Groep 1',
             progress: [0, 1, 2],
@@ -85,35 +94,40 @@ const assignments = [
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
           {
             learningObject: {
               targetAges: [6, 7],
-              keywords: ['Math', 'Science'],
+              keywords: [{keyword: 'Math'}, {keyword: 'Science'}],
             },
           },
         ],
       },
+      class: {
+        id: '1',
+        name: 'Klas 1',
+      },
+      teacherId: '1',
     },
   ];
 
@@ -229,7 +243,8 @@ function StudentAssignmentsPage() {
                         </TableCell>
                         
                         <TableCell>
-                            <DateTypography date={assignment.deadline} />
+                            {/*<DateTypography date={assignment.deadline} />*/}
+                            <DateTypography date={new Date()} />
                         </TableCell>
 
     
