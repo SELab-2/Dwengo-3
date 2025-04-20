@@ -21,8 +21,8 @@ const assignments: AssignmentDetail[] = [
             name: 'Groep 1',
             progress: [0, 1, 2],
             students: [
-              { name: 'Liam', surname: 'Janssen', id: '1' },
-              { name: 'Emma', surname: 'Vermeulen', id: '2' },
+              { user: {name: 'Liam', surname: 'Janssen'}, id: '1' },
+              { user: {name: 'Emma', surname: 'Vermeulen'}, id: '2' },
             ],
           },
       ],
@@ -80,8 +80,8 @@ const assignments: AssignmentDetail[] = [
             name: 'Groep 1',
             progress: [0, 1, 2],
             students: [
-              { name: 'Liam', surname: 'Janssen', id: '1' },
-              { name: 'Emma', surname: 'Vermeulen', id: '2' },
+              { user: {name: 'Liam', surname: 'Janssen'}, id: '1' },
+              { user: {name: 'Emma', surname: 'Vermeulen'}, id: '2' },
             ],
           },
       ],
