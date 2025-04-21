@@ -67,7 +67,7 @@ function App() {
                         path={AppRoutes.learningTheme(':id')}
                         element={<LearningThemePage />}
                       />
-                      <Route path={AppRoutes.class(':id')} element={<ClassDashboardPage />} />
+                      <Route path={AppRoutes.class(':classId')} element={<ClassDashboardPage />} />
                       <Route
                         path={AppRoutes.classStudentDetails(':classId', ':studentId')}
                         element={<ClassStudentDetails />}

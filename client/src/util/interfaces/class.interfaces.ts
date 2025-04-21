@@ -1,6 +1,6 @@
-import { AssignmentShort, AssignmentDetail, PopulatedAssignment } from './assignment.interfaces';
-import { StudentShort, StudentDetail } from './student.interfaces';
-import { TeacherShort, TeacherDetail } from './teacher.interfaces';
+import { AssignmentDetail, AssignmentShort, PopulatedAssignment } from './assignment.interfaces';
+import { StudentDetail, StudentShort } from './student.interfaces';
+import { TeacherDetail, TeacherShort } from './teacher.interfaces';
 
 export const enum ClassRoleEnum {
   STUDENT = 'STUDENT',
@@ -18,6 +18,7 @@ export interface ClassDetail {
   students: StudentShort[];
   teachers: TeacherShort[];
   assignments: AssignmentShort[];
+  notes: string;
 }
 
 export interface PopulatedClass extends ClassShort {
