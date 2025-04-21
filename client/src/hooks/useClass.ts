@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { fetchClassById, fetchClasses, fetchPopulatedClassById } from '../api/class';
+import { createClass, fetchClassById, fetchClasses, fetchPopulatedClassById } from '../api/class';
 import { ClassDetail, PopulatedClass } from '../util/interfaces/class.interfaces';
 import { ApiRoutes } from '../api/api.routes';
 import apiClient from '../api/apiClient';
@@ -67,13 +67,7 @@ export function useClassesByIds(classIds: string[]) {
 export function useCreateClass() {
   return useMutation({
     mutationFn: async (className: string) => {
-      const response = await apiClient.put(ApiRoutes.class.create, {
-        name: className,
-      });
-
-      const result: ClassDetail = response.data;
-
-      return result;
+      return await createClass({ name: className });
     },
   });
 }
