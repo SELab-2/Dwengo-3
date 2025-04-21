@@ -230,7 +230,7 @@ function ClassAssignmentPage() {
                   <Typography variant="h6">{t('name')}</Typography>
                 </TableCell>
                 <TableCell sx={{ minWidth: 200, width: '50%' }}>
-                  <Typography variant="h6">{t('progression')}</Typography>
+                  <Typography variant="h6">{t('progress')}</Typography>
                 </TableCell>
                 <TableCell />
               </TableRow>

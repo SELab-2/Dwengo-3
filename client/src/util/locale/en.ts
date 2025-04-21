@@ -71,8 +71,9 @@ export const en = {
     newAssignment: 'New Assignment',
     deadline: 'Deadline',
     givenBy: 'Given by',
-    progression: 'Progression',
+    progress: 'Progress',
     submission: 'Submission',
     back: 'Back',
+    score: 'Score',
   },
 };
