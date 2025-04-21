@@ -25,6 +25,7 @@ import AnnouncementDetailpage from './views/AnnouncementPage';
 import AssignmentCreatePage from './views/AssignmentCreatePage.tsx';
 import ClassStudentDetails from './views/ClassStudentDetails.tsx';
 import { Box } from '@mui/material';
+import ClassCreatePage from './views/ClassCreatePage.tsx';
 import { AppRoutes } from './util/app.routes.ts';
 import DiscussionsPage from './views/DiscussionsPage.tsx';
 
@@ -32,19 +33,19 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={theme}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh', // Ensure the layout fills the viewport height
-              }}
-            >
-              <MainAppBar />
-              <ErrorProvider>
+    <ErrorProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={theme}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minHeight: '100vh', // Ensure the layout fills the viewport height
+                }}
+              >
+                <MainAppBar />
                 <Box sx={{ flex: 1 }}>
                   {' '}
                   {/* Main content area */}
@@ -58,6 +59,7 @@ function App() {
                       <Route path={AppRoutes.home} element={<HomePage />} />
                       <Route path={AppRoutes.profile} element={<ProfilePage />} />
                       <Route path={AppRoutes.myClasses} element={<MyClassesPage />} />
+                      <Route path={AppRoutes.classCreate} element={<ClassCreatePage />} />
                       <Route path={AppRoutes.myLearningPaths} element={<MyLearningPathsPage />} />
                       <Route path={AppRoutes.learningPath(':id')} element={<LearningPathPage />} />
                       <Route path={AppRoutes.learningThemes} element={<LearningThemesPage />} />
@@ -100,13 +102,13 @@ function App() {
                     <Route path="*" element={<ErrorPage />} />
                   </Routes>
                 </Box>
-              </ErrorProvider>
-              <FooterBar /> {/* Footer is placed after the main content */}
-            </Box>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </AuthProvider>
-    </BrowserRouter>
+                <FooterBar /> {/* Footer is placed after the main content */}
+              </Box>
+            </ThemeProvider>
+          </QueryClientProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorProvider>
   );
 }
 
