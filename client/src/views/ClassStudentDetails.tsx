@@ -15,6 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
+import { AppRoutes } from '../util/app.routes.ts';
 
 const classData = {
   id: '1',
@@ -85,7 +86,7 @@ function ClassStudentDetails() {
                           cursor: 'pointer',
                           textDecoration: 'underline',
                         }}
-                        onClick={() => alert(`Navigate to ${lp.name}`)}
+                        onClick={() => navigate(AppRoutes.learningPath(lp.id))}
                       >
                         {lp.name} {'(' + lp.group + ')'}
                       </Typography>
