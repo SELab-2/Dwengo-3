@@ -60,7 +60,7 @@ export class AnnouncementDomain {
 
   public async getAnnouncementById(id: string, user: UserEntity) {
     const announcement = await this.announcementPersistence.getAnnouncementById(id);
-
+    console.log(announcement);
     const classId = announcement.classId;
     await this.classDomain.checkUserBelongsToClass(user, classId);
     return announcement;

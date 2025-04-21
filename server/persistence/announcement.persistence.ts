@@ -80,7 +80,7 @@ export class AnnouncementPersistence {
     });
 
     if (!announcement) {
-      throw new NotFoundError(40408);
+      throw new NotFoundError(40415);
     }
 
     return announcement;

@@ -258,15 +258,21 @@
             "description": "The unique identifier for the teacher.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
           },
-          "name": {
-            "type": "string",
-            "description": "The last name of the teacher.",
-            "example": "Doe"
-          },
-          "surname": {
-            "type": "string",
-            "description": "The surname of the teacher.",
-            "example": "John"
+          "user": {
+            "type": "object",
+            "description": "The user data of the teacher",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The last name of the teacher.",
+                "example": "Doe"
+              },
+              "surname": {
+                "type": "string",
+                "description": "The surname of the teacher.",
+                "example": "John"
+              }
+            }
           }
         }
       },
@@ -1055,13 +1061,16 @@
             "description": "The title of the announcement.",
             "example": "Important announcement"
           },
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the class.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
           "content": {
             "type": "string",
             "description": "The content of the announcement.",
             "example": "This is an important announcement."
-          },
-          "class": {
-            "$ref": "#/components/schemas/ClassShort"
           },
           "teacher": {
             "description": "The teacher who made the announcement",

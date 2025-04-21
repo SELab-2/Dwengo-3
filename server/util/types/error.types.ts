@@ -89,6 +89,8 @@ export class NotFoundError extends APIError {
         return 'Group not found...';
       case 40414:
         return 'Favorite not found...';
+      case 40415:
+        return 'Announcement not found...';
       default:
         return 'Not found...';
     }

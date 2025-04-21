@@ -5,6 +5,7 @@ export const announcementSelectDetail: Prisma.AnnouncementSelect = {
   id: true,
   title: true,
   content: true,
+  classId: true,
   teacher: {
     select: teacherSelectShort,
   },
