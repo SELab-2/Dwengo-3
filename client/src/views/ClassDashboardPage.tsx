@@ -153,14 +153,14 @@ function ClassDashboardPage() {
                       <Button
                         variant="contained"
                         sx={{ bgcolor: 'green', color: 'white' }}
-                        onClick={() => handleApproveRequest(request.id)}
+                        onClick={() => handleClassJoinRequest(request.id, Decision.accept)}
                       >
                         {t('approve')}
                       </Button>
                       <Button
                         variant="contained"
                         sx={{ bgcolor: 'red', color: 'white' }}
-                        onClick={() => handleRemoveRequest(request.id)}
+                        onClick={() => handleClassJoinRequest(request.id, Decision.deny)}
                       >
                         {t('remove')}
                       </Button>

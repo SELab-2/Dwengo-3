@@ -62,12 +62,12 @@ export async function addMockData(prisma: PrismaClient) {
         },
       },
       students: {
-        connect: students.slice(0, 8).map((student) => ({
+        connect: students.slice(0, 7).map((student) => ({
           id: student.student!.id,
         })),
       },
       classJoinRequests: {
-        create: students.slice(8).map((student) => ({
+        create: students.slice(7).map((student) => ({
           userId: student.id,
         })),
       },
