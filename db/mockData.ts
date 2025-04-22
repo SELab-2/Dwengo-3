@@ -6,9 +6,9 @@ import { faker } from '@faker-js/faker/locale/nl_BE';
 dotenv.config({ path: '../.env' });
 
 export async function addMockData(prisma: PrismaClient) {
-  await prisma.assignmentSubmission.deleteMany({});
-  await prisma.assignment.deleteMany({});
   await prisma.group.deleteMany({});
+  await prisma.assignment.deleteMany({});
+  await prisma.assignmentSubmission.deleteMany({});
   await prisma.classJoinRequest.deleteMany({});
   await prisma.class.deleteMany({});
   await prisma.message.deleteMany({});
@@ -28,6 +28,9 @@ export async function addMockData(prisma: PrismaClient) {
   if (!user) {
     throw new Error('No user found with provider GOOGLE');
   }
+
+  // find random learning path
+  const learningPath = await prisma.learningPath.findFirst({});
 
   const students = [];
   // create 10 students
@@ -53,7 +56,7 @@ export async function addMockData(prisma: PrismaClient) {
     );
   }
 
-  await prisma.class.create({
+  const classData = await prisma.class.create({
     data: {
       name: 'Klas 5A',
       teachers: {
@@ -69,6 +72,39 @@ export async function addMockData(prisma: PrismaClient) {
       classJoinRequests: {
         create: students.slice(7).map((student) => ({
           userId: student.id,
+        })),
+      },
+    },
+  });
+
+  await prisma.assignment.create({
+    data: {
+      class: {
+        connect: {
+          id: classData.id,
+        },
+      },
+      teacher: {
+        connect: {
+          id: user!.teacher!.id,
+        },
+      },
+      learningPath: {
+        connect: {
+          id: learningPath!.id,
+        },
+      },
+      groups: {
+        create: students.slice(0, 7).map((student) => ({
+          name: `Group of ${student.name}`,
+          students: {
+            connect: {
+              id: student.student!.id,
+            },
+          },
+          progress: Array.from({ length: 4 }, () => Math.floor(Math.random() * 13)).sort(
+            (a, b) => a - b,
+          ),
         })),
       },
     },
