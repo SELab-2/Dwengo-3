@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchStudents } from '../api/student';
+import { fetchStudentById, fetchStudents } from '../api/student';
 import { fetchTeachers } from '../api/teacher';
 
 /**
@@ -17,6 +17,17 @@ export function useStudent(userId?: string, classId?: string, groupId?: string) 
       return await fetchStudents(userId, classId, groupId);
     },
     enabled: !!userId || !!classId || !!groupId,
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useStudentById(studentId: string) {
+  return useQuery({
+    queryKey: ['studentById', studentId],
+    queryFn: async () => {
+      return await fetchStudentById(studentId);
+    },
+    enabled: !!studentId,
     refetchOnWindowFocus: false,
   });
 }

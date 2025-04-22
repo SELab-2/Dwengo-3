@@ -1,10 +1,16 @@
 import { ClassShort } from './class.interfaces';
 import { GroupShort } from './group.interfaces';
-import { LearningPathShort, LearningPathDetail } from './learningPath.interfaces';
+import { LearningPathDetail, LearningPathShort } from './learningPath.interfaces';
 
 export interface AssignmentShort {
   id: string;
   learningPathId: string;
+}
+
+export interface AssignmentShort2 {
+  id: string;
+  groups: GroupShort[];
+  learningPath: LearningPathDetail;
 }
 
 export interface AssignmentDetail {

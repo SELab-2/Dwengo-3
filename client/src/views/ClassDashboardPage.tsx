@@ -8,6 +8,12 @@ import {
   ListItemText,
   Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +27,8 @@ import {
 } from '../hooks/useClassJoinRequest.ts';
 import { Decision } from '../util/interfaces/classJoinRequest.interfaces.ts';
 import { useError } from '../hooks/useError.ts';
+import { AppRoutes } from '../util/app.routes.ts';
+import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
 
 function ClassDashboardPage() {
   const { t } = useTranslation();
@@ -38,6 +46,19 @@ function ClassDashboardPage() {
     refetch: refetchJoinRequests,
   } = useClassJoinRequests(classId!);
   const classJoinMutation = useHandleClassJoinRequestStudent();
+
+  const { data: assignmentsData } = useAssignmentsOfClass(classId!);
+
+  let assignment = undefined;
+  let totalProgress = undefined;
+  let groupsCompleted = undefined;
+  if (assignmentsData?.data?.length ?? 0 > 0) {
+    assignment = assignmentsData?.data[assignmentsData?.data.length - 1]!;
+    totalProgress = assignment.learningPath.learningPathNodes.length;
+    groupsCompleted = assignment.groups
+      .map((group) => group.progress[group.progress.length - 1] + 1)
+      .flat();
+  }
 
   const { setError } = useError();
 
@@ -115,30 +136,71 @@ function ClassDashboardPage() {
             {t('students')}
           </Typography>
 
-          <Paper sx={{ p: 2, mt: 2 }}>
-            <Typography variant="h6">{t('name')}</Typography>
-            <Stack spacing={2} sx={{ mt: 2, overflowY: 'auto' }}>
-              {classData!.students.map((student) => (
-                // TODO add links for students and teachers profiles
-                <Box key={student.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Typography sx={{ flex: 1, color: 'blue', cursor: 'pointer' }}>
-                    {student.user.name} {student.user.surname}
-                  </Typography>
-                  <LinearProgress
-                    variant="determinate"
-                    value={50} // TODO: Replace with actual progress value
-                    sx={{ flex: 3, height: 8, borderRadius: 5 }}
-                  />
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate(`/class/${classData!.id}/student/${student.id}`)}
-                  >
-                    {t('details')}
-                  </Button>
-                </Box>
-              ))}
-            </Stack>
-          </Paper>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Typography variant="h6">
+                      <strong>{t('name')}</strong>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="h6">
+                      <strong>{t('progress')}: </strong>
+                      {assignment?.learningPath.title}
+                    </Typography>
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {classData!.students.map((student) => {
+                  let progress = 0;
+                  if (assignment && groupsCompleted && totalProgress) {
+                    const groupIndex = assignment.groups.findIndex(
+                      (group) => group.students.findIndex((s) => s.id === student.id) > -1,
+                    );
+                    if (groupIndex > -1) {
+                      progress = (groupsCompleted[groupIndex] / totalProgress) * 100;
+                    }
+                  }
+
+                  return (
+                    <TableRow key={student.id}>
+                      <TableCell>
+                        <Typography
+                          sx={{
+                            color: 'blue',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {student.user.name} {student.user.surname}
+                        </Typography>
+                      </TableCell>
+                      <TableCell sx={{ minWidth: 200 }}>
+                        <LinearProgress
+                          variant="determinate"
+                          value={progress}
+                          sx={{ height: 8, borderRadius: 5 }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          onClick={() =>
+                            navigate(AppRoutes.classStudentDetails(classData!.id, student!.id))
+                          }
+                        >
+                          {t('details')}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
           {!isJoinRequestDataLoading && joinRequests.length > 0 && (
             <Box sx={{ mt: 4 }}>
