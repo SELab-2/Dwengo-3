@@ -1,4 +1,4 @@
-import { PrismaClient, ContentTypeEnum } from '@prisma/client';
+import { ContentTypeEnum, PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import cliProgress from 'cli-progress';
 
@@ -13,10 +13,8 @@ contentTypeMap.set('extern', ContentTypeEnum.EXTERN);
 contentTypeMap.set('blockly', ContentTypeEnum.BLOCKLY);
 
 const API_URLS = {
-  learningObjectsMeta:
-    'https://dwengo.org/backend/api/learningObject/search?all=',
-  learningObjectsContentById:
-    'https://dwengo.org/backend/api/learningObject/getRaw', // append hruid, version, language
+  learningObjectsMeta: 'https://dwengo.org/backend/api/learningObject/search?all=',
+  learningObjectsContentById: 'https://dwengo.org/backend/api/learningObject/getRaw', // append hruid, version, language
   learningPaths: 'https://dwengo.org/backend/api/learningPath/search?all=',
 };
 
@@ -34,10 +32,7 @@ async function fullSyncLearningObjects(prisma: PrismaClient) {
   const remoteObjects = await fetchRemoteData(API_URLS.learningObjectsMeta);
 
   // Initialize the progress bar
-  const progressBar = new cliProgress.SingleBar(
-    {},
-    cliProgress.Presets.shades_classic,
-  );
+  const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
   progressBar.start(remoteObjects.length, 0);
 
   for (const [index, remote] of remoteObjects.entries()) {
@@ -125,10 +120,7 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
   const remotePaths = await fetchRemoteData(API_URLS.learningPaths);
 
   // Initialize the progress bar
-  const progressBar = new cliProgress.SingleBar(
-    {},
-    cliProgress.Presets.shades_classic,
-  );
+  const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
   progressBar.start(remotePaths.length, 0);
 
   for (const [index, path] of remotePaths.entries()) {
@@ -154,7 +146,7 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
       },
     });
 
-    for (const node of path.nodes) {
+    for (const [index, node] of path.nodes.entries()) {
       const learningObject = await prisma.learningObject.findUnique({
         where: {
           hruid_version_language: {
@@ -171,15 +163,15 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
         update: {
           learningPathId: path._id,
           learningObjectId: learningObject!.id,
-          startNode: node.start_node,
           instruction: node.instruction,
+          index: index,
         },
         create: {
           id: node._id,
           learningPathId: path._id,
           learningObjectId: learningObject!.id,
-          startNode: node.start_node,
           instruction: node.instruction,
+          index: index,
         },
       });
     }
@@ -198,27 +190,27 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
           },
         });
 
-        let toNode = await learningObject?.learningPathNodes.find(
+        let toNodeIndex = learningObject?.learningPathNodes.find(
           (node: any) => node.learningPathId === path._id,
-        );
+        )?.index;
 
-        if (!toNode) {
+        if (!toNodeIndex) {
           // KANKER API geeft transitions naar nodes die niet bestaan
           // Ik los dit op door gewoon naar de volgende node te verwijzen 🤬
-          toNode = path.nodes[node_index + (1 % path.nodes.length)];
+          toNodeIndex = node_index + 1;
         }
 
         await prisma.learningNodeTransition.upsert({
           where: { id: transition._id },
           update: {
-            fromNodeId: node._id,
-            toNodeId: toNode!.id,
+            learningPathNodeId: node._id,
+            toNodeIndex: toNodeIndex,
             condition: transition.default ? null : 'true==true',
           },
           create: {
             id: transition._id,
-            fromNodeId: node._id,
-            toNodeId: toNode!.id,
+            learningPathNodeId: node._id,
+            toNodeIndex: toNodeIndex!,
             condition: transition.default ? null : 'true==true',
           },
         });
