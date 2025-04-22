@@ -79,8 +79,8 @@ export class ClassJoinRequestDomain {
     );
   }
 
-  public async handleJoinRequest(body: unknown, user: UserEntity) {
-    const classJoinRequestDecisionParams = ClassJoinRequestDecisionSchema.parse(body);
+  public async handleJoinRequest(body: { data: unknown }, user: UserEntity) {
+    const classJoinRequestDecisionParams = ClassJoinRequestDecisionSchema.parse(body.data);
 
     if (user.role !== ClassRoleEnum.TEACHER) {
       throw new BadRequestError(40019);
