@@ -2,11 +2,18 @@ import express, { NextFunction, Request, Response } from 'express';
 import { Profile, Strategy as GoogleStrategy, VerifyCallback } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
+import { z } from 'zod';
 
 import { UserDomain } from '../domain/user.domain';
-import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import {
+  AuthenticationProvider,
+  ClassRoleEnum,
+  UserEntity,
+  UserSchema,
+} from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
+import { RegisterSchema } from '../util/types/auth.types';
 
 const userDomain = new UserDomain();
 
@@ -227,15 +234,9 @@ router.put(
     try {
       if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
 
-      const user: UserEntity = await userDomain.createUser({
-        email: req.body.email,
-        name: req.body.name,
-        password: req.body.password,
-        provider: AuthenticationProvider.LOCAL,
-        role: ClassRoleEnum.STUDENT,
-        surname: req.body.surname,
-        username: req.body.username,
-      });
+      const userEntity = RegisterSchema.parse(req.body);
+      const user: UserEntity = await userDomain.createUser(userEntity);
+
       res.json(user);
     } catch (error) {
       next(error);
@@ -250,15 +251,8 @@ router.put(
     try {
       if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
 
-      const user: UserEntity = await userDomain.createUser({
-        email: req.body.email,
-        name: req.body.name,
-        password: req.body.password,
-        provider: AuthenticationProvider.LOCAL,
-        role: ClassRoleEnum.TEACHER,
-        surname: req.body.surname,
-        username: req.body.username,
-      });
+      const userEntity = RegisterSchema.parse(req.body);
+      const user: UserEntity = await userDomain.createUser(userEntity);
 
       res.json(user);
     } catch (error) {
