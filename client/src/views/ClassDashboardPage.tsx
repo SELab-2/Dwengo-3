@@ -43,28 +43,11 @@ function ClassDashboardPage() {
 
   const joinRequests = joinRequestData?.data || [];
 
-  const handleApproveRequest = (id: string) => {
+  const handleClassJoinRequest = (id: string, decision: Decision) => {
     classJoinMutation.mutate(
-      { requestId: id, decision: Decision.accept },
+      { requestId: id, decision: decision },
       {
         // TODO snackbar gebruiken om de melding te tonen on Success?
-        onSuccess: async () => {
-          // reload students component to fetch new data
-          await refetchClassData();
-          await refetchJoinRequests();
-        },
-        onError: (error: Error) => {
-          // Show error message in snackbar
-          setError(error.message);
-        },
-      },
-    );
-  };
-
-  const handleRemoveRequest = (id: string) => {
-    classJoinMutation.mutate(
-      { requestId: id, decision: Decision.deny },
-      {
         onSuccess: async () => {
           // reload students component to fetch new data
           await refetchClassData();
@@ -134,7 +117,7 @@ function ClassDashboardPage() {
 
           <Paper sx={{ p: 2, mt: 2 }}>
             <Typography variant="h6">{t('name')}</Typography>
-            <Stack spacing={2} sx={{ mt: 2, maxHeight: 300, overflowY: 'auto' }}>
+            <Stack spacing={2} sx={{ mt: 2, overflowY: 'auto' }}>
               {classData!.students.map((student) => (
                 // TODO add links for students and teachers profiles
                 <Box key={student.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

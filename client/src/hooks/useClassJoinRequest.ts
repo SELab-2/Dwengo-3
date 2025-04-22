@@ -13,7 +13,7 @@ import { Decision } from '../util/interfaces/classJoinRequest.interfaces.ts';
  */
 export function useClassJoinRequests(classId: string) {
   return useQuery({
-    queryKey: ['class', classId],
+    queryKey: ['classJoinRequests', classId],
     queryFn: async () => {
       return await getClassJoinRequestsStudent(classId);
     },

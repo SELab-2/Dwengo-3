@@ -100,7 +100,7 @@ export async function getClassJoinRequestsTeacher(
  * @returns Succesfully handled or not
  */
 export async function handleClassJoinRequestStudent(data: ClassJoinRequestPost) {
-  const response = await apiClient.get(ApiRoutes.classJoinRequest.student.reply, {
+  const response = await apiClient.post(ApiRoutes.classJoinRequest.student.reply, {
     data,
   });
 
