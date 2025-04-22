@@ -89,12 +89,12 @@ export class TeacherDomain {
 
     if (user.teacher) {
       return await this.classPersistence.getClasses(
-        { page: 1, pageSize: Infinity, skip: 0 },
+        { page: 1, pageSize: 100, skip: 0 },
         { teacherId: user.teacher.id },
       );
     } else if (user.student) {
       return await this.classPersistence.getClasses(
-        { page: 1, pageSize: Infinity, skip: 0 },
+        { page: 1, pageSize: 100, skip: 0 },
         { studentId: user.student.id },
       );
     } else {

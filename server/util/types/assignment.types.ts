@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { LearningPathShort } from './learningPath.types';
 import { ClassShort } from './class.types';
-import { GroupShort } from './group.types';
+import { GroupDetail, GroupShort } from './group.types';
 
 export const AssignmentFilterSchema = z
   .object({
@@ -38,4 +38,10 @@ export type AssignmentDetail = {
 export type AssignmentShort = {
   id: Uuid;
   learningPathId: Uuid;
+};
+
+export type AssignmentShort2 = {
+  id: Uuid;
+  groups: GroupDetail[];
+  learningPath: LearningPathShort;
 };

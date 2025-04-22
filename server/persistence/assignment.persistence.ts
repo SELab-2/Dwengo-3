@@ -3,7 +3,7 @@ import {
   AssignmentCreateParams,
   AssignmentDetail,
   AssignmentFilterParams,
-  AssignmentShort,
+  AssignmentShort2,
   Uuid,
 } from '../util/types/assignment.types';
 import { PaginationParams } from '../util/types/pagination.types';
@@ -11,7 +11,7 @@ import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import {
   assignmentSelectDetail,
-  assignmentSelectShort,
+  assignmentSelectShort2,
 } from '../util/selectInput/assignment.select';
 import { NotFoundError } from '../util/types/error.types';
 
@@ -19,7 +19,7 @@ export class AssignmentPersistence {
   public async getAssignments(
     filters: AssignmentFilterParams,
     paginationParams: PaginationParams,
-  ): Promise<{ data: AssignmentShort[]; totalPages: number }> {
+  ): Promise<{ data: AssignmentShort2[]; totalPages: number }> {
     const whereClause: Prisma.AssignmentWhereInput = {
       AND: [
         filters.classId
@@ -47,7 +47,7 @@ export class AssignmentPersistence {
                 some: {
                   students: {
                     some: {
-                      userId: filters.studentId,
+                      id: filters.studentId,
                     },
                   },
                 },
@@ -61,7 +61,7 @@ export class AssignmentPersistence {
       whereClause,
       paginationParams,
       undefined,
-      assignmentSelectShort,
+      assignmentSelectShort2,
     );
   }
 
