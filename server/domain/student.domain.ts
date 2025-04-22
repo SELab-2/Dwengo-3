@@ -199,6 +199,7 @@ export class StudentDomain {
         throw new NotFoundError(40404);
       }
 
+      // TODO: zie discord, isStudentInTeacherClass functie werkt niet correct
       // const isStudentInTeacherClass = await this.isStudentInTeacherClass(id, teacher.id);
       const isStudentInTeacherClass = true;
 
