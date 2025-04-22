@@ -11,8 +11,8 @@ import {
   Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const classData = {
   id: '1',
@@ -41,7 +41,9 @@ const admissionRequests = [
 
 function ClassDashboardPage() {
   const { t } = useTranslation();
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
+
+  const navigate = useNavigate();
 
   const handleApproveRequest = (id: string) => {
     // TODO
@@ -115,11 +117,7 @@ function ClassDashboardPage() {
                   />
                   <Button
                     variant="contained"
-                    onClick={
-                      // TODO: add link to student assignment progress
-                      // Replace with actual navigation
-                      () => alert(`TODO: View progress details for ${student.name}`)
-                    }
+                    onClick={() => navigate(`/class/${classData.id}/student/${student.id}`)}
                   >
                     {t('details')}
                   </Button>

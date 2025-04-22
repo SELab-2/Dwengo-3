@@ -1,5 +1,4 @@
 import { Box, Card, CardContent, Typography, useTheme } from '@mui/material';
-import { ClassRoleEnum } from '../util/types/class.types';
 
 interface MessageCardProps {
   id: string;
@@ -24,7 +23,7 @@ const MessageCard = ({ id, content, sender, discussionId, createdAt }: MessageCa
           display: 'flex',
           alignItems: 'center',
           bgcolor: theme.palette.primary.main,
-          p: 2,
+          padding: 1.2,
           justifyContent: 'space-between',
         }}
       >

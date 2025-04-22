@@ -110,8 +110,6 @@ const assignments = [
 
 function ClassAssignmentsPage() {
   const { id } = useParams<{ id: string }>();
-  const { t } = useTranslation();
-  const navigate = useNavigate();
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
