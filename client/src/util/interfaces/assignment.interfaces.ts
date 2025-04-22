@@ -24,7 +24,7 @@ export interface PopulatedAssignment {
 }
 
 export interface AssignmentCreate {
-  groups: string[];
+  groups: string[][];
   learningPathId: string;
   classId: string;
   teacherId: string;

@@ -19,98 +19,35 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DateTextField from '../components/textfields/DateTextField';
 import { StudentShort } from '../util/interfaces/student.interfaces';
 import BackButton from '../components/BackButton.tsx';
-
-const learningPaths = [
-  {
-    id: '1',
-    title: 'Learning Path 1',
-    description: 'Description of Learning Path 1',
-    image: 'https://via.placeholder.com/150',
-    keywords: ['AI', 'Machine Learning'],
-  },
-  {
-    id: '2',
-    title: 'Learning Path 2',
-    description: 'Description of Learning Path 2',
-    image: 'https://via.placeholder.com/150',
-    keywords: ['Data Science', 'Statistics'],
-  },
-  {
-    id: '3',
-    title: 'Learning Path 3',
-    description: 'Description of Learning Path 3',
-    image: 'https://via.placeholder.com/150',
-    keywords: ['Web Development', 'JavaScript'],
-  },
-  {
-    id: '4',
-    title: 'Learning Path 4',
-    description: 'Description of Learning Path 4',
-    image: 'https://via.placeholder.com/150',
-    keywords: ['Mobile Development', 'React Native'],
-  },
-  {
-    id: '5',
-    title: 'Learning Path 5',
-    description: 'Description of Learning Path 5',
-    image: 'https://via.placeholder.com/150',
-    keywords: ['Cloud Computing', 'AWS'],
-  },
-  {
-    id: '6',
-    title: 'Learning Path 6',
-    description: 'Description of Learning Path 6',
-    image: 'https://via.placeholder.com/150',
-    keywords: ['Cybersecurity', 'Network Security'],
-  },
-];
-
-const classData = {
-  id: '1',
-  name: 'Klas - 6 AIT',
-  teachers: ['Marnie Garcia', 'Marvin Kline'],
-  notes:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-};
-
-const keywords = learningPaths.map((path) => path.keywords).flat();
-
-const studentsData: StudentShort[] = [
-  { id: '1', user: { name: 'Roshnie', surname: 'Soetens' } },
-  { id: '2', user: { name: 'Charmayne', surname: 'Breijer' } },
-  { id: '3', user: { name: 'Soulaiman', surname: 'Bosland' } },
-  { id: '4', user: { name: 'Ouassima', surname: 'Wiltink' } },
-  { id: '5', user: { name: 'Davey', surname: 'Kraft' } },
-  { id: '6', user: { name: 'Franciscus', surname: 'de Bruin' } },
-  { id: '7', user: { name: 'Florence', surname: 'Rijsbergen' } },
-  { id: '8', user: { name: 'Seher', surname: 'van den Doel' } },
-];
-
-function makeRandomGroups(groupSize: number): StudentShort[][] {
-  // work with copy of the array as to not change the original student list
-  const copied_students = studentsData.map((student) => ({ ...student }));
-  const shuffled = copied_students.sort(() => Math.random() - 0.5); // shuffle the students array randomly
-
-  // initialize empty array for each group
-  const groups: StudentShort[][] = Array.from(
-    {
-      length: Math.ceil(copied_students.length / groupSize),
-    },
-    () => [],
-  );
-
-  shuffled.forEach((student, index) => {
-    groups[index % groups.length].push(student); // Round-robin
-  });
-
-  return groups;
-}
+import { useClassById } from '../hooks/useClass.ts';
+import { MarginSize } from '../util/size.ts';
+import { useLearningObjectById } from '../hooks/useLearningObject.ts';
+import { useLearningPath } from '../hooks/useLearningPath.ts';
+import { useCreateAssignment } from '../hooks/useAssignment.ts';
+import { useAuth } from '../hooks/useAuth.ts';
+import { AssignmentDetail } from '../util/interfaces/assignment.interfaces.ts';
+import { AppRoutes } from '../util/app.routes.ts';
+import { useError } from '../hooks/useError.ts';
 
 function AssignmentCreatePage() {
-  const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const { classId } = useParams<{ classId: string }>();
   const { t } = useTranslation();
   const theme = useTheme();
+  const assignmentMutation = useCreateAssignment();
   const navigate = useNavigate();
+  const { setError } = useError();
+
+  const teacherId = user?.teacher?.id;
+  const {data: paginatedData, isLoading: isLoadingLearningPaths} = useLearningPath();
+
+  const learningPaths = paginatedData?.data ?? [];
+  const keywords = learningPaths
+    .flatMap((path) => path.learningPathNodes
+    .flatMap((node) => node.learningObject.keywords.map((keyword) => keyword.keyword)));
+
+  const {data: classData, isLoading: isLoadingClass} = useClassById(classId!);
+  const studentsData = classData?.students ?? [];
 
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [groupSize, setGroupSize] = useState(1);
@@ -118,6 +55,7 @@ function AssignmentCreatePage() {
     learningPaths.map((path) => path.title),
   );
   const [selectedLearningPath, setSelectedLearningPath] = useState<string | null>('');
+  const [groupsIds, setGroupsIds] = useState<string[][]>([]);
 
   useEffect(() => {
     const updatedPaths = learningPaths
@@ -125,7 +63,10 @@ function AssignmentCreatePage() {
         (path) =>
           // if no keywords are selected, all learningpaths are shown
           selectedKeywords.length === 0 ||
-          path.keywords.some((keyword) => selectedKeywords.includes(keyword)),
+          path.learningPathNodes
+            .some((node) => node.learningObject.keywords
+            .some((keyword) => selectedKeywords.includes(keyword.keyword))
+          ),
       )
       .map((path) => path.title);
 
@@ -142,11 +83,62 @@ function AssignmentCreatePage() {
     setGroupSize(value);
   };
 
+  const handleSubmit = () => {
+    assignmentMutation.mutate({
+      classId: classId!,
+      teacherId: teacherId!,
+      groups: groupsIds,
+      learningPathId: selectedLearningPath!,
+    }, {
+      onSuccess: (response: AssignmentDetail) => {
+        navigate(AppRoutes.classAssignment(classId!, response.id));
+      },
+      onError: (error: Error) => {
+        setError(error.message);
+      },
+    });
+  }
+
+  const makeRandomGroups = (groupSize: number): StudentShort[][] => {
+    // work with copy of the array as to not change the original student list
+    const copied_students = studentsData.map((student) => ({ ...student }));
+    const shuffled = copied_students.sort(() => Math.random() - 0.5); // shuffle the students array randomly
+  
+    // initialize empty array for each group
+    const groups: StudentShort[][] = Array.from(
+      {
+        length: Math.ceil(copied_students.length / groupSize),
+      },
+      () => [],
+    );
+
+    const groupIds: string[][] = Array.from(
+      {
+        length: Math.ceil(copied_students.length / groupSize),
+      },
+      () => [],
+    );
+  
+    shuffled.forEach((student, index) => {
+      groups[index % groups.length].push(student); // Round-robin
+      groupIds[index % groups.length].push(student.id); // Round-robin
+    });
+
+    setGroupsIds(groupIds);
+  
+    return groups;
+  }
+
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={classData.id} className={classData.name} />
+      {isLoadingClass ? (
+        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
+          {t('loading')}
+        </Typography>
+      ) : (
+       <ClassNavigationBar id={classData!.id} className={classData!.name} />)}
       <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
-        <BackButton link={`/class/${classData.id}/assignments`} />
+        <BackButton link={`/class/${classData!.id}/assignments`} />
 
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}
@@ -242,7 +234,7 @@ function AssignmentCreatePage() {
               backgroundColor: theme.palette.primary.main,
               width: { xs: '100%', sm: '40%' }, // Full width on mobile, auto on larger screens
             }}
-            onClick={() => alert('TODO: Save assignment')}
+            onClick={handleSubmit}
           >
             {t('save')}
           </Button>

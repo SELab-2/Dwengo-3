@@ -14,107 +14,34 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { AppRoutes } from '../util/app.routes';
-
-const classData = {
-  id: '1',
-  name: 'Klas - 6 AIT',
-  teachers: ['Marnie Garcia', 'Marvin Kline'],
-  notes:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-};
-
-const assignments = [
-  {
-    id: '1',
-    learningPath: {
-      id: '1',
-      title: 'Leerpad 1',
-      description: 'Dit is een beschrijving van leerpad 1.',
-      image: 'https://via.placeholder.com/150',
-      learningPathNodes: [
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-      ],
-    },
-  },
-  {
-    id: '2',
-    learningPath: {
-      id: '1',
-      title: 'Leerpad 2',
-      description: 'Dit is een beschrijving van leerpad 1.',
-      image: 'https://via.placeholder.com/150',
-      learningPathNodes: [
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-        {
-          learningObject: {
-            targetAges: [6, 7],
-            keywords: ['Math', 'Science'],
-          },
-        },
-      ],
-    },
-  },
-];
+import { useAuth } from '../hooks/useAuth';
+import { useClassById } from '../hooks/useClass';
+import { MarginSize } from '../util/size';
+import { useAssignments } from '../hooks/useAssignment';
 
 function ClassAssignmentsPage() {
-  const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const { classId } = useParams<{ classId: string }>();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const teacherId = user?.teacher?.id;
+  const {data: classData, isLoading: isLoadingClass} = useClassById(classId!);
+
+  const {data: paginatedData, isLoading: isLoadingAssignment} = useAssignments(classId, undefined, undefined, teacherId, 1, 10);
+
+  const assignments = paginatedData?.data ?? [];
+  const totalPages = paginatedData?.totalPages ?? 0;
+
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={classData.id} className={classData.name} />
-
+      {isLoadingClass ? (
+        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
+          {t('loading')}
+        </Typography>
+      ) : (
+       <ClassNavigationBar id={classData!.id} className={classData!.name} />)}
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 800 }, p: 2 }}>
         <Typography variant="h4" gutterBottom>
           {t('assignments')}
@@ -130,11 +57,11 @@ function ClassAssignmentsPage() {
             boxShadow: 3,
             mx: 'auto',
             width: '100%',
-            maxWidth: { xs: '90%', sm: 800 },
+            maxWidth: { xs: '100%', sm: 800 },
             overflowX: 'auto', // 🚀 Horizontal Scroll on Small Screens
           }}
         >
-          <Table sx={{ minWidth: 600 }}>
+          <Table sx={{ minWidth: '100%' }}>
             {' '}
             {/* 📌 Ensuring Minimum Width */}
             <TableHead>
@@ -163,11 +90,10 @@ function ClassAssignmentsPage() {
                         fontSize: { xs: '14px', sm: '16px' },
                       }}
                     >
-                      {assignment.learningPath.title}
+                      {assignment.learningPathId!}
                     </Typography>
                   </TableCell>
-
-                  <TableCell sx={{ textAlign: 'center' }}>
+                  <TableCell align="right">
                     <Button
                       variant="contained"
                       sx={{
@@ -175,7 +101,7 @@ function ClassAssignmentsPage() {
                         padding: { xs: '5px 10px', sm: '8px 16px' },
                         minWidth: { xs: '60px', sm: '100px' },
                       }}
-                      onClick={() => navigate(AppRoutes.classAssignment(id!, assignment.id))}
+                      onClick={() => navigate(AppRoutes.classAssignment(classId!, assignment.id))}
                     >
                       {t('details')}
                     </Button>
@@ -185,7 +111,6 @@ function ClassAssignmentsPage() {
             </TableBody>
           </Table>
         </TableContainer>
-
         {/* 🛠 New Assignment Button - Fully Responsive */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Button
@@ -193,7 +118,7 @@ function ClassAssignmentsPage() {
             sx={{
               width: { xs: '100%', sm: '40%' }, // 📱 Full width on mobile, 40% on larger screens
             }}
-            onClick={() => navigate(AppRoutes.classAssignmentCreate(id!))}
+            onClick={() => navigate(AppRoutes.classAssignmentCreate(classId!))}
           >
             {t('newAssignment')}
           </Button>

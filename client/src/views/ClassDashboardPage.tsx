@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const classData = {
   id: '1',
@@ -41,7 +41,7 @@ const admissionRequests = [
 
 function ClassDashboardPage() {
   const { t } = useTranslation();
-  // const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
 
   const navigate = useNavigate();
 
@@ -59,7 +59,7 @@ function ClassDashboardPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={classData.id} className={classData.name} />
+      <ClassNavigationBar id={id!} className={classData.name} />
 
       <GridLegacy container spacing={3}>
         {/* Left Sidebar (Co-Teachers & Info) */}
