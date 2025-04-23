@@ -152,7 +152,7 @@ export class AssignmentController {
   private async createAssignment(req: Request, res: Response): Promise<void> {
     res.json(
       await this.assignmentDomain.createAssignment(
-        req.body,
+        req.body.data,
         await this.userDomain.getUserFromReq(req),
       ),
     );
