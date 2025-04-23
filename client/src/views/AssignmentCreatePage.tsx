@@ -25,9 +25,10 @@ import { useLearningObjectById } from '../hooks/useLearningObject.ts';
 import { useLearningPath } from '../hooks/useLearningPath.ts';
 import { useCreateAssignment } from '../hooks/useAssignment.ts';
 import { useAuth } from '../hooks/useAuth.ts';
-import { AssignmentDetail } from '../util/interfaces/assignment.interfaces.ts';
+import { AssignmentCreate, AssignmentDetail } from '../util/interfaces/assignment.interfaces.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { useError } from '../hooks/useError.ts';
+import { LearningPathShort } from '../util/interfaces/learningPath.interfaces.ts';
 
 function AssignmentCreatePage() {
   const { user } = useAuth();
@@ -40,21 +41,28 @@ function AssignmentCreatePage() {
 
   const teacherId = user?.teacher?.id;
   const {data: paginatedData, isLoading: isLoadingLearningPaths} = useLearningPath();
-
+  if (isLoadingLearningPaths) {
+    return (
+      <Box sx={{ minHeight: '100vh', p: 3 }}>
+        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
+          {t('loading')}
+        </Typography>
+      </Box>
+    );
+  }
   const learningPaths = paginatedData?.data ?? [];
-  const keywords = learningPaths
+
+  const keywords = Array.from(new Set(learningPaths
     .flatMap((path) => path.learningPathNodes
-    .flatMap((node) => node.learningObject.keywords.map((keyword) => keyword.keyword)));
+    .flatMap((node) => node.learningObject.keywords.map((keyword) => keyword.keyword)))));
 
   const {data: classData, isLoading: isLoadingClass} = useClassById(classId!);
   const studentsData = classData?.students ?? [];
 
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [groupSize, setGroupSize] = useState(1);
-  const [filteredLearningPaths, setFilteredLearningPaths] = useState<string[]>(
-    learningPaths.map((path) => path.title),
-  );
-  const [selectedLearningPath, setSelectedLearningPath] = useState<string | null>('');
+  const [filteredLearningPaths, setFilteredLearningPaths] = useState<LearningPathShort[]>(learningPaths);
+  const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
   const [groupsIds, setGroupsIds] = useState<string[][]>([]);
 
   useEffect(() => {
@@ -67,12 +75,11 @@ function AssignmentCreatePage() {
             .some((node) => node.learningObject.keywords
             .some((keyword) => selectedKeywords.includes(keyword.keyword))
           ),
-      )
-      .map((path) => path.title);
+      );
 
     setFilteredLearningPaths(updatedPaths);
-    if (selectedLearningPath && !updatedPaths.includes(selectedLearningPath)) {
-      setSelectedLearningPath('');
+    if (selectedLearningPath && !updatedPaths.some((path) => path.title === selectedLearningPath.title)) {
+      setSelectedLearningPath(null);
     }
   }, [selectedKeywords]);
 
@@ -84,12 +91,14 @@ function AssignmentCreatePage() {
   };
 
   const handleSubmit = () => {
-    assignmentMutation.mutate({
+    const data: AssignmentCreate = {
       classId: classId!,
       teacherId: teacherId!,
       groups: groupsIds,
-      learningPathId: selectedLearningPath!,
-    }, {
+      learningPathId: selectedLearningPath!.id,
+    };
+    console.log('Assignment data:', data);
+    assignmentMutation.mutate(data, {
       onSuccess: (response: AssignmentDetail) => {
         navigate(AppRoutes.classAssignment(classId!, response.id));
       },
@@ -112,20 +121,12 @@ function AssignmentCreatePage() {
       () => [],
     );
 
-    const groupIds: string[][] = Array.from(
-      {
-        length: Math.ceil(copied_students.length / groupSize),
-      },
-      () => [],
-    );
   
     shuffled.forEach((student, index) => {
       groups[index % groups.length].push(student); // Round-robin
-      groupIds[index % groups.length].push(student.id); // Round-robin
+
     });
 
-    setGroupsIds(groupIds);
-  
     return groups;
   }
 
@@ -173,11 +174,13 @@ function AssignmentCreatePage() {
               options={keywords}
               state={[selectedKeywords, setSelectedKeywords]}
             />
-            <BasicSelect
+            <BasicSelect<LearningPathShort>
               required
               labelName={t('learningPath')}
               options={filteredLearningPaths}
               state={[selectedLearningPath, setSelectedLearningPath]}
+              getOptionLabel={(option) => option.title}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
             />
           </Grid>
 
