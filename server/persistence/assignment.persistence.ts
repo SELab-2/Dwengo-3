@@ -47,7 +47,7 @@ export class AssignmentPersistence {
                 some: {
                   students: {
                     some: {
-                      userId: filters.studentId,
+                      id: filters.studentId,
                     },
                   },
                 },
