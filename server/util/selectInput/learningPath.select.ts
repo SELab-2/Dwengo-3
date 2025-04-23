@@ -4,7 +4,7 @@ export const learningPathSelectShort = {
   id: true,
   title: true,
   learningPathNodes: {
-    select: learningPathNodeSelectShort
+    select: learningPathNodeSelectShort,
   },
   image: true,
   description: true,

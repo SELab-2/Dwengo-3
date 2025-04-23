@@ -1,9 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-async function deleteRecords(
-  prisma: PrismaClient,
-  deleteAdditionalRecords: boolean = false,
-) {
+async function deleteRecords(prisma: PrismaClient, deleteAdditionalRecords: boolean = false) {
   console.log('Deleting records...');
 
   try {
@@ -11,6 +8,7 @@ async function deleteRecords(
     await prisma.learningPathNode.deleteMany({});
     await prisma.learningPath.deleteMany({});
     await prisma.learningObject.deleteMany({});
+    await prisma.learningObjectKeyword.deleteMany({});
     console.log('Synced records deleted successfully!');
 
     if (deleteAdditionalRecords) {
@@ -24,6 +22,8 @@ async function deleteRecords(
       await prisma.message.deleteMany({});
       await prisma.discussion.deleteMany({});
       await prisma.user.deleteMany({});
+      await prisma.favorite.deleteMany({});
+      await prisma.announcement.deleteMany({});
       console.log('Additional records deleted successfully!');
     }
   } catch (error) {

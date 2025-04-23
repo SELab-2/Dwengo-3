@@ -27,7 +27,7 @@ export class DiscussionPersistence {
     paginationParams: PaginationParams,
   ): Promise<{ data: DiscussionShort[]; totalPages: number }> {
     const whereClause: Prisma.DiscussionWhereInput = {
-      AND: [filters.userId ? { members: {some: {id: filters.userId} } } : {}],
+      AND: [filters.userId ? { members: { some: { id: filters.userId } } } : {}],
     };
 
     return searchAndPaginate(

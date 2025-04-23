@@ -12,7 +12,7 @@ export const learningPathNodeSelectDetail = {
   id: true,
   learningPathId: true,
   learningObject: {
-    select: learningObjectSelectShort
+    select: learningObjectSelectShort,
   },
   instruction: true,
   index: true,

@@ -52,4 +52,4 @@ export type UserEntity = z.infer<typeof UserSchema>;
 
 // do not return the password of the user to the client.
 export type UserDto = Omit<UserEntity, 'password'>;
-export type UserShort = Prisma.UserGetPayload<{select: typeof userSelectShort}>;
+export type UserShort = Prisma.UserGetPayload<{ select: typeof userSelectShort }>;

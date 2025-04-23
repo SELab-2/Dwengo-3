@@ -1,4 +1,9 @@
-import { AuthenticationProvider, ClassRoleEnum, FullUserType, UserEntity } from '../../util/types/user.types';
+import {
+  AuthenticationProvider,
+  ClassRoleEnum,
+  FullUserType,
+  UserEntity,
+} from '../../util/types/user.types';
 import { PrismaSingleton } from '../prismaSingleton';
 import { ClassPersistence } from '../class.persistence';
 import { ClassDetail } from '../../util/types/class.types';
@@ -15,10 +20,7 @@ import { LearningObjectPersistence } from '../learningObject.persistence';
 import { LearningObjectKeywordPersistence } from '../learningObjectKeyword.persistence';
 import { LearningPathPersistence } from '../learningPath.persistence';
 import { LearningPathNodePersistence } from '../learningPathNode.persistence';
-import {
-  LearningPathCreateParams,
-  LearningPathDetail,
-} from '../../util/types/learningPath.types';
+import { LearningPathCreateParams, LearningPathDetail } from '../../util/types/learningPath.types';
 import { LearningPathNodeDetail } from '../../util/types/learningPathNode.types';
 import {
   AnnouncementCreatePersistenceParams,
@@ -26,10 +28,7 @@ import {
 } from '../../util/types/announcement.types';
 import { AnnouncementPersistence } from '../announcement.persistence';
 import { DiscussionPersistence } from '../discussion.persistence';
-import {
-  DiscussionCreateParams,
-  DiscussionDetail,
-} from '../../util/types/discussion.types';
+import { DiscussionCreateParams, DiscussionDetail } from '../../util/types/discussion.types';
 import { AssignmentCreateSchema, AssignmentDetail } from '../../util/types/assignment.types';
 import { AssignmentPersistence } from '../assignment.persistence';
 import { AssignmentSubmissionDetail } from '../../util/types/assignmentSubmission.types';
@@ -42,22 +41,15 @@ import { UsersPersistence } from '../auth/users.persistence';
 import { RegisterParams } from '../../util/types/auth.types';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
-const classJoinRequestPersistence: ClassJoinRequestPersistence =
-  new ClassJoinRequestPersistence();
-const learningObjectPersistence: LearningObjectPersistence =
-  new LearningObjectPersistence();
+const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
+const learningObjectPersistence: LearningObjectPersistence = new LearningObjectPersistence();
 const learningObjectKeywordPersistence: LearningObjectKeywordPersistence =
   new LearningObjectKeywordPersistence();
-const learningPathPersistence: LearningPathPersistence =
-  new LearningPathPersistence();
-const learningPathNodePersistence: LearningPathNodePersistence =
-  new LearningPathNodePersistence();
-const announcementPersistence: AnnouncementPersistence =
-  new AnnouncementPersistence();
-const discussionPersistence: DiscussionPersistence =
-  new DiscussionPersistence();
-const assignmentPersistence: AssignmentPersistence =
-  new AssignmentPersistence();
+const learningPathPersistence: LearningPathPersistence = new LearningPathPersistence();
+const learningPathNodePersistence: LearningPathNodePersistence = new LearningPathNodePersistence();
+const announcementPersistence: AnnouncementPersistence = new AnnouncementPersistence();
+const discussionPersistence: DiscussionPersistence = new DiscussionPersistence();
+const assignmentPersistence: AssignmentPersistence = new AssignmentPersistence();
 const assignemntSubmissionPersistence: AssignmentSubmissionPersistence =
   new AssignmentSubmissionPersistence();
 const studentPersistence: StudentPersistence = new StudentPersistence();
@@ -74,7 +66,7 @@ export const insertStudents = async (): Promise<FullUserType[]> => {
       surname: 'student1',
       name: 'student1',
       role: ClassRoleEnum.STUDENT,
-      provider: AuthenticationProvider.LOCAL
+      provider: AuthenticationProvider.LOCAL,
     },
     {
       username: 'student2',
@@ -83,7 +75,7 @@ export const insertStudents = async (): Promise<FullUserType[]> => {
       surname: 'student2',
       name: 'student2',
       role: ClassRoleEnum.STUDENT,
-      provider: AuthenticationProvider.LOCAL
+      provider: AuthenticationProvider.LOCAL,
     },
   ];
   return Promise.all(users.map((user) => usersPersistence.saveUser(user)));
@@ -98,7 +90,7 @@ const insertTeachers = async (): Promise<FullUserType[]> => {
       surname: 'teacher1',
       name: 'teacher1',
       role: ClassRoleEnum.TEACHER,
-      provider: AuthenticationProvider.LOCAL
+      provider: AuthenticationProvider.LOCAL,
     },
     {
       username: 'teacher2',
@@ -107,17 +99,14 @@ const insertTeachers = async (): Promise<FullUserType[]> => {
       surname: 'teacher2',
       name: 'teacher2',
       role: ClassRoleEnum.TEACHER,
-      provider: AuthenticationProvider.LOCAL
+      provider: AuthenticationProvider.LOCAL,
     },
   ];
   return Promise.all(users.map((user) => usersPersistence.saveUser(user)));
 };
 
 export const insertUsers = async (): Promise<FullUserType[]> => {
-  const [students, teachers] = await Promise.all([
-    insertStudents(),
-    insertTeachers(),
-  ]);
+  const [students, teachers] = await Promise.all([insertStudents(), insertTeachers()]);
   return [...students, ...teachers];
 };
 
@@ -129,7 +118,7 @@ export const insertClasses = async (): Promise<ClassDetail[]> => {
     surname: 'teacher3',
     name: 'teacher3',
     role: ClassRoleEnum.TEACHER,
-    provider: AuthenticationProvider.LOCAL
+    provider: AuthenticationProvider.LOCAL,
   });
   const classes = [
     {
@@ -143,15 +132,11 @@ export const insertClasses = async (): Promise<ClassDetail[]> => {
     },
   ];
   return Promise.all(
-    classes.map((classData) =>
-      classPersistence.createClass(classData, teacher as UserEntity),
-    ),
+    classes.map((classData) => classPersistence.createClass(classData, teacher as UserEntity)),
   );
 };
 
-export const insertClassJoinRequests = async (): Promise<
-  ClassJoinRequestDetail[]
-> => {
+export const insertClassJoinRequests = async (): Promise<ClassJoinRequestDetail[]> => {
   const classes = await insertClasses();
   const students = await insertStudents();
   const teachers = await insertTeachers();
@@ -185,16 +170,10 @@ export const insertClassesWithStudents = async (): Promise<ClassDetail[]> => {
     });
     classIds.add(joinRequest.class.id);
   }
-  return Promise.all(
-    Array.from(classIds).map((classId) =>
-      classPersistence.getClassById(classId),
-    ),
-  );
+  return Promise.all(Array.from(classIds).map((classId) => classPersistence.getClassById(classId)));
 };
 
-export const insertLearningObjects = async (): Promise<
-  LearningObjectDetail[]
-> => {
+export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> => {
   const learningObjectsData: LearningObjectCreateParams[] = [
     {
       hruid: 'Text plain object',
@@ -251,16 +230,13 @@ export const insertLearningObjects = async (): Promise<
     [{ keyword: 'test1' }, { keyword: 'test2' }, { keyword: 'test4' }],
   ];
   const learningObjects: LearningObjectDetail[] = await Promise.all(
-    learningObjectsData.map((object) =>
-      learningObjectPersistence.createLearningObject(object),
-    ),
+    learningObjectsData.map((object) => learningObjectPersistence.createLearningObject(object)),
   );
   for (let i = 0; i < keywordsData.length; i++) {
-    const keywords =
-      await learningObjectKeywordPersistence.updateLearningObjectKeywords(
-        learningObjects[i].id,
-        keywordsData[i],
-      );
+    const keywords = await learningObjectKeywordPersistence.updateLearningObjectKeywords(
+      learningObjects[i].id,
+      keywordsData[i],
+    );
     learningObjects[i].keywords = keywords.map((keyword) => ({
       keyword: keyword.keyword,
     }));
@@ -284,9 +260,7 @@ const insertLearningPathsHelp = async (): Promise<LearningPathDetail[]> => {
     },
   ];
   return Promise.all(
-    learningPaths.map((learningPath) =>
-      learningPathPersistence.createLearningPath(learningPath),
-    ),
+    learningPaths.map((learningPath) => learningPathPersistence.createLearningPath(learningPath)),
   );
 };
 
@@ -322,9 +296,7 @@ export const insertLearningPaths = async (): Promise<LearningPathDetail[]> => {
   return learningPaths;
 };
 
-export const insertLearningPathNodes = async (): Promise<
-  LearningPathNodeDetail[]
-> => {
+export const insertLearningPathNodes = async (): Promise<LearningPathNodeDetail[]> => {
   const learningPaths = await insertLearningPathsHelp();
   return insertLearningPathNodesHelp(learningPaths);
 };
@@ -347,10 +319,7 @@ export const insertAnnouncements = async (): Promise<AnnouncementDetail[]> => {
     ];
     announcements.push(
       ...announcementsData.map((announcement) =>
-        announcementPersistence.createAnnouncement(
-          announcement,
-          classData.teachers[0].id,
-        ),
+        announcementPersistence.createAnnouncement(announcement, classData.teachers[0].id),
       ),
     );
   }
@@ -368,9 +337,9 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
         classId: classData.id,
         teacherId: classData.teachers[0].id,
         groups: groups,
-        learningPathId: path.id
+        learningPathId: path.id,
       });
-      assignments.push(assignmentPersistence.createAssignment(assignment))
+      assignments.push(assignmentPersistence.createAssignment(assignment));
     }
   }
   return Promise.all(assignments);
@@ -382,25 +351,31 @@ export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissi
   for (const assignemnt of assignments) {
     for (const group of assignemnt.groups) {
       for (const learningPathNode of assignemnt.learningPath.learningPathNodes) {
-        const learningObject = await learningObjectPersistence.getLearningObjectById(learningPathNode.learningObject.id);
+        const learningObject = await learningObjectPersistence.getLearningObjectById(
+          learningPathNode.learningObject.id,
+        );
         if (learningObject.submissionType === SubmissionTypeEnum.Enum.MULTIPLE_CHOICE) {
           const multipleChoice = learningObject.multipleChoice as MultipleChoice;
-          submissions.push(assignemntSubmissionPersistence.createAssignmentSubmission({
-            nodeId: learningPathNode.id,
-            groupId: group.id,
-            submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
-            submission: multipleChoice.options[0]
-          }));
+          submissions.push(
+            assignemntSubmissionPersistence.createAssignmentSubmission({
+              nodeId: learningPathNode.id,
+              groupId: group.id,
+              submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
+              submission: multipleChoice.options[0],
+            }),
+          );
         } else if (learningObject.submissionType === SubmissionTypeEnum.Enum.FILE) {
-          submissions.push(assignemntSubmissionPersistence.createAssignmentSubmission({
-            nodeId: learningPathNode.id,
-            groupId: group.id,
-            submissionType: SubmissionTypeEnum.Enum.FILE,
-            submission: {
-              fileName: "test.txt",
-              filePath: "files-submissions/qkjfqmlfqkf.txt"
-            }
-          }));
+          submissions.push(
+            assignemntSubmissionPersistence.createAssignmentSubmission({
+              nodeId: learningPathNode.id,
+              groupId: group.id,
+              submissionType: SubmissionTypeEnum.Enum.FILE,
+              submission: {
+                fileName: 'test.txt',
+                filePath: 'files-submissions/qkjfqmlfqkf.txt',
+              },
+            }),
+          );
         }
       }
     }
@@ -412,12 +387,14 @@ export const insertDiscussions = async (): Promise<DiscussionDetail[]> => {
   const assignments = await insertAssignments();
   const discussions = [];
   for (const assignemnt of assignments) {
-  for (const group of assignemnt.groups) {
+    for (const group of assignemnt.groups) {
       const discussionData: DiscussionCreateParams = {
-      groupId: group.id
+        groupId: group.id,
       };
       // get the group members userIds
-      const groupMemberUserIds: string[] = await studentPersistence.getStudentUserIdsByGroupId(group.id);
+      const groupMemberUserIds: string[] = await studentPersistence.getStudentUserIdsByGroupId(
+        group.id,
+      );
 
       // get the teacherIds
       const teacherIds: string[] = await teacherPersistence.getTeacherUserIdsByGroupId(group.id);
@@ -435,22 +412,22 @@ export const insertMessages = async (): Promise<MessageDetail[]> => {
   for (const discussion of discussions) {
     const messagesData: MessageCreateParams[] = [
       {
-        content: "test",
+        content: 'test',
         discussionId: discussion.id,
-        senderId: discussion.members[0].id
+        senderId: discussion.members[0].id,
       },
       {
-        content: "test2",
+        content: 'test2',
         discussionId: discussion.id,
-        senderId: discussion.members[0].id
-      }
+        senderId: discussion.members[0].id,
+      },
     ];
     for (const message of messagesData) {
       messages.push(messagePersistence.createMessage(message));
     }
   }
   return Promise.all(messages);
-}
+};
 
 export const deleteAllData = async (): Promise<void> => {
   await PrismaSingleton.instance.classJoinRequest.deleteMany();

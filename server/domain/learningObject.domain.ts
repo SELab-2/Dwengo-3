@@ -91,7 +91,8 @@ export class LearningObjectDomain {
       throw new BadRequestError(40029);
     }
 
-    const nodes = (await this.learningObjectPersistence.getLearningPathNodes(id))?.learningPathNodes;
+    const nodes = (await this.learningObjectPersistence.getLearningPathNodes(id))
+      ?.learningPathNodes;
 
     // If the LearningObject is linked to any LearningPathNode, prevent deletion
     if (!nodes || nodes.length > 0) {

@@ -28,5 +28,5 @@ export type MessageFilterParams = z.infer<typeof MessageFilterSchema>;
 export type MessageCreateParams = z.infer<typeof MessageCreateSchema>;
 export type MessageUpdateParams = z.infer<typeof MessageUpdateSchema>;
 export type MessageId = z.infer<typeof MessageIdSchema>;
-export type MessageDetail = Prisma.MessageGetPayload<{select: typeof messageSelectDetail}>;
-export type MessageShort = Prisma.MessageGetPayload<{select: typeof messageSelectShort}>;
+export type MessageDetail = Prisma.MessageGetPayload<{ select: typeof messageSelectDetail }>;
+export type MessageShort = Prisma.MessageGetPayload<{ select: typeof messageSelectShort }>;

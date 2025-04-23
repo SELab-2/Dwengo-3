@@ -41,8 +41,8 @@ export class AnnouncementPersistence {
     const whereClause: Prisma.AnnouncementWhereInput = {
       AND: [
         filters.classId ? { classId: filters.classId } : {},
-        filters.teacherId 
-          ? { 
+        filters.teacherId
+          ? {
               class: {
                 teachers: {
                   some: {
@@ -50,7 +50,7 @@ export class AnnouncementPersistence {
                   },
                 },
               },
-            } 
+            }
           : {},
         filters.studentId
           ? {

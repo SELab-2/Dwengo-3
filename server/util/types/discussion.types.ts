@@ -17,5 +17,7 @@ export const DiscussionCreateSchema = z.object({
 
 export type DiscussionFilterParams = z.infer<typeof DiscussionFilterSchema>;
 export type DiscussionCreateParams = z.infer<typeof DiscussionCreateSchema>;
-export type DiscussionDetail = Prisma.DiscussionGetPayload<{select: typeof discussionSelectDetail}>;
-export type DiscussionShort = Prisma.DiscussionGetPayload<{select: typeof discussionSelectShort}>;
+export type DiscussionDetail = Prisma.DiscussionGetPayload<{
+  select: typeof discussionSelectDetail;
+}>;
+export type DiscussionShort = Prisma.DiscussionGetPayload<{ select: typeof discussionSelectShort }>;

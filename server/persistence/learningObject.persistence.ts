@@ -89,15 +89,15 @@ export class LearningObjectPersistence {
 
   public async getLearningPathNodes(id: string) {
     const nodes = this.prisma.learningObject.findUnique({
-      where: {id : id},
+      where: { id: id },
       select: {
         learningPathNodes: {
-          select: learningPathNodeSelectShort
-        }
-      }
+          select: learningPathNodeSelectShort,
+        },
+      },
     });
 
-    if (! nodes) {
+    if (!nodes) {
       throw new Error(`Nodes from learningObjcet with id: ${id} not found`);
     }
     return nodes;

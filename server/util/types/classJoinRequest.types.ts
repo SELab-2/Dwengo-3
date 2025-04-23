@@ -6,9 +6,7 @@ export const ClassJoinRequestCreateScheme = z.object({
   classId: z.string().uuid('ClassId must be a valid UUID'),
 });
 
-export type ClassJoinRequestCreateParams = z.infer<
-  typeof ClassJoinRequestCreateScheme
->;
+export type ClassJoinRequestCreateParams = z.infer<typeof ClassJoinRequestCreateScheme>;
 
 export const ClassJoinRequestFilterSchema = z
   .object({
@@ -20,9 +18,7 @@ export const ClassJoinRequestFilterSchema = z
     path: ['classId', 'userId'], // This will attach the error to both fields
   });
 
-export type ClassJoinRequestFilterParams = z.infer<
-  typeof ClassJoinRequestFilterSchema
->;
+export type ClassJoinRequestFilterParams = z.infer<typeof ClassJoinRequestFilterSchema>;
 
 export const ClassJoinRequestDecisionSchema = z
   .object({
@@ -36,8 +32,8 @@ export const ClassJoinRequestDecisionSchema = z
     };
   });
 
-export type ClassJoinRequestDecisionParams = z.infer<
-  typeof ClassJoinRequestDecisionSchema
->;
+export type ClassJoinRequestDecisionParams = z.infer<typeof ClassJoinRequestDecisionSchema>;
 
-export type ClassJoinRequestDetail = Prisma.ClassJoinRequestGetPayload<{select: typeof classJoinRequestSelectDetail}>;
+export type ClassJoinRequestDetail = Prisma.ClassJoinRequestGetPayload<{
+  select: typeof classJoinRequestSelectDetail;
+}>;

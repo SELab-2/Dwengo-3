@@ -26,7 +26,10 @@ export class DiscussionDomain {
     this.studentPersistence = new StudentPersistence();
   }
 
-  public async getDiscussions(query: any, user: UserEntity): Promise<{ data: DiscussionShort[]; totalPages: number }> {
+  public async getDiscussions(
+    query: any,
+    user: UserEntity,
+  ): Promise<{ data: DiscussionShort[]; totalPages: number }> {
     const parseResult = queryWithPaginationParser(query, DiscussionFilterSchema);
     const filters = parseResult.dataSchema;
     if (user.id !== filters.userId) {

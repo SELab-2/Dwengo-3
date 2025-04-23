@@ -44,7 +44,7 @@ describe('class persistence test', () => {
 
     test('request with unexisting teacher id responds with false', async () => {
       for (const classData of classes) {
-        const req = classPersistence.isTeacherFromClass("sdflkqmfqlm", classData.id);
+        const req = classPersistence.isTeacherFromClass('sdflkqmfqlm', classData.id);
         await expect(req).resolves.toBeFalsy();
       }
     });
@@ -53,17 +53,26 @@ describe('class persistence test', () => {
   describe('test get classes', () => {
     test('request with existing teacher id responds with array of classes', async () => {
       const teacher = classes[0].teachers[0];
-      const req = classPersistence.getClasses({page: 1, pageSize: 10, skip:0}, {teacherId: teacher.id});
-      const expectedClasses = classes.map((classData) => ({id: classData.id, name: classData.name}));
-      await expect(req).resolves.toEqual({data: expect.arrayContaining(expectedClasses), totalPages: 1});
+      const req = classPersistence.getClasses(
+        { page: 1, pageSize: 10, skip: 0 },
+        { teacherId: teacher.id },
+      );
+      const expectedClasses = classes.map((classData) => ({
+        id: classData.id,
+        name: classData.name,
+      }));
+      await expect(req).resolves.toEqual({
+        data: expect.arrayContaining(expectedClasses),
+        totalPages: 1,
+      });
     });
   });
 
   describe('test update class', () => {
     test('request with existing id should update class correctly', async () => {
       for (const classData of classes) {
-        classData.name = "Test update";
-        const updateData = {name: classData.name, id: classData.id};
+        classData.name = 'Test update';
+        const updateData = { name: classData.name, id: classData.id };
         await classPersistence.updateClass(classData.id, updateData);
         const req = classPersistence.getClassById(classData.id);
         await expect(req).resolves.toStrictEqual(classData);
