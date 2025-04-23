@@ -16,7 +16,7 @@ export const classSelectDetail = {
   students: {
     select: studentSelectShort,
   },
-  assignment: {
+  assignments: {
     select: assignmentSelectShort,
   },
 };

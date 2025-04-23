@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Grid,
+  GridLegacy,
   LinearProgress,
   List,
   ListItem,
@@ -11,8 +11,8 @@ import {
   Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const classData = {
   id: '1',
@@ -41,7 +41,9 @@ const admissionRequests = [
 
 function ClassDashboardPage() {
   const { t } = useTranslation();
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
+
+  const navigate = useNavigate();
 
   const handleApproveRequest = (id: string) => {
     // TODO
@@ -59,9 +61,9 @@ function ClassDashboardPage() {
     <Box sx={{ minHeight: '100vh', p: 3 }}>
       <ClassNavigationBar id={classData.id} className={classData.name} />
 
-      <Grid container spacing={3}>
+      <GridLegacy container spacing={3}>
         {/* Left Sidebar (Co-Teachers & Info) */}
-        <Grid item xs={12} md={3}>
+        <GridLegacy item xs={12} md={3}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               {t('coTeachers')}
@@ -92,10 +94,10 @@ function ClassDashboardPage() {
               {t('editClassGroup')}
             </Button>
           </Paper>
-        </Grid>
+        </GridLegacy>
 
         {/* Main Content (Students & Admission Requests) */}
-        <Grid item xs={12} md={9}>
+        <GridLegacy item xs={12} md={9}>
           <Typography variant="h4" sx={{ mt: 3 }}>
             {t('students')}
           </Typography>
@@ -115,11 +117,7 @@ function ClassDashboardPage() {
                   />
                   <Button
                     variant="contained"
-                    onClick={
-                      // TODO: add link to student assignment progress
-                      // Replace with actual navigation
-                      () => alert(`TODO: View progress details for ${student.name}`)
-                    }
+                    onClick={() => navigate(`/class/${classData.id}/student/${student.id}`)}
                   >
                     {t('details')}
                   </Button>
@@ -161,8 +159,8 @@ function ClassDashboardPage() {
               </Stack>
             </Paper>
           )}
-        </Grid>
-      </Grid>
+        </GridLegacy>
+      </GridLegacy>
     </Box>
   );
 }

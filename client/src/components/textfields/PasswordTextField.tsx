@@ -1,5 +1,5 @@
-import { TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import CustomTextField from './CustomTextField';
 
 function PasswordTextField({
   password,
@@ -10,19 +10,7 @@ function PasswordTextField({
 }) {
   const { t } = useTranslation();
 
-  return (
-    <TextField
-      margin="normal"
-      required
-      fullWidth
-      name="password"
-      label={t('password')}
-      type="password"
-      id="password"
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-    />
-  );
+  return <CustomTextField value={password} setValue={setPassword} translation={t('password')} />;
 }
 
 export default PasswordTextField;

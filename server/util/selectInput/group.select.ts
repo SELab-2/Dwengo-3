@@ -7,6 +7,9 @@ export const groupSelectShort = {
   progress: true,
   assignmentId: true,
   name: true,
+  students: {
+    select: studentSelectShort,
+  },
 };
 
 export const groupSelectDetail = {

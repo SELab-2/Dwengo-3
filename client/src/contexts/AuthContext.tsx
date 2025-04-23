@@ -1,15 +1,17 @@
 import { createContext, useState, ReactNode, useEffect } from 'react';
-import { AuthContextType } from '../util/types/auth.types';
-import { UserDetail } from '../util/types/user.types';
+import { AuthContextType } from '../util/interfaces/auth.interfaces';
+import { UserDetail } from '../util/interfaces/user.interfaces';
 import apiClient from '../api/apiClient';
 import { ApiRoutes } from '../api/api.routes';
 import { useLocation } from 'react-router-dom';
+import { useError } from '../hooks/useError';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserDetail | null>(null);
   const location = useLocation();
+  const { setError } = useError();
 
   useEffect(() => {
     // Check if the user is logged in
@@ -22,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const response = await apiClient.get(ApiRoutes.me); // Backend endpoint to fetch user info
           setUser(response.data);
         } catch (error) {
-          console.error('Failed to fetch user:', error);
+          setError('Failed to fetch user data. Please log in again.');
         }
       };
 

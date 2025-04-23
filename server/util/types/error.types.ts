@@ -189,6 +189,10 @@ export class BadRequestError extends APIError {
         return "Can't fetch assignmentSubmissions that are not yours...";
       case 40044:
         return "Can't submit to a non-favorited learningPath...";
+      case 40045:
+        return 'Invalid data provided...';
+      case 40046:
+        return 'User already exists...';
       default:
         return 'Bad request...';
     }

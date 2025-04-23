@@ -5,13 +5,13 @@ import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useLogin } from '../hooks/useAuth';
-import { ClassRoleEnum } from '../util/types/class.types';
+import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
 import { AppRoutes } from '../util/app.routes';
 import { ApiRoutes } from '../api/api.routes';
-import { UserDetail } from '../util/types/user.types';
+import { UserDetail } from '../util/interfaces/user.interfaces';
 import GoogleLoginButton from './GoogleLoginButton';
 
 function LoginForm() {
@@ -35,12 +35,11 @@ function LoginForm() {
 
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
     loginMutation.mutate(
       {
-        email: data.get('email') as string,
-        password: data.get('password') as string,
+        email: email,
+        password: password,
         role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, //TODO: Change this to the correct role
       },
       {
