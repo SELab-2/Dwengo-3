@@ -9,7 +9,7 @@ dotenv.config({ path: '../.env' });
  */
 async function main() {
   await prisma.message.deleteMany();
-  await prisma.chat.deleteMany();
+  await prisma.discussion.deleteMany();
   await prisma.assignmentSubmission.deleteMany();
   await prisma.group.deleteMany();
   await prisma.learningNodeTransition.deleteMany();

@@ -11,7 +11,8 @@
     "test:int": "./util/test-files/integration_test.sh",
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",
     "readData": "ts-node util/db-scripts/readData.ts",
-    "deleteData": "ts-node util/db-scripts/deleteData.ts"
+    "deleteData": "ts-node util/db-scripts/deleteData.ts",
+    "insertData2": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData2.ts"
   },
   "repository": {
     "type": "git",

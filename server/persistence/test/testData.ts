@@ -279,7 +279,7 @@ const insertLearningPathsHelp = async (): Promise<LearningPathDetail[]> => {
     {
       hruid: 'learning path 2',
       language: 'EN',
-      title: 'test',
+      title: 'test2',
       description: 'test',
     },
   ];
