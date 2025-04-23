@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { Prisma } from '.prisma/client';
+import { classJoinRequestSelectDetail } from '../selectInput/classJoinRequest.select';
 
 export const ClassJoinRequestCreateScheme = z.object({
   classId: z.string().uuid('ClassId must be a valid UUID'),
@@ -37,3 +39,5 @@ export const ClassJoinRequestDecisionSchema = z
 export type ClassJoinRequestDecisionParams = z.infer<
   typeof ClassJoinRequestDecisionSchema
 >;
+
+export type ClassJoinRequestDetail = Prisma.ClassJoinRequestGetPayload<{select: typeof classJoinRequestSelectDetail}>;

@@ -5,27 +5,24 @@ import {
   ClassJoinRequestDecisionParams,
   ClassJoinRequestFilterParams,
 } from '../util/types/classJoinRequest.types';
-import { Prisma } from '@prisma/client';
+import { ClassRole, Prisma } from '@prisma/client';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinRequest.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { UsersPersistence } from './auth/users.persistence';
 
 export class ClassJoinRequestPersistence {
+  private usersPersistence: UsersPersistence;
+  public constructor() {
+    this.usersPersistence = new UsersPersistence();
+  }
   public async createClassJoinRequest(data: ClassJoinRequestCreateParams, user: UserEntity) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {
-        user: {
-          connect: {
-            id: user.id,
-          },
-        },
-        class: {
-          connect: {
-            id: data.classId,
-          },
-        },
+        classId: data.classId,
+        userId: user.id,
       },
-      select: classJoinRequestSelectDetail,
+      select: classJoinRequestSelectDetail
     });
   }
 
@@ -44,7 +41,7 @@ export class ClassJoinRequestPersistence {
   public async getJoinRequests(
     paginationParams: PaginationParams,
     filters: ClassJoinRequestFilterParams,
-    classRole: ClassRoleEnum,
+    classRole: ClassRole,
   ) {
     // We need to do this to not expose the Prisma.EnumClassRoleFilter<"User"> type to the domain layer.
     let filterByRole: Prisma.UserWhereInput = {};
@@ -76,25 +73,39 @@ export class ClassJoinRequestPersistence {
   public async handleJoinRequest(data: ClassJoinRequestDecisionParams) {
     if (data.acceptRequest) {
       // Delete the join request.
-      const classJoinRequest = await PrismaSingleton.instance.classJoinRequest.delete({
-        where: {
-          id: data.requestId,
-        },
-      });
-
-      // Add the student/teacher to the class.
-      await PrismaSingleton.instance.student.update({
-        where: {
-          userId: classJoinRequest.userId,
-        },
-        data: {
-          classes: {
-            connect: {
-              id: classJoinRequest.classId,
-            },
+      const classJoinRequest =
+        await PrismaSingleton.instance.classJoinRequest.delete({
+          where: {
+            id: data.requestId,
           },
-        },
-      });
+        });
+      // Add the student/teacher to the class.
+      const user = await this.usersPersistence.getUserById(classJoinRequest.userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      let dataConnect;
+      if (user.role === ClassRoleEnum.STUDENT) {
+        dataConnect = {students: {
+          connect: {
+            id: user.student!.id
+          }
+        }};
+      } else {
+        dataConnect = {
+          teachers: {
+            connect: {
+              id: user.teacher!.id
+            }
+          }
+        };
+      }
+        await PrismaSingleton.instance.class.update({
+          where: {
+            id: classJoinRequest.classId,
+          },
+          data: dataConnect
+        });
     } else {
       // Delete the join request.
       await PrismaSingleton.instance.classJoinRequest.delete({

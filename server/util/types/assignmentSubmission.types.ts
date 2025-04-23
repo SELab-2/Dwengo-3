@@ -1,8 +1,6 @@
 import { Prisma, SubmissionType } from '@prisma/client';
 import { z } from 'zod';
-import { Uuid } from './assignment.types';
-
-import { assignmentSubmissionSelectDetail } from '../selectInput/assignmentSubmission.select';
+import { assignmentSubmissionSelectDetail, assignmentSubmissionSelectShort } from '../selectInput/assignmentSubmission.select';
 
 const FileSubmissionSchema = z.object({
   fileName: z.string(),
@@ -13,7 +11,7 @@ const MultipleChoiceSubSchema = z.string();
 
 export const SubmissionFilterSchema = z
   .object({
-    groupId: z.string().uuid().optional(),
+    groupId: z.string().uuid(),
     nodeId: z.string().uuid().optional(),
     favoriteId: z.string().uuid().optional(),
   })
@@ -72,6 +70,6 @@ export type FileSubmission = z.infer<typeof FileSubmissionSchema>;
 export type AssignmentSubmissionDetail = Prisma.AssignmentSubmissionGetPayload<{
   select: typeof assignmentSubmissionSelectDetail;
 }>;
-export type AssignmentSubmissionShort = {
-  id: Uuid;
-};
+export type AssignmentSubmissionShort = Prisma.AssignmentSubmissionGetPayload<{
+  select: typeof assignmentSubmissionSelectShort
+}>;
