@@ -14,7 +14,7 @@ const MultipleChoiceSubSchema = z.string();
 
 export const SubmissionFilterSchema = z
   .object({
-    groupId: z.string().uuid(),
+    groupId: z.string().uuid().optional(),
     nodeId: z.string().uuid().optional(),
     favoriteId: z.string().uuid().optional(),
   })
