@@ -5,7 +5,6 @@ import {
   StudentCreateSchema,
   StudentFilterParams,
   StudentFilterSchema,
-  StudentIncludeSchema,
 } from '../util/types/student.types';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { UsersPersistence } from '../persistence/auth/users.persistence';
@@ -247,7 +246,6 @@ export class StudentDomain {
     const students = await this.studentPersistence.getStudents(
       { page: 1, pageSize: 100, skip: 0 },
       { groupId },
-      { user: false, classes: false, groups: false },
     );
 
     // Check if the student exists
