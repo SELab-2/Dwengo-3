@@ -1,8 +1,7 @@
-import { Prisma } from '@prisma/client';
 import { classSelectShort } from './class.select';
 import { userSelectShort } from './user.select';
 
-export const classJoinRequestSelectDetail: Prisma.ClassJoinRequestSelect = {
+export const classJoinRequestSelectDetail = {
   id: true,
   class: {
     select: classSelectShort,

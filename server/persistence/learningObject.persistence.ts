@@ -12,6 +12,7 @@ import {
   learningObjectSelectShort,
 } from '../util/selectInput/learningObject.select';
 import { NotFoundError } from '../util/types/error.types';
+import { learningPathNodeSelectShort } from '../util/selectInput/learningPathNode.select';
 
 export class LearningObjectPersistence {
   private prisma: PrismaClient;
@@ -84,6 +85,22 @@ export class LearningObjectPersistence {
     }
 
     return learningObject;
+  }
+
+  public async getLearningPathNodes(id: string) {
+    const nodes = this.prisma.learningObject.findUnique({
+      where: { id: id },
+      select: {
+        learningPathNodes: {
+          select: learningPathNodeSelectShort,
+        },
+      },
+    });
+
+    if (!nodes) {
+      throw new Error(`Nodes from learningObjcet with id: ${id} not found`);
+    }
+    return nodes;
   }
 
   public async deleteLearningObject(id: string) {

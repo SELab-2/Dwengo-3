@@ -1,9 +1,8 @@
-import { Prisma } from '@prisma/client';
 import { classSelectShort } from './class.select';
 import { groupSelectShort } from './group.select';
 import { learningPathSelectShort } from './learningPath.select';
 
-export const assignmentSelectDetail: Prisma.AssignmentSelect = {
+export const assignmentSelectDetail = {
   id: true,
   teacherId: true,
   class: {

@@ -4,7 +4,7 @@ import {
   DiscussionCreateParams,
   DiscussionDetail,
   DiscussionFilterParams,
-  discussionShort,
+  DiscussionShort,
 } from '../util/types/discussion.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
@@ -25,9 +25,9 @@ export class DiscussionPersistence {
   public async getDiscussions(
     filters: DiscussionFilterParams,
     paginationParams: PaginationParams,
-  ): Promise<{ data: discussionShort[]; totalPages: number }> {
+  ): Promise<{ data: DiscussionShort[]; totalPages: number }> {
     const whereClause: Prisma.DiscussionWhereInput = {
-      AND: [filters.groupIds ? { groupId: { in: filters.groupIds } } : {}],
+      AND: [filters.userId ? { members: { some: { id: filters.userId } } } : {}],
     };
 
     return searchAndPaginate(

@@ -158,9 +158,6 @@ export class StudentDomain {
     // Validate and parse student filters
     const filters = StudentFilterSchema.parse(query);
 
-    // Validate and parse student include
-    const include = StudentIncludeSchema.parse(query);
-
     if (user.role === ClassRoleEnum.TEACHER) {
       // Check if the teacher exists
       const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
@@ -186,7 +183,7 @@ export class StudentDomain {
       await this.validateGetStudentsAsStudent(filters, student);
     }
 
-    return await this.studentPersistence.getStudents(pagination, filters, include);
+    return await this.studentPersistence.getStudents(pagination, filters);
   }
 
   public async getStudentById(id: string, user: UserEntity) {

@@ -3,11 +3,11 @@ import { groupSelectShort } from './group.select';
 import { userSelectShort } from './user.select';
 import { messageSelectDetail } from './message.select';
 
-export const discussionSelectShort: Prisma.DiscussionSelect = {
+export const discussionSelectShort = {
   id: true,
 };
 
-export const discussionSelectDetail: Prisma.DiscussionSelect = {
+export const discussionSelectDetail = {
   id: true,
   group: {
     select: groupSelectShort,

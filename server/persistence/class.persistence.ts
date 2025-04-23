@@ -1,5 +1,10 @@
 import { PaginationParams } from '../util/types/pagination.types';
-import { ClassCreateParams, ClassFilterParams, ClassUpdateParams } from '../util/types/class.types';
+import {
+  ClassCreateParams,
+  ClassDetail,
+  ClassFilterParams,
+  ClassUpdateParams,
+} from '../util/types/class.types';
 import { Prisma } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
@@ -48,7 +53,7 @@ export class ClassPersistence {
     return classData;
   }
 
-  public async createClass(params: ClassCreateParams, creator: UserEntity) {
+  public async createClass(params: ClassCreateParams, creator: UserEntity): Promise<ClassDetail> {
     return await this.prisma.class.create({
       data: {
         name: params.name,

@@ -51,12 +51,11 @@ export class TeacherDomain {
     // Validate the query
     const paginationData = PaginationFilterSchema.parse(query);
     const filterData = TeacherFilterSchema.parse(query);
-    const includeData = TeacherIncludeSchema.parse(query);
 
     // TODO: validation
 
     // Fetch the teachers
-    return await this.teacherPersistence.getTeachers(paginationData, filterData, includeData);
+    return await this.teacherPersistence.getTeachers(paginationData, filterData);
   }
 
   public async getTeacherById(id: string) {
