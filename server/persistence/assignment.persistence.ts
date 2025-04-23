@@ -14,6 +14,7 @@ import {
   assignmentSelectShort,
 } from '../util/selectInput/assignment.select';
 import { NotFoundError } from '../util/types/error.types';
+import { groupSelectShort } from '../util/selectInput/group.select';
 
 export class AssignmentPersistence {
   public async getAssignments(
@@ -124,15 +125,11 @@ export class AssignmentPersistence {
               connect: group.map((student: Uuid) => ({ id: student })),
             },
           },
+          select: groupSelectShort
         }),
       ),
     );
-    assignment.groups = groups.map((group) => ({
-      id: group.id,
-      assignmentId: group.assignmentId,
-      name: group.name,
-      progress: group.progress
-    }));
+    assignment.groups = groups;
     return assignment;
   }
 }
