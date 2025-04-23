@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createAssignment, fetchAssignmentById, fetchAssignments } from "../api/assignment";
 import { AssignmentCreate } from "../util/interfaces/assignment.interfaces";
-
 /**
  * Fetches a list of assignments based on the provided class, group, student, and teacher IDs.
  *
@@ -22,9 +21,23 @@ export function useAssignments(
   return useQuery({
     queryKey: ['assignments', classId, groupId, studentId, teacherId],
     queryFn: async () => {
-      return await fetchAssignments(classId, groupId, studentId, teacherId, page, pageSize);
+      return await fetchAssignments({classId, groupId, studentId, teacherId, page, pageSize});
     },
-    enabled: !!classId || !!groupId || !!studentId || !!teacherId,
+    enabled: !!classId || !!groupId || !!studentId || !!teacherId,})}
+
+/**
+ * Hook to fetch assignments for a specific student
+ *
+ * @param studentId - The ID of the student for whom to fetch assignments
+ * @return A query object containing the assignments data
+ */
+export function useAssignmentsOfStudent(studentId: string) {
+  return useQuery({
+    queryKey: ['assignmentsOfStudent', studentId],
+    queryFn: async () => {
+      return await fetchAssignments({ studentId });
+    },
+    enabled: !!studentId,
     refetchOnWindowFocus: false,
   });
 }
@@ -57,4 +70,21 @@ export function useCreateAssignment() {
             return await createAssignment(data);
         }
     });
-    }
+}
+
+/**
+ * Hook to fetch assignments for a specific class
+ *
+ * @param classId - The ID of the class for which to fetch assignments
+ * @return A query object containing the assignments data
+ */
+export function useAssignmentsOfClass(classId: string) {
+  return useQuery({
+    queryKey: ['assignmentsOfClass', classId],
+    queryFn: async () => {
+      return await fetchAssignments({ classId });
+    },
+    enabled: !!classId,
+    refetchOnWindowFocus: false,
+  });
+}

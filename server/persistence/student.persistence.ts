@@ -45,10 +45,7 @@ export class StudentPersistence {
    * @param include - Optional `include` clause for related models.
    * @returns Paginated data and total pages.
    */
-  public async getStudents(
-    pagination: PaginationParams,
-    filters: StudentFilterParams
-  ) {
+  public async getStudents(pagination: PaginationParams, filters: StudentFilterParams) {
     const whereClause: Prisma.StudentWhereInput = {
       AND: [
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
@@ -61,7 +58,7 @@ export class StudentPersistence {
       whereClause,
       pagination,
       undefined,
-      studentSelectShort
+      studentSelectShort,
     );
   }
 

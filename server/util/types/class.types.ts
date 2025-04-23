@@ -27,5 +27,5 @@ export const ClassUpdateSchema = z.object({
 });
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
-export type ClassShort = Prisma.ClassGetPayload<{select: typeof classSelectShort}>;
-export type ClassDetail = Prisma.ClassGetPayload<{select: typeof classSelectDetail}>;
+export type ClassShort = Prisma.ClassGetPayload<{ select: typeof classSelectShort }>;
+export type ClassDetail = Prisma.ClassGetPayload<{ select: typeof classSelectDetail }>;

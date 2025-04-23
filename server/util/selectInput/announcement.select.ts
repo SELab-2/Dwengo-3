@@ -6,7 +6,7 @@ export const announcementSelectDetail = {
   title: true,
   content: true,
   class: {
-    select: classSelectShort
+    select: classSelectShort,
   },
   teacher: {
     select: teacherSelectShort,

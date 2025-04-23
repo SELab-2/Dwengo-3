@@ -17,7 +17,7 @@ export const assignmentSubmissionSelectDetail = {
     select: FavoriteSelectShort,
   },
 };
-  
+
 export const assignmentSubmissionSelectShort = {
-    id: true
+  id: true,
 };

@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import { Prisma } from '.prisma/client';
-import { announcementSelectDetail, announcementSelectShort } from '../selectInput/announcement.select';
+import {
+  announcementSelectDetail,
+  announcementSelectShort,
+} from '../selectInput/announcement.select';
 
 export enum FilterType {
   BEFORE = 'BEFORE',
@@ -68,5 +71,9 @@ export type AnnouncementCreateDomainParams = z.infer<typeof AnnouncementCreateDo
 export type TeacherId = z.infer<typeof TeacherIdSchema>;
 export type AnnouncementUpdateParams = z.infer<typeof AnnouncementUpdateSchema>;
 
-export type AnnouncementDetail = Prisma.AnnouncementGetPayload<{select: typeof announcementSelectDetail}>;
-export type AnnouncementShort = Prisma.AnnouncementGetPayload<{select: typeof announcementSelectShort}>;
+export type AnnouncementDetail = Prisma.AnnouncementGetPayload<{
+  select: typeof announcementSelectDetail;
+}>;
+export type AnnouncementShort = Prisma.AnnouncementGetPayload<{
+  select: typeof announcementSelectShort;
+}>;

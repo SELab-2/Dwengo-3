@@ -2,7 +2,10 @@ import { z } from 'zod';
 import { Uuid } from './assignment.types';
 import { Decimal } from '@prisma/client/runtime/library';
 import { Prisma } from '.prisma/client';
-import { learningObjectSelectDetail, learningObjectSelectShort } from '../selectInput/learningObject.select';
+import {
+  learningObjectSelectDetail,
+  learningObjectSelectShort,
+} from '../selectInput/learningObject.select';
 
 export const ContentTypeEnum = z.enum([
   'TEXT_PLAIN',
@@ -15,11 +18,7 @@ export const ContentTypeEnum = z.enum([
   'BLOCKLY',
 ]);
 
-export const SubmissionTypeEnum = z.enum([
-  "READ",
-  "MULTIPLE_CHOICE",
-  "FILE"
-])
+export const SubmissionTypeEnum = z.enum(['READ', 'MULTIPLE_CHOICE', 'FILE']);
 
 export const learningObjectKeywordSchema = z.object({
   keyword: z.string().min(1, 'Keyword is required'),
@@ -28,8 +27,8 @@ export const learningObjectKeywordSchema = z.object({
 export type LearningObjectKeywordParams = z.infer<typeof learningObjectKeywordSchema>;
 
 const multipleChoiseShema = z.object({
-  question: z.string().min(1, "Question is required"),
-  options: z.string().array().nonempty()
+  question: z.string().min(1, 'Question is required'),
+  options: z.string().array().nonempty(),
 });
 
 export type MultipleChoice = z.infer<typeof multipleChoiseShema>;
@@ -97,9 +96,11 @@ export const LearningObjectFilterSchema = z.object({
     .optional(),
 });
 
-export type LearningObjectFilterParams = z.infer<
-  typeof LearningObjectFilterSchema
->;
+export type LearningObjectFilterParams = z.infer<typeof LearningObjectFilterSchema>;
 
-export type LearningObjectShort = Prisma.LearningObjectGetPayload<{select: typeof learningObjectSelectShort}>;
-export type LearningObjectDetail = Prisma.LearningObjectGetPayload<{select: typeof learningObjectSelectDetail}>;
+export type LearningObjectShort = Prisma.LearningObjectGetPayload<{
+  select: typeof learningObjectSelectShort;
+}>;
+export type LearningObjectDetail = Prisma.LearningObjectGetPayload<{
+  select: typeof learningObjectSelectDetail;
+}>;

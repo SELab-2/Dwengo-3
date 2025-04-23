@@ -22,7 +22,7 @@ export class ClassJoinRequestPersistence {
         classId: data.classId,
         userId: user.id,
       },
-      select: classJoinRequestSelectDetail
+      select: classJoinRequestSelectDetail,
     });
   }
 
@@ -73,39 +73,40 @@ export class ClassJoinRequestPersistence {
   public async handleJoinRequest(data: ClassJoinRequestDecisionParams) {
     if (data.acceptRequest) {
       // Delete the join request.
-      const classJoinRequest =
-        await PrismaSingleton.instance.classJoinRequest.delete({
-          where: {
-            id: data.requestId,
-          },
-        });
+      const classJoinRequest = await PrismaSingleton.instance.classJoinRequest.delete({
+        where: {
+          id: data.requestId,
+        },
+      });
       // Add the student/teacher to the class.
       const user = await this.usersPersistence.getUserById(classJoinRequest.userId);
       if (!user) {
-        throw new Error("User not found");
+        throw new Error('User not found');
       }
       let dataConnect;
       if (user.role === ClassRoleEnum.STUDENT) {
-        dataConnect = {students: {
-          connect: {
-            id: user.student!.id
-          }
-        }};
+        dataConnect = {
+          students: {
+            connect: {
+              id: user.student!.id,
+            },
+          },
+        };
       } else {
         dataConnect = {
           teachers: {
             connect: {
-              id: user.teacher!.id
-            }
-          }
+              id: user.teacher!.id,
+            },
+          },
         };
       }
-        await PrismaSingleton.instance.class.update({
-          where: {
-            id: classJoinRequest.classId,
-          },
-          data: dataConnect
-        });
+      await PrismaSingleton.instance.class.update({
+        where: {
+          id: classJoinRequest.classId,
+        },
+        data: dataConnect,
+      });
     } else {
       // Delete the join request.
       await PrismaSingleton.instance.classJoinRequest.delete({

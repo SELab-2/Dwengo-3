@@ -39,10 +39,7 @@ export class TeacherPersistence {
    * @param include - Optional `include` clause for related models.
    * @returns Paginated data and total pages.
    */
-  public async getTeachers(
-    pagination: PaginationParams,
-    filters: TeacherFilterParams,
-  ) {
+  public async getTeachers(pagination: PaginationParams, filters: TeacherFilterParams) {
     const whereClause = {
       AND: [
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
@@ -55,7 +52,7 @@ export class TeacherPersistence {
       whereClause,
       pagination,
       undefined,
-      teacherSelectShort
+      teacherSelectShort,
     );
   }
 

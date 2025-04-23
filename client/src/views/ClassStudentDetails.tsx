@@ -16,69 +16,73 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 import { AppRoutes } from '../util/app.routes.ts';
-
-const classData = {
-  id: '1',
-  name: 'Klas - 6 AIT',
-};
-
-const mockLearningPaths = [
-  { id: '1', name: 'leerpad 1', group: 'Group 1', completed: 7, total: 8 },
-  { id: '2', name: 'leerpad 2', group: 'Group 2', completed: 11, total: 16 },
-  { id: '3', name: 'leerpad 3', group: 'Group 3', completed: 8, total: 11 },
-  { id: '4', name: 'leerpad 4', group: 'Group 4', completed: 15, total: 17 },
-  { id: '5', name: 'leerpad 5', group: 'Group 5', completed: 10, total: 11 },
-];
+import { useClassById } from '../hooks/useClass.ts';
+import { useAssignmentsOfStudent } from '../hooks/useAssignment.ts';
 
 function ClassStudentDetails() {
-  const { id, studentId } = useParams<{ id: string; studentId: string }>();
+  const { classId, studentId } = useParams<{ classId: string; studentId: string }>();
+
+  const { data: classData } = useClassById(classId!);
+  const studentData = classData?.students.find((student) => student.id === studentId);
+  const { data: assignments } = useAssignmentsOfStudent(studentId!);
+
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={classData.id} className={classData.name} />
+      <ClassNavigationBar id={classId!} className={classData?.name} />
 
-      <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 800 }, p: 2 }}>
+      <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%' }, p: 2 }}>
         <Button
           variant="outlined"
           startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(`/class/${classData.id}`)}
+          onClick={() => navigate(AppRoutes.class(classId!))}
           sx={{ mb: 3 }}
         >
           {t('back')}
         </Button>
 
         <Typography variant="h4" gutterBottom>
-          Leerling {studentId}
+          {t('student')}: {studentData?.user.name} {studentData?.user.surname}
         </Typography>
 
-        <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-          {t('assignments')}
-        </Typography>
-
-        <TableContainer component={Paper} sx={{ maxWidth: 900 }}>
+        <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <strong>{t('name')}</strong>
+                  <Typography variant="h6">
+                    <strong>{t('group')}</strong>
+                  </Typography>
                 </TableCell>
                 <TableCell>
-                  <strong>{t('progress')}</strong>
+                  <Typography variant="h6">
+                    <strong>{t('learningPath')}</strong>
+                  </Typography>
                 </TableCell>
                 <TableCell>
-                  <strong>{t('score')}</strong>
+                  <Typography variant="h6">
+                    <strong>{t('progress')}</strong>
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h6">
+                    <strong>{t('score')}</strong>
+                  </Typography>
                 </TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockLearningPaths.map((lp) => {
-                const progress = (lp.completed / lp.total) * 100;
+              {assignments?.data.map((assignment) => {
+                const completed =
+                  assignment.groups[0].progress[assignment.groups[0].progress.length - 1] + 1;
+                const total = assignment.learningPath.learningPathNodes.length;
+                const progress = (completed / total) * 100;
 
                 return (
-                  <TableRow key={lp.id}>
+                  <TableRow key={assignment.id}>
                     <TableCell>
                       <Typography
                         sx={{
@@ -86,9 +90,21 @@ function ClassStudentDetails() {
                           cursor: 'pointer',
                           textDecoration: 'underline',
                         }}
-                        onClick={() => navigate(AppRoutes.learningPath(lp.id))}
+                        onClick={() => navigate(AppRoutes.learningPath(assignment.learningPath.id))}
                       >
-                        {lp.name} {'(' + lp.group + ')'}
+                        {assignment.groups[0].name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography
+                        sx={{
+                          color: 'blue',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                        }}
+                        onClick={() => navigate(AppRoutes.learningPath(assignment.learningPath.id))}
+                      >
+                        {assignment.learningPath.title}
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ minWidth: 200 }}>
@@ -98,9 +114,12 @@ function ClassStudentDetails() {
                         sx={{ height: 8, borderRadius: 5 }}
                       />
                     </TableCell>
-                    <TableCell>{`${lp.completed}/${lp.total}`}</TableCell>
+                    <TableCell>{`${completed}/${total}`}</TableCell>
                     <TableCell>
-                      <Button variant="contained" onClick={() => alert(`Details of ${lp.name}`)}>
+                      <Button
+                        variant="contained"
+                        onClick={() => alert(`Submission details of the assignment`)}
+                      >
                         {t('details')}
                       </Button>
                     </TableCell>

@@ -4,8 +4,7 @@ import { PrismaSingleton } from '../prismaSingleton';
 import { deleteAllData, insertDiscussions } from './testData';
 import { DiscussionDetail } from '../../util/types/discussion.types';
 
-const discussionPersistence: DiscussionPersistence =
-  new DiscussionPersistence();
+const discussionPersistence: DiscussionPersistence = new DiscussionPersistence();
 let discussions: DiscussionDetail[] = [];
 
 describe('discussion persistence test', () => {
@@ -41,9 +40,11 @@ describe('discussion persistence test', () => {
             { userId: user.id },
             { page: 1, pageSize: 20, skip: 0 },
           );
-          const expectedDiscussions = discussions.filter((d) => d.members.some((member) => member.id === user.id)).map((d) => ({
-            id: d.id
-          }));
+          const expectedDiscussions = discussions
+            .filter((d) => d.members.some((member) => member.id === user.id))
+            .map((d) => ({
+              id: d.id,
+            }));
           expect(expectedDiscussions).not.toEqual([]);
           await expect(req).resolves.toEqual({
             data: expect.arrayContaining(expectedDiscussions),

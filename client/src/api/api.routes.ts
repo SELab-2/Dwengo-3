@@ -54,7 +54,6 @@ export const ApiRoutes = {
   },
 
   // ClassJoinRequest
-  // TODO: Change this when the backend is changed
   classJoinRequest: {
     student: {
       create: '/api/class/studentRequest',
