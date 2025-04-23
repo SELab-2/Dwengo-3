@@ -1,14 +1,17 @@
 import { Router, Response, Request } from 'express';
 import { AssignmentDomain } from '../domain/assignment.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class AssignmentController {
   public router: Router;
   private assignmentDomain: AssignmentDomain;
+  private readonly userDomain: UserDomain;
 
   public constructor() {
     this.router = Router();
     this.assignmentDomain = new AssignmentDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -63,7 +66,7 @@ export class AssignmentController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/', this.getAssignments.bind(this));
+    this.router.get('/', isAuthenticated, this.getAssignments.bind(this));
     /**
      * @swagger
      * /api/assignment/{id}:
@@ -94,7 +97,7 @@ export class AssignmentController {
      *       404:
      *         description: Assignment not found.
      */
-    this.router.get('/:id', this.getAssignmentById.bind(this));
+    this.router.get('/:id', isAuthenticated, this.getAssignmentById.bind(this));
     /**
      * @swagger
      * /api/assignment:
@@ -125,20 +128,33 @@ export class AssignmentController {
      *       403:
      *         description: Forbidden, user does not have permission to create the assignment.
      */
-    this.router.put('/', this.createAssignment.bind(this));
+    this.router.put('/', isAuthenticated, this.createAssignment.bind(this));
   }
 
   private async getAssignments(req: Request, res: Response): Promise<void> {
-    res.json(await this.assignmentDomain.getAssignments(req.query, await getUserFromReq(req)));
+    res.json(
+      await this.assignmentDomain.getAssignments(
+        req.query,
+        await this.userDomain.getUserFromReq(req),
+      ),
+    );
   }
 
   private async getAssignmentById(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.assignmentDomain.getAssignmentById(req.params.id, await getUserFromReq(req)),
+      await this.assignmentDomain.getAssignmentById(
+        req.params.id,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   }
 
   private async createAssignment(req: Request, res: Response): Promise<void> {
-    res.json(await this.assignmentDomain.createAssigment(req.body, await getUserFromReq(req)));
+    res.json(
+      await this.assignmentDomain.createAssignment(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
+    );
   }
 }

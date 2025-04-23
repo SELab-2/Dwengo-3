@@ -34,6 +34,19 @@ export class AuthorizationError extends APIError {
   get statusCode(): number {
     return 403;
   }
+
+  get message(): string {
+    switch (this.errorCode) {
+      case 40301:
+        return 'User is not authenticated';
+      case 40302:
+        return 'User is already authenticated';
+      case 40303:
+        return 'Invalid credentials';
+      default:
+        return 'Unauthorized...';
+    }
+  }
 }
 
 export class NotFoundError extends APIError {
@@ -72,6 +85,10 @@ export class NotFoundError extends APIError {
         return 'LearningObject not found...';
       case 40412:
         return 'LearningPathNode not found...';
+      case 40413:
+        return 'Group not found...';
+      case 40414:
+        return 'Favorite not found...';
       default:
         return 'Not found...';
     }
@@ -91,13 +108,11 @@ export class BadRequestError extends APIError {
   get message(): string {
     switch (this.errorCode) {
       case 40001:
-        return "Can't fetch classes you're not a teacher of...";
+        return "Can't fetch classes/groups you're not a teacher of...";
       case 40002:
-        return "Can't fetch classes you're not a student of...";
-      case 40003:
-        return 'Either studentId, teacherId or classId must be provided...';
+        return "Can't fetch classes/groups you're not a student of...";
       case 40004:
-        return 'Provided user ID does correspond with the provided studentId or teacherId...';
+        return 'Provided ID does is not a studentId or teacherId...';
       case 40005:
         return 'You must be a teacher to create a class...';
       case 40006:
@@ -163,7 +178,21 @@ export class BadRequestError extends APIError {
       case 40038:
         return 'User role does not match expected role...';
       case 40039:
-        return "Can't submit to a group you're not a student of.";
+        return "Can't submit to a group you're not a student of...";
+      case 40040:
+        return 'All students in a group must belong to the same class...';
+      case 40041:
+        return 'All users must belong to the same group...';
+      case 40042:
+        return "Can't fetch favorites from other user...";
+      case 40043:
+        return "Can't fetch assignmentSubmissions that are not yours...";
+      case 40044:
+        return "Can't submit to a non-favorited learningPath...";
+      case 40045:
+        return 'Invalid data provided...';
+      case 40046:
+        return 'User already exists...';
       default:
         return 'Bad request...';
     }

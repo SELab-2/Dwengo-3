@@ -1,4 +1,5 @@
-import { ClassRoleEnum } from './class.types';
+import { ClassRoleEnum } from './class.interfaces';
+import { UserDetail } from './user.interfaces';
 
 export interface LoginData {
   email: string;
@@ -15,18 +16,9 @@ export interface RegisterData {
   role: ClassRoleEnum;
 }
 
-export interface UserData {
-  id: number;
-  username: string;
-  email: string;
-  role: ClassRoleEnum;
-  name: string;
-  surname: string;
-}
-
 export interface AuthContextType {
-  user: UserData | null;
-  login: (data: UserData) => void;
-  register: (data: UserData) => void;
+  user: UserDetail | null;
+  login: (data: UserDetail) => void;
+  register: (data: UserDetail) => void;
   logout: () => void;
 }

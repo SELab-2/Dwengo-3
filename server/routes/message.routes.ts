@@ -1,14 +1,17 @@
 import { Router, Request, Response } from 'express';
 import { MessageDomain } from '../domain/message.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class MessageController {
   public router: Router;
   private messageDomain: MessageDomain;
+  private readonly userDomain: UserDomain;
 
   public constructor() {
     this.router = Router();
     this.messageDomain = new MessageDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -50,7 +53,7 @@ export class MessageController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.get('/', this.getMessages.bind(this));
+    this.router.get('/', isAuthenticated, this.getMessages.bind(this));
     /**
      * @swagger
      * /api/message:
@@ -79,7 +82,7 @@ export class MessageController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.put('/', this.createMessage.bind(this));
+    this.router.put('/', isAuthenticated, this.createMessage.bind(this));
     /**
      * @swagger
      * /api/message/{id}:
@@ -110,18 +113,27 @@ export class MessageController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.delete('/:id', this.deleteMessage.bind(this));
+    this.router.delete('/:id', isAuthenticated, this.deleteMessage.bind(this));
   }
 
   private async getMessages(req: Request, res: Response): Promise<void> {
-    res.json(await this.messageDomain.getMessages(req.query, await getUserFromReq(req)));
+    res.json(
+      await this.messageDomain.getMessages(req.query, await this.userDomain.getUserFromReq(req)),
+    );
   }
 
   private async createMessage(req: Request, res: Response): Promise<void> {
-    res.json(await this.messageDomain.createMessage(req.body, await getUserFromReq(req)));
+    res.json(
+      await this.messageDomain.createMessage(req.body, await this.userDomain.getUserFromReq(req)),
+    );
   }
 
   private async deleteMessage(req: Request, res: Response): Promise<void> {
-    res.json(await this.messageDomain.deleteMessage(req.params.id, await getUserFromReq(req)));
+    res.json(
+      await this.messageDomain.deleteMessage(
+        req.params.id,
+        await this.userDomain.getUserFromReq(req),
+      ),
+    );
   }
 }

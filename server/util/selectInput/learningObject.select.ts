@@ -5,7 +5,6 @@ export const learningObjectSelectShort: Prisma.LearningObjectSelect = {
   title: true,
   language: true,
   estimatedTime: true,
-  // TODO: geef gewoon een array van keywords mee ipv object met keyword property
   keywords: {
     select: {
       keyword: true,
@@ -37,7 +36,6 @@ export const learningObjectSelectDetail: Prisma.LearningObjectSelect = {
   updatedAt: true,
   content: true,
   multipleChoice: true,
-  // TODO: geef gewoon een array van keywords mee ipv object met keyword property
   keywords: {
     select: {
       keyword: true,

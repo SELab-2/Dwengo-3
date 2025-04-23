@@ -5,6 +5,9 @@ CREATE TYPE "ContentTypeEnum" AS ENUM ('text/plain', 'text/markdown', 'image/ima
 CREATE TYPE "ClassRole" AS ENUM ('TEACHER', 'STUDENT');
 
 -- CreateEnum
+CREATE TYPE "AuthProvider" AS ENUM ('LOCAL', 'GOOGLE');
+
+-- CreateEnum
 CREATE TYPE "SubmissionType" AS ENUM ('MULTIPLE_CHOICE', 'FILE', 'READ');
 
 -- CreateTable
@@ -84,6 +87,7 @@ CREATE TABLE "LearningPath" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
+    "provider" "AuthProvider" NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
@@ -150,7 +154,8 @@ CREATE TABLE "Assignment" (
 -- CreateTable
 CREATE TABLE "AssignmentSubmission" (
     "id" TEXT NOT NULL,
-    "groupId" TEXT NOT NULL,
+    "groupId" TEXT,
+    "favoriteId" TEXT,
     "nodeId" TEXT NOT NULL,
     "submissionType" "SubmissionType" NOT NULL,
     "submission" JSONB NOT NULL,
@@ -310,6 +315,9 @@ ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_nodeId_f
 
 -- AddForeignKey
 ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Group"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "AssignmentSubmission" ADD CONSTRAINT "AssignmentSubmission_favoriteId_fkey" FOREIGN KEY ("favoriteId") REFERENCES "Favorite"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_learningPathId_fkey" FOREIGN KEY ("learningPathId") REFERENCES "LearningPath"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

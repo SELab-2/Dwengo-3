@@ -1,25 +1,35 @@
 import { Router, Request, Response } from 'express';
 import { StudentDomain } from '../domain/student.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class StudentController {
   public router: Router;
-  private studentDomain: StudentDomain;
+  private readonly studentDomain: StudentDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.studentDomain = new StudentDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private getStudents = async (req: Request, res: Response) => {
-    res.json(await this.studentDomain.getStudents(req.query, await getUserFromReq(req)));
+    res.json(
+      await this.studentDomain.getStudents(req.query, await this.userDomain.getUserFromReq(req)),
+    );
   };
 
   private getStudentById = async (req: Request, res: Response) => {
-    res.json(await this.studentDomain.getStudentById(req.params.id, await getUserFromReq(req)));
+    res.json(
+      await this.studentDomain.getStudentById(
+        req.params.id,
+        await this.userDomain.getUserFromReq(req),
+      ),
+    );
   };
-  
+
   private initializeRoutes() {
     /**
      * @swagger
@@ -31,23 +41,28 @@ export class StudentController {
      *       - Student
      *     summary: Get list of students
      *     description: Fetches a list of students filtered by optional query parameters.
-     *     requestBody:
-     *       description: Optional filters for the query
-     *       required: false
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               userId:
-     *                 type: string
-     *                 format: uuid
-     *               classId:
-     *                 type: string
-     *                 format: uuid
-     *               groupId:
-     *                 type: string
-     *                 format: uuid
+     *     parameters:
+     *       - name: userId
+     *         in: query
+     *         description: Filter by user ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: classId
+     *         in: query
+     *         description: Filter by class ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: groupId
+     *         in: query
+     *         description: Filter by group ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
      *     responses:
      *       200:
      *         description: Successfully fetched the list of students
@@ -65,7 +80,7 @@ export class StudentController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.get('/', this.getStudents);
+    this.router.get('/', isAuthenticated, this.getStudents);
     /**
      * @swagger
      * /api/student/{id}:
@@ -96,6 +111,6 @@ export class StudentController {
      *       404:
      *         description: Student not found.
      */
-    this.router.get('/:id', this.getStudentById);
+    this.router.get('/:id', isAuthenticated, this.getStudentById);
   }
 }

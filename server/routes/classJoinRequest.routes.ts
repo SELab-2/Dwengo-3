@@ -1,21 +1,27 @@
 import { Request, Response, Router } from 'express';
 import { ClassJoinRequestDomain } from '../domain/classJoinRequest.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
 import { ClassRoleEnum } from '../util/types/user.types';
+import { isAuthenticated } from './auth.routes';
 
 export class ClassJoinRequestController {
   public router: Router;
   private classJoinRequestDomain: ClassJoinRequestDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.classJoinRequestDomain = new ClassJoinRequestDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private createJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.createClassJoinRequest(req.body, await getUserFromReq(req)),
+      await this.classJoinRequestDomain.createClassJoinRequest(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
@@ -23,7 +29,7 @@ export class ClassJoinRequestController {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
         req.query,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
         ClassRoleEnum.STUDENT,
       ),
     );
@@ -33,7 +39,7 @@ export class ClassJoinRequestController {
     res.json(
       await this.classJoinRequestDomain.getJoinRequests(
         req.query,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
         ClassRoleEnum.TEACHER,
       ),
     );
@@ -41,7 +47,10 @@ export class ClassJoinRequestController {
 
   private handleJoinRequest = async (req: Request, res: Response) => {
     res.json(
-      await this.classJoinRequestDomain.handleJoinRequest(req.body, await getUserFromReq(req)),
+      await this.classJoinRequestDomain.handleJoinRequest(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
@@ -70,7 +79,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/studentRequest', this.createJoinRequest);
+    this.router.put('/studentRequest', isAuthenticated, this.createJoinRequest);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -95,7 +104,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/teacherRequest', this.createJoinRequest);
+    this.router.put('/teacherRequest', isAuthenticated, this.createJoinRequest);
     /**
      * @swagger
      * /api/class/studentRequest:
@@ -142,7 +151,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/studentRequest', this.getStudentJoinRequests);
+    this.router.get('/studentRequest', isAuthenticated, this.getStudentJoinRequests);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -189,7 +198,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/teacherRequest', this.getTeacherJoinRequests);
+    this.router.get('/teacherRequest', isAuthenticated, this.getTeacherJoinRequests);
     /**
      * @swagger
      * /api/class/studentRequest:
@@ -214,7 +223,7 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.post('/studentRequest', this.handleJoinRequest);
+    this.router.post('/studentRequest', isAuthenticated, this.handleJoinRequest);
     /**
      * @swagger
      * /api/class/teacherRequest:
@@ -239,6 +248,6 @@ export class ClassJoinRequestController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.post('/teacherRequest', this.handleJoinRequest);
+    this.router.post('/teacherRequest', isAuthenticated, this.handleJoinRequest);
   }
 }

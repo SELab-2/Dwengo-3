@@ -42,6 +42,7 @@ const theme = createTheme({
     },
     text: {
       primary: 'rgb(0, 0, 0)',
+      secondary: 'rgb(73, 73, 73)',
     },
     custom: dwengoColors,
   },

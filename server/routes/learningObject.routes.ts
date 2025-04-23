@@ -1,20 +1,26 @@
 import { Request, Response, Router } from 'express';
 import { LearningObjectDomain } from '../domain/learningObject.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningObjectController {
   public router: Router;
   private learningObjectDomain: LearningObjectDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.learningObjectDomain = new LearningObjectDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private createLearningObject = async (req: Request, res: Response) => {
     res.json(
-      await this.learningObjectDomain.createLearningObject(req.body, await getUserFromReq(req)),
+      await this.learningObjectDomain.createLearningObject(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
@@ -31,7 +37,7 @@ export class LearningObjectController {
       await this.learningObjectDomain.updateLearningObject(
         req.params.id,
         req.body,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -40,7 +46,7 @@ export class LearningObjectController {
     res.json(
       await this.learningObjectDomain.deleteLearningObject(
         req.params.id,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -75,7 +81,7 @@ export class LearningObjectController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createLearningObject);
+    this.router.put('/', isAuthenticated, this.createLearningObject);
     /**
      * @swagger
      * /api/learningObject:
@@ -120,7 +126,7 @@ export class LearningObjectController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/', this.getLearningObjects);
+    this.router.get('/', isAuthenticated, this.getLearningObjects);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -151,7 +157,7 @@ export class LearningObjectController {
      *       404:
      *         description: Learning object not found.
      */
-    this.router.get('/:id', this.getLearningObjectById);
+    this.router.get('/:id', isAuthenticated, this.getLearningObjectById);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -188,7 +194,7 @@ export class LearningObjectController {
      *       403:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.patch('/:id', this.updateLearningObject);
+    this.router.patch('/:id', isAuthenticated, this.updateLearningObject);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -206,7 +212,7 @@ export class LearningObjectController {
      *         schema:
      *           type: string
      *           format: uuid
-     *         description: The unique identifier of the learning object to update.
+     *         description: The unique identifier of the learning object to delete.
      *     responses:
      *       204:
      *         description: Learning object deleted successfully.
@@ -215,6 +221,6 @@ export class LearningObjectController {
      *       404:
      *         description: Learning object not found.
      */
-    this.router.delete('/:id', this.deleteLearningObject);
+    this.router.delete('/:id', isAuthenticated, this.deleteLearningObject);
   }
 }

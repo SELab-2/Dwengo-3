@@ -8,7 +8,7 @@ import {
   StudentIncludeSchema,
 } from '../util/types/student.types';
 import { ClassPersistence } from '../persistence/class.persistence';
-import { getUserById } from '../persistence/auth/users.persistance';
+import { UsersPersistence } from '../persistence/auth/users.persistence';
 import { Student, Teacher } from '@prisma/client';
 import { TeacherPersistence } from '../persistence/teacher.persistence';
 import { BadRequestError, NotFoundError } from '../util/types/error.types';
@@ -17,11 +17,13 @@ export class StudentDomain {
   private studentPersistence: StudentPersistence;
   private teacherPersistence: TeacherPersistence;
   private classPersistence: ClassPersistence;
+  private readonly userPersistence = new UsersPersistence();
 
   constructor() {
     this.studentPersistence = new StudentPersistence();
     this.teacherPersistence = new TeacherPersistence();
     this.classPersistence = new ClassPersistence();
+    this.userPersistence = new UsersPersistence();
   }
 
   /**
@@ -35,7 +37,7 @@ export class StudentDomain {
     const { userId } = StudentCreateSchema.parse(body);
 
     // Check if the user exists
-    const user = await getUserById(userId);
+    const user = await this.userPersistence.getUserById(userId);
 
     if (!user) {
       throw new NotFoundError(40405);
@@ -80,7 +82,7 @@ export class StudentDomain {
 
     if (query.userId) {
       // Check if the user exists
-      const userExists = await getUserById(query.userId);
+      const userExists = await this.userPersistence.getUserById(query.userId);
 
       if (!userExists) {
         throw new NotFoundError(40405);

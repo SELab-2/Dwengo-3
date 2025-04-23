@@ -1,14 +1,17 @@
 import { Router, Request, Response } from 'express';
 import { DiscussionDomain } from '../domain/discussion.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class DiscussionController {
   public router: Router;
   private discussionDomain: DiscussionDomain;
+  private readonly userDomain: UserDomain;
 
   public constructor() {
     this.router = Router();
     this.discussionDomain = new DiscussionDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -51,7 +54,7 @@ export class DiscussionController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.get('/', this.getDiscussions.bind(this));
+    this.router.get('/', isAuthenticated, this.getDiscussions.bind(this));
     /**
      * @swagger
      * /api/discussion/{id}:
@@ -82,7 +85,7 @@ export class DiscussionController {
      *       404:
      *         description: Discussion not found.
      */
-    this.router.get('/:id', this.getDiscussionById.bind(this));
+    this.router.get('/:id', isAuthenticated, this.getDiscussionById.bind(this));
     /**
      * @swagger
      * /api/discussion:
@@ -111,20 +114,33 @@ export class DiscussionController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.put('/', this.createDiscussion.bind(this));
+    this.router.put('/', isAuthenticated, this.createDiscussion.bind(this));
   }
 
   private async getDiscussions(req: Request, res: Response): Promise<void> {
-    res.json(await this.discussionDomain.getDiscussions(req.query, await getUserFromReq(req)));
+    res.json(
+      await this.discussionDomain.getDiscussions(
+        req.query,
+        await this.userDomain.getUserFromReq(req),
+      ),
+    );
   }
 
   private async getDiscussionById(req: Request, res: Response): Promise<void> {
     res.json(
-      await this.discussionDomain.getDiscussionById(req.params.id, await getUserFromReq(req)),
+      await this.discussionDomain.getDiscussionById(
+        req.params.id,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   }
 
   private async createDiscussion(req: Request, res: Response): Promise<void> {
-    res.json(await this.discussionDomain.createDiscussion(req.body, await getUserFromReq(req)));
+    res.json(
+      await this.discussionDomain.createDiscussion(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
+    );
   }
 }

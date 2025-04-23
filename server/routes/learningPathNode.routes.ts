@@ -1,20 +1,26 @@
 import { Router, Request, Response } from 'express';
 import { LearningPathNodeDomain } from '../domain/learningPathNode.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningPathNodeController {
   public router: Router;
   private learningPathNodeDomain: LearningPathNodeDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.learningPathNodeDomain = new LearningPathNodeDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private createLearningPathNode = async (req: Request, res: Response) => {
     res.json(
-      await this.learningPathNodeDomain.createLearningPathNode(req.body, await getUserFromReq(req)),
+      await this.learningPathNodeDomain.createLearningPathNode(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
@@ -51,7 +57,7 @@ export class LearningPathNodeController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createLearningPathNode);
+    this.router.put('/', isAuthenticated, this.createLearningPathNode);
     /**
      * @swagger
      * /api/learningPathNode/{id}:
@@ -82,6 +88,6 @@ export class LearningPathNodeController {
      *       404:
      *         description: LearningPathNode not found.
      */
-    this.router.get('/:id', this.getLearningPathNodeById);
+    this.router.get('/:id', isAuthenticated, this.getLearningPathNodeById);
   }
 }

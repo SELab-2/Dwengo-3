@@ -1,29 +1,45 @@
 import { Request, Response, Router } from 'express';
 import { AnnouncementDomain } from '../domain/announcement.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class AnnouncementController {
   public router: Router;
   private announcementDomain: AnnouncementDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.announcementDomain = new AnnouncementDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private getAnnouncements = async (req: Request, res: Response) => {
-    res.json(await this.announcementDomain.getAnnouncements(req.query, await getUserFromReq(req)));
+    res.json(
+      await this.announcementDomain.getAnnouncements(
+        req.query,
+        await this.userDomain.getUserFromReq(req),
+      ),
+    );
   };
 
   private getAnnouncementById = async (req: Request, res: Response) => {
     res.json(
-      await this.announcementDomain.getAnnouncementById(req.params.id, await getUserFromReq(req)),
+      await this.announcementDomain.getAnnouncementById(
+        req.params.id,
+        await this.userDomain.getUserFromReq(req),
+      ),
     );
   };
 
   private createAnnouncement = async (req: Request, res: Response) => {
-    res.json(await this.announcementDomain.createAnnouncement(req.body, await getUserFromReq(req)));
+    res.json(
+      await this.announcementDomain.createAnnouncement(
+        req.body,
+        await this.userDomain.getUserFromReq(req),
+      ),
+    );
   };
 
   private updateAnnouncement = async (req: Request, res: Response) => {
@@ -31,7 +47,7 @@ export class AnnouncementController {
       await this.announcementDomain.updateAnnouncement(
         req.params.id,
         req.body,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -65,7 +81,7 @@ export class AnnouncementController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createAnnouncement);
+    this.router.put('/', isAuthenticated, this.createAnnouncement);
     /**
      * @swagger
      * /api/announcement:
@@ -111,7 +127,7 @@ export class AnnouncementController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.get('/', this.getAnnouncements);
+    this.router.get('/', isAuthenticated, this.getAnnouncements);
     /**
      * @swagger
      * /api/announcement/{id}:
@@ -142,7 +158,7 @@ export class AnnouncementController {
      *       404:
      *         description: Announcement not found.
      */
-    this.router.get('/:id', this.getAnnouncementById);
+    this.router.get('/:id', isAuthenticated, this.getAnnouncementById);
     /**
      * @swagger
      * /api/announcement/{id}:
@@ -183,6 +199,6 @@ export class AnnouncementController {
      *       404:
      *         description: Announcement not found.
      */
-    this.router.patch('/:id', this.updateAnnouncement);
+    this.router.patch('/:id', isAuthenticated, this.updateAnnouncement);
   }
 }
