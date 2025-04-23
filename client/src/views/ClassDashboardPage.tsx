@@ -19,38 +19,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
-<<<<<<< HEAD
-
-const classData = {
-  id: '1',
-  name: 'Klas - 6 AIT',
-  teachers: ['Marnie Garcia', 'Marvin Kline'],
-  notes:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-};
-
-const studentsData = [
-  { id: '1', name: 'Roshnie Soetens', progress: 70 },
-  { id: '2', name: 'Charmayne Breijer', progress: 50 },
-  { id: '3', name: 'Soulaiman Bosland', progress: 30 },
-  { id: '4', name: 'Ouassima Wiltink', progress: 60 },
-  { id: '5', name: 'Davey Kraft', progress: 80 },
-  { id: '6', name: 'Franciscus de Bruin', progress: 45 },
-  { id: '7', name: 'Florence Rijsbergen', progress: 55 },
-  { id: '8', name: 'Seher van den Doel', progress: 20 },
-];
-
-const admissionRequests = [
-  { id: '1', name: 'Wichert van de Pol' },
-  { id: '2', name: 'Elton Sas' },
-  { id: '3', name: 'Jens van de Kleut' },
-];
-
-function ClassDashboardPage() {
-  const { t } = useTranslation();
-  const { id } = useParams<{ id: string }>();
-
-=======
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import {
@@ -64,7 +32,6 @@ import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
 
 function ClassDashboardPage() {
   const { t } = useTranslation();
->>>>>>> origin/dev
   const navigate = useNavigate();
 
   const { classId } = useParams<{ classId: string }>();
@@ -121,11 +88,7 @@ function ClassDashboardPage() {
     </Typography>
   ) : (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-<<<<<<< HEAD
-      <ClassNavigationBar id={id!} className={classData.name} />
-=======
       <ClassNavigationBar id={classData!.id} className={classData!.name} />
->>>>>>> origin/dev
 
       <GridLegacy container spacing={3}>
         {/* Left Sidebar (Co-Teachers & Info) */}

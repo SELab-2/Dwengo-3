@@ -41,15 +41,6 @@ function AssignmentCreatePage() {
 
   const teacherId = user?.teacher?.id;
   const {data: paginatedData, isLoading: isLoadingLearningPaths} = useLearningPath();
-  if (isLoadingLearningPaths) {
-    return (
-      <Box sx={{ minHeight: '100vh', p: 3 }}>
-        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
-          {t('loading')}
-        </Typography>
-      </Box>
-    );
-  }
   const learningPaths = paginatedData?.data ?? [];
 
   const keywords = Array.from(new Set(learningPaths
@@ -63,7 +54,7 @@ function AssignmentCreatePage() {
   const [groupSize, setGroupSize] = useState(1);
   const [filteredLearningPaths, setFilteredLearningPaths] = useState<LearningPathShort[]>(learningPaths);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
-  const [groupsIds, setGroupsIds] = useState<string[][]>([]);
+  const [groups, setGroups] = useState<StudentShort[][]>(studentsData.map((student) => [student]));
 
   useEffect(() => {
     const updatedPaths = learningPaths
@@ -78,7 +69,7 @@ function AssignmentCreatePage() {
       );
 
     setFilteredLearningPaths(updatedPaths);
-    if (selectedLearningPath && !updatedPaths.some((path) => path.title === selectedLearningPath.title)) {
+    if (selectedLearningPath && updatedPaths.find((path) => path.title === selectedLearningPath.title)) {
       setSelectedLearningPath(null);
     }
   }, [selectedKeywords]);
@@ -88,16 +79,16 @@ function AssignmentCreatePage() {
     // Ensure value is at least 1 and smaller than students.length
     value = Math.min(Math.max(1, value), studentsData.length);
     setGroupSize(value);
+    setGroups(makeRandomGroups(value));
   };
 
   const handleSubmit = () => {
     const data: AssignmentCreate = {
       classId: classId!,
       teacherId: teacherId!,
-      groups: groupsIds,
+      groups: groups.map((group) => group.map((student) => student.id)),
       learningPathId: selectedLearningPath!.id,
     };
-    console.log('Assignment data:', data);
     assignmentMutation.mutate(data, {
       onSuccess: (response: AssignmentDetail) => {
         navigate(AppRoutes.classAssignment(classId!, response.id));
@@ -210,13 +201,13 @@ function AssignmentCreatePage() {
                 bgcolor: 'background.paper',
               }}
             >
-              {makeRandomGroups(groupSize).map((group, index) => (
+              {groups.map((group, index) => (
                 <div key={index}>
                   <ListItem>
                     <ListItemText
                       primary={`${t('group')} ${index + 1}`}
                       secondary={group.map((student) => (
-                        <Typography key={student.id} variant="body2">
+                        <Typography key={student.id} variant="body2" component='span' display="block" >
                           {student.user.name} {student.user.surname}
                         </Typography>
                       ))}

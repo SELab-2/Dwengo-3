@@ -1,6 +1,7 @@
 import { ClassShort } from './class.interfaces';
 import { GroupShort } from './group.interfaces';
 import { LearningPathDetail, LearningPathShort } from './learningPath.interfaces';
+import { TeacherShort } from './teacher.interfaces';
 
 export interface AssignmentShort {
   id: string;
@@ -15,7 +16,7 @@ export interface AssignmentShort2 {
 
 export interface AssignmentDetail {
   id: string;
-  teacherId: string;
+  teacher: TeacherShort;
   class: ClassShort;
   groups: GroupShort[];
   learningPath: LearningPathShort;

@@ -46,7 +46,6 @@ function ClassAssignmentsPage() {
         <Typography variant="h4" gutterBottom>
           {t('assignments')}
         </Typography>
-
         {/* 📌 Responsive Table Wrapper */}
         <TableContainer
           component={Paper}
@@ -62,7 +61,6 @@ function ClassAssignmentsPage() {
           }}
         >
           <Table sx={{ minWidth: '100%' }}>
-            {' '}
             {/* 📌 Ensuring Minimum Width */}
             <TableHead>
               <TableRow
@@ -90,7 +88,7 @@ function ClassAssignmentsPage() {
                         fontSize: { xs: '14px', sm: '16px' },
                       }}
                     >
-                      {assignment.learningPathId!}
+                      {assignment.learningPath.title}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
