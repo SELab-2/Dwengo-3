@@ -56,9 +56,7 @@ export class LearningObjectDomain {
   }
 
   public async getLearningObjectById(id: string) {
-    const { learningPathNodes, ...learningObject } =
-      await this.learningObjectPersistence.getLearningObjectById(id);
-    return learningObject;
+    return await this.learningObjectPersistence.getLearningObjectById(id);
   }
 
   public async updateLearningObject(
@@ -93,8 +91,10 @@ export class LearningObjectDomain {
       throw new BadRequestError(40029);
     }
 
+    const nodes = (await this.learningObjectPersistence.getLearningPathNodes(id))?.learningPathNodes;
+
     // If the LearningObject is linked to any LearningPathNode, prevent deletion
-    if (learningObject.learningPathNodes.length > 0) {
+    if (!nodes || nodes.length > 0) {
       throw new BadRequestError(40030);
     }
 

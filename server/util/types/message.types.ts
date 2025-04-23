@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { Uuid } from './assignment.types';
-import { UserShort } from './user.types';
+import { Prisma } from '.prisma/client';
+import { messageSelectDetail, messageSelectShort } from '../selectInput/message.select';
 
 export const MessageFilterSchema = z
   .object({
@@ -28,9 +28,5 @@ export type MessageFilterParams = z.infer<typeof MessageFilterSchema>;
 export type MessageCreateParams = z.infer<typeof MessageCreateSchema>;
 export type MessageUpdateParams = z.infer<typeof MessageUpdateSchema>;
 export type MessageId = z.infer<typeof MessageIdSchema>;
-export type MessageDetail = {
-  id: MessageId;
-  content: string;
-  sender: UserShort;
-  createdAt: Date;
-};
+export type MessageDetail = Prisma.MessageGetPayload<{select: typeof messageSelectDetail}>;
+export type MessageShort = Prisma.MessageGetPayload<{select: typeof messageSelectShort}>;

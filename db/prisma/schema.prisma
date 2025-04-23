@@ -130,7 +130,7 @@ model Student {
   userId  String  @unique
   classes Class[]
   groups  Group[]
-  user    User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model Teacher {
@@ -138,7 +138,7 @@ model Teacher {
   userId     String       @unique
   classes    Class[]
   assignment Assignment[]
-  user       User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   Announcement Announcement[]
 }

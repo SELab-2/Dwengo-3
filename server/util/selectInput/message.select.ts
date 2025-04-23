@@ -1,7 +1,6 @@
-import { Prisma } from '@prisma/client';
 import { userSelectShort } from './user.select';
 
-export const messageSelectDetail: Prisma.MessageSelect = {
+export const messageSelectDetail = {
   id: true,
   content: true,
   sender: {
@@ -11,7 +10,7 @@ export const messageSelectDetail: Prisma.MessageSelect = {
   createdAt: true,
 };
 
-export const messageSelectShort: Prisma.MessageSelect = {
+export const messageSelectShort = {
   id: true,
   content: true,
   sender: {

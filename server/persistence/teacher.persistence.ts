@@ -3,7 +3,7 @@ import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { TeacherFilterParams, TeacherIncludeParams } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { teacherSelectDetail } from '../util/selectInput/teacher.select';
+import { teacherSelectDetail, teacherSelectShort } from '../util/selectInput/teacher.select';
 import { NotFoundError } from '../util/types/error.types';
 
 export class TeacherPersistence {
@@ -42,17 +42,21 @@ export class TeacherPersistence {
   public async getTeachers(
     pagination: PaginationParams,
     filters: TeacherFilterParams,
-    include: TeacherIncludeParams,
   ) {
     const whereClause = {
       AND: [
-        filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
         filters.assignmentId ? { assignments: { some: { id: filters.assignmentId } } } : {},
       ],
     };
 
-    return await searchAndPaginate(this.prisma.teacher, whereClause, pagination, include);
+    return await searchAndPaginate(
+      this.prisma.teacher,
+      whereClause,
+      pagination,
+      undefined,
+      teacherSelectShort
+    );
   }
 
   /**
@@ -83,10 +87,16 @@ export class TeacherPersistence {
    * @returns The teacher data.
    */
   public async getTeacherByUserId(userId: string) {
-    return await this.prisma.teacher.findUnique({
+    const teacher = await this.prisma.teacher.findUnique({
       where: { userId },
       select: teacherSelectDetail,
     });
+
+    if (!teacher) {
+      throw new NotFoundError(40404);
+    }
+
+    return teacher;
   }
 
   /*

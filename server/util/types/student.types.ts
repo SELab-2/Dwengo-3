@@ -23,6 +23,10 @@ export const StudentFilterSchema = z.object({
   userId: z.string().uuid().optional(),
   classId: z.string().uuid().optional(),
   groupId: z.string().uuid().optional(),
+})
+.refine((data) => Object.values(data).some((value) => value !== undefined), {
+  message: 'At least one filter must be provided.',
+  path: [],
 });
 
 export type StudentFilterParams = z.infer<typeof StudentFilterSchema>;

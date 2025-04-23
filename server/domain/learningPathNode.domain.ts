@@ -22,7 +22,7 @@ export class LearningPathNodeDomain {
     }
     return this.learningPathNodePersistence.createLearningPathNode(
       data,
-      await this.learningPathNodePersistence.getLearningPathNodeCount(data),
+      await this.learningPathNodePersistence.getLearningPathNodeCount(data.learningPathId),
     );
   }
 
