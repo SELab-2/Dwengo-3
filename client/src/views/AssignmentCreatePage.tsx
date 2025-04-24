@@ -43,8 +43,6 @@ function AssignmentCreatePage() {
   const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath();
   const learningPaths = paginatedData?.data ?? [];
 
-  console.log(learningPaths);
-
   const keywords = Array.from(
     new Set(
       learningPaths.flatMap((path) =>
@@ -64,8 +62,6 @@ function AssignmentCreatePage() {
     useState<LearningPathShort[]>(learningPaths);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
   const [groups, setGroups] = useState<StudentShort[][]>(studentsData.map((student) => [student]));
-
-  console.log('filteredLearningPaths: ', filteredLearningPaths);
 
   useEffect(() => {
     const updatedPaths = learningPaths.filter(
