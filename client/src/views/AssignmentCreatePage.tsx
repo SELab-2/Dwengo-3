@@ -40,39 +40,53 @@ function AssignmentCreatePage() {
   const { setError } = useError();
 
   const teacherId = user?.teacher?.id;
-  const {data: paginatedData, isLoading: isLoadingLearningPaths} = useLearningPath();
+  const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath();
   const learningPaths = paginatedData?.data ?? [];
 
-  const keywords = Array.from(new Set(learningPaths
-    .flatMap((path) => path.learningPathNodes
-    .flatMap((node) => node.learningObject.keywords.map((keyword) => keyword.keyword)))));
+  console.log(learningPaths);
 
-  const {data: classData, isLoading: isLoadingClass} = useClassById(classId!);
+  const keywords = Array.from(
+    new Set(
+      learningPaths.flatMap((path) =>
+        path.learningPathNodes.flatMap((node) =>
+          node.learningObject.keywords.map((keyword) => keyword.keyword),
+        ),
+      ),
+    ),
+  );
+
+  const { data: classData, isLoading: isLoadingClass } = useClassById(classId!);
   const studentsData = classData?.students ?? [];
 
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [groupSize, setGroupSize] = useState(1);
-  const [filteredLearningPaths, setFilteredLearningPaths] = useState<LearningPathShort[]>(learningPaths);
+  const [filteredLearningPaths, setFilteredLearningPaths] =
+    useState<LearningPathShort[]>(learningPaths);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
   const [groups, setGroups] = useState<StudentShort[][]>(studentsData.map((student) => [student]));
 
+  console.log('filteredLearningPaths: ', filteredLearningPaths);
+
   useEffect(() => {
-    const updatedPaths = learningPaths
-      .filter(
-        (path) =>
-          // if no keywords are selected, all learningpaths are shown
-          selectedKeywords.length === 0 ||
-          path.learningPathNodes
-            .some((node) => node.learningObject.keywords
-            .some((keyword) => selectedKeywords.includes(keyword.keyword))
+    const updatedPaths = learningPaths.filter(
+      (path) =>
+        // if no keywords are selected, all learningpaths are shown
+        selectedKeywords.length === 0 ||
+        path.learningPathNodes.some((node) =>
+          node.learningObject.keywords.some((keyword) =>
+            selectedKeywords.includes(keyword.keyword),
           ),
-      );
+        ),
+    );
 
     setFilteredLearningPaths(updatedPaths);
-    if (selectedLearningPath && !updatedPaths.find((path) => path.title === selectedLearningPath.title)) {
+    if (
+      selectedLearningPath &&
+      !updatedPaths.find((path) => path.title === selectedLearningPath.title)
+    ) {
       setSelectedLearningPath(null);
     }
-  }, [selectedKeywords]);
+  }, [selectedKeywords, learningPaths]);
 
   const handleGroupSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = Number(event.target.value);
@@ -98,13 +112,13 @@ function AssignmentCreatePage() {
         setError(error.message);
       },
     });
-  }
+  };
 
   const makeRandomGroups = (groupSize: number): StudentShort[][] => {
     // work with copy of the array as to not change the original student list
     const copied_students = studentsData.map((student) => ({ ...student }));
     const shuffled = copied_students.sort(() => Math.random() - 0.5); // shuffle the students array randomly
-  
+
     // initialize empty array for each group
     const groups: StudentShort[][] = Array.from(
       {
@@ -113,14 +127,12 @@ function AssignmentCreatePage() {
       () => [],
     );
 
-  
     shuffled.forEach((student, index) => {
       groups[index % groups.length].push(student); // Round-robin
-
     });
 
     return groups;
-  }
+  };
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
@@ -129,7 +141,8 @@ function AssignmentCreatePage() {
           {t('loading')}
         </Typography>
       ) : (
-       <ClassNavigationBar id={classData!.id} className={classData!.name} />)}
+        <ClassNavigationBar id={classData!.id} className={classData!.name} />
+      )}
       <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
         <BackButton link={`/class/${classData!.id}/assignments`} />
 
@@ -208,7 +221,12 @@ function AssignmentCreatePage() {
                     <ListItemText
                       primary={`${t('group')} ${index + 1}`}
                       secondary={group.map((student) => (
-                        <Typography key={student.id} variant="body2" component='span' display="block" >
+                        <Typography
+                          key={student.id}
+                          variant="body2"
+                          component="span"
+                          display="block"
+                        >
                           {student.user.name} {student.user.surname}
                         </Typography>
                       ))}
