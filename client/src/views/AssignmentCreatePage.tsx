@@ -140,7 +140,7 @@ function AssignmentCreatePage() {
         <ClassNavigationBar id={classData!.id} className={classData!.name} />
       )}
       <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
-        <BackButton link={`/class/${classData!.id}/assignments`} />
+        <BackButton link={`/class/${classData?.id}/assignments`} />
 
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}
