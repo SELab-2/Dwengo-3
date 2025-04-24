@@ -1,9 +1,14 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createClass, fetchClassById, fetchClasses, fetchPopulatedClassById } from '../api/class';
-import { ClassDetail, PopulatedClass } from '../util/interfaces/class.interfaces';
+import { ClassDetail, ClassRoleEnum, PopulatedClass } from '../util/interfaces/class.interfaces';
 import { ApiRoutes } from '../api/api.routes';
 import apiClient from '../api/apiClient';
 import { fetchNestedData } from '../api/util';
+import { create } from 'domain';
+import {
+  createClassJoinRequestStudent,
+  createClassJoinRequestTeacher,
+} from '../api/classJoinRequest';
 
 /**
  * Fetches a list of classes based on the provided student and teacher IDs.
@@ -68,6 +73,27 @@ export function useCreateClass() {
   return useMutation({
     mutationFn: async (className: string) => {
       return await createClass({ name: className });
+    },
+  });
+}
+
+/**
+ * Sends a request to join a class based on the provided class ID and role.
+ *
+ * @returns The mutation object for a request to join a class.
+ */
+export function useJoinClass() {
+  return useMutation({
+    mutationFn: async ({ classId, role }: { classId: string; role: ClassRoleEnum }) => {
+      if (role === ClassRoleEnum.STUDENT) {
+        return await createClassJoinRequestStudent({
+          classId: classId,
+        });
+      } else if (role === ClassRoleEnum.TEACHER) {
+        return await createClassJoinRequestTeacher({
+          classId: classId,
+        });
+      }
     },
   });
 }
