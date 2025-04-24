@@ -35,7 +35,6 @@ export type MultipleChoice = z.infer<typeof multipleChoiseShema>;
 
 export const LearningObjectCreateSchema = z.object({
   hruid: z.string().min(1, 'HRUID is required'),
-  uuid: z.string().uuid(),
   version: z.number().int().min(1, 'Version must be a positive integer'),
   language: z.string().min(1, 'Language is required'),
   title: z.string().min(1, 'Title is required'),

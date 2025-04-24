@@ -21,7 +21,6 @@ enum ContentTypeEnum {
 model LearningObject {
   id                String                  @id @default(uuid())
   hruid             String
-  uuid              String // uuid of existing learning objects
   version           Int
   language          String
   title             String

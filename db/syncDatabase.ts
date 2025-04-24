@@ -67,7 +67,6 @@ async function fullSyncLearningObjects(prisma: PrismaClient) {
       create: {
         id: remote._id,
         hruid: remote.hruid,
-        uuid: remote.uuid,
         version: remote.version,
         language: remote.language,
         title: remote.title,
