@@ -56,3 +56,18 @@ export async function createDiscussion(data: DiscussionCreate) {
 
   return response.data;
 }
+
+/**
+ * Update a discussion
+ *
+ * @param id - The ID of the discussion to be updated
+ * @param data - The data of the discussion to be updated
+ * @returns The discussiondetails
+ */
+export async function updateDiscussion(id: string, data: DiscussionCreate) {
+  const response = await apiClient.put(ApiRoutes.discussion.update(id), {
+    data,
+  });
+
+  return response.data;
+}

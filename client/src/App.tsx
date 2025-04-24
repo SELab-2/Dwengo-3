@@ -27,7 +27,8 @@ import ClassStudentDetails from './views/ClassStudentDetails.tsx';
 import { Box } from '@mui/material';
 import ClassAddPage from './views/ClassAddPage.tsx';
 import { AppRoutes } from './util/app.routes.ts';
-import DiscussionsPage from './views/DiscussionsPage.tsx';
+import DiscussionsPage from './views/ClassDiscussionsPage.tsx';
+import DiscussionCreatePage from './views/DiscussionCreatePage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -95,6 +96,10 @@ function App() {
                       <Route
                         path={AppRoutes.classDiscussions(':classId')}
                         element={<DiscussionsPage />}
+                      />
+                      <Route
+                        path={AppRoutes.discussionCreate(':classId')}
+                        element={<DiscussionCreatePage />}
                       />
                     </Route>
 
