@@ -2,8 +2,8 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { StudentFilterParams, StudentIncludeParams } from '../util/types/student.types';
-import { studentSelectDetail } from '../util/selectInput/student.select';
+import { studentSelectDetail, studentSelectShort } from '../util/selectInput/student.select';
+import { StudentFilterParams } from '../util/types/student.types';
 import { NotFoundError } from '../util/types/error.types';
 
 /**
@@ -45,20 +45,21 @@ export class StudentPersistence {
    * @param include - Optional `include` clause for related models.
    * @returns Paginated data and total pages.
    */
-  public async getStudents(
-    pagination: PaginationParams,
-    filters: StudentFilterParams,
-    include: StudentIncludeParams,
-  ) {
+  public async getStudents(pagination: PaginationParams, filters: StudentFilterParams) {
     const whereClause: Prisma.StudentWhereInput = {
       AND: [
-        filters.userId ? { userId: filters.userId } : {},
         filters.classId ? { classes: { some: { id: filters.classId } } } : {},
         filters.groupId ? { groups: { some: { id: filters.groupId } } } : {},
       ],
     };
 
-    return searchAndPaginate(this.prisma.student, whereClause, pagination, include);
+    return searchAndPaginate(
+      this.prisma.student,
+      whereClause,
+      pagination,
+      undefined,
+      studentSelectShort,
+    );
   }
 
   /**
@@ -87,10 +88,16 @@ export class StudentPersistence {
    * @returns The student data.
    */
   public async getStudentByUserId(userId: string) {
-    return await this.prisma.student.findUnique({
+    const student = await this.prisma.student.findUnique({
       where: { userId },
       select: studentSelectDetail,
     });
+
+    if (!student) {
+      throw new NotFoundError(40403);
+    }
+
+    return student;
   }
 
   public async getStudentUserIdsByGroupId(groupId: string) {

@@ -1,6 +1,4 @@
-import { Prisma } from '@prisma/client';
-
-export const userSelectShort: Prisma.UserSelect = {
+export const userSelectShort = {
   id: true,
   surname: true,
   name: true,

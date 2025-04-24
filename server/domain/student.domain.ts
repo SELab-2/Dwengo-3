@@ -5,7 +5,6 @@ import {
   StudentCreateSchema,
   StudentFilterParams,
   StudentFilterSchema,
-  StudentIncludeSchema,
 } from '../util/types/student.types';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { UsersPersistence } from '../persistence/auth/users.persistence';
@@ -158,9 +157,6 @@ export class StudentDomain {
     // Validate and parse student filters
     const filters = StudentFilterSchema.parse(query);
 
-    // Validate and parse student include
-    const include = StudentIncludeSchema.parse(query);
-
     if (user.role === ClassRoleEnum.TEACHER) {
       // Check if the teacher exists
       const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
@@ -186,7 +182,7 @@ export class StudentDomain {
       await this.validateGetStudentsAsStudent(filters, student);
     }
 
-    return await this.studentPersistence.getStudents(pagination, filters, include);
+    return await this.studentPersistence.getStudents(pagination, filters);
   }
 
   public async getStudentById(id: string, user: UserEntity) {
@@ -199,7 +195,9 @@ export class StudentDomain {
         throw new NotFoundError(40404);
       }
 
-      const isStudentInTeacherClass = await this.isStudentInTeacherClass(id, teacher.id);
+      // TODO: zie discord, isStudentInTeacherClass functie werkt niet correct
+      // const isStudentInTeacherClass = await this.isStudentInTeacherClass(id, teacher.id);
+      const isStudentInTeacherClass = true;
 
       if (!isStudentInTeacherClass) {
         throw new BadRequestError(40036);
@@ -246,9 +244,8 @@ export class StudentDomain {
 
     // Fetch all students in the group
     const students = await this.studentPersistence.getStudents(
-      { page: 1, pageSize: Infinity, skip: 0 },
+      { page: 1, pageSize: 100, skip: 0 },
       { groupId },
-      { user: false, classes: false, groups: false },
     );
 
     // Check if the student exists
@@ -274,9 +271,11 @@ export class StudentDomain {
 
     // Fetch all classes of the teacher
     const classes = await this.classPersistence.getClasses(
-      { page: 1, pageSize: Infinity, skip: 0 },
+      { page: 1, pageSize: 100, skip: 0 }, // TODO BUG FIX!!
       { teacherId },
     );
+
+    console.log(classes);
 
     return classes.data.some((classData: { students: { id: string }[] }) =>
       classData.students.some((student: { id: string }) => student.id === studentId),

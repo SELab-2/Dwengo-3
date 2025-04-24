@@ -4,7 +4,7 @@ import {
   AssignmentCreateSchema,
   AssignmentDetail,
   AssignmentFilterSchema,
-  AssignmentShort,
+  AssignmentShort2,
   Uuid,
 } from '../util/types/assignment.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
@@ -33,14 +33,27 @@ export class AssignmentDomain {
   public async getAssignments(
     query: any,
     user: UserEntity,
-  ): Promise<{ data: AssignmentShort[]; totalPages: number }> {
+  ): Promise<{ data: AssignmentShort2[]; totalPages: number }> {
     const pagination = PaginationFilterSchema.parse(query);
     const filters = AssignmentFilterSchema.parse(query);
 
     await compareUserIdWithFilterId(user, filters.studentId, filters.teacherId);
     await checkIfUserIsInClass(user, filters.classId, this.classPersistence);
     await checkIfUserIsInGroup(user, filters.groupId, this.groupPersistence);
-    return this.assignmentPersistence.getAssignments(filters, pagination);
+    const result = await this.assignmentPersistence.getAssignments(filters, pagination);
+
+    if (filters.studentId) {
+      for (const assignment of result.data) {
+        for (const group of assignment.groups) {
+          if (group.students.some((student) => student.id === filters.studentId)) {
+            assignment.groups = [group];
+            break;
+          }
+        }
+      }
+    }
+
+    return result;
   }
 
   public async getAssignmentById(id: Uuid, user: UserEntity): Promise<AssignmentDetail> {

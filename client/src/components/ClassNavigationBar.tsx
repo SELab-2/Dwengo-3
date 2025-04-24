@@ -21,7 +21,7 @@ import { AppRoutes } from '../util/app.routes.ts';
 import { useTheme } from '@mui/material/styles';
 import React, { useState } from 'react';
 
-function NavigationBar({ id, className }: { id: string; className: string }) {
+function NavigationBar({ id, className }: { id: string; className: string | undefined }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const location = useLocation();
@@ -88,7 +88,7 @@ function NavigationBar({ id, className }: { id: string; className: string }) {
             </>
           ) : (
             <Tabs
-              value={activeTab !== -1 ? activeTab : 0}
+              value={activeTab !== -1 ? activeTab : false}
               onChange={handleTabChange}
               textColor="inherit"
               indicatorColor="secondary"

@@ -4,7 +4,7 @@ import {
   DiscussionCreateSchema,
   DiscussionDetail,
   DiscussionFilterSchema,
-  discussionShort,
+  DiscussionShort,
 } from '../util/types/discussion.types';
 import { UserEntity } from '../util/types/user.types';
 import { checkIfUserIsInGroup } from '../util/cookie-checks/cookieChecks.util';
@@ -29,15 +29,12 @@ export class DiscussionDomain {
   public async getDiscussions(
     query: any,
     user: UserEntity,
-  ): Promise<{ data: discussionShort[]; totalPages: number }> {
+  ): Promise<{ data: DiscussionShort[]; totalPages: number }> {
     const parseResult = queryWithPaginationParser(query, DiscussionFilterSchema);
     const filters = parseResult.dataSchema;
-    const checks = filters.groupIds
-      ? filters.groupIds.map((groupId) =>
-          checkIfUserIsInGroup(user, groupId, this.groupPersistence),
-        )
-      : [];
-    await Promise.all(checks);
+    if (user.id !== filters.userId) {
+      throw new Error("User ID doesn't correspond with the provided userId.");
+    }
     return this.discussionPersistence.getDiscussions(filters, parseResult.dataPagination);
   }
 

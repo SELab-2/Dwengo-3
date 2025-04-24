@@ -1,7 +1,7 @@
 import {
   AssignmentCreate,
   AssignmentDetail,
-  AssignmentShort,
+  AssignmentShort2,
 } from '../util/interfaces/assignment.interfaces';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
 import { ApiRoutes } from './api.routes';
@@ -18,14 +18,21 @@ import apiClient from './apiClient';
  * @param teacherId - The ID of the teacher whose assignments are to be fetched.
  * @returns Paginated data containing the list of assignments.
  */
-export async function fetchAssignments(
-  classId?: string,
-  groupId?: string,
-  studentId?: string,
-  teacherId?: string,
-  page?: number,
-  pageSize?: number,
-) {
+export async function fetchAssignments({
+  classId,
+  groupId,
+  studentId,
+  teacherId,
+  page,
+  pageSize,
+}: {
+  classId?: string;
+  groupId?: string;
+  studentId?: string;
+  teacherId?: string;
+  page?: number;
+  pageSize?: number;
+}) {
   const response = await apiClient.get(ApiRoutes.assignment.list, {
     params: {
       page,
@@ -37,7 +44,7 @@ export async function fetchAssignments(
     },
   });
 
-  const result: PaginatedData<AssignmentShort> = response.data;
+  const result: PaginatedData<AssignmentShort2> = response.data;
 
   return result;
 }
