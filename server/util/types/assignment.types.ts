@@ -24,7 +24,7 @@ export const AssignmentCreateSchema = z.object({
   groups: z.string().uuid().array().nonempty().array().nonempty(),
   classId: z.string().uuid(),
   teacherId: z.string().uuid().optional(),
-  learningPathId: z.string().uuid(),
+  learningPathId: z.string(),
 });
 
 export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;
