@@ -50,9 +50,7 @@ export async function fetchFavoriteById(id: string) {
  * @returns The favoritedetails
  */
 export async function createFavorite(data: FavoriteCreate) {
-  const response = await apiClient.put(ApiRoutes.favorites.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.favorites.create, data);
 
   return response.data;
 }

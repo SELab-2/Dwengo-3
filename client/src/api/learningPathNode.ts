@@ -25,9 +25,7 @@ export async function fetchLearningPathNodeById(id: string) {
  * @returns The LearningPathNodedetails
  */
 export async function createLearningPathNode(data: LearningPathNodeCreate) {
-  const response = await apiClient.put(ApiRoutes.learningPathNode.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.learningPathNode.create, data);
 
   return response.data;
 }

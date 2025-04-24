@@ -28,9 +28,7 @@ export async function fetchLearningObjectById(id: string) {
  * @returns The learningObject details
  */
 export async function createLearningObject(data: LearningObjectCreate) {
-  const response = await apiClient.put(ApiRoutes.learningObject.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.learningObject.create, data);
 
   return response.data;
 }
@@ -72,9 +70,7 @@ export async function fetchLearningObjects(
  * @returns The learningObject details
  */
 export async function updateLearningObject(id: string, data: LearningObjectUpdate) {
-  const response = await apiClient.patch(ApiRoutes.learningObject.update(id), {
-    data,
-  });
+  const response = await apiClient.patch(ApiRoutes.learningObject.update(id), data);
 
   return response.data;
 }
