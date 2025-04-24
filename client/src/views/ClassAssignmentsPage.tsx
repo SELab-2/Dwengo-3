@@ -1,13 +1,6 @@
 import {
   Box,
   Button,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,6 +11,9 @@ import { useAuth } from '../hooks/useAuth';
 import { useClassById } from '../hooks/useClass';
 import { MarginSize } from '../util/size';
 import { useAssignments } from '../hooks/useAssignment';
+import TeacherAssignmentsTable from '../components/TeacherAssignmentsTable';
+import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
+import StudentAssignmentsTable from '../components/StudentAssignmentsTable';
 
 function ClassAssignmentsPage() {
   const { user } = useAuth();
@@ -26,11 +22,13 @@ function ClassAssignmentsPage() {
   const navigate = useNavigate();
 
   const teacherId = user?.teacher?.id;
+  const studentId = user?.student?.id;
+
   const {data: classData, isLoading: isLoadingClass} = useClassById(classId!);
 
-  const {data: paginatedData, isLoading: isLoadingAssignment} = useAssignments(classId, undefined, undefined, teacherId, 1, 10);
+  const {data: paginatedData, isLoading: isLoadingAssignment} = useAssignments(classId, undefined, studentId, teacherId, 1, 10);
 
-  const assignments = paginatedData?.data ?? [];
+  const assignments: AssignmentShort2[] = paginatedData?.data ?? [];
   const totalPages = paginatedData?.totalPages ?? 0;
 
 
@@ -42,85 +40,30 @@ function ClassAssignmentsPage() {
         </Typography>
       ) : (
        <ClassNavigationBar id={classData!.id} className={classData!.name} />)}
-      <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 800 }, p: 2 }}>
+      <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: teacherId ? 800 : 1200 }, p: 2 }}>
         <Typography variant="h4" gutterBottom>
           {t('assignments')}
         </Typography>
-        {/* 📌 Responsive Table Wrapper */}
-        <TableContainer
-          component={Paper}
-          sx={{
-            borderRadius: 2,
-            maxHeight: 450,
-            overflow: 'auto',
-            boxShadow: 3,
-            mx: 'auto',
-            width: '100%',
-            maxWidth: { xs: '100%', sm: 800 },
-            overflowX: 'auto', // 🚀 Horizontal Scroll on Small Screens
-          }}
-        >
-          <Table sx={{ minWidth: '100%' }}>
-            {/* 📌 Ensuring Minimum Width */}
-            <TableHead>
-              <TableRow
+
+        {teacherId ? (
+          <Box>
+            <TeacherAssignmentsTable assignments={assignments} classId={classId!} />
+            {/* 🛠 New Assignment Button - Fully Responsive */}
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <Button
+                variant="contained"
                 sx={{
-                  position: 'sticky',
-                  top: 0,
-                  zIndex: 1,
-                  backgroundColor: 'white',
-                  borderBottom: '2px solid #ddd',
+                  width: { xs: '100%', sm: '40%' }, // 📱 Full width on mobile, 40% on larger screens
                 }}
+                onClick={() => navigate(AppRoutes.classAssignmentCreate(classId!))}
               >
-                <TableCell sx={{ minWidth: 180, width: '50%' }}>
-                  <Typography variant="h6">{t('learningPath')}</Typography>
-                </TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {assignments.map((assignment, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Typography
-                      sx={{
-                        cursor: 'pointer',
-                        fontSize: { xs: '14px', sm: '16px' },
-                      }}
-                    >
-                      {assignment.learningPath.title}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="contained"
-                      sx={{
-                        fontSize: { xs: '12px', sm: '14px' },
-                        padding: { xs: '5px 10px', sm: '8px 16px' },
-                        minWidth: { xs: '60px', sm: '100px' },
-                      }}
-                      onClick={() => navigate(AppRoutes.classAssignment(classId!, assignment.id))}
-                    >
-                      {t('details')}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {/* 🛠 New Assignment Button - Fully Responsive */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Button
-            variant="contained"
-            sx={{
-              width: { xs: '100%', sm: '40%' }, // 📱 Full width on mobile, 40% on larger screens
-            }}
-            onClick={() => navigate(AppRoutes.classAssignmentCreate(classId!))}
-          >
-            {t('newAssignment')}
-          </Button>
-        </Box>
+                {t('newAssignment')}
+              </Button>
+            </Box>
+          </Box>
+        ) : (
+          <StudentAssignmentsTable assignments={assignments} />
+        )}
       </Box>
     </Box>
   );

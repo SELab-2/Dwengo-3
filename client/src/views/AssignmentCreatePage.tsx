@@ -69,7 +69,7 @@ function AssignmentCreatePage() {
       );
 
     setFilteredLearningPaths(updatedPaths);
-    if (selectedLearningPath && updatedPaths.find((path) => path.title === selectedLearningPath.title)) {
+    if (selectedLearningPath && !updatedPaths.find((path) => path.title === selectedLearningPath.title)) {
       setSelectedLearningPath(null);
     }
   }, [selectedKeywords]);
@@ -83,6 +83,7 @@ function AssignmentCreatePage() {
   };
 
   const handleSubmit = () => {
+    //TODO: add (name, description) and deadline
     const data: AssignmentCreate = {
       classId: classId!,
       teacherId: teacherId!,
