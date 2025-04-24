@@ -13,7 +13,7 @@ import {
 } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
-import { RegisterSchema } from '../util/types/auth.types';
+import { RegisterParams, RegisterSchema } from '../util/types/auth.types';
 
 const userDomain = new UserDomain();
 
@@ -365,9 +365,20 @@ router.put(
       if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
 
       const userEntity = RegisterSchema.parse(req.body);
-      const user: UserEntity = await userDomain.createUser(userEntity);
+      const user: UserEntity = await userDomain.createUser({
+        ...userEntity,
+        provider: AuthenticationProvider.LOCAL,
+      });
 
-      res.json(user);
+      req.login(user, (err) => {
+        if (err) {
+          // todo: better error message?
+          throw new AuthorizationError(-1);
+        }
+
+        // If login is successful, send the user data as a response
+        res.status(200).json(user);
+      });
     } catch (error) {
       next(error);
     }
@@ -423,10 +434,21 @@ router.put(
     try {
       if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
 
-      const userEntity = RegisterSchema.parse(req.body);
-      const user: UserEntity = await userDomain.createUser(userEntity);
+      const userEntity: RegisterParams = RegisterSchema.parse(req.body);
+      const user: UserEntity = await userDomain.createUser({
+        ...userEntity,
+        provider: AuthenticationProvider.LOCAL,
+      });
 
-      res.json(user);
+      req.login(user, (err) => {
+        if (err) {
+          // todo: better error message?
+          throw new AuthorizationError(-1);
+        }
+
+        // If login is successful, send the user data as a response
+        res.status(200).json(user);
+      });
     } catch (error) {
       next(error);
     }
