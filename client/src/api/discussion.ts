@@ -20,7 +20,18 @@ export async function fetchDiscussions(groupIds?: string[], page?: number, pageS
     params: {
       page,
       pageSize,
-      groupIds,
+      ...(groupIds && groupIds.length > 0 ? { groupIds } : {}),
+    },
+    paramsSerializer: (params) => {
+      const searchParams = new URLSearchParams();
+      if (params.page !== undefined) searchParams.append('page', params.page);
+      if (params.pageSize !== undefined) searchParams.append('pageSize', params.pageSize);
+      if (params.groupIds) {
+        (Array.isArray(params.groupIds) ? params.groupIds : [params.groupIds]).forEach(
+          (id: string) => searchParams.append('groupIds', id),
+        );
+      }
+      return searchParams.toString();
     },
   });
 
