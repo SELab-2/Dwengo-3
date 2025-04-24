@@ -13,7 +13,7 @@ import {
 } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
-import { RegisterSchema } from '../util/types/auth.types';
+import { RegisterParams, RegisterSchema } from '../util/types/auth.types';
 
 const userDomain = new UserDomain();
 
@@ -33,7 +33,7 @@ function isValidRoleUrl(req: Request): boolean {
  * A middleware function that checks if the user is authenticated.
  *
  * If the user is authenticated, `next()` is called.
- * Otherwise, an error is thrown.
+ * Otherwise, an AuthorizationError is thrown.
  *
  * @param req - The Express request object
  * @param res - The Express response object
@@ -52,7 +52,7 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
  * Used to allow users to call register and login endpoints.
  *
  * If the user is not authenticated, `next()` is called.
- * Otherwise, an error is thrown.
+ * Otherwise, an AuthorizationError is thrown.
  *
  * @param req - The Express request object
  * @param res - The Express response object
@@ -163,6 +163,18 @@ passport.deserializeUser(async (id: string, done) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/student/login/google:
+ *   get:
+ *     tags:
+ *      - Auth
+ *     summary: Login / Register as a student through Google
+ *     description: Redirects to the Google login page to login/register as a student
+ *     responses:
+ *       302:
+ *         description: Redirect to google login page
+ */
 router.get(
   '/student/login/google',
   isNotAuthenticated,
@@ -173,6 +185,18 @@ router.get(
   }),
 );
 
+/**
+ * @swagger
+ * /api/auth/teacher/login/google:
+ *   get:
+ *     tags:
+ *      - Auth
+ *     summary: Login / Register as a teacher using Google
+ *     description: Redirects to the Google login page to login/register as a teacher
+ *     responses:
+ *       302:
+ *         description: Redirect to google login page
+ */
 router.get(
   '/teacher/login/google',
   isNotAuthenticated,
@@ -183,6 +207,38 @@ router.get(
   }),
 );
 
+/**
+ * @swagger
+ * /api/auth/student/login/local:
+ *   post:
+ *     tags:
+ *      - Auth
+ *     summary: Login as a student using local credentials
+ *     description: Login as a student using username and password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Login'
+ *     responses:
+ *       200:
+ *         description: Login succesfull, received user data without password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserData'
+ *       403:
+ *         description: Already logged in / Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User already logged in / Invalid credentials
+ */
 router.post(
   '/student/login/local',
   isNotAuthenticated,
@@ -205,6 +261,38 @@ router.post(
   },
 );
 
+/**
+ * @swagger
+ * /api/auth/teacher/login/local:
+ *   post:
+ *     tags:
+ *      - Auth
+ *     summary: Login as a teacher using local credentials
+ *     description: Login as a teacher using username and password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Login'
+ *     responses:
+ *       200:
+ *         description: User data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserData'
+ *       403:
+ *         description: Already logged in / Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User already logged in / Invalid credentials
+ */
 router.post(
   '/teacher/login/local',
   isNotAuthenticated,
@@ -227,6 +315,48 @@ router.post(
   },
 );
 
+/**
+ * @swagger
+ * /api/auth/student/register:
+ *   put:
+ *     tags:
+ *      - Auth
+ *     summary: Register a new student using local credentials
+ *     description: Register a new student using username, password, name, surname and email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Register'
+ *     responses:
+ *       200:
+ *         description: Register succesfull, received user data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserData'
+ *       400:
+ *         description: User already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User already exists
+ *       403:
+ *         description: User is already authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is already authenticated
+ */
 router.put(
   '/student/register',
   isNotAuthenticated,
@@ -235,15 +365,68 @@ router.put(
       if (!isValidRoleUrl(req)) next(new BadRequestError(40013));
 
       const userEntity = RegisterSchema.parse(req.body);
-      const user: UserEntity = await userDomain.createUser(userEntity);
+      const user: UserEntity = await userDomain.createUser({
+        ...userEntity,
+        provider: AuthenticationProvider.LOCAL,
+      });
 
-      res.json(user);
+      req.login(user, (err) => {
+        if (err) {
+          // todo: better error message?
+          throw new AuthorizationError(-1);
+        }
+
+        // If login is successful, send the user data as a response
+        res.status(200).json(user);
+      });
     } catch (error) {
       next(error);
     }
   },
 );
 
+/**
+ * @swagger
+ * /api/auth/teacher/register:
+ *   put:
+ *     tags:
+ *      - Auth
+ *     summary: Register a new student using local credentials
+ *     description: Register a new student using username, password, name, surname and email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Register'
+ *     responses:
+ *       200:
+ *         description: Register succesfull, received user data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserData'
+ *       400:
+ *         description: User already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User already exists
+ *       403:
+ *         description: User is already authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is already authenticated
+ */
 router.put(
   '/teacher/register',
   isNotAuthenticated,
@@ -251,10 +434,21 @@ router.put(
     try {
       if (!isValidRoleUrl(req)) next(new BadRequestError(40012));
 
-      const userEntity = RegisterSchema.parse(req.body);
-      const user: UserEntity = await userDomain.createUser(userEntity);
+      const userEntity: RegisterParams = RegisterSchema.parse(req.body);
+      const user: UserEntity = await userDomain.createUser({
+        ...userEntity,
+        provider: AuthenticationProvider.LOCAL,
+      });
 
-      res.json(user);
+      req.login(user, (err) => {
+        if (err) {
+          // todo: better error message?
+          throw new AuthorizationError(-1);
+        }
+
+        // If login is successful, send the user data as a response
+        res.status(200).json(user);
+      });
     } catch (error) {
       next(error);
     }
@@ -274,6 +468,36 @@ router.get(
   },
 );
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   delete:
+ *     tags:
+ *       - Auth
+ *     summary: Logout the current user
+ *     description: Logs out the authenticated user and destroys the session.
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logout successful
+ *       403:
+ *         description: User is not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is not authenticated
+ */
 router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: NextFunction) => {
   req.logout((err) => {
     if (err) return next(err);
@@ -288,7 +512,33 @@ router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: Ne
   });
 });
 
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     tags:
+ *       - Auth
+ *     summary: Get the current user's data
+ *     description: Returns the data of the authenticated user.
+ *     responses:
+ *       200:
+ *         description: Authenticated, received user data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserData'
+ *       403:
+ *         description: Unauthenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is not authenticated
+ */
 router.get('/me', isAuthenticated, (req: Request, res: Response) => {
   // Return the authenticated user's data
-  res.json(req.user);
+  res.json(req.user as UserEntity);
 });

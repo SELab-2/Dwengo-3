@@ -9,7 +9,7 @@ export interface LearningPathNodeShort {
 export interface LearningPathNodeDetail {
   id: string;
   learningPathId: string;
-  learningObjectId: string;
+  learningObject: LearningObjectShort;
   instruction: string;
   index: number;
   transitions: LearningPathNodeTransitionDetail[];

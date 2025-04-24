@@ -123,9 +123,7 @@ export async function fetchPopulatedClassById(
  * @returns The classDetails
  */
 export async function createClass(data: ClassCreate) {
-  const response = await apiClient.put(ApiRoutes.class.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.class.create, data);
 
   const result: ClassDetail = response.data;
   return result;
@@ -139,9 +137,7 @@ export async function createClass(data: ClassCreate) {
  * @returns The classDetails
  */
 export async function updateClass(id: string, data: ClassUpdate) {
-  const response = await apiClient.patch(ApiRoutes.class.update(id), {
-    data,
-  });
+  const response = await apiClient.patch(ApiRoutes.class.update(id), data);
 
   return response.data;
 }

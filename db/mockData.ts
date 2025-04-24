@@ -30,7 +30,9 @@ export async function addMockData(prisma: PrismaClient) {
   }
 
   // find random learning path
-  const learningPath = await prisma.learningPath.findFirst({});
+  const learningPath = (await prisma.learningPath.findFirst({
+    include: { learningPathNodes: true },
+  }))!;
 
   const students = [];
   // create 10 students
@@ -91,7 +93,7 @@ export async function addMockData(prisma: PrismaClient) {
       },
       learningPath: {
         connect: {
-          id: learningPath!.id,
+          id: learningPath.id,
         },
       },
       groups: {
@@ -102,9 +104,9 @@ export async function addMockData(prisma: PrismaClient) {
               id: student.student!.id,
             },
           },
-          progress: Array.from({ length: 4 }, () => Math.floor(Math.random() * 13)).sort(
-            (a, b) => a - b,
-          ),
+          progress: Array.from({ length: 4 }, () =>
+            Math.floor(Math.random() * learningPath.learningPathNodes.length),
+          ).sort((a, b) => a - b),
         })),
       },
     },

@@ -21,24 +21,10 @@ function LearningPathPage() {
   const [wrongAnswer, setWrongAnswer] = useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { data: learningPath } = useLearningPathById(id);
-  const { data: currentNode, refetch: refetchCurrentNode } = useLearningPathNodeById(
+  const { data: currentNode } = useLearningPathNodeById(
     learningPath?.learningPathNodes[activeIndex].id,
   );
-  const { data: currentObject, refetch: refetchCurrentObject } = useLearningObjectById(
-    currentNode?.learningObjectId,
-  );
-
-  useEffect(() => {
-    if (learningPath) {
-      refetchCurrentNode();
-    }
-  }, [learningPath, activeIndex, refetchCurrentNode]);
-
-  useEffect(() => {
-    if (currentNode) {
-      refetchCurrentObject();
-    }
-  }, [currentNode, activeIndex, refetchCurrentObject]);
+  const { data: currentObject } = useLearningObjectById(currentNode?.learningObject.id);
 
   if (!learningPath) {
     return <div>{t('loading')}</div>;

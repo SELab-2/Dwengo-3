@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { RegisterParams } from '../util/types/auth.types';
+import { CreateUserParams, RegisterParams } from '../util/types/auth.types';
 import { AuthProvider, ClassRole, User } from '@prisma/client';
 import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
@@ -22,7 +22,7 @@ export class UserDomain {
   private readonly persistence = new UsersPersistence();
   private readonly classDomain = new ClassDomain();
 
-  async createUser(userData: RegisterParams): Promise<UserEntity> {
+  async createUser(userData: CreateUserParams): Promise<UserEntity> {
     if (userData.email === null || userData.email.trim().length === 0) {
       throw new BadRequestError(40045);
     }

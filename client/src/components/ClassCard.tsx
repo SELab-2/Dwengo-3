@@ -34,7 +34,7 @@ function ClassCard({ classDetails }: { classDetails: PopulatedClass }) {
       // For a student, calculate the progress based on the group they're in
       const progress =
         assignment.groups
-          .filter((group) => group.students.some((student) => student.id === user?.student?.id))[0]
+          .filter((group) => group.students?.some((student) => student.id === user?.student?.id))[0] //TODO: for some reason group.students is undefined
           ?.progress.at(-1) || 0;
 
       return Math.round((progress / assignment.learningPath.learningPathNodes.length) * 100);

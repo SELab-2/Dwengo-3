@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   GridLegacy,
+  IconButton,
   LinearProgress,
   List,
   ListItem,
@@ -18,7 +19,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import {
@@ -29,6 +30,7 @@ import { Decision } from '../util/interfaces/classJoinRequest.interfaces.ts';
 import { useError } from '../hooks/useError.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 function ClassDashboardPage() {
   const { t } = useTranslation();
@@ -95,6 +97,56 @@ function ClassDashboardPage() {
         <GridLegacy item xs={12} md={3}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              {t('classId')}
+            </Typography>
+
+            {/* Horizontally scrollable class ID with copy icon outside */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                mb: 2,
+                mt: 1,
+                maxWidth: '100%',
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  overflowX: 'auto',
+                  whiteSpace: 'nowrap',
+                  bgcolor: '#f5f5f5',
+                  borderRadius: 1,
+                  px: 1,
+                  py: 0.5,
+                  maxWidth: '100%',
+                  flex: 1,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontFamily: 'monospace',
+                    fontWeight: 'bold',
+                    userSelect: 'all',
+                  }}
+                  component="span"
+                >
+                  {classData!.id}
+                </Typography>
+              </Box>
+              <IconButton
+                size="small"
+                aria-label={t('copy')}
+                onClick={() => navigator.clipboard.writeText(classData!.id)}
+                sx={{ ml: 1 }}
+              >
+                <ContentCopyIcon fontSize="small" />
+              </IconButton>
+            </Box>
+
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               {t('coTeachers')}
             </Typography>
             <List sx={{ maxHeight: 100, overflowY: 'auto', bgcolor: '#f5f5f5', borderRadius: 1 }}>
@@ -148,7 +200,9 @@ function ClassDashboardPage() {
                   <TableCell>
                     <Typography variant="h6">
                       <strong>{t('progress')}: </strong>
-                      {assignment?.learningPath.title}
+                      <Link to={AppRoutes.learningPath(assignment?.learningPath.id || '/404')}>
+                        {assignment?.learningPath.title}
+                      </Link>
                     </Typography>
                   </TableCell>
                   <TableCell />

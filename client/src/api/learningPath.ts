@@ -1,6 +1,7 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
+import qs from 'qs';
 import {
   LearningPathShort,
   LearningPathDetail,
@@ -28,6 +29,9 @@ export async function fetchLearningPaths(
       ages,
       page,
       pageSize,
+    },
+    paramsSerializer: (params) => {
+      return qs.stringify(params, { arrayFormat: 'repeat' });
     },
   });
 
