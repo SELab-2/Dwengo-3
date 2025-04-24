@@ -55,6 +55,7 @@ export const en = {
     coTeachers: 'Co-teachers',
     notes: 'Notes',
     createNewAnnouncement: 'Create new announcement',
+    noAnnouncements: 'No announcements yet',
     loading: 'Loading...',
     incorrectAnswer: 'Wrong answer. Try again.',
     completePreviousSteps: 'Please complete the previous steps before proceeding.',
