@@ -7,6 +7,7 @@ import { AppRoutes } from '../util/app.routes';
 import ClassCard from '../components/ClassCard';
 import Paginator from '../components/Paginator';
 import { useState } from 'react';
+import { Add } from '@mui/icons-material';
 
 function MyClassesPage() {
   const { user } = useAuth();
@@ -58,17 +59,18 @@ function MyClassesPage() {
         <Typography variant="h4" sx={{ textAlign: 'left' }}>
           {t('myClasses')}
         </Typography>
-        {user?.teacher && (
-          <Button
-            href={AppRoutes.classCreate}
-            variant="contained"
-            sx={{
-              textTransform: 'none',
-            }}
-          >
-            {t('createClass')}
-          </Button>
-        )}
+
+        {/* Button to create or join a class */}
+        <Button
+          startIcon={<Add />}
+          href={AppRoutes.classAdd}
+          variant="contained"
+          sx={{
+            textTransform: 'none',
+          }}
+        >
+          {t('addClass')}
+        </Button>
       </Box>
 
       {/* Show a loading indicator or a message if no classes are available */}
