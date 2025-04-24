@@ -9,22 +9,12 @@ function AnnouncementDetailpage() {
   const { user } = useAuth(); // NEEDED TO CHECK IF USER IS TEACHER OR STUDENT for future edit features
   const { announcementId } = useParams<{ announcementId: string }>(); // Get the announcement ID from the URL
 
-  // TODO get classData from somewhere, probably straight from the API via the announcementID
-  const classData = {
-    id: '1234',
-    name: 'Klas - 6 AIT',
-    teachers: ['Marnie Garcia', 'Marvin Kline'],
-    notes:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tincidunt congue ligula in rutrum. Morbi nec lacus condimentum, hendrerit mi eu, feugiat.',
-  };
-
   const { data: announcementData } = useAnnouncementById(announcementId!);
 
   const announcement = announcementData!;
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={classData.id} className={classData.name} />
       <Paper
         sx={{
           p: 2,
