@@ -13,7 +13,7 @@ const themeKeywordsMap = {
   'AI in Climate': ['AI', 'Climate'],
   'Social Robot': ['Robotics', 'AI'],
   'AI in Healthcare': ['AI', 'Healthcare'],
-  'Language Technology': ['Language', 'AI'],
+  'Language Technology': ['EN'],
 };
 
 function LearningPathsOverviewPage() {
