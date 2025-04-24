@@ -96,9 +96,7 @@ export async function getClassJoinRequestsTeacher(
  * @returns Succesfully handled or not
  */
 export async function handleClassJoinRequestStudent(data: ClassJoinRequestPost) {
-  const response = await apiClient.post(ApiRoutes.classJoinRequest.student.reply, {
-    data,
-  });
+  const response = await apiClient.post(ApiRoutes.classJoinRequest.student.reply, data);
 
   return response.data;
 }
@@ -110,9 +108,7 @@ export async function handleClassJoinRequestStudent(data: ClassJoinRequestPost) 
  * @returns Succesfully handled or not
  */
 export async function handleClassJoinRequestTeacher(data: ClassJoinRequestPost) {
-  const response = await apiClient.post(ApiRoutes.classJoinRequest.teacher.reply, {
-    data,
-  });
+  const response = await apiClient.post(ApiRoutes.classJoinRequest.teacher.reply, data);
 
   return response.data;
 }
