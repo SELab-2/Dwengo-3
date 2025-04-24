@@ -7,7 +7,6 @@ import {
   LearningPathDetail,
   LearningPathCreate,
 } from '../util/interfaces/learningPath.interfaces';
-import { Repeat } from '@mui/icons-material';
 
 /**
  * Fetches a list of learningPaths based on keywords, ages, page, and pageSize.
