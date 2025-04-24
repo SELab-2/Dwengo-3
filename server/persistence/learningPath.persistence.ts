@@ -62,7 +62,6 @@ export class LearningPathPersistence {
     paginationParams: PaginationParams,
   ) {
     const whereClause: Prisma.LearningPathWhereInput = this.buildWhereClause(filters);
-    console.log(filters);
 
     return searchAndPaginate(
       this.prisma.learningPath,
