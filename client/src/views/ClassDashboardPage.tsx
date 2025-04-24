@@ -54,7 +54,7 @@ function ClassDashboardPage() {
   let assignment = undefined;
   let totalProgress = undefined;
   let groupsCompleted = undefined;
-  if (assignmentsData?.data?.length ?? 0 > 0) {
+  if ((assignmentsData?.data?.length ?? 0) > 0) {
     assignment = assignmentsData?.data[assignmentsData?.data.length - 1]!;
     totalProgress = assignment.learningPath.learningPathNodes.length;
     groupsCompleted = assignment.groups

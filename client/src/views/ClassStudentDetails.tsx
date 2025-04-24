@@ -76,10 +76,15 @@ function ClassStudentDetails() {
             </TableHead>
             <TableBody>
               {assignments?.data.map((assignment) => {
-                const completed =
-                  assignment.groups[0].progress[assignment.groups[0].progress.length - 1] + 1;
                 const total = assignment.learningPath.learningPathNodes.length;
-                const progress = (completed / total) * 100;
+                let completed = 0;
+                let progress = 0;
+
+                if (assignment.groups[0].progress.length > 0) {
+                  completed =
+                    assignment.groups[0].progress[assignment.groups[0].progress.length - 1] + 1;
+                  progress = (completed / total) * 100;
+                }
 
                 return (
                   <TableRow key={assignment.id}>
