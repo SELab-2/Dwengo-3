@@ -1,11 +1,13 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
+import qs from 'qs';
 import {
   LearningPathShort,
   LearningPathDetail,
   LearningPathCreate,
 } from '../util/interfaces/learningPath.interfaces';
+import { Repeat } from '@mui/icons-material';
 
 /**
  * Fetches a list of learningPaths based on keywords, ages, page, and pageSize.
@@ -28,6 +30,9 @@ export async function fetchLearningPaths(
       ages,
       page,
       pageSize,
+    },
+    paramsSerializer: (params) => {
+      return qs.stringify(params, { arrayFormat: 'repeat' });
     },
   });
 
