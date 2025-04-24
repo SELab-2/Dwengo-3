@@ -21,7 +21,6 @@ export function useLearningPath(
     queryFn: async () => {
       return await fetchLearningPaths(keywords, ages, page, pageSize);
     },
-    enabled: !!keywords, // Make sure it's enabled when keywords are available
     refetchOnWindowFocus: false,
   });
 }
