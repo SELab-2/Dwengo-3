@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import {
@@ -54,7 +54,7 @@ function ClassDashboardPage() {
   let assignment = undefined;
   let totalProgress = undefined;
   let groupsCompleted = undefined;
-  if (assignmentsData?.data?.length ?? 0 > 0) {
+  if ((assignmentsData?.data?.length ?? 0) > 0) {
     assignment = assignmentsData?.data[assignmentsData?.data.length - 1]!;
     totalProgress = assignment.learningPath.learningPathNodes.length;
     groupsCompleted = assignment.groups
@@ -200,7 +200,9 @@ function ClassDashboardPage() {
                   <TableCell>
                     <Typography variant="h6">
                       <strong>{t('progress')}: </strong>
-                      {assignment?.learningPath.title}
+                      <Link to={AppRoutes.learningPath(assignment?.learningPath.id || '/404')}>
+                        {assignment?.learningPath.title}
+                      </Link>
                     </Typography>
                   </TableCell>
                   <TableCell />

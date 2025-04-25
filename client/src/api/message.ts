@@ -32,9 +32,7 @@ export async function fetchMessages(discussionId?: string, page?: number, pageSi
  * @returns The messagedetails
  */
 export async function createMessage(data: MessageCreate) {
-  const response = await apiClient.put(ApiRoutes.message.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.message.create, data);
 
   return response.data;
 }

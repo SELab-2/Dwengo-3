@@ -70,9 +70,7 @@ export async function fetchAssignmentById(id: string) {
  * @returns The assignmentdetails
  */
 export async function createAssignment(data: AssignmentCreate) {
-  const response = await apiClient.put(ApiRoutes.assignment.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.assignment.create, data);
 
   return response.data;
 }

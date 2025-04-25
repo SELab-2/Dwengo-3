@@ -61,9 +61,7 @@ export async function fetchLearningPathById(id: string) {
  * @returns The learningPath details
  */
 export async function createLearningPath(data: LearningPathCreate) {
-  const response = await apiClient.put(ApiRoutes.learningPath.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.learningPath.create, data);
 
   return response.data;
 }

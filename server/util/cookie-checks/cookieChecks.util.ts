@@ -102,7 +102,7 @@ export const checkIfUsersAreInSameClass = async (
     throw new BadRequestError(40040);
   }
 
-  if (classData.teachers.some((teacher) => teacher.id !== teacherId)) {
+  if (!classData.teachers.find((teacher) => teacher.id === teacherId)) {
     throw new BadRequestError(40001);
   }
 };

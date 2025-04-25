@@ -61,9 +61,7 @@ export async function fetchDiscussionById(id: string) {
  * @returns The discussiondetails
  */
 export async function createDiscussion(data: DiscussionCreate) {
-  const response = await apiClient.put(ApiRoutes.discussion.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.discussion.create, data);
 
   return response.data;
 }

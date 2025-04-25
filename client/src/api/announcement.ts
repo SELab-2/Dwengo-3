@@ -15,9 +15,7 @@ import { PaginatedData } from '../util/interfaces/general.interfaces';
  * @returns The announcementdetails
  */
 export async function createAnnouncement(announcement: AnnouncementCreate) {
-  const response = await apiClient.put(ApiRoutes.announcement.create, {
-    announcement,
-  });
+  const response = await apiClient.put(ApiRoutes.announcement.create, announcement);
 
   return response.data;
 }
@@ -29,7 +27,7 @@ export async function createAnnouncement(announcement: AnnouncementCreate) {
  * @param pageSize - The number of items you want to fetch
  * @param classId - The id of the class whose announcements are to be fetched
  * @param teacherId - The id of the teacher whose announcements are to be fetched
- * @param studentID - The id of the student whose announcements are to be fetched
+ * @param studentId - The id of the student whose announcements are to be fetched
  * @returns A list of announcements
  */
 export async function fetchAnnouncements(
@@ -75,9 +73,7 @@ export async function fetchAnnouncementById(announcementId: string) {
  * @returns The announcementdetails
  */
 export async function updateAnnouncement(announcementId: string, data: AnnouncementUpdate) {
-  const response = await apiClient.patch(ApiRoutes.announcement.update(announcementId), {
-    data,
-  });
+  const response = await apiClient.patch(ApiRoutes.announcement.update(announcementId), data);
 
   return response.data;
 }

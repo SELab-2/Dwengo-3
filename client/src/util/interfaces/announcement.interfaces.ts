@@ -1,4 +1,5 @@
 import { TeacherShort } from './teacher.interfaces';
+import { ClassShort } from './class.interfaces.ts';
 
 export interface AnnouncementShort {
   id: string;
@@ -10,6 +11,7 @@ export interface AnnouncementDetail {
   title: string;
   content: string;
   teacher: TeacherShort;
+  class: ClassShort;
 }
 
 export interface AnnouncementCreate {

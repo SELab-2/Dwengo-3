@@ -12,12 +12,12 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 import { AppRoutes } from '../util/app.routes.ts';
 import { useClassById } from '../hooks/useClass.ts';
 import { useAssignmentsOfStudent } from '../hooks/useAssignment.ts';
+import BackButton from '../components/BackButton.tsx';
 
 function ClassStudentDetails() {
   const { classId, studentId } = useParams<{ classId: string; studentId: string }>();
@@ -34,14 +34,7 @@ function ClassStudentDetails() {
       <ClassNavigationBar id={classId!} className={classData?.name} />
 
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%' }, p: 2 }}>
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(AppRoutes.class(classId!))}
-          sx={{ mb: 3 }}
-        >
-          {t('back')}
-        </Button>
+        <BackButton link={AppRoutes.class(classId!)}></BackButton>
 
         <Typography variant="h4" gutterBottom>
           {t('student')}: {studentData?.user.name} {studentData?.user.surname}
@@ -76,10 +69,15 @@ function ClassStudentDetails() {
             </TableHead>
             <TableBody>
               {assignments?.data.map((assignment) => {
-                const completed =
-                  assignment.groups[0].progress[assignment.groups[0].progress.length - 1] + 1;
                 const total = assignment.learningPath.learningPathNodes.length;
-                const progress = (completed / total) * 100;
+                let completed = 0;
+                let progress = 0;
+
+                if (assignment.groups[0].progress.length > 0) {
+                  completed =
+                    assignment.groups[0].progress[assignment.groups[0].progress.length - 1] + 1;
+                  progress = (completed / total) * 100;
+                }
 
                 return (
                   <TableRow key={assignment.id}>

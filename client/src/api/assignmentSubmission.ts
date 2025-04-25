@@ -47,9 +47,7 @@ export async function fetchAssignmentSubmissions(
  * @returns The assignmentSubmissiondetails
  */
 export async function createAssignmentSubmission(data: AssignmentSubmissionCreate) {
-  const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, data);
 
   return response.data;
 }
@@ -75,9 +73,7 @@ export async function fetchAssignmentSubmissionById(assignmentSubmissionId: stri
  * @returns The AssignmentSubmissionDetails
  */
 export async function updateAssignmentSubmission(id: string, data: AssignmentSubmissionUpdate) {
-  const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), {
-    data,
-  });
+  const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), data);
 
   return response.data;
 }
