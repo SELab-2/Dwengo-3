@@ -12,12 +12,12 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 import { AppRoutes } from '../util/app.routes.ts';
 import { useClassById } from '../hooks/useClass.ts';
 import { useAssignmentsOfStudent } from '../hooks/useAssignment.ts';
+import BackButton from '../components/BackButton.tsx';
 
 function ClassStudentDetails() {
   const { classId, studentId } = useParams<{ classId: string; studentId: string }>();
@@ -34,14 +34,7 @@ function ClassStudentDetails() {
       <ClassNavigationBar id={classId!} className={classData?.name} />
 
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%' }, p: 2 }}>
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(AppRoutes.class(classId!))}
-          sx={{ mb: 3 }}
-        >
-          {t('back')}
-        </Button>
+        <BackButton link={AppRoutes.class(classId!)}></BackButton>
 
         <Typography variant="h4" gutterBottom>
           {t('student')}: {studentData?.user.name} {studentData?.user.surname}
