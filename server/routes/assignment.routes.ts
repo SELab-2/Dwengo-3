@@ -1,4 +1,4 @@
-import { Router, Response, Request } from 'express';
+import { Request, Response, Router } from 'express';
 import { AssignmentDomain } from '../domain/assignment.domain';
 import { UserDomain } from '../domain/user.domain';
 import { isAuthenticated } from './auth.routes';
@@ -152,7 +152,7 @@ export class AssignmentController {
   private async createAssignment(req: Request, res: Response): Promise<void> {
     res.json(
       await this.assignmentDomain.createAssignment(
-        req.body.data,
+        req.body,
         await this.userDomain.getUserFromReq(req),
       ),
     );

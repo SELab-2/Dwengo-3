@@ -48,7 +48,7 @@ export class ClassJoinRequestController {
   private handleJoinRequest = async (req: Request, res: Response) => {
     res.json(
       await this.classJoinRequestDomain.handleJoinRequest(
-        req.body.data,
+        req.body,
         await this.userDomain.getUserFromReq(req),
       ),
     );
