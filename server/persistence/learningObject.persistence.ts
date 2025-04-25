@@ -42,7 +42,7 @@ export class LearningObjectPersistence {
         filters.targetAges && filters.targetAges.length > 0
           ? {
               targetAges: {
-                hasSome: filters.targetAges, // Match any of the target ages
+                hasSome: filters.targetAges, // Match any of the target ages, todo: change to "between"
               },
             }
           : {},
