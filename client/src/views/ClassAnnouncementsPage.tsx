@@ -38,7 +38,7 @@ function ClassAnnouncementsPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={classId!} className={classData!.name} />
+      <ClassNavigationBar id={classId!} className={classData?.name} />
       <Paper
         sx={{
           p: 2,
