@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createAssignment, fetchAssignmentById, fetchAssignments } from '../api/assignment';
 import { AssignmentCreate } from '../util/interfaces/assignment.interfaces';
+
 /**
  * Fetches a list of assignments based on the provided class, group, student, and teacher IDs.
  *
@@ -10,20 +11,28 @@ import { AssignmentCreate } from '../util/interfaces/assignment.interfaces';
  * @param teacherId - The ID of the teacher whose assignments are to be fetched.
  * @returns The query object containing the assignment data.
  */
-export function useAssignments(
-  classId?: string,
-  groupId?: string,
-  studentId?: string,
-  teacherId?: string,
-  page: number = 1,
-  pageSize: number = 10,
-) {
+export function useAssignments({
+  studentId,
+  classId,
+  groupId,
+  teacherId,
+  page,
+  pageSize,
+}: {
+  studentId?: string;
+  classId?: string;
+  groupId?: string;
+  teacherId?: string;
+  page?: number;
+  pageSize?: number;
+}) {
   return useQuery({
-    queryKey: ['assignments', classId, groupId, studentId, teacherId],
+    queryKey: ['assignments', studentId, classId, groupId, teacherId, page, pageSize],
     queryFn: async () => {
-      return await fetchAssignments({ classId, groupId, studentId, teacherId, page, pageSize });
+      return await fetchAssignments({ studentId, classId, groupId, teacherId, page, pageSize });
     },
-    enabled: !!classId || !!groupId || !!studentId || !!teacherId,
+    enabled: !!studentId || !!classId || !!groupId || !!teacherId,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -87,42 +96,6 @@ export function useAssignmentsOfClass(classId: string) {
       return await fetchAssignments({ classId });
     },
     enabled: !!classId,
-    refetchOnWindowFocus: false,
-  });
-}
-
-/**
- * Hook to fetch assignments for a specific group
- *
- * @param studentId - The ID of the student for whom to fetch assignments
- * @param classId - The ID of the class for which to fetch assignments
- * @param groupId - The ID of the group for which to fetch assignments
- * @param teacherId - The ID of the teacher for whom to fetch assignments
- * @param page - The page number of the pagination you want to fetch
- * @param pageSize - The number of items you want to fetch
- * @returns A query object containing the assignments data
- */
-export function useAssignments({
-  studentId,
-  classId,
-  groupId,
-  teacherId,
-  page,
-  pageSize,
-}: {
-  studentId?: string;
-  classId?: string;
-  groupId?: string;
-  teacherId?: string;
-  page?: number;
-  pageSize?: number;
-}) {
-  return useQuery({
-    queryKey: ['assignments', studentId, classId, groupId, teacherId, page, pageSize],
-    queryFn: async () => {
-      return await fetchAssignments({ studentId, classId, groupId, teacherId, page, pageSize });
-    },
-    enabled: !!studentId || !!classId || !!groupId || !!teacherId,
     refetchOnWindowFocus: false,
   });
 }
