@@ -14,10 +14,8 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useTranslation } from 'react-i18next';
-import DateTypography from '../components/DateTypography';
 import GroupListDialog from '../components/GroupListDialog';
 import { useState } from 'react';
-import { StudentShort } from '../util/interfaces/student.interfaces';
 import BackButton from '../components/BackButton.tsx';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
@@ -29,7 +27,7 @@ const calculateProgress = (
 ) => {
   const total_nodes = learningPath.learningPathNodes.length;
   // + 1 is added because of zero indexing
-  return progress.length > 0 ? ((Math.max(...progress) + 1) / total_nodes) * 100  : 0;
+  return progress.length > 0 ? ((Math.max(...progress) + 1) / total_nodes) * 100 : 0;
 };
 
 function ClassAssignmentPage() {
@@ -37,11 +35,11 @@ function ClassAssignmentPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [students, setStudents] = useState<StudentShort[]>([]);
+  const [selectedGroupIndex, setSelectedGroupIndex] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
 
-  const {data: classData, isLoading: isLoadingClass} = useClassById(classId!);
-  const {data: assignment, isLoading: isLoadingAssignment} = useAssignmentById(assignmentId!);
+  const { data: classData, isLoading: isLoadingClass } = useClassById(classId!);
+  const { data: assignment, isLoading: isLoadingAssignment } = useAssignmentById(assignmentId!);
   if (isLoadingAssignment) {
     return (
       <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
@@ -57,7 +55,8 @@ function ClassAssignmentPage() {
           {t('loading')}
         </Typography>
       ) : (
-       <ClassNavigationBar id={classData!.id} className={classData!.name} />)}
+        <ClassNavigationBar id={classData!.id} className={classData!.name} />
+      )}
 
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 1000 }, p: 2 }}>
         <BackButton link={`/class/${classData!.id}/assignments`} />
@@ -72,7 +71,11 @@ function ClassAssignmentPage() {
 
         {/*<DateTypography text={`${t('deadline')}: `} date={assignment.deadline} variant='h5' />*/}
 
-        <GroupListDialog students={students} open={open} onClose={() => setOpen(false)} />
+        <GroupListDialog
+          students={assignment?.groups[selectedGroupIndex]?.students ?? []}
+          open={open}
+          onClose={() => setOpen(false)}
+        />
 
         <TableContainer
           component={Paper}
@@ -117,7 +120,7 @@ function ClassAssignmentPage() {
                         fontSize: { xs: '14px', sm: '16px' },
                       }}
                       onClick={() => {
-                        setStudents(group.students);
+                        setSelectedGroupIndex(index);
                         setOpen(true);
                       }}
                     >
@@ -133,7 +136,7 @@ function ClassAssignmentPage() {
                         borderRadius: 5,
                         minWidth: { xs: '80px', sm: '150px', md: '200px' },
                       }}
-                    /> 
+                    />
                   </TableCell>
                   <TableCell sx={{ textAlign: 'center' }}>
                     <Button
