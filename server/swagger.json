@@ -15,6 +15,111 @@
       }
     },
     "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email of the user.",
+            "example": "example@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user.",
+            "example": "password123"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "Register": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The username of the user.",
+            "example": "example"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the user.",
+            "example": "John"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the user.",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the user.",
+            "example": "example@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user.",
+            "example": "password123"
+          },
+          "role": {
+            "type": "string",
+            "description": "The role of the user.",
+            "enum": ["TEACHER", "STUDENT"]
+          }
+        }
+      },
+      "UserData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the user.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "provider": {
+            "type": "string",
+            "description": "The provider of the user.",
+            "enum": ["LOCAL", "GOOGLE"]
+          },
+          "username": {
+            "type": "string",
+            "description": "The username of the user.",
+            "example": "example"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the user.",
+            "example": "example@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user.",
+            "example": "password123"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the user.",
+            "example": "John"
+          },
+          "surname": {
+            "type": "string",
+            "description": "The surname of the user.",
+            "example": "Doe"
+          },
+          "role": {
+            "type": "string",
+            "description": "The role of the user.",
+            "enum": ["STUDENT", "TEACHER"]
+          },
+          "teacher": {
+            "description": "The teacher data of the user",
+            "$ref": "#/components/schemas/TeacherShort"
+          },
+          "student": {
+            "description": "The student data of the user",
+            "$ref": "#/components/schemas/StudentShort"
+          }
+        }
+      },
       "LearningPathCreate": {
         "type": "object",
         "properties": {
@@ -57,7 +162,6 @@
         },
         "required": ["hruid", "language", "title"]
       },
-
       "ClassDetail": {
         "type": "object",
         "properties": {
@@ -111,7 +215,6 @@
           }
         }
       },
-
       "TeacherDetail": {
         "type": "object",
         "properties": {
@@ -155,19 +258,24 @@
             "description": "The unique identifier for the teacher.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
           },
-          "name": {
-            "type": "string",
-            "description": "The last name of the teacher.",
-            "example": "Doe"
-          },
-          "surname": {
-            "type": "string",
-            "description": "The surname of the teacher.",
-            "example": "John"
+          "user": {
+            "type": "object",
+            "description": "The user data of the teacher",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The last name of the teacher.",
+                "example": "Doe"
+              },
+              "surname": {
+                "type": "string",
+                "description": "The surname of the teacher.",
+                "example": "John"
+              }
+            }
           }
         }
       },
-
       "StudentDetail": {
         "type": "object",
         "properties": {
@@ -230,7 +338,6 @@
           }
         }
       },
-
       "LearningPathDetail": {
         "type": "object",
         "properties": {
@@ -331,7 +438,6 @@
           }
         }
       },
-
       "LearningObjectDetail": {
         "type": "object",
         "properties": {
@@ -413,7 +519,11 @@
             "items": {
               "type": "object"
             },
-            "example": [{ "goal": "Understand variables" }]
+            "example": [
+              {
+                "goal": "Understand variables"
+              }
+            ]
           },
           "copyright": {
             "type": "string",
@@ -438,7 +548,9 @@
           "returnValue": {
             "type": "object",
             "description": "Callback url for submission",
-            "example": { "callback": "https://example.com" }
+            "example": {
+              "callback": "https://example.com"
+            }
           },
           "available": {
             "type": "boolean",
@@ -534,7 +646,6 @@
           }
         }
       },
-
       "LearningPathNodeDetail": {
         "type": "object",
         "properties": {
@@ -593,7 +704,6 @@
           }
         }
       },
-
       "LearningPathNodeTransitionDetail": {
         "type": "object",
         "properties": {
@@ -621,7 +731,6 @@
           }
         }
       },
-
       "UserDetail": {
         "type": "object",
         "properties": {
@@ -699,7 +808,6 @@
           }
         }
       },
-
       "ClassJoinRequestDetail": {
         "type": "object",
         "properties": {
@@ -717,7 +825,6 @@
           }
         }
       },
-
       "GroupDetail": {
         "type": "object",
         "properties": {
@@ -783,7 +890,6 @@
           }
         }
       },
-
       "AssignmentDetail": {
         "type": "object",
         "properties": {
@@ -831,7 +937,6 @@
           }
         }
       },
-
       "SubmissionDetail": {
         "type": "object",
         "properties": {
@@ -844,13 +949,18 @@
           "submission": {
             "type": "object",
             "description": "The submission of the student",
-            "example": { "answer": "B" }
+            "example": {
+              "answer": "B"
+            }
           },
           "group": {
             "$ref": "#/components/schemas/GroupShort"
           },
           "learningPathNode": {
             "$ref": "#/components/schemas/LearningPathNodeShort"
+          },
+          "favorite": {
+            "$ref": "#/components/schemas/FavoriteShort"
           }
         }
       },
@@ -865,7 +975,6 @@
           }
         }
       },
-
       "DiscussionDetail": {
         "type": "object",
         "properties": {
@@ -907,7 +1016,6 @@
           }
         }
       },
-
       "MessageDetail": {
         "type": "object",
         "properties": {
@@ -939,7 +1047,6 @@
           }
         }
       },
-
       "AnnouncementDetail": {
         "type": "object",
         "properties": {
@@ -954,13 +1061,16 @@
             "description": "The title of the announcement.",
             "example": "Important announcement"
           },
+          "classId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the class.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
           "content": {
             "type": "string",
             "description": "The content of the announcement.",
             "example": "This is an important announcement."
-          },
-          "class": {
-            "$ref": "#/components/schemas/ClassShort"
           },
           "teacher": {
             "description": "The teacher who made the announcement",
@@ -984,7 +1094,62 @@
           }
         }
       },
-
+      "FavoriteShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the favorite",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The userId of the user that made the favorite",
+            "example": "660e8400-e29b-41d4-a716-446655440000"
+          },
+          "progress": {
+            "type": "array",
+            "description": "A list of the indexes of the already completed nodes",
+            "items": {
+              "type": "integer"
+            },
+            "example": [0, 1, 2, 4]
+          },
+          "learningPath": {
+            "description": "The favorited learningPath",
+            "$ref": "#/components/schemas/LearningPathShort"
+          }
+        }
+      },
+      "FavoriteDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the favorite",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "progress": {
+            "type": "array",
+            "description": "A list of the indexes of the already completed nodes",
+            "items": {
+              "type": "integer"
+            },
+            "example": [0, 1, 2, 4]
+          },
+          "learningPath": {
+            "description": "The favorited learningPath",
+            "$ref": "#/components/schemas/LearningPathShort"
+          },
+          "user": {
+            "description": "The user that made the favorite",
+            "$ref": "#/components/schemas/UserShort"
+          }
+        }
+      },
       "PaginatedResponse": {
         "type": "object",
         "properties": {
@@ -1000,7 +1165,6 @@
           }
         }
       },
-
       "ClassUpdate": {
         "type": "object",
         "properties": {
@@ -1011,7 +1175,6 @@
           }
         }
       },
-
       "StudentUpdate": {
         "type": "object",
         "properties": {
@@ -1033,7 +1196,6 @@
           }
         }
       },
-
       "LearningPathNodeCreate": {
         "type": "object",
         "properties": {
@@ -1153,7 +1315,11 @@
             "items": {
               "type": "object"
             },
-            "example": [{ "goal": "Understand variables" }]
+            "example": [
+              {
+                "goal": "Understand variables"
+              }
+            ]
           },
           "copyright": {
             "type": "string",
@@ -1178,7 +1344,9 @@
           "returnValue": {
             "type": "object",
             "description": "Callback url for something (i have no idea)",
-            "example": { "callback": "https://example.com" }
+            "example": {
+              "callback": "https://example.com"
+            }
           },
           "available": {
             "type": "boolean",
@@ -1211,16 +1379,16 @@
               "answer": "4"
             }
           },
-          "canUploadSubmission": {
-            "type": "boolean",
-            "description": "Indicates whether submissions can be uploaded for the learning object.",
-            "example": false
-          },
           "keywords": {
             "type": "array",
             "description": "List of keywords associated with the learning object.",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "keyword": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -1341,7 +1509,6 @@
           }
         }
       },
-
       "AnnouncementCreate": {
         "type": "object",
         "properties": {
@@ -1408,7 +1575,6 @@
         },
         "required": ["requestId", "decision"]
       },
-
       "DiscussionCreate": {
         "type": "object",
         "properties": {
@@ -1417,21 +1583,10 @@
             "format": "uuid",
             "description": "The ID of the group this discussion is for.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
-          },
-          "members": {
-            "type": "array",
-            "description": "The userIds of the members of the discussion",
-            "items": {
-              "type": "string",
-              "format": "uuid",
-              "description": "The ID of the user"
-            },
-            "example": ["550e8400-e29b-41d4-a716-446655440000"]
           }
         },
         "required": ["groupId", "members"]
       },
-
       "MessageCreate": {
         "type": "object",
         "properties": {
@@ -1448,7 +1603,6 @@
         },
         "required": ["discussionId", "content"]
       },
-
       "AssignmentCreate": {
         "type": "object",
         "properties": {
@@ -1456,12 +1610,16 @@
             "type": "array",
             "description": "The groups that are assigned to the assignment",
             "items": {
-              "type": "string",
-              "format": "uuid",
-              "description": "The ID of the group",
-              "example": "550e8400-e29b-41d4-a716-446655440000"
+              "type": "array",
+              "description": "the userId's of the people in a group",
+              "items": {
+                "type": "string",
+                "format": "uuid",
+                "description": "The ID of the group",
+                "example": "550e8400-e29b-41d4-a716-446655440000"
+              }
             },
-            "example": ["550e8400-e29b-41d4-a716-446655440000"]
+            "example": [["550e8400-e29b-41d4-a716-446655440000"]]
           },
           "learningPathId": {
             "type": "string",
@@ -1483,6 +1641,99 @@
           }
         },
         "required": ["groups", "learningPathId", "classId", "teacherId"]
+      },
+      "SubmissionCreate": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the group submitting the assignment.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "favoriteId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the favorite to which the submission belongs",
+            "example": "770e8400-e29b-41d4-a716-446655440000"
+          },
+          "nodeId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the node this submission belongs to.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "submissionType": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "FILE"],
+            "description": "The type of submission. MULTIPLE_CHOICE expects a string, FILE expects an object."
+          },
+          "submission": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "For MULTIPLE_CHOICE submission type, this should be a string representing the selected answer.",
+                "example": "A"
+              },
+              {
+                "$ref": "#/components/schemas/FileSubmissionSchema"
+              }
+            ],
+            "description": "The submission data, either a string for MULTIPLE_CHOICE or an object for FILE."
+          }
+        },
+        "required": ["nodeId", "submissionType", "submission"]
+      },
+      "SubmissionUpdate": {
+        "type": "object",
+        "properties": {
+          "submissionType": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "FILE"],
+            "description": "The type of submission. MULTIPLE_CHOICE expects a string, FILE expects an object."
+          },
+          "submission": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "For MULTIPLE_CHOICE submission type, this should be a string representing the selected answer.",
+                "example": "A"
+              },
+              {
+                "$ref": "#/components/schemas/FileSubmissionSchema"
+              }
+            ],
+            "description": "The submission data, either a string for MULTIPLE_CHOICE or an object for FILE."
+          }
+        }
+      },
+      "FavoriteCreate": {
+        "type": "object",
+        "properties": {
+          "learningPathId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the learningPath you want to favorite",
+            "example": "550e8400-e29b-41d4-a716-446655440002"
+          }
+        },
+        "required": ["learningPathId"]
+      },
+      "FileSubmissionSchema": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "The name of the file being submitted.",
+            "example": "example.pdf"
+          },
+          "filePath": {
+            "type": "string",
+            "description": "The path where the file is stored.",
+            "example": "/uploads/example.pdf"
+          }
+        },
+        "required": ["fileName", "filePath"]
       }
     }
   }

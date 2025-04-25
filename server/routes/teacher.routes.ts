@@ -1,46 +1,28 @@
 import { Router, Request, Response } from 'express';
 import { TeacherDomain } from '../domain/teacher.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class TeacherController {
   public router: Router;
   private teacherDomain: TeacherDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.teacherDomain = new TeacherDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
   private getTeachers = async (req: Request, res: Response) => {
     res.json(
-      await this.teacherDomain.getTeachers(
-        req.query,
-        await getUserFromReq(req),
-      ),
+      await this.teacherDomain.getTeachers(req.query, await this.userDomain.getUserFromReq(req)),
     );
   };
 
   private getTeacherById = async (req: Request, res: Response) => {
     res.json(await this.teacherDomain.getTeacherById(req.params.id));
-  };
-
-  private updateTeacher = async (req: Request, res: Response) => {
-    res.json(
-      await this.teacherDomain.updateTeacher(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
-  };
-
-  private deleteTeacher = async (req: Request, res: Response) => {
-    res.json(
-      await this.teacherDomain.deleteTeacher(
-        req.body,
-        await getUserFromReq(req),
-      ),
-    );
   };
 
   private initializeRoutes() {
@@ -54,22 +36,28 @@ export class TeacherController {
      *       - Teacher
      *     summary: Get list of teachers
      *     description: Fetches a list of teachers filtered by optional query parameters.
-     *     requestBody:
-     *       required: false
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               userId:
-     *                 type: string
-     *                 format: uuid
-     *               classId:
-     *                 type: string
-     *                 format: uuid
-     *               assignmentId:
-     *                 type: string
-     *                 format: uuid
+     *     parameters:
+     *       - name: userId
+     *         in: query
+     *         description: Filter by user ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: classId
+     *         in: query
+     *         description: Filter by class ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: assignmentId
+     *         in: query
+     *         description: Filter by assignment ID
+     *         required: false
+     *         schema:
+     *           type: string
+     *           format: uuid
      *     responses:
      *       200:
      *         description: A list of teachers
@@ -87,7 +75,7 @@ export class TeacherController {
      *       401:
      *         description: Unauthorized
      */
-    this.router.get('/', this.getTeachers);
+    this.router.get('/', isAuthenticated, this.getTeachers);
     /**
      * @swagger
      * /api/teacher/{id}:
@@ -114,64 +102,6 @@ export class TeacherController {
      *       404:
      *         description: Teacher not found.
      */
-    this.router.get('/:id', this.getTeacherById);
-    /**
-     * @swagger
-     * /api/teacher:
-     *   patch:
-     *     security:
-     *       - cookieAuth: []
-     *     tags: [Teacher]
-     *     summary:  Update a teacher
-     *     description: Update a teacher with the given data.
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               id:
-     *                 type: string
-     *                 format: uuid
-     *               classes:
-     *                 type: array
-     *                 items:
-     *                   type: string
-     *                   format: uuid
-     *               assignment:
-     *                 type: array
-     *                 items:
-     *                   type: string
-     *                   format: uuid
-     *             required:
-     *              - id
-     *     responses:
-     *       200:
-     *         description: Teacher successfully updated
-     *         content:
-     *           application/json:
-     *             schema:
-     *               $ref: '#/components/schemas/TeacherDetail'
-     *       401:
-     *         description: Unauthorized
-     */
-    this.router.put('/', this.updateTeacher);
-    /**
-     * @swagger
-     * /api/teacher/{id}:
-     *   delete:
-     *     security:
-     *       - cookieAuth: []
-     *     tags: [Teacher]
-     *     summary: Delete a teacher
-     *     description: Delete the teacher with the given id.
-     *     responses:
-     *       200:
-     *         description: Teacher successfully deleted
-     *       401:
-     *         description: Unauthorized
-     */
-    this.router.delete('/', this.deleteTeacher);
+    this.router.get('/:id', isAuthenticated, this.getTeacherById);
   }
 }

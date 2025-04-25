@@ -1,10 +1,10 @@
-import cookieParser from 'cookie-parser';
-import * as http2 from 'node:http2';
-import { router as auth, verifyCookie } from './routes/auth.router';
-import express, { Express, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
+
+dotenv.config({ path: '../.env' });
+
+import { router as auth } from './routes/auth.routes';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import { ClassController } from './routes/class.routes';
-import { ZodError } from 'zod';
 import { LearningPathController } from './routes/learningPath.routes';
 import { LearningPathNodeController } from './routes/learningPathNode.routes';
 import { LearningPathNodeTransitionController } from './routes/learningPathNodeTransition.routes';
@@ -19,15 +19,32 @@ import * as swaggerDocument from './swagger.json';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { StudentController } from './routes/student.routes';
 import { TeacherController } from './routes/teacher.routes';
-
-dotenv.config({ path: '../.env' });
+import passport from 'passport';
+import session from 'express-session';
+import { errorHandling } from './errorHandling';
+import cors from 'cors';
+import { FavoritesController } from './routes/favorites.routes';
 
 export const app: Express = express();
-const port = process.env.PORT || 3001;
+const port = 3001;
 
 // Allow requests from frontend
-import cors from 'cors';
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+// TODO: change this for production
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3001'];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests from the allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  }),
+);
 
 const options = {
   swaggerDefinition: swaggerDocument, // Use the imported JSON configuration
@@ -41,43 +58,27 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 }
 
-// cookie validating middleware
+if (process.env.SESSION_SECRET === undefined) {
+  throw new Error('Secret for cookies not present');
+}
+
 app.use(
-  cookieParser(),
-  async (req: Request, res: Response, next: NextFunction) => {
-    const verified = await verifyCookie(req.cookies['DWENGO_SESSION']);
-    if (!verified) {
-      const path = req.path;
-
-      // TODO: MOET HERSCHREVEN WORDEN!!!
-      if (path.indexOf('/auth') == -1) {
-        // TODO: redirect to login page, but only when header is set to redirect
-        res.status(http2.constants.HTTP_STATUS_FORBIDDEN).send('unauthorized');
-        return;
-      }
-    }
-    next();
-  },
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      maxAge: 1000 * 60 * 60 * 5, // 5 hours
+      path: '/',
+    },
+  }),
 );
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
-
-// Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  // TODO: Maybe make some error logging mechanism?
-  console.error('[ERROR]', err);
-
-  // If the error is a ZodError, it means that the request did not pass the validation
-  const statusCode = err instanceof ZodError ? 400 : 500;
-
-  if (process.env.NODE_ENV === 'production') {
-    res.status(statusCode).send('Something broke!');
-  } else {
-    res.status(statusCode).json({
-      message: err.message || 'Internal Server Error',
-      stack: err.stack,
-    });
-  }
-});
 
 const apiRouter = express.Router();
 if (process.env.NODE_ENV === 'development') {
@@ -92,21 +93,19 @@ apiRouter.use('/teacher', new TeacherController().router);
 apiRouter.use('/class', new ClassController().router);
 apiRouter.use('/learningPath', new LearningPathController().router);
 apiRouter.use('/learningPathNode', new LearningPathNodeController().router);
-apiRouter.use(
-  '/learningPathNodeTransition',
-  new LearningPathNodeTransitionController().router,
-);
+apiRouter.use('/learningPathNodeTransition', new LearningPathNodeTransitionController().router);
 apiRouter.use('/learningObject', new LearningObjectController().router);
 apiRouter.use('/announcement', new AnnouncementController().router);
 apiRouter.use('/assignment', new AssignmentController().router);
-apiRouter.use(
-  '/assignmentSubmission',
-  new AssignmentSubmissionController().router,
-);
+apiRouter.use('/assignmentSubmission', new AssignmentSubmissionController().router);
 
 apiRouter.use('/auth', auth);
 apiRouter.use('/discussion', new DiscussionController().router);
 apiRouter.use('/message', new MessageController().router);
+apiRouter.use('/favorites', new FavoritesController().router);
+
+// Error handling middleware
+app.use(errorHandling);
 
 app.listen(port, () => {
   console.log(`[SERVER] - listening on http://localhost:${port}`);

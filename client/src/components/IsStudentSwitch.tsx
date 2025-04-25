@@ -1,5 +1,6 @@
 import { Box, Switch, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { MarginSize } from '../util/size';
 
 export function IsStudentSwitch({
   isStudent,
@@ -12,10 +13,10 @@ export function IsStudentSwitch({
 
   return (
     <Box
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: MarginSize.tiny }}
     >
       <Switch checked={isStudent} onChange={() => setIsStudent(!isStudent)} />
-      <Typography>{isStudent ? t('student') : t('teacher')}</Typography>
+      <Typography>{isStudent ? t('iAmStudent') : t('iAmTeacher')}</Typography>
     </Box>
   );
 }

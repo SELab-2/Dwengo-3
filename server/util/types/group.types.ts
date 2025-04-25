@@ -1,7 +1,17 @@
-import { Uuid } from './assignment.types';
+import { AssignmentShort, Uuid } from './assignment.types';
 
 export type GroupShort = {
   id: Uuid;
-  nodeId: Uuid | null;
+  progress: number[];
   assignmentId: Uuid;
+  name: string;
+};
+
+export type GroupDetail = {
+  id: Uuid;
+  name: string;
+  progress: number[];
+  assignment: AssignmentShort;
+  discussion: any;
+  students: any[];
 };

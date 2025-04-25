@@ -13,7 +13,20 @@ function LoginAppBar() {
           height: '100%',
         }}
       >
-        <DwengoIcon href="/login" />
+        <Box
+          sx={{
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            flexGrow: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <DwengoIcon href="/login" />
+        </Box>
         <Box sx={{ marginLeft: 'auto' }}>
           <LanguageSwitcher />
         </Box>

@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Divider } from '@mui/material';
 import EmailTextField from './textfields/EmailTextField';
 import PasswordTextField from './textfields/PasswordTextField';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useLogin } from '../hooks/useAuth';
-import { ClassRoleEnum } from '../util/types/class.types';
+import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
 import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
+import { AppRoutes } from '../util/app.routes';
+import { ApiRoutes } from '../api/api.routes';
+import { UserDetail } from '../util/interfaces/user.interfaces';
+import GoogleLoginButton from './GoogleLoginButton';
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -18,27 +22,33 @@ function LoginForm() {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isStudent, setIsStudent] = useState<boolean>(true);
+  const [isStudent, setIsStudent] = useState<boolean>(false);
 
   const loginMutation = useLogin();
 
+  const handleGoogleLogin = () => {
+    // Redirect to the Google login page
+    window.location.href =
+      import.meta.env.VITE_API_URL +
+      (isStudent ? ApiRoutes.login.google.student : ApiRoutes.login.google.teacher);
+  };
+
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
     loginMutation.mutate(
       {
-        email: data.get('email') as string,
-        password: data.get('password') as string,
+        email: email,
+        password: password,
         role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, //TODO: Change this to the correct role
       },
       {
-        onSuccess: (response) => {
+        onSuccess: (response: UserDetail) => {
           // Set the user in the auth context
           login(response);
 
           // Redirect to the home page
-          navigate('/');
+          navigate(AppRoutes.home);
         },
         onError: (error) => {
           setError(error.message);
@@ -49,9 +59,12 @@ function LoginForm() {
 
   return (
     <Box component="form" onSubmit={handleLoginSubmit} sx={{ mt: 0 }}>
+      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
+      <Divider sx={{ mb: MarginSize.xsmall }} />
+      <GoogleLoginButton onClick={handleGoogleLogin}></GoogleLoginButton>
+      <Divider sx={{ mt: MarginSize.xsmall }} />
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
-      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
       <Button
         type="submit"
         fullWidth

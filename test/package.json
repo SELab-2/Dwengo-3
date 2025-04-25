@@ -4,7 +4,8 @@
   "description": "Testing",
   "main": "app.ts",
   "scripts": {
-    "test:unit": "vitest -c vitest.config.unit.ts",
+    "test:domain": "vitest -c vitest.config.domain.ts",
+    "test:router": "vitest -c vitest.config.router.ts",
     "test:int": "./integration_test.sh"
   },
   "repository": {
@@ -28,6 +29,8 @@
     "vitest-dom": "^0.1.1"
   },
   "dependencies": {
+    "@types/node": "^22.15.2",
+    "dotenv": "^16.5.0",
     "zod": "^3.24.2"
   }
 }

@@ -1,5 +1,8 @@
 import { z } from 'zod';
 import { Uuid } from './assignment.types';
+import { classSelectDetail, classSelectShort } from '../selectInput/class.select';
+import { Prisma } from '@prisma/client';
+import { Select } from '@prisma/client/runtime/library';
 
 export const ClassFilterSchema = z
   .object({
@@ -20,12 +23,9 @@ export const ClassCreateSchema = z.object({
 export type ClassCreateParams = z.infer<typeof ClassCreateSchema>;
 
 export const ClassUpdateSchema = z.object({
-  id: z.string().uuid('Id must be a valid UUID'),
   name: z.string().min(1, 'Name must be a non-empty string').trim().optional(),
 });
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
-export type ClassShort = {
-  id: Uuid;
-  name: string;
-};
+export type ClassShort = Prisma.ClassGetPayload<{ select: typeof classSelectShort }>;
+export type ClassDetail = Prisma.ClassGetPayload<{ select: typeof classSelectDetail }>;

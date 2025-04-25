@@ -9,6 +9,7 @@ import {
 } from '../util/types/message.types';
 import { UserEntity } from '../util/types/user.types';
 import { DiscussionDomain } from './discussion.domain';
+import { BadRequestError } from '../util/types/error.types';
 
 export class MessageDomain {
   private messagePersistence: MessagePersistence;
@@ -25,28 +26,17 @@ export class MessageDomain {
   ): Promise<{ data: MessageDetail[]; totalPages: number }> {
     const parseResult = queryWithPaginationParser(query, MessageFilterSchema);
     const filters = parseResult.dataSchema;
+
     if (filters.discussionId) {
-      await this.discussionDomain.getDiscussions(
-        { id: filters.discussionId },
-        user,
-      ); //this checks if user is part of the discussion
+      // this checks if user is part of the discussion
+      await this.discussionDomain.getDiscussions({ groupIds: [filters.discussionId] }, user);
     }
-    return this.messagePersistence.getMessages(
-      filters,
-      parseResult.dataPagination,
-    );
+    return this.messagePersistence.getMessages(filters, parseResult.dataPagination);
   }
 
-  public async createMessage(
-    query: any,
-    user: UserEntity,
-  ): Promise<MessageDetail> {
-    const parseResult = MessageCreateSchema.safeParse(query);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
-    const data = parseResult.data;
-    await this.discussionDomain.getDiscussions({ id: data.discussionId }, user); //this checks if user is part of the discussion
+  public async createMessage(query: any, user: UserEntity): Promise<MessageDetail> {
+    const data = MessageCreateSchema.parse(query);
+    // await this.discussionDomain.getDiscussions({ groupIds: [data.discussionId] }, user); //this checks if user is part of the discussion
     if (user.role === ClassRole.TEACHER) {
       data.senderId = user.teacher!.userId;
     } else if (user.role == ClassRole.STUDENT) {
@@ -55,25 +45,15 @@ export class MessageDomain {
     return this.messagePersistence.createMessage(data);
   }
 
-  public async deleteMessage(
-    id: string,
-    user: UserEntity,
-  ): Promise<MessageDetail> {
-    const parseResult = MessageIdSchema.safeParse(id);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
-    const message = await this.messagePersistence.getMessageById(
-      parseResult.data,
-    );
+  public async deleteMessage(id: string, user: UserEntity): Promise<MessageDetail> {
+    const messageId = MessageIdSchema.parse(id);
+    const message = await this.messagePersistence.getMessageById(messageId);
     if (
-      (user.role === ClassRole.TEACHER &&
-        user.teacher!.userId !== message.sender.id) ||
-      (user.role === ClassRole.STUDENT &&
-        user.student!.userId !== message.sender.id)
+      (user.role === ClassRole.TEACHER && user.student!.userId !== message.sender.id) ||
+      (user.role === ClassRole.STUDENT && user.teacher!.userId !== message.sender.id)
     ) {
-      throw new Error('You can only delete your own messages');
+      throw new BadRequestError(40008);
     }
-    return this.messagePersistence.deleteMessage(parseResult.data);
+    return this.messagePersistence.deleteMessage(messageId);
   }
 }

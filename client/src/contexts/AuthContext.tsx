@@ -1,37 +1,50 @@
 import { createContext, useState, ReactNode, useEffect } from 'react';
-import { AuthContextType, UserData } from '../util/types/auth.types';
+import { AuthContextType } from '../util/interfaces/auth.interfaces';
+import { UserDetail } from '../util/interfaces/user.interfaces';
+import apiClient from '../api/apiClient';
+import { ApiRoutes } from '../api/api.routes';
+import { useLocation } from 'react-router-dom';
+import { useError } from '../hooks/useError';
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
-);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<UserDetail | null>(null);
+  const location = useLocation();
+  const { setError } = useError();
 
-  // Load user from local storage
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setUser(JSON.parse(user));
+    // Check if the user is logged in
+    const excludedRoutes = ['/login', '/register'];
+
+    // Fetch user info when the component mounts
+    if (!excludedRoutes.includes(location.pathname)) {
+      const fetchUser = async () => {
+        try {
+          const response = await apiClient.get(ApiRoutes.me); // Backend endpoint to fetch user info
+          setUser(response.data);
+        } catch (error) {
+          setError('Failed to fetch user data. Please log in again.');
+        }
+      };
+
+      fetchUser();
     }
   }, []);
 
-  // Save user to local storage
-  const login = (userData: UserData) => {
+  const login = (userData: UserDetail) => {
+    // Set user in context
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  // Save user to local storage
-  const register = (userData: UserData) => {
+  const register = (userData: UserDetail) => {
+    // Set user in context
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  // Remove user from local storage
   const logout = () => {
+    // Clear user from context
     setUser(null);
-    localStorage.removeItem('user');
   };
 
   return (

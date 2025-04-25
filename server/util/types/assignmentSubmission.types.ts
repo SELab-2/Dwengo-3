@@ -1,8 +1,9 @@
 import { Prisma, SubmissionType } from '@prisma/client';
 import { z } from 'zod';
-import { Uuid } from './assignment.types';
-
-import { assignmentSubmissionSelectDetail } from '../selectInput/assignmentSubmission.select';
+import {
+  assignmentSubmissionSelectDetail,
+  assignmentSubmissionSelectShort,
+} from '../selectInput/assignmentSubmission.select';
 
 const FileSubmissionSchema = z.object({
   fileName: z.string(),
@@ -15,6 +16,7 @@ export const SubmissionFilterSchema = z
   .object({
     groupId: z.string().uuid().optional(),
     nodeId: z.string().uuid().optional(),
+    favoriteId: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: 'At least one filter must be provided.',
@@ -23,7 +25,8 @@ export const SubmissionFilterSchema = z
 
 export const SubmissionCreateSchema = z
   .object({
-    groupId: z.string().uuid(),
+    groupId: z.string().uuid().optional(),
+    favoriteId: z.string().uuid().optional(),
     nodeId: z.string().uuid(),
     submissionType: z.nativeEnum(SubmissionType),
     submission: z.union([FileSubmissionSchema, MultipleChoiceSubSchema]),
@@ -39,11 +42,14 @@ export const SubmissionCreateSchema = z
         'submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE',
       path: ['submission'],
     },
-  );
+  )
+  .refine((data) => data.favoriteId !== undefined || data.groupId !== undefined, {
+    message: 'Either groupId or favoriteId must be provided',
+    path: ['submission'],
+  });
 
 export const SubmissionUpdateSchema = z
   .object({
-    id: z.string().uuid(),
     submissionType: z.nativeEnum(SubmissionType),
     submission: z.union([FileSubmissionSchema, MultipleChoiceSubSchema]),
   })
@@ -67,6 +73,6 @@ export type FileSubmission = z.infer<typeof FileSubmissionSchema>;
 export type AssignmentSubmissionDetail = Prisma.AssignmentSubmissionGetPayload<{
   select: typeof assignmentSubmissionSelectDetail;
 }>;
-export type AssignmentSubmissionShort = {
-  id: Uuid;
-};
+export type AssignmentSubmissionShort = Prisma.AssignmentSubmissionGetPayload<{
+  select: typeof assignmentSubmissionSelectShort;
+}>;

@@ -1,17 +1,21 @@
-import { Prisma } from '@prisma/client';
 import { assignmentSelectShort } from './assignment.select';
 import { discussionSelectShort } from './discussion.select';
 import { studentSelectShort } from './student.select';
 
-export const groupSelectShort: Prisma.GroupSelect = {
+export const groupSelectShort = {
   id: true,
-  nodeId: true, //TODO change to nodeIndex
+  progress: true,
   assignmentId: true,
+  name: true,
+  students: {
+    select: studentSelectShort,
+  },
 };
 
-export const groupSelectDetail: Prisma.GroupSelect = {
+export const groupSelectDetail = {
   id: true,
-  nodeId: true, //TODO change to nodeIndex
+  name: true,
+  progress: true,
   assignment: {
     select: assignmentSelectShort,
   },

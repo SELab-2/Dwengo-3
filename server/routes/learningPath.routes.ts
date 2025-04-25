@@ -1,14 +1,17 @@
 import { Request, Response, Router } from 'express';
 import { LearningPathDomain } from '../domain/learningPath.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningPathController {
   public router: Router;
   private learningPathDomain: LearningPathDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.learningPathDomain = new LearningPathDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -24,7 +27,7 @@ export class LearningPathController {
     res.json(
       await this.learningPathDomain.createLearningPath(
         req.body,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -80,7 +83,7 @@ export class LearningPathController {
      *       401:
      *         description: Unauthorized, user not authenticated
      */
-    this.router.get('/', this.getLearningPaths);
+    this.router.get('/', isAuthenticated, this.getLearningPaths);
     /**
      * @swagger
      * /api/learningPath/{id}:
@@ -111,7 +114,7 @@ export class LearningPathController {
      *       404:
      *         description: Learning path not found.
      */
-    this.router.get('/:id', this.getLearningPathById);
+    this.router.get('/:id', isAuthenticated, this.getLearningPathById);
     /**
      * @swagger
      * /api/learningPath:
@@ -136,6 +139,6 @@ export class LearningPathController {
      *             schema:
      *               $ref: '#/components/schemas/LearningPathDetail'
      */
-    this.router.put('/', this.createLearningPath);
+    this.router.put('/', isAuthenticated, this.createLearningPath);
   }
 }

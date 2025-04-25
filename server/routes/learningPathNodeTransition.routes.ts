@@ -1,26 +1,25 @@
 import { Router, Request, Response } from 'express';
 import { LearningPathNodeTransitionDomain } from '../domain/learningPathNodeTransition.domain';
-import { getUserFromReq } from '../domain/user.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningPathNodeTransitionController {
   public router: Router;
   private LearningPathNodeTransitionDomain: LearningPathNodeTransitionDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
-    this.LearningPathNodeTransitionDomain =
-      new LearningPathNodeTransitionDomain();
+    this.LearningPathNodeTransitionDomain = new LearningPathNodeTransitionDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
-  private createLearningPathNodeTransition = async (
-    req: Request,
-    res: Response,
-  ) => {
+  private createLearningPathNodeTransition = async (req: Request, res: Response) => {
     res.json(
       await this.LearningPathNodeTransitionDomain.createLearningPathNodeTransition(
         req.body,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -54,6 +53,6 @@ export class LearningPathNodeTransitionController {
      *       401:
      *         description: Unauthorized, user not authenticated.
      */
-    this.router.put('/', this.createLearningPathNodeTransition);
+    this.router.put('/', isAuthenticated, this.createLearningPathNodeTransition);
   }
 }

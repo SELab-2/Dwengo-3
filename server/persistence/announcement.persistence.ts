@@ -3,6 +3,7 @@ import {
   AnnouncementByFilterParams,
   AnnouncementCreatePersistenceParams,
   AnnouncementUpdateParams,
+  FilterType,
 } from '../util/types/announcement.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
@@ -11,6 +12,7 @@ import {
   announcementSelectShort,
 } from '../util/selectInput/announcement.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
 
 //TODO : import prisma client from singleton
 
@@ -19,10 +21,37 @@ export class AnnouncementPersistence {
     filters: AnnouncementByFilterParams,
     paginationParams: PaginationParams,
   ) {
+    const filterType = (filter: FilterType) => {
+      switch (filter) {
+        case FilterType.AFTER:
+          return {
+            gt: filters.timestamp,
+          };
+        case FilterType.BEFORE:
+          return {
+            lt: filters.timestamp,
+          };
+        case FilterType.EQUAL:
+          return {
+            equals: filters.timestamp,
+          };
+      }
+    };
+
     const whereClause: Prisma.AnnouncementWhereInput = {
       AND: [
         filters.classId ? { classId: filters.classId } : {},
-        filters.teacherId ? { teacherId: filters.teacherId } : {},
+        filters.teacherId
+          ? {
+              class: {
+                teachers: {
+                  some: {
+                    id: filters.teacherId,
+                  },
+                },
+              },
+            }
+          : {},
         filters.studentId
           ? {
               class: {
@@ -32,6 +61,12 @@ export class AnnouncementPersistence {
                   },
                 },
               },
+            }
+          : {},
+        filters.timestamp
+          ? {
+              // must be present by constraint on AnnouncementByFilterParams
+              createdAt: filterType(filters.timestampFilterType!!),
             }
           : {},
       ],
@@ -47,17 +82,15 @@ export class AnnouncementPersistence {
   }
 
   public async getAnnouncementById(id: string) {
-    const announcement = await PrismaSingleton.instance.announcement.findUnique(
-      {
-        where: {
-          id: id,
-        },
-        select: announcementSelectDetail,
+    const announcement = await PrismaSingleton.instance.announcement.findUnique({
+      where: {
+        id: id,
       },
-    );
+      select: announcementSelectDetail,
+    });
 
     if (!announcement) {
-      throw new Error(`Announcement with id: ${id} was not found`);
+      throw new NotFoundError(40415);
     }
 
     return announcement;
@@ -68,7 +101,7 @@ export class AnnouncementPersistence {
     teacherId: string,
   ) {
     const { classId, ...data } = announcementCreateParams;
-    const announcement = await PrismaSingleton.instance.announcement.create({
+    return await PrismaSingleton.instance.announcement.create({
       data: {
         ...data,
         class: {
@@ -84,39 +117,26 @@ export class AnnouncementPersistence {
       },
       select: announcementSelectDetail,
     });
-    return announcement;
   }
 
-  public async updateAnnouncement(
-    id: string,
-    announcementUpdateParams: AnnouncementUpdateParams,
-  ) {
-    const updatedAnnouncement =
-      await PrismaSingleton.instance.announcement.update({
-        where: { id: id },
-        data: announcementUpdateParams,
-        select: announcementSelectDetail,
-      });
-    return updatedAnnouncement;
+  public async updateAnnouncement(id: string, announcementUpdateParams: AnnouncementUpdateParams) {
+    return await PrismaSingleton.instance.announcement.update({
+      where: { id: id },
+      data: announcementUpdateParams,
+      select: announcementSelectDetail,
+    });
   }
 
-  public async checkAnnouncementIsFromTeacher(
-    announcementId: string,
-    teacherId: string,
-  ) {
-    const announcement = await PrismaSingleton.instance.announcement.findUnique(
-      {
-        where: {
-          id: announcementId,
-          teacherId: teacherId,
-        },
+  public async checkAnnouncementIsFromTeacher(announcementId: string, teacherId: string) {
+    const announcement = await PrismaSingleton.instance.announcement.findUnique({
+      where: {
+        id: announcementId,
+        teacherId: teacherId,
       },
-    );
+    });
 
     if (!announcement) {
-      throw new Error(
-        `Announcement with id: ${announcementId} does not belong to teacher with id: ${teacherId}`,
-      );
+      throw new BadRequestError(40037);
     }
   }
 }

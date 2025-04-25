@@ -3,7 +3,7 @@ import {
   AssignmentCreateParams,
   AssignmentDetail,
   AssignmentFilterParams,
-  AssignmentShort,
+  AssignmentShort2,
   Uuid,
 } from '../util/types/assignment.types';
 import { PaginationParams } from '../util/types/pagination.types';
@@ -11,14 +11,16 @@ import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import {
   assignmentSelectDetail,
-  assignmentSelectShort,
+  assignmentSelectShort2,
 } from '../util/selectInput/assignment.select';
+import { NotFoundError } from '../util/types/error.types';
+import { groupSelectShort } from '../util/selectInput/group.select';
 
 export class AssignmentPersistence {
   public async getAssignments(
     filters: AssignmentFilterParams,
     paginationParams: PaginationParams,
-  ): Promise<{ data: AssignmentShort[]; totalPages: number }> {
+  ): Promise<{ data: AssignmentShort2[]; totalPages: number }> {
     const whereClause: Prisma.AssignmentWhereInput = {
       AND: [
         filters.classId
@@ -28,7 +30,13 @@ export class AssignmentPersistence {
           : {},
         filters.teacherId
           ? {
-              teacherId: filters.teacherId,
+              class: {
+                teachers: {
+                  some: {
+                    id: filters.teacherId,
+                  },
+                },
+              },
             }
           : {},
         filters.groupId
@@ -46,7 +54,7 @@ export class AssignmentPersistence {
                 some: {
                   students: {
                     some: {
-                      userId: filters.studentId,
+                      id: filters.studentId,
                     },
                   },
                 },
@@ -60,7 +68,7 @@ export class AssignmentPersistence {
       whereClause,
       paginationParams,
       undefined,
-      assignmentSelectShort,
+      assignmentSelectShort2,
     );
   }
 
@@ -71,15 +79,13 @@ export class AssignmentPersistence {
     });
 
     if (!assignment) {
-      throw new Error(`Assignment with id: ${id} was not found`);
+      throw new NotFoundError(40408);
     }
 
     return assignment;
   }
 
-  public async createAssignment(
-    params: AssignmentCreateParams,
-  ): Promise<AssignmentDetail> {
+  public async createAssignment(params: AssignmentCreateParams): Promise<AssignmentDetail> {
     //create assignment
     const assignment = await PrismaSingleton.instance.assignment.create({
       data: {
@@ -105,7 +111,7 @@ export class AssignmentPersistence {
     // TODO: the following should be in group.persistence.ts, and should be called from assignment.domain.ts
     // TODO: maybe we should name 'group' according to the language of the request.
     //create groups for the assignment
-    await PrismaSingleton.instance.$transaction(
+    const groups = await PrismaSingleton.instance.$transaction(
       params.groups.map((group: Uuid[], index: number) =>
         PrismaSingleton.instance.group.create({
           data: {
@@ -119,9 +125,11 @@ export class AssignmentPersistence {
               connect: group.map((student: Uuid) => ({ id: student })),
             },
           },
+          select: groupSelectShort,
         }),
       ),
     );
+    assignment.groups = groups;
     return assignment;
   }
 }
