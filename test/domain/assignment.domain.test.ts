@@ -172,6 +172,24 @@ describe('assignment domain', () => {
       }
       return null;
     });
+    mockAssignmentPeristence.getAssignments.mockImplementation((filter, pagination) => {
+      return {
+        data: [
+          {
+            groups: [
+              {
+                students: [
+                  {
+                    id: userStudent.id,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        total_pages: 1,
+      };
+    });
     mockAssignmentPeristence.getAssignmentId.mockImplementation((id: string) => {
       let found = existingAssignments.find((a) => a.id === id);
       if (found) {
