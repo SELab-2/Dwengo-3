@@ -38,7 +38,7 @@ export function useAnnouncements(
   pageSize?: number,
 ) {
   return useQuery({
-    queryKey: ['class', classId, teacherId, studentId, page, pageSize],
+    queryKey: ['announcements', classId, teacherId, studentId, page, pageSize],
     queryFn: async () => {
       return await fetchAnnouncements(classId, teacherId, studentId, page, pageSize);
     },
