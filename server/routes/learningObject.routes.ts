@@ -1,14 +1,17 @@
-import { Request, Response, Router } from "express";
-import { LearningObjectDomain } from "../domain/learningObject.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Request, Response, Router } from 'express';
+import { LearningObjectDomain } from '../domain/learningObject.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningObjectController {
   public router: Router;
   private learningObjectDomain: LearningObjectDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.learningObjectDomain = new LearningObjectDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -16,7 +19,7 @@ export class LearningObjectController {
     res.json(
       await this.learningObjectDomain.createLearningObject(
         req.body,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -25,12 +28,16 @@ export class LearningObjectController {
     res.json(await this.learningObjectDomain.getLearningObjects(req.query));
   };
 
+  private getLearningObjectById = async (req: Request, res: Response) => {
+    res.json(await this.learningObjectDomain.getLearningObjectById(req.params.id));
+  };
+
   private updateLearningObject = async (req: Request, res: Response) => {
     res.json(
       await this.learningObjectDomain.updateLearningObject(
         req.params.id,
         req.body,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -39,7 +46,7 @@ export class LearningObjectController {
     res.json(
       await this.learningObjectDomain.deleteLearningObject(
         req.params.id,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -48,7 +55,8 @@ export class LearningObjectController {
     /**
      * @swagger
      * /api/learningObject:
-     *   post:
+     *   put:
+
      *     security:
      *       - cookieAuth: []
      *     tags:
@@ -67,15 +75,13 @@ export class LearningObjectController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningObjectGet'
+     *               $ref: '#/components/schemas/LearningObjectDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
-    this.router.post("/", this.createLearningObject);
+    this.router.put('/', isAuthenticated, this.createLearningObject);
     /**
      * @swagger
      * /api/learningObject:
@@ -101,28 +107,57 @@ export class LearningObjectController {
      *           items:
      *             type: integer
      *         description: Target age groups to filter learning objects by.
-     *       - in: query
-     *         name: id
-     *         schema:
-     *           type: string
-     *         description: The unique identifier of the learning object to filter by.
      *     responses:
      *       200:
      *         description: A list of learning objects matching the filters.
      *         content:
      *           application/json:
      *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/LearningObjectGet'
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/LearningObjectShort'
      *       400:
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
-    this.router.get("/", this.getLearningObjects);
+    this.router.get('/', isAuthenticated, this.getLearningObjects);
+    /**
+     * @swagger
+     * /api/learningObject/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningObject
+     *     summary: Get a learning object by ID
+     *     description: Gets the content of a specific learning object selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the learning object.
+     *     responses:
+     *       200:
+     *         description: Learning object fetched succesfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningObjectDetail'
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Learning object not found.
+     */
+    this.router.get('/:id', isAuthenticated, this.getLearningObjectById);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -153,15 +188,13 @@ export class LearningObjectController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningObjectGet'
+     *               $ref: '#/components/schemas/LearningObjectDetail'
      *       400:
      *         description: Bad request due to invalid input.
      *       403:
      *         description: Unauthorized, user not authenticated.
-     *       500:
-     *         description: Internal server error.
      */
-    this.router.patch("/:id", this.updateLearningObject);
+    this.router.patch('/:id', isAuthenticated, this.updateLearningObject);
     /**
      * @swagger
      * /api/learningObject/{id}:
@@ -179,7 +212,7 @@ export class LearningObjectController {
      *         schema:
      *           type: string
      *           format: uuid
-     *         description: The unique identifier of the learning object to update.
+     *         description: The unique identifier of the learning object to delete.
      *     responses:
      *       204:
      *         description: Learning object deleted successfully.
@@ -187,9 +220,7 @@ export class LearningObjectController {
      *         description: Unauthorized, user not authenticated.
      *       404:
      *         description: Learning object not found.
-     *       500:
-     *         description: Internal server error.
      */
-    this.router.delete("/:id", this.deleteLearningObject);
+    this.router.delete('/:id', isAuthenticated, this.deleteLearningObject);
   }
 }

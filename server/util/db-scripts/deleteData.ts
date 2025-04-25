@@ -1,15 +1,15 @@
-import * as dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
+import * as dotenv from 'dotenv';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: '../.env' });
 
 /**
  * Deletes all data from the database in the correct order
  */
 async function main() {
   await prisma.message.deleteMany();
-  await prisma.chat.deleteMany();
+  await prisma.discussion.deleteMany();
   await prisma.assignmentSubmission.deleteMany();
   await prisma.group.deleteMany();
   await prisma.learningNodeTransition.deleteMany();

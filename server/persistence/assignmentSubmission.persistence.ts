@@ -1,74 +1,104 @@
-import { AssignmentSubmission, Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from '@prisma/client';
 import {
   AssignmentSubCreateParams,
   AssignmentSubFilterParams,
+  AssignmentSubmissionShort,
   AssignmentSubUpdateParams,
-} from "../util/types/assignmentSubmission.types";
-import { PaginationParams } from "../util/types/pagination.types";
-import { PrismaSingleton } from "./prismaSingleton";
+} from '../util/types/assignmentSubmission.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { PrismaSingleton } from './prismaSingleton';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { Uuid } from '../util/types/assignment.types';
+import {
+  assignmentSubmissionSelectDetail,
+  assignmentSubmissionSelectShort,
+} from '../util/selectInput/assignmentSubmission.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class AssignmentSubmissionPersistence {
   public async getAssignmentSubmissions(
     filters: AssignmentSubFilterParams,
     paginationParams: PaginationParams,
-  ): Promise<{ data: AssignmentSubmission[]; totalPages: number }> {
+  ): Promise<{ data: AssignmentSubmissionShort[]; totalPages: number }> {
     const whereClause: Prisma.AssignmentSubmissionWhereInput = {
       AND: [
         filters.groupId ? { groupId: filters.groupId } : {},
         filters.nodeId ? { nodeId: filters.nodeId } : {},
-        filters.id ? { id: filters.id } : {},
+        filters.favoriteId ? { favoriteId: filters.favoriteId } : {},
       ],
     };
-
-    const [assignmentsSubs, totalCount] =
-      await PrismaSingleton.instance.$transaction([
-        PrismaSingleton.instance.assignmentSubmission.findMany({
-          where: whereClause,
-          skip: paginationParams.skip,
-          take: paginationParams.pageSize,
-        }),
-        PrismaSingleton.instance.assignmentSubmission.count({
-          where: whereClause,
-        }),
-      ]);
-    return {
-      data: assignmentsSubs,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return await searchAndPaginate(
+      PrismaSingleton.instance.assignmentSubmission,
+      whereClause,
+      paginationParams,
+      undefined,
+      assignmentSubmissionSelectShort,
+    );
   }
 
-  public async createAssignmentSubmission(
-    params: AssignmentSubCreateParams,
-  ): Promise<AssignmentSubmission> {
-    return PrismaSingleton.instance.assignmentSubmission.create({
-      data: {
-        node: {
-          connect: {
-            id: params.nodeId,
-          },
-        },
-        group: {
-          connect: {
-            id: params.groupId,
-          },
-        },
-        submissionType: params.submissionType,
-        submission: params.submission,
-      },
+  public async getAssignmentSubmissionById(id: Uuid) {
+    const assignmentsubmission = await PrismaSingleton.instance.assignmentSubmission.findUnique({
+      where: { id: id },
+      select: assignmentSubmissionSelectDetail,
     });
+
+    if (!assignmentsubmission) {
+      throw new NotFoundError(40406);
+    }
+
+    return assignmentsubmission;
   }
 
-  public async updateAssignmentSubmission(
-    params: AssignmentSubUpdateParams,
-  ): Promise<AssignmentSubmission> {
-    return PrismaSingleton.instance.assignmentSubmission.update({
+  public async createAssignmentSubmission(params: AssignmentSubCreateParams) {
+    if (params.groupId) {
+      return await PrismaSingleton.instance.assignmentSubmission.create({
+        data: {
+          node: {
+            connect: {
+              id: params.nodeId,
+            },
+          },
+          group: {
+            connect: {
+              id: params.groupId,
+            },
+          },
+          submissionType: params.submissionType,
+          submission: params.submission,
+        },
+        select: assignmentSubmissionSelectDetail,
+      });
+    } else {
+      return await PrismaSingleton.instance.assignmentSubmission.create({
+        data: {
+          node: {
+            connect: {
+              id: params.nodeId,
+            },
+          },
+          favorite: {
+            connect: {
+              id: params.favoriteId,
+            },
+          },
+          submissionType: params.submissionType,
+          submission: params.submission,
+        },
+        select: assignmentSubmissionSelectDetail,
+      });
+    }
+  }
+
+  public async updateAssignmentSubmission(id: string, params: AssignmentSubUpdateParams) {
+    return await PrismaSingleton.instance.assignmentSubmission.update({
       where: {
-        id: params.id,
+        id: id,
       },
       data: {
         submissionType: params.submissionType,
         submission: params.submission,
       },
+      select: assignmentSubmissionSelectDetail,
     });
   }
 }

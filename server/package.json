@@ -4,11 +4,15 @@
   "description": "Dwengo leerplatform",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node app.ts",
+    "start": "nodemon app.ts",
+    "start:dev": "ts-node app.ts",
     "debug": "nodemon app.ts",
+    "test:unit": "vitest -c util/test-files/vitest.config.unit.ts",
+    "test:int": "./util/test-files/integration_test.sh",
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",
     "readData": "ts-node util/db-scripts/readData.ts",
-    "deleteData": "ts-node util/db-scripts/deleteData.ts"
+    "deleteData": "ts-node util/db-scripts/deleteData.ts",
+    "insertData2": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData2.ts"
   },
   "repository": {
     "type": "git",
@@ -31,36 +35,38 @@
     "@types/cookie-parser": "^1.4.8",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.13.4",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.16",
+    "@types/passport-local": "^1.0.38",
+    "@types/supertest": "^6.0.2",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "eslint": "^9.21.0",
-    "eslint-config-prettier": "^10.0.2",
-    "eslint-plugin-prettier": "^5.2.3",
     "globals": "^16.0.0",
     "nodemon": "^3.1.9",
+    "supertest": "^7.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.26.0"
+    "vitest": "^3.0.7",
+    "vitest-mock-extended": "^3.0.1"
   },
   "dependencies": {
+    "@types/cors": "^2.8.17",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
     "express": "^5",
+    "express-session": "^1.18.1",
     "multer": "^1.4.5-lts.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
     "zod": "^3.24.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*": "prettier --write"
   }
 }

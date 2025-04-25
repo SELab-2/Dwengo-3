@@ -1,8 +1,8 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const LearningPathNodeTransitionCreateSchema = z.object({
-  fromNodeId: z.string(),
-  toNodeId: z.string(),
+  learningPathNodeId: z.string(),
+  toNodeIndex: z.number(),
   condition: z.string().optional(),
 });
 

@@ -1,87 +1,130 @@
-import { Request } from "express";
-import crypto from "crypto";
-import { LoginRequest, RegisterRequest } from "../util/types/RequestTypes";
-import * as persistence from "../persistence/auth/users.persistance";
-import { ClassRole, User } from "@prisma/client";
-import {
-  ClassRoleEnum,
-  FullUserType,
-  UserEntity,
-  UserSchema,
-} from "../util/types/user.types";
+import { Request } from 'express';
+import { CreateUserParams, RegisterParams } from '../util/types/auth.types';
+import { AuthProvider, ClassRole, User } from '@prisma/client';
+import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import * as crypto from 'node:crypto';
+import { BadRequestError } from '../util/types/error.types';
+import { UsersPersistence } from '../persistence/auth/users.persistence';
+import { ClassFilterParams, ClassShort } from '../util/types/class.types';
+import { ClassDomain } from './class.domain';
 
-export async function registerUser(
-  registerRequest: RegisterRequest,
-): Promise<UserEntity> {
-  const user = await persistence.saveUser({
-    username: registerRequest.username,
-    email: registerRequest.email,
-    password: crypto
-      .createHash("sha512")
-      .update(registerRequest.password)
-      .digest("base64"),
-    name: registerRequest.name,
-    surname: registerRequest.surname,
-    role: registerRequest.role as ClassRole,
-  });
-  return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    password: user.password,
-    name: user.name,
-    surname: user.surname,
-    role:
-      user.role === ClassRole.TEACHER
-        ? ClassRoleEnum.TEACHER
-        : ClassRoleEnum.STUDENT,
-    teacher: user.teacher,
-    student: user.student,
+export class UserDomain {
+  private readonly providerMap = {
+    [AuthProvider.GOOGLE]: AuthenticationProvider.GOOGLE,
+    [AuthProvider.LOCAL]: AuthenticationProvider.LOCAL,
   };
-}
 
-export async function loginUser(
-  loginRequest: LoginRequest,
-): Promise<UserEntity> {
-  const user: FullUserType | null = await persistence.getUserByEmail(
-    loginRequest.email,
-  );
-  if (user === null) throw new Error("User not found");
-  return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    password: user.password,
-    name: user.name,
-    surname: user.surname,
-    role:
-      user.role === ClassRole.TEACHER
-        ? ClassRoleEnum.TEACHER
-        : ClassRoleEnum.STUDENT,
-    teacher: user.teacher,
-    student: user.student,
+  private readonly roleMap = {
+    [ClassRole.TEACHER]: ClassRoleEnum.TEACHER,
+    [ClassRole.STUDENT]: ClassRoleEnum.STUDENT,
   };
-}
 
-export async function deleteUser(id: string): Promise<boolean> {
-  const user: User | null = await persistence.deleteUser(id);
-  return user !== null;
-}
+  private readonly persistence = new UsersPersistence();
+  private readonly classDomain = new ClassDomain();
 
-export async function expectUserRole(id: string, expectedRole: ClassRole) {
-  const user: { role: ClassRole } | null =
-    await persistence.getUserRoleById(id);
-  if (user === null) throw new Error("User not found");
-  if (user.role != expectedRole)
-    throw new Error(
-      `User role ${user.role} does not match expected role of ${expectedRole}`,
-    );
-}
+  async createUser(userData: CreateUserParams): Promise<UserEntity> {
+    if (userData.email === null || userData.email.trim().length === 0) {
+      throw new BadRequestError(40045);
+    }
+    if ((await this.persistence.getUserByEmail(userData.email)) !== null) {
+      throw new BadRequestError(40046);
+    }
 
-export async function getUserFromReq(req: Request): Promise<UserEntity> {
-  const id = req.cookies["DWENGO_SESSION"].split("?")[0];
-  const user = await persistence.getUserById(id);
-  const parsedUser = UserSchema.safeParse(user);
-  if (!parsedUser.success) throw parsedUser.error; // Shouldn't happen...
-  return parsedUser.data;
+    if (userData.provider === AuthenticationProvider.LOCAL) {
+      userData.password = crypto.createHash('sha256').update(userData.password).digest('base64');
+    }
+
+    const user = await this.persistence.saveUser(userData);
+    return {
+      email: user.email,
+      id: user.id,
+      name: user.name,
+      password: user.password,
+      provider: this.providerMap[user.provider],
+      role: this.roleMap[user.role],
+      student: user.student,
+      surname: user.surname,
+      teacher: user.teacher,
+      username: user.username,
+    };
+  }
+
+  /**
+   * Fetches a user by their ID.
+   *
+   * @param id - The ID of the user to fetch.
+   * @returns The user data. If the user is not found, null is returned.
+   */
+  async getUserById(id: string): Promise<UserEntity | null> {
+    const user = await this.persistence.getUserById(id);
+    if (user === null) return null;
+    return {
+      id: user.id,
+      provider: this.providerMap[user.provider],
+      username: user.username,
+      email: user.email,
+      password: user.password,
+      name: user.name,
+      surname: user.surname,
+      role: this.roleMap[user.role],
+      teacher: user.teacher,
+      student: user.student,
+    };
+  }
+
+  /**
+   * Deletes a user by their ID.
+   *
+   * @param id - The ID of the user to delete.
+   *
+   * @returns `true` if the user was successfully deleted, `false` otherwise.
+   */
+  async deleteUser(id: string): Promise<boolean> {
+    const user: User | null = await this.persistence.deleteUser(id);
+    return user !== null;
+  }
+
+  /**
+   * Extracts the authenticated user from the request object.
+   *
+   * @param req - The Express request object containing the user information.
+   * @returns The authenticated user as a UserEntity.
+   * @throws If the user is not authenticated or the user data is malformed.
+   */
+  async getUserFromReq(req: Request): Promise<UserEntity & { classes: ClassShort[] }> {
+    const filter: ClassFilterParams = {
+      teacherId: (req.user as UserEntity).teacher?.id,
+      studentId: (req.user as UserEntity).student?.id,
+    };
+
+    const classes = await this.classDomain.getClasses(filter, req.user!! as UserEntity);
+    return {
+      ...(req.user as UserEntity),
+      classes: classes.data,
+    };
+  }
+
+  /**
+   * Fetches a user by their email address.
+   *
+   * @param email - The email address to search for.
+   * @returns The user data if the user is found, otherwise null.
+   */
+  async getUserByEmail(email: string): Promise<UserEntity | null> {
+    if (email === null || email.trim().length === 0) throw new BadRequestError(40045);
+    const user = await this.persistence.getUserByEmail(email);
+    if (user === null) return null;
+    return {
+      id: user.id,
+      provider: this.providerMap[user.provider],
+      username: user.username,
+      email: user.email,
+      password: user.password,
+      name: user.name,
+      surname: user.surname,
+      role: this.roleMap[user.role],
+      teacher: user.teacher,
+      student: user.student,
+    };
+  }
 }

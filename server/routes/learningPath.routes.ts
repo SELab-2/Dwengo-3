@@ -1,14 +1,17 @@
-import { Request, Response, Router } from "express";
-import { LearningPathDomain } from "../domain/learningPath.domain";
-import { getUserFromReq } from "../domain/user.domain";
+import { Request, Response, Router } from 'express';
+import { LearningPathDomain } from '../domain/learningPath.domain';
+import { UserDomain } from '../domain/user.domain';
+import { isAuthenticated } from './auth.routes';
 
 export class LearningPathController {
   public router: Router;
   private learningPathDomain: LearningPathDomain;
+  private readonly userDomain: UserDomain;
 
   constructor() {
     this.router = Router();
     this.learningPathDomain = new LearningPathDomain();
+    this.userDomain = new UserDomain();
     this.initializeRoutes();
   }
 
@@ -16,11 +19,15 @@ export class LearningPathController {
     res.json(await this.learningPathDomain.getLearningPaths(req.query));
   };
 
+  private getLearningPathById = async (req: Request, res: Response) => {
+    res.json(await this.learningPathDomain.getLearningPathById(req.params.id));
+  };
+
   private createLearningPath = async (req: Request, res: Response) => {
     res.json(
       await this.learningPathDomain.createLearningPath(
         req.body,
-        await getUserFromReq(req),
+        await this.userDomain.getUserFromReq(req),
       ),
     );
   };
@@ -41,12 +48,6 @@ export class LearningPathController {
      *       Fetches a list of learning paths filtered by optional query parameters:
      *       keywords, age, or learning path ID.
      *     parameters:
-     *       - name: id
-     *         in: query
-     *         description: Filter by learning path ID
-     *         required: false
-     *         schema:
-     *           type: string
      *       - name: keywords
      *         in: query
      *         description: Filter by keywords (multiple values allowed)
@@ -69,21 +70,55 @@ export class LearningPathController {
      *         content:
      *           application/json:
      *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/LearningPathGet'
+     *               allOf:
+     *                 - $ref: '#/components/schemas/PaginatedResponse'
+     *                 - type: object
+     *                   properties:
+     *                     data:
+     *                       type: array
+     *                       items:
+     *                         $ref: '#/components/schemas/LearningPathShort'
      *       400:
      *         description: Bad request due to invalid parameters
      *       401:
      *         description: Unauthorized, user not authenticated
-     *       500:
-     *         description: Internal server error
      */
-    this.router.get("/", this.getLearningPaths);
+    this.router.get('/', isAuthenticated, this.getLearningPaths);
+    /**
+     * @swagger
+     * /api/learningPath/{id}:
+     *   get:
+     *     security:
+     *       - cookieAuth: []
+     *     tags:
+     *       - LearningPath
+     *     summary: Get a learning path by ID
+     *     description: Gets the content of a specific learning path selected by its UUID
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *         description: The unique identifier of the learning path.
+     *     responses:
+     *       200:
+     *         description: Learning path fetched succesfully.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/LearningPathDetail'
+     *       403:
+     *         description: Unauthorized, user not authenticated.
+     *       404:
+     *         description: Learning path not found.
+     */
+    this.router.get('/:id', isAuthenticated, this.getLearningPathById);
     /**
      * @swagger
      * /api/learningPath:
-     *   post:
+     *   put:
      *     security:
      *       - cookieAuth: []
      *     tags:
@@ -102,8 +137,8 @@ export class LearningPathController {
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/LearningPathGet'
+     *               $ref: '#/components/schemas/LearningPathDetail'
      */
-    this.router.post("/", this.createLearningPath);
+    this.router.put('/', isAuthenticated, this.createLearningPath);
   }
 }

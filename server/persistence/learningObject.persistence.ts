@@ -1,12 +1,18 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
 import {
   LearningObjectFilterParams,
   LearningObjectUpdateWithoutKeywords,
   LearningObjectWithoutKeywords,
-} from "../util/types/learningObject.types";
-import { PaginationParams } from "../util/types/pagination.types";
-import { searchAndPaginate } from "../util/pagination/pagination.util";
+} from '../util/types/learningObject.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
+import {
+  learningObjectSelectDetail,
+  learningObjectSelectShort,
+} from '../util/selectInput/learningObject.select';
+import { NotFoundError } from '../util/types/error.types';
+import { learningPathNodeSelectShort } from '../util/selectInput/learningPathNode.select';
 
 export class LearningObjectPersistence {
   private prisma: PrismaClient;
@@ -40,8 +46,6 @@ export class LearningObjectPersistence {
               },
             }
           : {},
-
-        filters.id ? { id: filters.id } : {},
       ].filter(Boolean), // Remove empty objects from the AND array
     };
 
@@ -49,54 +53,60 @@ export class LearningObjectPersistence {
       this.prisma.learningObject,
       where,
       paginationParams,
-      {
-        // TODO: geef gewoon een array van keywords mee ipv object met keyword property
-        keywords: {
-          select: {
-            keyword: true,
-          },
-        },
-      },
+      undefined,
+      learningObjectSelectShort,
     );
   }
 
   public async createLearningObject(data: LearningObjectWithoutKeywords) {
     const learningObject = await this.prisma.learningObject.create({
       data: data,
-      include: {
-        keywords: {
-          select: {
-            // TODO: analoog met hierboven
-            keyword: true,
-          },
-        },
-      },
+      select: learningObjectSelectDetail,
     });
     return learningObject;
   }
 
-  public async updateLearningObject(
-    id: string,
-    data: LearningObjectUpdateWithoutKeywords,
-  ) {
+  public async updateLearningObject(id: string, data: LearningObjectUpdateWithoutKeywords) {
     return await this.prisma.learningObject.update({
       where: { id: id },
       data: data,
+      select: learningObjectSelectDetail,
     });
   }
 
   public async getLearningObjectById(id: string) {
-    return await this.prisma.learningObject.findUnique({
+    const learningObject = await this.prisma.learningObject.findUnique({
       where: { id: id },
-      include: {
-        learningPathNodes: true,
+      select: learningObjectSelectDetail,
+    });
+
+    if (!learningObject) {
+      throw new NotFoundError(40411);
+    }
+
+    return learningObject;
+  }
+
+  public async getLearningPathNodes(id: string) {
+    const nodes = this.prisma.learningObject.findUnique({
+      where: { id: id },
+      select: {
+        learningPathNodes: {
+          select: learningPathNodeSelectShort,
+        },
       },
     });
+
+    if (!nodes) {
+      throw new Error(`Nodes from learningObjcet with id: ${id} not found`);
+    }
+    return nodes;
   }
 
   public async deleteLearningObject(id: string) {
     return await this.prisma.learningObject.delete({
       where: { id: id },
+      select: learningObjectSelectDetail,
     });
   }
 }

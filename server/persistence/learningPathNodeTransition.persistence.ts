@@ -1,30 +1,20 @@
-import { PrismaClient } from "@prisma/client";
-import { LearningPathNodeTransitionCreateParams } from "../util/types/learningPathNodeTransition.types";
-import { PrismaSingleton } from "./prismaSingleton";
+import { learningPathNodeTransitionSelectDetail } from '../util/selectInput/learningPathNodeTransition.select';
+import { LearningPathNodeTransitionCreateParams } from '../util/types/learningPathNodeTransition.types';
+import { PrismaSingleton } from './prismaSingleton';
 
 export class LearningPathNodeTransitionPersistence {
-  public async createLearningPathNodeTransition(
-    data: LearningPathNodeTransitionCreateParams,
-  ) {
+  public async createLearningPathNodeTransition(data: LearningPathNodeTransitionCreateParams) {
+    const { learningPathNodeId, ...rest } = data;
     // Create a transition and connect it from previous to next node
-
-    const { fromNodeId, toNodeId, ...transitionData } = data;
-    const transition =
-      await PrismaSingleton.instance.learningNodeTransition.create({
-        data: {
-          ...transitionData,
-          fromNode: {
-            connect: {
-              id: fromNodeId,
-            },
-          },
-          toNode: {
-            connect: {
-              id: toNodeId,
-            },
-          },
+    const transition = await PrismaSingleton.instance.learningNodeTransition.create({
+      data: {
+        ...rest,
+        learningPathNode: {
+          connect: { id: data.learningPathNodeId },
         },
-      });
+      },
+      select: learningPathNodeTransitionSelectDetail,
+    });
     return transition;
   }
 }

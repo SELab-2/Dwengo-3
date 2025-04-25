@@ -1,12 +1,13 @@
-import { LearningPathPersistence } from "../persistence/learningPath.persistence";
+import { LearningPathPersistence } from '../persistence/learningPath.persistence';
 import {
   LearningPathByFilterParams,
   LearningPathCreateParams,
   LearningPathCreateSchema,
   LearningPathFilterSchema,
-} from "../util/types/learningPath.types";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
+} from '../util/types/learningPath.types';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { BadRequestError } from '../util/types/error.types';
 
 export class LearningPathDomain {
   private learningPathPersistence;
@@ -16,38 +17,26 @@ export class LearningPathDomain {
   }
 
   public async getLearningPaths(query: LearningPathByFilterParams) {
-    if (typeof query.keywords === "string") {
+    if (typeof query.keywords === 'string') {
       query.keywords = [query.keywords];
     }
 
-    const paginationParseResult = PaginationFilterSchema.safeParse(query);
-    if (!paginationParseResult.success) {
-      throw paginationParseResult.error;
-    }
+    const paginationParse = PaginationFilterSchema.parse(query);
+    const filters = LearningPathFilterSchema.parse(query);
 
-    const filtersResult = LearningPathFilterSchema.safeParse(query);
-    if (!filtersResult.success) {
-      throw filtersResult.error;
-    }
-
-    return this.learningPathPersistence.getLearningPaths(
-      filtersResult.data,
-      paginationParseResult.data,
-    );
+    return this.learningPathPersistence.getLearningPaths(filters, paginationParse);
   }
 
-  public async createLearningPath(
-    body: LearningPathCreateParams,
-    user: UserEntity,
-  ) {
-    const parseResult = LearningPathCreateSchema.safeParse(body);
-    if (!parseResult.success) {
-      throw parseResult.error;
-    }
+  public async getLearningPathById(id: string) {
+    return this.learningPathPersistence.getLearningPathById(id);
+  }
+
+  public async createLearningPath(body: LearningPathCreateParams, user: UserEntity) {
+    const data = LearningPathCreateSchema.parse(body);
 
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error("User must be a teacher to create a learning path.");
+      throw new BadRequestError(40009);
     }
-    return this.learningPathPersistence.createLearningPath(parseResult.data);
+    return this.learningPathPersistence.createLearningPath(data);
   }
 }

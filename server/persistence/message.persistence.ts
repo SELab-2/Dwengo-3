@@ -1,12 +1,15 @@
-import { Message, Prisma, PrismaClient } from "@prisma/client";
-import { PrismaSingleton } from "./prismaSingleton";
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaSingleton } from './prismaSingleton';
 import {
   MessageCreateParams,
+  MessageDetail,
   MessageFilterParams,
   MessageId,
-  MessageUpdateParams,
-} from "../util/types/message.types";
-import { PaginationParams } from "../util/types/pagination.types";
+} from '../util/types/message.types';
+import { PaginationParams } from '../util/types/pagination.types';
+import { searchAndPaginate } from '../util/pagination/pagination.util';
+import { messageSelectDetail, messageSelectShort } from '../util/selectInput/message.select';
+import { NotFoundError } from '../util/types/error.types';
 
 export class MessagePersistence {
   private prisma: PrismaClient;
@@ -18,29 +21,33 @@ export class MessagePersistence {
   public async getMessages(
     filters: MessageFilterParams,
     paginationParams: PaginationParams,
-  ): Promise<{ data: Message[]; totalPages: number }> {
+  ): Promise<{ data: MessageDetail[]; totalPages: number }> {
     const whereclause: Prisma.MessageWhereInput = {
       AND: [filters.discussionId ? { discussionId: filters.discussionId } : {}],
     };
-    const [messages, totalCount] = await this.prisma.$transaction([
-      this.prisma.message.findMany({
-        where: whereclause,
-        skip: paginationParams.skip,
-        take: paginationParams.pageSize,
-        include: { sender: true },
-        orderBy: { createdAt: "desc" },
-      }),
-      this.prisma.message.count({
-        where: whereclause,
-      }),
-    ]);
-    return {
-      data: messages,
-      totalPages: Math.ceil(totalCount / paginationParams.pageSize),
-    };
+    return searchAndPaginate(
+      this.prisma.message,
+      whereclause,
+      paginationParams,
+      undefined,
+      messageSelectShort,
+    );
   }
 
-  public async createMessage(params: MessageCreateParams): Promise<Message> {
+  public async getMessageById(id: MessageId): Promise<MessageDetail> {
+    const message = await this.prisma.message.findUnique({
+      where: { id: id },
+      select: messageSelectDetail,
+    });
+
+    if (!message) {
+      throw new NotFoundError(40407);
+    }
+
+    return message;
+  }
+
+  public async createMessage(params: MessageCreateParams): Promise<MessageDetail> {
     return this.prisma.message.create({
       data: {
         discussion: {
@@ -50,30 +57,21 @@ export class MessagePersistence {
         },
         sender: {
           connect: {
-            id: params.senderId,
+            id: params.senderId!,
           },
         },
         content: params.content,
       },
+      select: messageSelectDetail,
     });
   }
 
-  public async updateMessage(params: MessageUpdateParams): Promise<Message> {
-    return this.prisma.message.update({
-      where: {
-        id: params.id,
-      },
-      data: {
-        content: params.content,
-      },
-    });
-  }
-
-  public async deleteMessage(id: MessageId): Promise<Message> {
+  public async deleteMessage(id: MessageId): Promise<MessageDetail> {
     return this.prisma.message.delete({
       where: {
         id: id,
       },
+      select: messageSelectDetail,
     });
   }
 }

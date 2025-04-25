@@ -1,21 +1,15 @@
 {
   "devDependencies": {
-    "husky": "^9.1.7",
+    "globals": "^16.0.0",
+    "husky": "^8.0.0",
     "lint-staged": "^15.4.3",
-    "prettier": "^3.5.3",
-    "prisma": "^6.4.1"
+    "prettier": "^3.5.3"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky && husky install",
+    "lint": "eslint ."
   },
   "lint-staged": {
-    "*.ts": "prettier --write",
-    "*.js": "prettier --write",
-    "*.css": "prettier --write",
-    "*.json": "prettier --write",
-    "*.md": "prettier --write"
-  },
-  "dependencies": {
-    "@prisma/client": "^6.4.1"
+    "**/*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
   }
 }

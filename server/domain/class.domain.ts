@@ -1,122 +1,126 @@
-import { ClassPersistence } from "../persistence/class.persistence";
-import { PaginationFilterSchema } from "../util/types/pagination.types";
+import { ClassPersistence } from '../persistence/class.persistence';
+import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
-  ClassFilterSchema,
   ClassCreateSchema,
+  ClassFilterParams,
+  ClassFilterSchema,
   ClassUpdateSchema,
-} from "../util/types/class.types";
-import { ClassRoleEnum, UserEntity } from "../util/types/user.types";
+} from '../util/types/class.types';
+import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
+import { compareUserIdWithFilterId } from '../util/cookie-checks/cookieChecks.util';
 
 export class ClassDomain {
-  private classPersistance;
+  private classPersistence;
 
   constructor() {
-    this.classPersistance = new ClassPersistence();
+    this.classPersistence = new ClassPersistence();
   }
 
-  public async getClasses(query: unknown, user: UserEntity) {
+  public async getClasses(query: ClassFilterParams, user: UserEntity) {
     // Validate and parse pagination query parameters
-    const paginationResult = PaginationFilterSchema.safeParse(query);
-    if (!paginationResult.success) {
-      throw paginationResult.error;
-    }
+    const pagination = PaginationFilterSchema.parse(query);
 
     // Validate and parse class filters
-    const filtersResult = ClassFilterSchema.safeParse(query);
-    if (!filtersResult.success) {
-      throw filtersResult.error;
-    }
+    const filters = ClassFilterSchema.parse(query);
 
-    const { id, studentId, teacherId } = filtersResult.data;
+    await compareUserIdWithFilterId(user, filters.studentId, filters.teacherId);
 
-    if (id) {
-      // Class Id is given => fetch class and check if user is a teacher or student
-      const classData = await this.classPersistance.getClassById(id);
+    return await this.classPersistence.getClasses(pagination, filters);
+  }
 
-      if (!classData) {
-        throw new Error("Class not found.");
-      }
+  public async getClassById(id: string, user: UserEntity) {
+    const classData = await this.classPersistence.getClassById(id);
 
-      if (user.role === ClassRoleEnum.TEACHER) {
-        const isTeacherOfThisClass = classData.teachers.some(
-          (teacher) => teacher.userId === user.id,
-        );
-
-        if (!isTeacherOfThisClass) {
-          throw new Error("Can't fetch classes you're not a teacher of.");
-        }
-      }
-
-      if (user.role === ClassRoleEnum.STUDENT) {
-        const isStudentOfThisClass = classData.students.some(
-          (student) => student.userId === user.id,
-        );
-
-        if (!isStudentOfThisClass) {
-          throw new Error("Can't fetch classes you're not a student of.");
-        }
-      }
-
-      return { data: [classData], totalPages: 1 };
-    } else {
-      if (!studentId && !teacherId) {
-        throw new Error(
-          "Either studentId, teacherId or classId must be provided.",
-        );
-      }
-
-      if (
-        (studentId &&
-          user.role === ClassRoleEnum.STUDENT &&
-          user.student?.id !== studentId) ||
-        (teacherId &&
-          user.role === ClassRoleEnum.TEACHER &&
-          user.teacher?.id !== teacherId)
-      ) {
-        throw new Error(
-          "User ID does correspond with the provided studentId or teacherId.",
-        );
-      }
-
-      const { data, totalPages } = await this.classPersistance.getClasses(
-        paginationResult.data,
-        filtersResult.data,
+    if (user.role === ClassRoleEnum.TEACHER) {
+      const isTeacherOfThisClass = classData.teachers.some(
+        (teacher) => teacher.id === user.teacher?.id,
       );
 
-      return { data, totalPages };
+      if (!isTeacherOfThisClass) {
+        throw new BadRequestError(40001);
+      }
     }
+
+    if (user.role === ClassRoleEnum.STUDENT) {
+      const isStudentOfThisClass = classData.students.some((student) => student.userId === user.id);
+
+      if (!isStudentOfThisClass) {
+        throw new BadRequestError(40002);
+      }
+    }
+
+    // Delete the userId fields from the object
+    return classData;
   }
 
   public async createClass(body: unknown, user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
-      throw new Error("User must be a teacher to create a class.");
+      throw new BadRequestError(40005);
     }
 
     // Validate and parse class create parameters
-    const createParamsResult = ClassCreateSchema.safeParse(body);
-    if (!createParamsResult.success) {
-      throw createParamsResult.error;
-    }
-
-    return this.classPersistance.createClass(createParamsResult.data, user);
+    const data = ClassCreateSchema.parse(body);
+    return this.classPersistence.createClass(data, user);
   }
 
-  public async updateClass(body: unknown, user: UserEntity) {
+  public async updateClass(id: string, body: unknown, user: UserEntity) {
     // Validate and parse class update parameters
-    const updateParamsResult = ClassUpdateSchema.safeParse(body);
-    if (!updateParamsResult.success) {
-      throw updateParamsResult.error;
+    const params = ClassUpdateSchema.parse(body);
+
+    if (!user.teacher) {
+      throw new BadRequestError(40006);
     }
 
-    if (
-      !this.classPersistance.isTeacherFromClass(
-        user.id,
-        updateParamsResult.data.id,
-      )
-    ) {
-      throw new Error("User must be a teacher of the class to update it.");
+    if (!(await this.classPersistence.isTeacherFromClass(user.teacher.id, id))) {
+      throw new BadRequestError(40006);
     }
 
-    return this.classPersistance.updateClass(updateParamsResult.data);
+    return this.classPersistence.updateClass(id, params);
+  }
+
+  public async checkUserBelongsToClass(user: UserEntity, classId: string) {
+    const classById = await this.classPersistence.getClassById(classId);
+    let exists = false;
+    if (user.role === ClassRoleEnum.TEACHER) {
+      exists = classById?.teachers.some((teacher) => teacher.id === user.teacher?.id) || false;
+    } else if (user.role === ClassRoleEnum.STUDENT) {
+      exists = classById?.students.some((student) => student.id === user.student?.id) || false;
+    }
+    if (!exists) {
+      throw new BadRequestError(40007);
+    }
+  }
+
+  public async removeTeacherFromClass(classId: string, teacherId: string, user: UserEntity) {
+    if (!user.teacher) {
+      throw new BadRequestError(40035);
+    }
+
+    if (!(await this.classPersistence.isTeacherFromClass(user.teacher.id, classId))) {
+      throw new BadRequestError(40035);
+    }
+
+    if (!(await this.classPersistence.isTeacherFromClass(teacherId, classId))) {
+      throw new NotFoundError(40404);
+    }
+
+    return await this.classPersistence.removeTeacherFromClass(classId, teacherId);
+  }
+
+  public async removeStudentFromClass(classId: string, studentId: string, user: UserEntity) {
+    if (!user.teacher) {
+      throw new BadRequestError(40035);
+    }
+
+    if (!(await this.classPersistence.isTeacherFromClass(user.teacher.id, classId))) {
+      throw new BadRequestError(40035);
+    }
+
+    if (!(await this.classPersistence.isStudentFromClass(studentId, classId))) {
+      throw new NotFoundError(40403);
+    }
+
+    return await this.classPersistence.removeStudentFromClass(classId, studentId);
   }
 }

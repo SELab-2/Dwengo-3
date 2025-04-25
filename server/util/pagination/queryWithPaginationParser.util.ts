@@ -1,25 +1,14 @@
-import { z, ZodEffects, ZodObject } from "zod";
-import {
-  PaginationFilterSchema,
-  PaginationParams,
-} from "../types/pagination.types";
+import { z, ZodEffects, ZodObject } from 'zod';
+import { PaginationFilterSchema, PaginationParams } from '../types/pagination.types';
 
-export const queryWithPaginationParser = <
-  T extends ZodObject<any> | ZodEffects<ZodObject<any>>,
->(
+export const queryWithPaginationParser = <T extends ZodObject<any> | ZodEffects<ZodObject<any>>>(
   query: any,
   schema: T,
 ): { dataSchema: z.infer<typeof schema>; dataPagination: PaginationParams } => {
-  const paginationResult = PaginationFilterSchema.safeParse(query);
-  if (!paginationResult.success) {
-    throw paginationResult.error;
-  }
-  const parseResult = schema.safeParse(query);
-  if (!parseResult.success) {
-    throw parseResult.error;
-  }
+  const pagination = PaginationFilterSchema.parse(query);
+  const data = schema.parse(query);
   return {
-    dataSchema: parseResult.data,
-    dataPagination: paginationResult.data,
+    dataSchema: data,
+    dataPagination: pagination,
   };
 };
