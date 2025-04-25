@@ -1,5 +1,5 @@
 {
-    "testUsers": [
+  "testUsers": [
     {
       "id": "1a2b3c4d-1111-2222-3333-444455556666",
       "username": "user1",
@@ -90,8 +90,8 @@
       "name": "Charlotte",
       "role": "STUDENT"
     }
-    ],
-    "testTeachers": [
+  ],
+  "testTeachers": [
     {
       "id": "3b06702b-1111-2222-3333-444455556666",
       "userId": "1a2b3c4d-1111-2222-3333-444455556666"
@@ -112,8 +112,8 @@
       "id": "3b06702b-5555-6666-7777-888899990000",
       "userId": "5e6f7g8h-5555-6666-7777-888899990000"
     }
-    ],
-    "testStudents": [
+  ],
+  "testStudents": [
     {
       "id": "4c07803c-1111-2222-3333-444455556666",
       "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
@@ -134,26 +134,26 @@
       "id": "4c07803c-5555-6666-7777-888899990000",
       "userId": "0j1k2l3m-0000-1111-2222-333344445555"
     }
-    ],
-    "testClasses": [
+  ],
+  "testClasses": [
     {
       "id": "8b07803c-4444-5555-6666-777788889999",
       "name": "class1",
       "students": [
         {
-            "id": "4c07803c-1111-2222-3333-444455556666",
-            "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
-          },
-          {
-            "id": "4c07803c-2222-3333-4444-555566667777",
-            "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
-          }
+          "id": "4c07803c-1111-2222-3333-444455556666",
+          "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+        },
+        {
+          "id": "4c07803c-2222-3333-4444-555566667777",
+          "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+        }
       ],
       "teachers": [
         {
-            "id": "3b06702b-1111-2222-3333-444455556666",
-            "userId": "1a2b3c4d-1111-2222-3333-444455556666"
-          }
+          "id": "3b06702b-1111-2222-3333-444455556666",
+          "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+        }
       ]
     },
     {
@@ -161,19 +161,19 @@
       "name": "class2",
       "students": [
         {
-            "id": "4c07803c-3333-4444-5555-666677778888",
-            "userId": "8h9i0j1k-8888-9999-0000-111122223333"
-          },
-          {
-            "id": "4c07803c-4444-5555-6666-777788889999",
-            "userId": "9i0j1k2l-9999-0000-1111-222233334444"
-          }
+          "id": "4c07803c-3333-4444-5555-666677778888",
+          "userId": "8h9i0j1k-8888-9999-0000-111122223333"
+        },
+        {
+          "id": "4c07803c-4444-5555-6666-777788889999",
+          "userId": "9i0j1k2l-9999-0000-1111-222233334444"
+        }
       ],
       "teachers": [
         {
-            "id": "3b06702b-2222-3333-4444-555566667777",
-            "userId": "2b3c4d5e-2222-3333-4444-555566667777"
-          }
+          "id": "3b06702b-2222-3333-4444-555566667777",
+          "userId": "2b3c4d5e-2222-3333-4444-555566667777"
+        }
       ]
     },
     {
@@ -181,183 +181,177 @@
       "name": "class3",
       "students": [
         {
-            "id": "4c07803c-5555-6666-7777-888899990000",
-            "userId": "0j1k2l3m-0000-1111-2222-333344445555"
-          }
+          "id": "4c07803c-5555-6666-7777-888899990000",
+          "userId": "0j1k2l3m-0000-1111-2222-333344445555"
+        }
       ],
       "teachers": [
         {
-            "id": "3b06702b-3333-4444-5555-666677778888",
-            "userId": "3c4d5e6f-3333-4444-5555-666677778888"
-          }
+          "id": "3b06702b-3333-4444-5555-666677778888",
+          "userId": "3c4d5e6f-3333-4444-5555-666677778888"
+        }
       ]
     }
-    ],
-    "testPaginationFilter": {
-        "page": "1",
-        "pageSize": "10"
-    },
-    "testAssignments": [
-        {
-            "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
-            "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
-            "teacherId": "3b06702b-1111-2222-3333-444455556666",
-            "classId": "8b07803c-4444-5555-6666-777788889999",
-            "class": {
-              "id": "8b07803c-4444-5555-6666-777788889999",
-              "name": "class1"
-            }
-        },
-        {
-            "id": "6e312a15-dcc0-45d3-8660-17c749910839",
-            "learningPathId": "91aa27dc-2c50-5e6e-b789-769de70cf653",
-            "teacherId": "3b06702b-2222-3333-4444-555566667777",
-            "classId": "8b07853c-4444-5555-6666-777788889999",
-            "class": {
-              "id": "8b07853c-4444-5555-6666-777788889999",
-              "name": "class2"
-            }
-        }
-    ],
-    "testAnnnouncements": [
-      {
-        "id": "07cca202-e34c-459a-b289-56a383231cdd",
-        "title": "announcement1",
-        "content": "content",
-        "classId": "8b07803c-4444-5555-6666-777788889999",
-        "teacherId": "3b06702b-1111-2222-3333-444455556666"
-      },
-      {
-        "id": "07cca202-e34c-459a-b289-56a383231cee",
-        "title": "announcement2",
-        "content": "content",
-        "classId": "8b07853c-4444-5555-6666-777788889999",
-        "teacherId": "3b06702b-2222-3333-4444-555566667777"
+  ],
+  "testPaginationFilter": {
+    "page": "1",
+    "pageSize": "10"
+  },
+  "testAssignments": [
+    {
+      "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
+      "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+      "teacherId": "3b06702b-1111-2222-3333-444455556666",
+      "classId": "8b07803c-4444-5555-6666-777788889999",
+      "class": {
+        "id": "8b07803c-4444-5555-6666-777788889999",
+        "name": "class1"
       }
-    ],
-    "testLearningPaths": [
+    },
+    {
+      "id": "6e312a15-dcc0-45d3-8660-17c749910839",
+      "learningPathId": "91aa27dc-2c50-5e6e-b789-769de70cf653",
+      "teacherId": "3b06702b-2222-3333-4444-555566667777",
+      "classId": "8b07853c-4444-5555-6666-777788889999",
+      "class": {
+        "id": "8b07853c-4444-5555-6666-777788889999",
+        "name": "class2"
+      }
+    }
+  ],
+  "testAnnouncements": [
+    {
+      "id": "07cca202-e34c-459a-b289-56a383231cdd",
+      "title": "announcement1",
+      "content": "content",
+      "classId": "8b07803c-4444-5555-6666-777788889999",
+      "teacherId": "3b06702b-1111-2222-3333-444455556666"
+    },
+    {
+      "id": "07cca202-e34c-459a-b289-56a383231cee",
+      "title": "announcement2",
+      "content": "content",
+      "classId": "8b07853c-4444-5555-6666-777788889999",
+      "teacherId": "3b06702b-2222-3333-4444-555566667777"
+    }
+  ],
+  "testLearningPaths": [
+    {
+      "id": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+      "hruid": "lp0",
+      "language": "nl",
+      "title": "title0",
+      "description": "This is a description"
+    },
+    {
+      "id": "91aa27dc-2c50-5e6e-b789-769de70cf653",
+      "hruid": "lp1",
+      "language": "en",
+      "title": "title1",
+      "description": "This is another description"
+    },
+    {
+      "id": "a2bb38ed-3d61-6f7f-c890-87aef81df764",
+      "hruid": "lp2",
+      "language": "fr",
+      "title": "title2",
+      "description": "A different learning path description"
+    }
+  ],
+  "testGroups": [
+    {
+      "id": "11e237ff-aa67-4859-ab1d-3d12731899b6",
+      "name": "group1",
+      "assignmentId": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
+      "students": [
         {
-            "id": "82ff18cb-1b49-4d5d-a678-658cd69be542",
-            "hruid": "lp0",
-            "language": "nl",
-            "title": "title0",
-            "description": "This is a description"
-          },
-          {
-            "id": "91aa27dc-2c50-5e6e-b789-769de70cf653",
-            "hruid": "lp1",
-            "language": "en",
-            "title": "title1",
-            "description": "This is another description"
-          },
-          {
-            "id": "a2bb38ed-3d61-6f7f-c890-87aef81df764",
-            "hruid": "lp2",
-            "language": "fr",
-            "title": "title2",
-            "description": "A different learning path description"
-          }
-    ],
-    "testGroups": [
-        {
-            "id": "11e237ff-aa67-4859-ab1d-3d12731899b6",
-            "name": "group1",
-            "assignmentId": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
-            "students": [
-              {
-                "id": "4c07803c-1111-2222-3333-444455556666",
-                "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
-              },
-              {
-                "id": "4c07803c-2222-3333-4444-555566667777",
-                "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
-              }
-            ],
-            "assignment": {
-                "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
-                "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
-                "teacherId": "3b06702b-1111-2222-3333-444455556666",
-                "classId": "8b07803c-4444-5555-6666-777788889999",
-                "class": {
-                    "id": "8b07803c-4444-5555-6666-777788889999",
-                    "name": "class1",
-                    "students": [
-                      {
-                          "id": "4c07803c-1111-2222-3333-444455556666",
-                          "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
-                        },
-                        {
-                          "id": "4c07803c-2222-3333-4444-555566667777",
-                          "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
-                        }
-                    ],
-                    "teachers": [
-                      {
-                          "id": "3b06702b-1111-2222-3333-444455556666",
-                          "userId": "1a2b3c4d-1111-2222-3333-444455556666"
-                        }
-                    ]
-                  }
-            },
-            "progress": []
-        }
-    ],
-    "testKeywords": [
-        { "keyword": "keyword1" },
-        { "keyword": "keyword2" }
-    ],
-    "testLearningObjects": [
-      {
-        "id": "3388e211-d585-4ee0-8556-34958491fae5",
-        "hruid": "test-v1",
-        "uuid": "bfba889e-f642-4f05-8286-04ed116be3ce",
-        "version": 3,
-        "language": "nl",
-        "title": "This is a titleeeee",
-        "description": "This is a description",
-        "contentType": "TEXT_MARKDOWN",
-        "target_ages": [
-            4,
-            3
-        ],
-        "teacher_exclusive": true,
-        "skos_concepts": [
-            "http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen",
-            "http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso"
-        ],
-        "educational_goals": [
-            {
-                "_id": "61510999f505a74ccc1f2da5",
-                "source": "Source",
-                "id": "id"
-            },
-            {
-                "_id": "61510999f505a74ccc1f2da6",
-                "source": "Source2",
-                "id": "id2"
-            }
-        ],
-        "copyright": "Copyright by dwengo",
-        "licence": "CC BY",
-        "difficulty": 3,
-        "estimated_time": 20,
-        "return_value": {
-                "callback_url": "url/callback",
-                "callback_schema": {
-                "att": "test",
-                "att2": "test2"
-            }
+          "id": "4c07803c-1111-2222-3333-444455556666",
+          "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
         },
-        "available": true,
-        "content": "content",
-        "learningPathNodes": [
-          {
-            "id": "661a7044-68e3-46b2-9968-b23d95499c46",
-            "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
-            "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae5",
-            "instruction": "instruction1"
-          }
-        ]
+        {
+          "id": "4c07803c-2222-3333-4444-555566667777",
+          "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+        }
+      ],
+      "assignment": {
+        "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
+        "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+        "teacherId": "3b06702b-1111-2222-3333-444455556666",
+        "classId": "8b07803c-4444-5555-6666-777788889999",
+        "class": {
+          "id": "8b07803c-4444-5555-6666-777788889999",
+          "name": "class1",
+          "students": [
+            {
+              "id": "4c07803c-1111-2222-3333-444455556666",
+              "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+            },
+            {
+              "id": "4c07803c-2222-3333-4444-555566667777",
+              "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+            }
+          ],
+          "teachers": [
+            {
+              "id": "3b06702b-1111-2222-3333-444455556666",
+              "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+            }
+          ]
+        }
+      },
+      "progress": []
+    }
+  ],
+  "testKeywords": [{ "keyword": "keyword1" }, { "keyword": "keyword2" }],
+  "testLearningObjects": [
+    {
+      "id": "3388e211-d585-4ee0-8556-34958491fae5",
+      "hruid": "test-v1",
+      "uuid": "bfba889e-f642-4f05-8286-04ed116be3ce",
+      "version": 3,
+      "language": "nl",
+      "title": "This is a titleeeee",
+      "description": "This is a description",
+      "contentType": "TEXT_MARKDOWN",
+      "target_ages": [4, 3],
+      "teacher_exclusive": true,
+      "skos_concepts": [
+        "http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen",
+        "http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso"
+      ],
+      "educational_goals": [
+        {
+          "_id": "61510999f505a74ccc1f2da5",
+          "source": "Source",
+          "id": "id"
+        },
+        {
+          "_id": "61510999f505a74ccc1f2da6",
+          "source": "Source2",
+          "id": "id2"
+        }
+      ],
+      "copyright": "Copyright by dwengo",
+      "licence": "CC BY",
+      "difficulty": 3,
+      "estimated_time": 20,
+      "return_value": {
+        "callback_url": "url/callback",
+        "callback_schema": {
+          "att": "test",
+          "att2": "test2"
+        }
+      },
+      "available": true,
+      "content": "content",
+      "learningPathNodes": [
+        {
+          "id": "661a7044-68e3-46b2-9968-b23d95499c46",
+          "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+          "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae5",
+          "instruction": "instruction1"
+        }
+      ]
     },
     {
       "id": "3388e211-d585-4ee0-8556-34958491fae6",
@@ -368,31 +362,26 @@
       "title": "This is a titleeeee",
       "description": "This is a description",
       "contentType": "TEXT_MARKDOWN",
-      "target_ages": [
-          4,
-          3
-      ],
+      "target_ages": [4, 3],
       "teacher_exclusive": true,
-      "skos_concepts": [
-          "http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen"
-      ],
+      "skos_concepts": ["http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen"],
       "educational_goals": [
-          {
-              "_id": "61510999f505a74ccc1f2da6",
-              "source": "Source2",
-              "id": "id2"
-          }
+        {
+          "_id": "61510999f505a74ccc1f2da6",
+          "source": "Source2",
+          "id": "id2"
+        }
       ],
       "copyright": "Copyright by dwengo",
       "licence": "CC BY",
       "difficulty": 3,
       "estimated_time": 20,
       "return_value": {
-              "callback_url": "url/callback",
-              "callback_schema": {
-              "att": "test",
-              "att2": "test2"
-          }
+        "callback_url": "url/callback",
+        "callback_schema": {
+          "att": "test",
+          "att2": "test2"
+        }
       },
       "available": true,
       "content": "content",
@@ -404,58 +393,55 @@
           "instruction": "instruction2"
         }
       ]
-  }
-    ],
-    "testLearningPathNodes": [
-      {
-        "id": "661a7044-68e3-46b2-9968-b23d95499c46",
-        "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
-        "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae5",
-        "instruction": "instruction1"
-      },
-      {
-        "id": "661a7044-68e3-46b2-9968-b23d95499c47",
-        "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
-        "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae6",
-        "instruction": "instruction2"
+    }
+  ],
+  "testLearningPathNodes": [
+    {
+      "id": "661a7044-68e3-46b2-9968-b23d95499c46",
+      "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+      "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae5",
+      "instruction": "instruction1"
+    },
+    {
+      "id": "661a7044-68e3-46b2-9968-b23d95499c47",
+      "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+      "learningObjectId": "3388e211-d585-4ee0-8556-34958491fae6",
+      "instruction": "instruction2"
+    }
+  ],
+  "testLearningPathNodeTransitions": [
+    {
+      "id": "fea5d839-c551-49a7-8e4c-d33179743133",
+      "learningPathNodeId": "661a7044-68e3-46b2-9968-b23d95499c47",
+      "toNodeIndex": 1
+    }
+  ],
+  "testDiscussions": [
+    {
+      "id": "de671ef9-fbed-4263-846f-7c5ab8f39dc7",
+      "groupId": "11e237ff-aa67-4859-ab1d-3d12731899b6",
+      "members": ["899edbd7-c766-48f4-8363-56fd8c1f4a2b", "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"],
+      "group": {
+        "id": "11e237ff-aa67-4859-ab1d-3d12731899b6",
+        "name": "group1"
       }
-    ],
-    "testLearningPathNodeTransitions": [
-      {
-        "id": "fea5d839-c551-49a7-8e4c-d33179743133",
-        "learningPathNodeId": "661a7044-68e3-46b2-9968-b23d95499c47",
-        "toNodeIndex": 1
+    }
+  ],
+  "testMessages": [
+    {
+      "id": 1,
+      "discussionId": "de671ef9-fbed-4263-846f-7c5ab8f39dc7",
+      "content": "content",
+      "senderId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+      "sender": {
+        "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+        "username": "user6",
+        "email": "user6@example.com",
+        "password": "password6",
+        "surname": "Garcia",
+        "name": "Sophia",
+        "role": "STUDENT"
       }
-    ],
-    "testDiscussions": [
-      {
-        "id": "de671ef9-fbed-4263-846f-7c5ab8f39dc7",
-        "groupId": "11e237ff-aa67-4859-ab1d-3d12731899b6",
-        "members": [
-          "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
-          "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
-        ],
-        "group": {
-          "id": "11e237ff-aa67-4859-ab1d-3d12731899b6",
-          "name": "group1"
-        }
-      }
-    ],
-    "testMessages": [
-      {
-        "id": 1,
-        "discussionId": "de671ef9-fbed-4263-846f-7c5ab8f39dc7",
-        "content": "content",
-        "senderId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
-        "sender": {
-          "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
-          "username": "user6",
-          "email": "user6@example.com",
-          "password": "password6",
-          "surname": "Garcia",
-          "name": "Sophia",
-          "role": "STUDENT"
-        }
-      }
-    ]
+    }
+  ]
 }

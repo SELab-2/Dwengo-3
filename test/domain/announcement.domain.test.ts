@@ -11,7 +11,7 @@ import {
   testStudents,
   testPaginationFilter,
   testClasses,
-  testAnnnouncements,
+  testAnnouncements,
 } from '../testObjects.json';
 
 // announcement persistence mock
@@ -99,9 +99,9 @@ let getAnnouncementsTeacherNotUserQuery = {
   teacherId: testTeachers[1].id,
 };
 
-let getAnnouncementByIdId = testAnnnouncements[0].id;
+let getAnnouncementByIdId = testAnnouncements[0].id;
 let getAnnouncementByIdInvalidId = 'id';
-let getAnnouncementByIdNotOfClassId = testAnnnouncements[1].id;
+let getAnnouncementByIdNotOfClassId = testAnnouncements[1].id;
 
 let createAnnouncementParams = {
   title: 'title0',
@@ -125,7 +125,7 @@ let createAnnouncementNotOfClassParams = {
   classId: testClasses[1].id,
 };
 
-let updateAnnouncementId = testAnnnouncements[0].id;
+let updateAnnouncementId = testAnnouncements[0].id;
 let updateAnnouncementParams = {
   title: 'title0',
   content: 'content',
@@ -155,14 +155,22 @@ describe('announcement domain', () => {
       return null;
     });
     mockAnnouncementPeristence.getAnnouncementById.mockImplementation((id: string) => {
-      let found = testAnnnouncements.find((a) => a.id === id);
+      let found = testAnnouncements.find((a) => a.id === id);
       if (found) {
-        return found;
+        return {
+          id: found.id,
+          title: found.title,
+          content: found.content,
+          teacherId: found.teacherId,
+          class: {
+            id: found.classId,
+          },
+        };
       }
       return null;
     });
     mockAnnouncementPeristence.getAnnouncements.mockImplementation((filter, pagination) => {
-      return testAnnnouncements[0];
+      return testAnnouncements[0];
     });
     mockAnnouncementPeristence.createAnnouncement.mockImplementation((data, pagination) => {
       return createAnnouncementParams;
