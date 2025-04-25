@@ -26,14 +26,14 @@ function AnnouncementDetailpage({ classId, className }: { classId: string; class
       )}
 
       {!isLoading && (
-        <Box sx={{ mx: 'auto', width: '100%', maxWidth: '90%', p: 2 }}>
+        <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
           <BackButton link={AppRoutes.classAnnouncements(classId)}></BackButton>
           <Paper
             sx={{
               p: 2,
-              maxWidth: '90%', // Responsive width
-              width: '100%',
+              // maxWidth: { xs: '90%', sm: '90%' }, // Responsive width
               mx: 'auto',
+              width: { xs: '90%', sm: '100%' },
               mt: 1,
             }}
           >
