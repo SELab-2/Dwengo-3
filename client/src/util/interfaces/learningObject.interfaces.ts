@@ -15,7 +15,7 @@ export interface LearningObjectShort {
   title: string;
   language: string;
   estimatedTime: number;
-  kewords: keyword[];
+  keywords: keyword[];
   targetAges: number[];
 }
 

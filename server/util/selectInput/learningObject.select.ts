@@ -1,10 +1,9 @@
-import { Prisma } from '@prisma/client';
-
-export const learningObjectSelectShort: Prisma.LearningObjectSelect = {
+export const learningObjectSelectShort = {
   id: true,
   title: true,
   language: true,
   estimatedTime: true,
+  // TODO: geef gewoon een array van keywords mee ipv object met keyword property
   keywords: {
     select: {
       keyword: true,
@@ -13,7 +12,7 @@ export const learningObjectSelectShort: Prisma.LearningObjectSelect = {
   targetAges: true,
 };
 
-export const learningObjectSelectDetail: Prisma.LearningObjectSelect = {
+export const learningObjectSelectDetail = {
   id: true,
   hruid: true,
   version: true,
@@ -36,6 +35,8 @@ export const learningObjectSelectDetail: Prisma.LearningObjectSelect = {
   updatedAt: true,
   content: true,
   multipleChoice: true,
+  submissionType: true,
+  // TODO: geef gewoon een array van keywords mee ipv object met keyword property
   keywords: {
     select: {
       keyword: true,

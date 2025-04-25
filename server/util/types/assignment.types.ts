@@ -1,7 +1,10 @@
 import { z } from 'zod';
-import { LearningPathShort } from './learningPath.types';
-import { ClassShort } from './class.types';
-import { GroupShort } from './group.types';
+import { Prisma } from '.prisma/client';
+import {
+  assignmentSelectDetail,
+  assignmentSelectShort,
+  assignmentSelectShort2,
+} from '../selectInput/assignment.select';
 
 export const AssignmentFilterSchema = z
   .object({
@@ -21,21 +24,18 @@ export const AssignmentCreateSchema = z.object({
   groups: z.string().uuid().array().nonempty().array().nonempty(),
   classId: z.string().uuid(),
   teacherId: z.string().uuid().optional(),
-  learningPathId: z.string().uuid(),
+  learningPathId: z.string(),
 });
 
 export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;
 export type Uuid = z.infer<typeof IdSchema>;
 export type AssignmentFilterParams = z.infer<typeof AssignmentFilterSchema>;
-export type AssignmentDetail = {
-  id: Uuid;
-  learningPath: LearningPathShort;
-  class: ClassShort;
-  groups: GroupShort[];
-  teacherId: Uuid;
-};
 
-export type AssignmentShort = {
-  id: Uuid;
-  learningPathId: Uuid;
-};
+export type AssignmentDetail = Prisma.AssignmentGetPayload<{
+  select: typeof assignmentSelectDetail;
+}>;
+export type AssignmentShort = Prisma.AssignmentGetPayload<{ select: typeof assignmentSelectShort }>;
+
+export type AssignmentShort2 = Prisma.AssignmentGetPayload<{
+  select: typeof assignmentSelectShort2;
+}>;

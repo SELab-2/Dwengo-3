@@ -1,4 +1,4 @@
-import { ClassRole, Student, Teacher, User } from '@prisma/client';
+import { ClassRole, User } from '@prisma/client';
 import { PrismaSingleton } from '../prismaSingleton';
 import { FullUserType } from '../../util/types/user.types';
 import { RegisterParams } from '../../util/types/auth.types';

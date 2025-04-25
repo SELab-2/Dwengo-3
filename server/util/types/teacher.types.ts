@@ -19,11 +19,16 @@ export type TeacherCreateParams = z.infer<typeof TeacherCreateSchema>;
  * @property classId - The id of the class to get all teachers from
  * @property assignmentId - The id of the assignment to get the teacher for
  */
-export const TeacherFilterSchema = z.object({
-  userId: z.string().uuid().optional(),
-  classId: z.string().uuid().optional(),
-  assignmentId: z.string().uuid().optional(),
-});
+export const TeacherFilterSchema = z
+  .object({
+    userId: z.string().uuid().optional(),
+    classId: z.string().uuid().optional(),
+    assignmentId: z.string().uuid().optional(),
+  })
+  .refine((data) => Object.values(data).some((value) => value !== undefined), {
+    message: 'At least one filter must be provided.',
+    path: [],
+  });
 
 export type TeacherFilterParams = z.infer<typeof TeacherFilterSchema>;
 

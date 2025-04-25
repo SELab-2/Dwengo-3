@@ -30,15 +30,13 @@ function RegisterForm() {
   const handleRegisterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const data = new FormData(event.currentTarget);
-
     registerMutation.mutate(
       {
-        username: ((data.get('name') as string) + data.get('surname')) as string,
-        name: data.get('name') as string,
-        surname: data.get('surname') as string,
-        email: data.get('email') as string,
-        password: data.get('password') as string,
+        username: name.toLowerCase() + '_' + surname.toLowerCase(),
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
         role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER,
       },
       {

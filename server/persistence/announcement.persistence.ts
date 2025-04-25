@@ -41,7 +41,17 @@ export class AnnouncementPersistence {
     const whereClause: Prisma.AnnouncementWhereInput = {
       AND: [
         filters.classId ? { classId: filters.classId } : {},
-        filters.teacherId ? { teacherId: filters.teacherId } : {},
+        filters.teacherId
+          ? {
+              class: {
+                teachers: {
+                  some: {
+                    id: filters.teacherId,
+                  },
+                },
+              },
+            }
+          : {},
         filters.studentId
           ? {
               class: {
@@ -80,7 +90,7 @@ export class AnnouncementPersistence {
     });
 
     if (!announcement) {
-      throw new NotFoundError(40408);
+      throw new NotFoundError(40415);
     }
 
     return announcement;

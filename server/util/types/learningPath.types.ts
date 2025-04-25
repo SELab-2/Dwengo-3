@@ -1,5 +1,10 @@
 import { z } from 'zod';
 import { Uuid } from './assignment.types';
+import { Prisma } from '.prisma/client';
+import {
+  learningPathSelectDetail,
+  learningPathSelectShort,
+} from '../selectInput/learningPath.select';
 
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),
@@ -21,9 +26,10 @@ export const LearningPathCreateSchema = z.object({
 
 export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;
 export type LearningPathCreateParams = z.infer<typeof LearningPathCreateSchema>;
-export type LearningPathShort = {
-  id: Uuid;
-  title: string;
-  image: string | null;
-  description: string | null;
-};
+
+export type LearningPathShort = Prisma.LearningPathGetPayload<{
+  select: typeof learningPathSelectShort;
+}>;
+export type LearningPathDetail = Prisma.LearningPathGetPayload<{
+  select: typeof learningPathSelectDetail;
+}>;

@@ -81,6 +81,7 @@ export class StudentController {
      *         description: Unauthorized, user not authenticated
      */
     this.router.get('/', isAuthenticated, this.getStudents);
+
     /**
      * @swagger
      * /api/student/{id}:
@@ -89,8 +90,8 @@ export class StudentController {
      *       - cookieAuth: []
      *     tags:
      *       - Student
-     *     summary: Get a student by studentID
-     *     description: Gets the content of a specific student selected by its UUID
+     *     summary: Retrieve a student by their ID
+     *     description: Fetches detailed information about a student identified by a unique UUID.
      *     parameters:
      *       - in: path
      *         name: id
@@ -98,14 +99,14 @@ export class StudentController {
      *         schema:
      *           type: string
      *           format: uuid
-     *         description: The unique identifier of the student.
+     *         description: The UUID of the student to retrieve.
      *     responses:
      *       200:
-     *         description: Student fetched succesfully.
-     *       content:
-     *        application/json:
-     *         schema:
-     *          $ref: '#/components/schemas/StudentDetail'
+     *         description: Successfully retrieved the student details.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/StudentDetail'
      *       403:
      *         description: Unauthorized, user not authenticated.
      *       404:

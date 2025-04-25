@@ -89,6 +89,8 @@ export class NotFoundError extends APIError {
         return 'Group not found...';
       case 40414:
         return 'Favorite not found...';
+      case 40415:
+        return 'Announcement not found...';
       default:
         return 'Not found...';
     }
@@ -189,6 +191,10 @@ export class BadRequestError extends APIError {
         return "Can't fetch assignmentSubmissions that are not yours...";
       case 40044:
         return "Can't submit to a non-favorited learningPath...";
+      case 40045:
+        return 'Invalid data provided...';
+      case 40046:
+        return 'User already exists...';
       default:
         return 'Bad request...';
     }

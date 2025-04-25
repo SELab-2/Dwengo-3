@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { Uuid } from './assignment.types';
 import { Decimal } from '@prisma/client/runtime/library';
+import { Prisma } from '.prisma/client';
+import {
+  learningObjectSelectDetail,
+  learningObjectSelectShort,
+} from '../selectInput/learningObject.select';
 
 export const ContentTypeEnum = z.enum([
   'TEXT_PLAIN',
@@ -13,11 +18,20 @@ export const ContentTypeEnum = z.enum([
   'BLOCKLY',
 ]);
 
+export const SubmissionTypeEnum = z.enum(['READ', 'MULTIPLE_CHOICE', 'FILE']);
+
 export const learningObjectKeywordSchema = z.object({
   keyword: z.string().min(1, 'Keyword is required'),
 });
 
 export type LearningObjectKeywordParams = z.infer<typeof learningObjectKeywordSchema>;
+
+const multipleChoiseShema = z.object({
+  question: z.string().min(1, 'Question is required'),
+  options: z.string().array().nonempty(),
+});
+
+export type MultipleChoice = z.infer<typeof multipleChoiseShema>;
 
 export const LearningObjectCreateSchema = z.object({
   hruid: z.string().min(1, 'HRUID is required'),
@@ -38,7 +52,8 @@ export const LearningObjectCreateSchema = z.object({
   returnValue: z.any().optional(), // JSON object
   available: z.boolean().default(true),
   content: z.string().min(1, 'Content is required'),
-  multipleChoice: z.any().optional(), // JSON object
+  multipleChoice: multipleChoiseShema.optional(), // JSON object
+  submissionType: SubmissionTypeEnum.optional(),
   keywords: z.array(learningObjectKeywordSchema).optional(),
 });
 
@@ -82,10 +97,10 @@ export const LearningObjectFilterSchema = z.object({
 });
 
 export type LearningObjectFilterParams = z.infer<typeof LearningObjectFilterSchema>;
-export type LearningObjectShort = {
-  id: Uuid;
-  title: string;
-  language: string;
-  estimatedTime: Decimal | null;
-  targetAges: number[];
-};
+
+export type LearningObjectShort = Prisma.LearningObjectGetPayload<{
+  select: typeof learningObjectSelectShort;
+}>;
+export type LearningObjectDetail = Prisma.LearningObjectGetPayload<{
+  select: typeof learningObjectSelectDetail;
+}>;

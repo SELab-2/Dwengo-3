@@ -14,9 +14,7 @@ import { PaginatedData } from '../util/interfaces/general.interfaces';
  * @returns Succesfully created or not
  */
 export async function createClassJoinRequestStudent(data: ClassJoinRequestCreate) {
-  const response = await apiClient.put(ApiRoutes.classJoinRequest.student.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.classJoinRequest.student.create, data);
 
   return response.data;
 }
@@ -28,9 +26,7 @@ export async function createClassJoinRequestStudent(data: ClassJoinRequestCreate
  * @returns Succesfully created or not
  */
 export async function createClassJoinRequestTeacher(data: ClassJoinRequestCreate) {
-  const response = await apiClient.put(ApiRoutes.classJoinRequest.teacher.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.classJoinRequest.teacher.create, data);
 
   return response.data;
 }
@@ -100,9 +96,7 @@ export async function getClassJoinRequestsTeacher(
  * @returns Succesfully handled or not
  */
 export async function handleClassJoinRequestStudent(data: ClassJoinRequestPost) {
-  const response = await apiClient.get(ApiRoutes.classJoinRequest.student.reply, {
-    data,
-  });
+  const response = await apiClient.post(ApiRoutes.classJoinRequest.student.reply, data);
 
   return response.data;
 }
@@ -114,9 +108,7 @@ export async function handleClassJoinRequestStudent(data: ClassJoinRequestPost) 
  * @returns Succesfully handled or not
  */
 export async function handleClassJoinRequestTeacher(data: ClassJoinRequestPost) {
-  const response = await apiClient.get(ApiRoutes.classJoinRequest.teacher.reply, {
-    data,
-  });
+  const response = await apiClient.post(ApiRoutes.classJoinRequest.teacher.reply, data);
 
   return response.data;
 }

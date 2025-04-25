@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { RegisterParams } from '../util/types/auth.types';
+import { CreateUserParams, RegisterParams } from '../util/types/auth.types';
 import { AuthProvider, ClassRole, User } from '@prisma/client';
 import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
@@ -22,9 +22,12 @@ export class UserDomain {
   private readonly persistence = new UsersPersistence();
   private readonly classDomain = new ClassDomain();
 
-  async createUser(userData: RegisterParams): Promise<UserEntity> {
+  async createUser(userData: CreateUserParams): Promise<UserEntity> {
+    if (userData.email === null || userData.email.trim().length === 0) {
+      throw new BadRequestError(40045);
+    }
     if ((await this.persistence.getUserByEmail(userData.email)) !== null) {
-      throw new BadRequestError(-1, 'User already exists');
+      throw new BadRequestError(40046);
     }
 
     if (userData.provider === AuthenticationProvider.LOCAL) {
@@ -108,6 +111,7 @@ export class UserDomain {
    * @returns The user data if the user is found, otherwise null.
    */
   async getUserByEmail(email: string): Promise<UserEntity | null> {
+    if (email === null || email.trim().length === 0) throw new BadRequestError(40045);
     const user = await this.persistence.getUserByEmail(email);
     if (user === null) return null;
     return {

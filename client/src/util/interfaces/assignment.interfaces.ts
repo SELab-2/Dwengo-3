@@ -1,15 +1,22 @@
 import { ClassShort } from './class.interfaces';
 import { GroupShort } from './group.interfaces';
-import { LearningPathShort, LearningPathDetail } from './learningPath.interfaces';
+import { LearningPathDetail, LearningPathShort } from './learningPath.interfaces';
+import { TeacherShort } from './teacher.interfaces';
 
 export interface AssignmentShort {
   id: string;
   learningPathId: string;
 }
 
+export interface AssignmentShort2 {
+  id: string;
+  groups: GroupShort[];
+  learningPath: LearningPathDetail;
+}
+
 export interface AssignmentDetail {
   id: string;
-  teacherId: string;
+  teacher: TeacherShort;
   class: ClassShort;
   groups: GroupShort[];
   learningPath: LearningPathShort;
@@ -24,7 +31,7 @@ export interface PopulatedAssignment {
 }
 
 export interface AssignmentCreate {
-  groups: string[];
+  groups: string[][];
   learningPathId: string;
   classId: string;
   teacherId: string;

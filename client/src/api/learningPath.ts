@@ -1,6 +1,7 @@
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
+import qs from 'qs';
 import {
   LearningPathShort,
   LearningPathDetail,
@@ -28,6 +29,9 @@ export async function fetchLearningPaths(
       ages,
       page,
       pageSize,
+    },
+    paramsSerializer: (params) => {
+      return qs.stringify(params, { arrayFormat: 'repeat' });
     },
   });
 
@@ -57,9 +61,7 @@ export async function fetchLearningPathById(id: string) {
  * @returns The learningPath details
  */
 export async function createLearningPath(data: LearningPathCreate) {
-  const response = await apiClient.put(ApiRoutes.learningPath.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.learningPath.create, data);
 
   return response.data;
 }

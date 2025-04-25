@@ -1,8 +1,11 @@
+import { join } from 'path';
+
 export const fr = {
   translation: {
     yes: 'Oui',
     no: 'Non',
     or: 'Ou',
+    fillInRequired: 'Remplissez les champs obligatoires',
     email: 'Adresse email',
     name: 'Nom',
     surname: 'Nom de famille',
@@ -25,6 +28,14 @@ export const fr = {
     myLearningPaths: 'Mon parcours d’apprentissage',
     profile: 'Profil',
     myClasses: 'Mes classes',
+    className: 'Nom de la classe',
+    createClass: 'Créer la classe',
+    createAClass: 'Créer une classe',
+    addClass: 'Ajouter une classe',
+    joinClass: 'Demander à rejoindre la classe',
+    joinAClass: 'Rejoindre une classe',
+    classId: "Code d'identification de la classe",
+    noClasses: 'Pas encore de classes',
     edit: 'Modifier',
     delete: 'Supprimer',
     deleteAccount: 'Supprimer le compte',
@@ -43,6 +54,7 @@ export const fr = {
     learningPath: "Parcours d'apprentissage",
     groupSize: 'Taille du groupe',
     group: 'Groupe',
+    noAssignments: 'Pas encore de devoirs',
     dashboard: 'Tableau de bord',
     announcements: 'Annonces',
     discussions: 'Discussions',
@@ -67,8 +79,9 @@ export const fr = {
     newAssignment: 'Nouveau devoir',
     deadline: 'Date limite',
     givenBy: 'Donné par',
-    progression: 'Progression',
+    progress: 'Progrès',
     submission: 'Soumission',
     back: 'Retourner',
+    score: 'Score',
   },
 };

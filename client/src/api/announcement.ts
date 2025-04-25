@@ -15,9 +15,7 @@ import { PaginatedData } from '../util/interfaces/general.interfaces';
  * @returns The announcementdetails
  */
 export async function createAnnouncement(announcement: AnnouncementCreate) {
-  const response = await apiClient.put(ApiRoutes.announcement.create, {
-    announcement,
-  });
+  const response = await apiClient.put(ApiRoutes.announcement.create, announcement);
 
   return response.data;
 }
@@ -75,9 +73,7 @@ export async function fetchAnnouncementById(announcementId: string) {
  * @returns The announcementdetails
  */
 export async function updateAnnouncement(announcementId: string, data: AnnouncementUpdate) {
-  const response = await apiClient.patch(ApiRoutes.announcement.update(announcementId), {
-    data,
-  });
+  const response = await apiClient.patch(ApiRoutes.announcement.update(announcementId), data);
 
   return response.data;
 }

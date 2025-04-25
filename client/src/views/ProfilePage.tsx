@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import NotLoggedIn from '../components/NotLoggedIn';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
+import { useError } from '../hooks/useError';
 
 function ProfilePage() {
   // TODO: call to API to get user data?
@@ -31,6 +32,7 @@ function ProfilePage() {
   const logoutMutation = useLogout();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { setError } = useError();
 
   const handleLogout = () => {
     logoutMutation.mutateAsync(undefined, {
@@ -43,7 +45,7 @@ function ProfilePage() {
       },
       onError: (error) => {
         // Handle error (e.g., show error message)
-        console.error('Logout failed:', error);
+        setError('Logout failed:' + error.message);
       },
     });
   };
