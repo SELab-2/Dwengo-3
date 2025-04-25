@@ -67,6 +67,7 @@ export const fr = {
     coTeachers: 'Co-enseignants',
     notes: 'Remarques',
     createNewAnnouncement: 'Créer une nouvelle annonce',
+    noAnnouncements: 'pas encore d’annonces',
     loading: 'Chargement...',
     incorrectAnswer: 'Mauvaise réponse. Essayez encore.',
     completePreviousSteps: 'Veuillez compléter les étapes précédentes avant de continuer.',

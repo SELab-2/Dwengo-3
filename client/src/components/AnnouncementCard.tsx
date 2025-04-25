@@ -1,13 +1,14 @@
-import { Card, CardContent, Avatar, Typography, Box } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
+import { TeacherShort } from '../util/interfaces/teacher.interfaces';
 
 interface AnnouncementCardProps {
   id: string;
   title: string;
-  date: string;
-  teacher: string;
+  //date: string;
+  teacher: TeacherShort;
   content: string;
   // actionButtons: React.ReactNode;
 }
@@ -16,7 +17,7 @@ interface AnnouncementCardProps {
 const AnnouncementCard = ({
   id,
   title,
-  date,
+  //date,
   teacher,
   content,
   // actionButtons,  /* TODO: This is needed to place an edit button on the card when on the detail page and when the user is a teacher */
@@ -39,14 +40,15 @@ const AnnouncementCard = ({
           <Typography variant="h6" fontWeight="bold" onClick={handleClick}>
             {title}
           </Typography>
+          {/* no possible way to get date from backend
           <Typography variant="body2" color={theme.palette.text.secondary}>
             {date}
           </Typography>
+          */}
+          <Typography variant="subtitle1" fontWeight="bold">
+            {teacher.user.name}
+          </Typography>
         </Box>
-        <Box sx={{ flexGrow: 1 }} />
-        <Typography variant="subtitle1" fontWeight="bold">
-          {teacher}
-        </Typography>
       </Box>
       <CardContent sx={{ bgcolor: '#fffde7' }}>
         <Typography variant="body2">{content}</Typography>

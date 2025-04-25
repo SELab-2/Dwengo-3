@@ -64,6 +64,7 @@ export const nl = {
     coTeachers: 'Co-leerkrachten',
     notes: 'Opmerkingen',
     createNewAnnouncement: 'Nieuwe aankondiging maken',
+    noAnnouncements: 'Nog geen aankondigingen',
     loading: 'Laden...',
     incorrectAnswer: 'Verkeerd antwoord. Probeer opnieuw.',
     completePreviousSteps: 'Voltooi de vorige stappen voordat je verdergaat.',
