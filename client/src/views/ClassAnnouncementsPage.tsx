@@ -1,4 +1,4 @@
-import { Typography, Box, Button, useTheme, Paper, Stack } from '@mui/material';
+import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth.ts';
@@ -10,7 +10,7 @@ import { useAnnouncementDetails } from '../hooks/useAnnouncement.ts';
 import Paginator from '../components/Paginator';
 import { useState } from 'react';
 
-function AnnouncementsPage() {
+function ClassAnnouncementsPage() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const theme = useTheme();
@@ -102,4 +102,4 @@ function AnnouncementsPage() {
     </Box>
   );
 }
-export default AnnouncementsPage;
+export default ClassAnnouncementsPage;
