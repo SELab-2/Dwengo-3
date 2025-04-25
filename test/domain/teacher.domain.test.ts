@@ -8,7 +8,11 @@ import {
   testClasses,
   testPaginationFilter,
 } from '../testObjects.json';
-import { ClassRoleEnum, UserEntity } from '../../server/util/types/user.types';
+import {
+  AuthenticationProvider,
+  ClassRoleEnum,
+  UserEntity,
+} from '../../server/util/types/user.types';
 
 // teacher persistence mock
 const { mockTeacherPeristence } = vi.hoisted(() => {
@@ -48,11 +52,13 @@ let userTeacher: UserEntity = {
   ...testUsers[0],
   role: testUsers[0].role as ClassRoleEnum,
   teacher: testTeachers[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 let userStudent: UserEntity = {
   ...testUsers[5],
   role: testUsers[5].role as ClassRoleEnum,
   student: testStudents[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 
 let createUser = testUsers[0];

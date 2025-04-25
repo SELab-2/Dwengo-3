@@ -7,7 +7,11 @@ import {
   testStudents,
   testUsers,
 } from '../testObjects.json';
-import { ClassRoleEnum, UserEntity } from '../../server/util/types/user.types';
+import {
+  AuthenticationProvider,
+  ClassRoleEnum,
+  UserEntity,
+} from '../../server/util/types/user.types';
 
 // class persistence mock
 const { mockClassPeristence } = vi.hoisted(() => {
@@ -34,11 +38,13 @@ let userTeacher: UserEntity = {
   ...testUsers[0],
   role: testUsers[0].role as ClassRoleEnum,
   teacher: testTeachers[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 let userStudent: UserEntity = {
   ...testUsers[5],
   role: testUsers[5].role as ClassRoleEnum,
   student: testStudents[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 
 let getClassesEmptyQuery = { ...testPaginationFilter };
@@ -59,7 +65,7 @@ let existingClasses = testClasses;
 let createClassParams = { name: 'class0' };
 let createClassInvalidParams = { name: '' };
 
-let updateClassParams = { id: testClasses[0].id, name: 'class0' };
+let updateClassParams = { name: 'class0' };
 let updateClassInvalidIdParams = { id: 'id', name: 'class0' };
 let updateClassInvalidNameParams = { id: 'id', name: '' };
 let updateClassTeacherDoesntBelongParams = { id: testClasses[1].id, name: 'class0' };
@@ -103,7 +109,7 @@ describe('class domain', () => {
       ).rejects.toThrow();
     });
     test('invalid filters fails', async () => {
-      await expect(classDomain.getClasses(getClassesEmptyQuery, userStudent)).rejects.toThrow();
+      await expect(classDomain.getClasses({}, userStudent)).rejects.toThrow();
     });
     test('student id provided and user is student with other id fails', async () => {
       await expect(
@@ -166,25 +172,33 @@ describe('class domain', () => {
       });
     });
     test('user is teacher of class and valid params passes', async () => {
-      await expect(classDomain.updateClass(updateClassParams, userTeacher)).resolves.not.toThrow();
+      await expect(
+        classDomain.updateClass(testClasses[0].id, updateClassParams, userTeacher),
+      ).resolves.not.toThrow();
     });
     test('invalid id param fails', async () => {
       await expect(
-        classDomain.updateClass(updateClassInvalidIdParams, userStudent),
+        classDomain.updateClass(testClasses[0].id, updateClassInvalidIdParams, userStudent),
       ).rejects.toThrow();
     });
     test('invalid name param fails', async () => {
       await expect(
-        classDomain.updateClass(updateClassInvalidNameParams, userTeacher),
+        classDomain.updateClass(testClasses[0].id, updateClassInvalidNameParams, userTeacher),
       ).rejects.toThrow();
     });
     test('user is not teacher of class fails', async () => {
       await expect(
-        classDomain.updateClass(updateClassTeacherDoesntBelongParams, userTeacher),
+        classDomain.updateClass(
+          testClasses[0].id,
+          updateClassTeacherDoesntBelongParams,
+          userTeacher,
+        ),
       ).rejects.toThrow();
     });
     test('user is student fails', async () => {
-      await expect(classDomain.updateClass(updateClassParams, userStudent)).rejects.toThrow();
+      await expect(
+        classDomain.updateClass(testClasses[0].id, updateClassParams, userStudent),
+      ).rejects.toThrow();
     });
   });
 });
