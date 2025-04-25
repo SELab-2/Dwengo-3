@@ -77,11 +77,9 @@ describe('class domain', () => {
   });
   describe('getClasses', () => {
     beforeEach(() => {
-      /*
-            mockClassPeristence.getClasses.mockImplementation(() => {
-                return [testClasses[0]]
-            });
-            */
+      mockClassPeristence.getClasses.mockImplementation(() => {
+        return [testClasses[0]];
+      });
     });
     test('teacher id provided and corresponds with user teacher id passes', async () => {
       await expect(
@@ -165,9 +163,9 @@ describe('class domain', () => {
   });
   describe('updateClass', () => {
     beforeEach(() => {
-      mockClassPeristence.isTeacherFromClass.mockImplementation((userId, classId) => {
+      mockClassPeristence.isTeacherFromClass.mockImplementation((teacherId, classId) => {
         return existingClasses.some(
-          (c) => c.id === classId && c.teachers.some((t) => t.userId === userId),
+          (c) => c.id === classId && c.teachers.some((t) => t.id === teacherId),
         );
       });
     });
@@ -189,7 +187,7 @@ describe('class domain', () => {
     test('user is not teacher of class fails', async () => {
       await expect(
         classDomain.updateClass(
-          testClasses[0].id,
+          testClasses[1].id,
           updateClassTeacherDoesntBelongParams,
           userTeacher,
         ),

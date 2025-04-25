@@ -44,7 +44,7 @@ const { mockUserPeristence } = vi.hoisted(() => {
     },
   };
 });
-vi.mock('../../../server/persistence/auth/users.persistance', () => mockUserPeristence);
+vi.mock('../../server/persistence/auth/users.persistance', () => mockUserPeristence);
 
 const teacherDomain = new TeacherDomain();
 
