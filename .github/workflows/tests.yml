@@ -2,7 +2,9 @@ name: Test on PR to dev/main
 
 on:
   pull_request:
-    branches: [dev, main]
+    branches:
+      - dev
+      - main
 
 jobs:
   test:
