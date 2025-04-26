@@ -4,9 +4,10 @@
   "description": "Testing",
   "main": "app.ts",
   "scripts": {
-    "test:domain": "vitest -c vitest.config.domain.ts",
-    "test:router": "vitest -c vitest.config.router.ts",
-    "test:int": "./integration_test.sh"
+    "test:domain": "vitest --run -c vitest.config.domain.ts",
+    "test:router": "vitest --run -c vitest.config.router.ts",
+    "test:int": "./integration_test.sh",
+    "test:all": "npm run test:router && npm run test:domain && npm run test:int"
   },
   "repository": {
     "type": "git",
