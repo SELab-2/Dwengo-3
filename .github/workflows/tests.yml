@@ -1,0 +1,31 @@
+name: Test on PR to dev/main
+
+on:
+  pull_request:
+    branches:
+      - [dev, main]
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache node modules for server, client, and dv
+        uses: actions/cache@v2
+        with:
+          path: |
+            /home/selab2/dwengo/server/node_modules
+            /home/selab2/dwengo/client/node_modules
+            /home/selab2/dwengo/db/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+      
+      - name: Install dependencies
+        run: |
+          cd /home/selab2/dwengo/server && npm install && cd ../client && npm install && cd ../db && npm install
+
+      - name: Run tests
+        run: |
+          cd /home/selab2/dwengo/test && npm run test:all
