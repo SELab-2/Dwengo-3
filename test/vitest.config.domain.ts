@@ -2,6 +2,6 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    include: ['./domain/learningObject.domain.test.ts'],
+    include: ['./domain/message.domain.test.ts'],
   },
 });

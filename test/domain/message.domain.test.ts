@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { MessageDomain } from '../../server/domain/message.domain';
-import { ClassRoleEnum, UserEntity } from '../../server/util/types/user.types';
+import {
+  AuthenticationProvider,
+  ClassRoleEnum,
+  UserEntity,
+} from '../../server/util/types/user.types';
 import {
   testDiscussions,
   testPaginationFilter,
@@ -32,11 +36,13 @@ let userTeacher: UserEntity = {
   ...testUsers[0],
   role: testUsers[0].role as ClassRoleEnum,
   teacher: testTeachers[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 let userStudent: UserEntity = {
   ...testUsers[5],
   role: testUsers[5].role as ClassRoleEnum,
   student: testStudents[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 
 let getMessagesQuery = {
@@ -73,7 +79,7 @@ let deleteMessageInvalidId = 'id';
 describe('message domain', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    mockMessagePeristence.getMessageById.mockImplementation((id: number) => {
+    mockMessagePeristence.getMessageById.mockImplementation((id: string) => {
       let found = testMessages.find((m) => m.id === id);
       if (found) {
         return found;
