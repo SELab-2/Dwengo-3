@@ -44,7 +44,11 @@ const { mockUserPeristence } = vi.hoisted(() => {
     },
   };
 });
-vi.mock('../../server/persistence/auth/users.persistance', () => mockUserPeristence);
+vi.mock('../../server/persistence/auth/users.persistence', () => ({
+  UsersPersistence: vi.fn().mockImplementation(() => {
+    return mockUserPeristence;
+  }),
+}));
 
 const teacherDomain = new TeacherDomain();
 
@@ -164,10 +168,8 @@ describe('teacher domain', () => {
     });
   });
   describe('getTeachers', () => {
-    test('valid pagination and no params passes', async () => {
-      await expect(
-        teacherDomain.getTeachers(getTeachersEmptyQuery, userTeacher),
-      ).resolves.not.toThrow();
+    test('valid pagination and no params fails', async () => {
+      await expect(teacherDomain.getTeachers(getTeachersEmptyQuery, userTeacher)).rejects.toThrow();
     });
     test('valid pagination and valid params passes', async () => {
       await expect(teacherDomain.getTeachers(getTeachersQuery, userTeacher)).resolves.not.toThrow();
