@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cache node modules for server, client, and dv
+      - name: Cache node modules for server, client, and db
         uses: actions/cache@v4
         with:
           path: |
@@ -25,8 +25,8 @@ jobs:
       
       - name: Install dependencies
         run: |
-          cd server && npm install && cd ../client && npm install && cd ../db && npm install
+          cd server && npm install && cd ../client && npm install && cd ../db && npm install && cd ../test && npm install
 
       - name: Run tests
         run: |
-          cd test && npm run test:all
+          npm run test:all
