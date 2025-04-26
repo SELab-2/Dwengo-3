@@ -9,9 +9,7 @@ import apiClient from './apiClient';
  * @returns The LearningPathNodeTransitiondetails
  */
 export async function createLearningPathNodeTransition(data: LearningPathNodeTransitionCreate) {
-  const response = await apiClient.put(ApiRoutes.learningPathNodeTransition.create, {
-    data,
-  });
+  const response = await apiClient.put(ApiRoutes.learningPathNodeTransition.create, data);
 
   return response.data;
 }

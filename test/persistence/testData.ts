@@ -41,7 +41,8 @@ import { TeacherPersistence } from '../../server/persistence/teacher.persistence
 import { MessageCreateParams, MessageDetail } from '../../server/util/types/message.types';
 import { MessagePersistence } from '../../server/persistence/message.persistence';
 import { UsersPersistence } from '../../server/persistence/auth/users.persistence';
-import { CreateUserParams, RegisterParams } from '../../server/util/types/auth.types';
+import { CreateUserParams } from '../../server/util/types/auth.types';
+import * as crypto from 'node:crypto';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
@@ -65,7 +66,7 @@ export const insertStudents = async (): Promise<FullUserType[]> => {
     {
       username: 'student1',
       email: 'student1@test.com',
-      password: 'password',
+      password: crypto.createHash('sha256').update('password').digest('base64'),
       surname: 'student1',
       name: 'student1',
       role: ClassRoleEnum.STUDENT,
@@ -74,7 +75,7 @@ export const insertStudents = async (): Promise<FullUserType[]> => {
     {
       username: 'student2',
       email: 'student2@test.com',
-      password: 'password',
+      password: crypto.createHash('sha256').update('password').digest('base64'),
       surname: 'student2',
       name: 'student2',
       role: ClassRoleEnum.STUDENT,
@@ -89,7 +90,7 @@ const insertTeachers = async (): Promise<FullUserType[]> => {
     {
       username: 'teacher1',
       email: 'teacher1@test.com',
-      password: 'password',
+      password: crypto.createHash('sha256').update('password').digest('base64'),
       surname: 'teacher1',
       name: 'teacher1',
       role: ClassRoleEnum.TEACHER,
@@ -98,7 +99,7 @@ const insertTeachers = async (): Promise<FullUserType[]> => {
     {
       username: 'teacher2',
       email: 'teacher2@test.com',
-      password: 'password',
+      password: crypto.createHash('sha256').update('password').digest('base64'),
       surname: 'teacher2',
       name: 'teacher2',
       role: ClassRoleEnum.TEACHER,
@@ -117,7 +118,7 @@ export const insertClasses = async (): Promise<ClassDetail[]> => {
   const teacher = await usersPersistence.saveUser({
     username: 'teacher3',
     email: 'teacher3@test.com',
-    password: 'password',
+    password: crypto.createHash('sha256').update('password').digest('base64'),
     surname: 'teacher3',
     name: 'teacher3',
     role: ClassRoleEnum.TEACHER,
@@ -258,7 +259,7 @@ const insertLearningPathsHelp = async (): Promise<LearningPathDetail[]> => {
     {
       hruid: 'learning path 2',
       language: 'EN',
-      title: 'test',
+      title: 'test2',
       description: 'test',
     },
   ];

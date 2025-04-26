@@ -10,11 +10,11 @@ export async function addMockData(prisma: PrismaClient) {
   await prisma.assignment.deleteMany({});
   await prisma.assignmentSubmission.deleteMany({});
   await prisma.classJoinRequest.deleteMany({});
+  await prisma.announcement.deleteMany({});
   await prisma.class.deleteMany({});
   await prisma.message.deleteMany({});
   await prisma.discussion.deleteMany({});
   await prisma.favorite.deleteMany({});
-  await prisma.announcement.deleteMany({});
 
   await prisma.student.deleteMany({});
   // await prisma.teacher.deleteMany({});
@@ -30,7 +30,9 @@ export async function addMockData(prisma: PrismaClient) {
   }
 
   // find random learning path
-  const learningPath = await prisma.learningPath.findFirst({});
+  const learningPath = (await prisma.learningPath.findFirst({
+    include: { learningPathNodes: true },
+  }))!;
 
   const students = [];
   // create 10 students
@@ -91,7 +93,7 @@ export async function addMockData(prisma: PrismaClient) {
       },
       learningPath: {
         connect: {
-          id: learningPath!.id,
+          id: learningPath.id,
         },
       },
       groups: {
@@ -102,13 +104,34 @@ export async function addMockData(prisma: PrismaClient) {
               id: student.student!.id,
             },
           },
-          progress: Array.from({ length: 4 }, () => Math.floor(Math.random() * 13)).sort(
-            (a, b) => a - b,
-          ),
+          progress: Array.from({ length: 4 }, () =>
+            Math.floor(Math.random() * learningPath.learningPathNodes.length),
+          ).sort((a, b) => a - b),
         })),
       },
     },
   });
+
+  for (let i = 0; i < 12; i++) {
+    const content = faker.food.description() + `\n\n${faker.lorem.text()}`;
+
+    await prisma.announcement.create({
+      data: {
+        title: `Announcement about ${faker.food.dish()}`,
+        content: content,
+        class: {
+          connect: {
+            id: classData.id,
+          },
+        },
+        teacher: {
+          connect: {
+            id: user!.teacher!.id,
+          },
+        },
+      },
+    });
+  }
 }
 
 async function main() {

@@ -14,6 +14,7 @@ import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 import MessageCard from '../components/MessageCard.tsx';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { CreateMessageCard } from '../components/CreateMessageCard.tsx';
+import { useParams } from 'react-router-dom';
 
 const classData = {
   id: '1',
@@ -151,7 +152,8 @@ const discussionsArray = [
   },
 ];
 
-function DiscussionsPage() {
+function ClassDiscussionsPage() {
+  const { classId } = useParams<{ classId: string }>(); // Get the announcement ID from the URL
   const { t } = useTranslation();
   const theme = useTheme();
   const [showCreateMessageCard, setShowCreateMessageCard] = useState<boolean>(false);
@@ -174,7 +176,7 @@ function DiscussionsPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
-      <ClassNavigationBar id={classData.id} className={classData.name} />
+      <ClassNavigationBar id={classId!} className={classData.name} />
 
       {!showCreateMessageCard &&
         discussionsArray.map((discussion) => {
@@ -253,4 +255,4 @@ function DiscussionsPage() {
   );
 }
 
-export default DiscussionsPage;
+export default ClassDiscussionsPage;

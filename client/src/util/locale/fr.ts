@@ -1,3 +1,5 @@
+import { join } from 'path';
+
 export const fr = {
   translation: {
     yes: 'Oui',
@@ -27,7 +29,12 @@ export const fr = {
     profile: 'Profil',
     myClasses: 'Mes classes',
     className: 'Nom de la classe',
-    createClass: 'Créer une classe',
+    createClass: 'Créer la classe',
+    createAClass: 'Créer une classe',
+    addClass: 'Ajouter une classe',
+    joinClass: 'Demander à rejoindre la classe',
+    joinAClass: 'Rejoindre une classe',
+    classId: "Code d'identification de la classe",
     noClasses: 'Pas encore de classes',
     edit: 'Modifier',
     delete: 'Supprimer',
@@ -60,6 +67,7 @@ export const fr = {
     coTeachers: 'Co-enseignants',
     notes: 'Remarques',
     createNewAnnouncement: 'Créer une nouvelle annonce',
+    noAnnouncements: 'pas encore d’annonces',
     loading: 'Chargement...',
     incorrectAnswer: 'Mauvaise réponse. Essayez encore.',
     completePreviousSteps: 'Veuillez compléter les étapes précédentes avant de continuer.',

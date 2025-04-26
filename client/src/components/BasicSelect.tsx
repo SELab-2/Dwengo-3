@@ -1,21 +1,30 @@
 import { Autocomplete, TextField } from '@mui/material';
 import { useState } from 'react';
 
-interface BasicSelectProps {
+interface BasicSelectProps<T> {
   labelName: string;
-  options: string[];
+  options: T[];
   required?: boolean;
-  state?: [string | null, React.Dispatch<React.SetStateAction<string | null>>];
+  state?: [T | null, React.Dispatch<React.SetStateAction<T | null>>];
+  getOptionLabel: (option: T) => string;
+  isOptionEqualToValue?: (option: T, value: T) => boolean;
 }
 
-function BasicSelect({ labelName, options, required, state }: BasicSelectProps) {
-  const [value, setValue] = state ?? useState<string | null>(null);
+function BasicSelect<T>({
+  labelName,
+  options,
+  required,
+  state,
+  getOptionLabel,
+  isOptionEqualToValue = (a, b) => a === b,
+}: BasicSelectProps<T>) {
+  const [value, setValue] = state ?? useState<T | null>(null);
   const [inputValue, setInputValue] = useState('');
 
   return (
     <Autocomplete
       value={value}
-      onChange={(_, newValue: string | null) => {
+      onChange={(_, newValue: T | null) => {
         setValue(newValue);
       }}
       inputValue={inputValue}
@@ -23,6 +32,8 @@ function BasicSelect({ labelName, options, required, state }: BasicSelectProps) 
         setInputValue(newInputValue);
       }}
       options={options}
+      getOptionLabel={getOptionLabel}
+      isOptionEqualToValue={isOptionEqualToValue}
       renderInput={(params) => (
         <TextField required={required} {...params} label={labelName} fullWidth margin="normal" />
       )}

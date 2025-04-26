@@ -20,14 +20,14 @@ import LearningPathPage from './views/LearningPathPage';
 import ClassAssignmentsPage from './views/ClassAssignmentsPage';
 import ClassAssignmentPage from './views/ClassAssignmentPage';
 import LearningThemePage from './views/LearningThemePage';
-import AnnouncementsPage from './views/AnnouncementsPage';
-import AnnouncementDetailpage from './views/AnnouncementPage';
+import ClassAnnouncementsPage from './views/ClassAnnouncementsPage.tsx';
+import AnnouncementDetailpage from './views/AnnouncementDetailpage.tsx';
 import AssignmentCreatePage from './views/AssignmentCreatePage.tsx';
 import ClassStudentDetails from './views/ClassStudentDetails.tsx';
 import { Box } from '@mui/material';
-import ClassCreatePage from './views/ClassCreatePage.tsx';
+import ClassAddPage from './views/ClassAddPage.tsx';
 import { AppRoutes } from './util/app.routes.ts';
-import DiscussionsPage from './views/DiscussionsPage.tsx';
+import ClassDiscussionsPage from './views/ClassDiscussionsPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -59,7 +59,7 @@ function App() {
                       <Route path={AppRoutes.home} element={<HomePage />} />
                       <Route path={AppRoutes.profile} element={<ProfilePage />} />
                       <Route path={AppRoutes.myClasses} element={<MyClassesPage />} />
-                      <Route path={AppRoutes.classCreate} element={<ClassCreatePage />} />
+                      <Route path={AppRoutes.classAdd} element={<ClassAddPage />} />
                       <Route path={AppRoutes.myLearningPaths} element={<MyLearningPathsPage />} />
                       <Route path={AppRoutes.learningPath(':id')} element={<LearningPathPage />} />
                       <Route path={AppRoutes.learningThemes} element={<LearningThemesPage />} />
@@ -86,7 +86,7 @@ function App() {
                       />
                       <Route
                         path={AppRoutes.classAnnouncements(':classId')}
-                        element={<AnnouncementsPage />}
+                        element={<ClassAnnouncementsPage />}
                       />
                       <Route
                         path={AppRoutes.announcement(':announcementId')}
@@ -94,7 +94,7 @@ function App() {
                       />
                       <Route
                         path={AppRoutes.classDiscussions(':classId')}
-                        element={<DiscussionsPage />}
+                        element={<ClassDiscussionsPage />}
                       />
                     </Route>
 

@@ -1,4 +1,4 @@
-import { Router, Response, Request } from 'express';
+import { Request, Response, Router } from 'express';
 import { AssignmentDomain } from '../domain/assignment.domain';
 import { UserDomain } from '../domain/user.domain';
 import { isAuthenticated } from './auth.routes';

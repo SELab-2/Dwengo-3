@@ -94,10 +94,10 @@ passport.use(
           user = await userDomain.createUser({
             id: profile.id,
             email: profile.emails!![0].value,
-            name: profile.name!!.familyName,
+            name: profile.name!!.givenName,
             password: '',
             provider: AuthenticationProvider.GOOGLE,
-            surname: profile.name!!.givenName,
+            surname: profile.name!!.familyName,
             username: profile.displayName,
             role: role,
           });
