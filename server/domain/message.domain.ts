@@ -45,7 +45,7 @@ export class MessageDomain {
     return this.messagePersistence.createMessage(data);
   }
 
-  public async deleteMessage(id: number, user: UserEntity): Promise<MessageDetail> {
+  public async deleteMessage(id: string, user: UserEntity): Promise<MessageDetail> {
     const messageId = MessageIdSchema.parse(id);
     const message = await this.messagePersistence.getMessageById(messageId);
     if (

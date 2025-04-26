@@ -127,7 +127,7 @@ describe('message domain', () => {
   describe('deleteMessage', () => {
     test('valid id passes', async () => {
       await expect(
-        messageDomain.deleteMessage(deleteMessageId, userStudent),
+        messageDomain.deleteMessage(deleteMessageId.toString(), userStudent),
       ).resolves.not.toThrow();
     });
     test('invalid id fails', async () => {
