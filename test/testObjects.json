@@ -312,9 +312,8 @@
       "language": "nl",
       "title": "This is a titleeeee",
       "description": "This is a description",
-      "contentType": "TEXT_MARKDOWN",
       "target_ages": [4, 3],
-      "teacher_exclusive": true,
+      "teacherExclusive": true,
       "skos_concepts": [
         "http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen",
         "http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso"
@@ -361,9 +360,8 @@
       "language": "fr",
       "title": "This is a titleeeee",
       "description": "This is a description",
-      "contentType": "TEXT_MARKDOWN",
       "target_ages": [4, 3],
-      "teacher_exclusive": true,
+      "teacherExclusive": true,
       "skos_concepts": ["http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen"],
       "educational_goals": [
         {
