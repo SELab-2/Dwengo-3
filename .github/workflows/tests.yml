@@ -18,15 +18,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            /home/selab2/dwengo/server/node_modules
-            /home/selab2/dwengo/client/node_modules
-            /home/selab2/dwengo/db/node_modules
+            server/node_modules
+            client/node_modules
+            db/node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       
       - name: Install dependencies
         run: |
-          cd /home/selab2/dwengo/server && npm install && cd ../client && npm install && cd ../db && npm install
+          cd server && npm install && cd ../client && npm install && cd ../db && npm install
 
       - name: Run tests
         run: |
-          cd /home/selab2/dwengo/test && npm run test:all
+          cd test && npm run test:all
