@@ -18,11 +18,11 @@ export const MessageCreateSchema = z.object({
 });
 
 export const MessageUpdateSchema = z.object({
-  id: z.string().uuid(),
+  id: z.number().positive(),
   content: z.string(),
 });
 
-export const MessageIdSchema = z.string().uuid();
+export const MessageIdSchema = z.number().positive();
 
 export type MessageFilterParams = z.infer<typeof MessageFilterSchema>;
 export type MessageCreateParams = z.infer<typeof MessageCreateSchema>;

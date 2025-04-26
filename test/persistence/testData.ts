@@ -41,7 +41,7 @@ import { TeacherPersistence } from '../../server/persistence/teacher.persistence
 import { MessageCreateParams, MessageDetail } from '../../server/util/types/message.types';
 import { MessagePersistence } from '../../server/persistence/message.persistence';
 import { UsersPersistence } from '../../server/persistence/auth/users.persistence';
-import { RegisterParams } from '../../server/util/types/auth.types';
+import { CreateUserParams, RegisterParams } from '../../server/util/types/auth.types';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
@@ -61,7 +61,7 @@ const messagePersistence: MessagePersistence = new MessagePersistence();
 const usersPersistence: UsersPersistence = new UsersPersistence();
 
 export const insertStudents = async (): Promise<FullUserType[]> => {
-  const users: RegisterParams[] = [
+  const users: CreateUserParams[] = [
     {
       username: 'student1',
       email: 'student1@test.com',
@@ -85,7 +85,7 @@ export const insertStudents = async (): Promise<FullUserType[]> => {
 };
 
 const insertTeachers = async (): Promise<FullUserType[]> => {
-  const users: RegisterParams[] = [
+  const users: CreateUserParams[] = [
     {
       username: 'teacher1',
       email: 'teacher1@test.com',
@@ -306,7 +306,7 @@ export const insertLearningPathNodes = async (): Promise<LearningPathNodeDetail[
 
 export const insertAnnouncements = async (): Promise<AnnouncementDetail[]> => {
   const classes = await insertClassesWithStudents();
-  const announcements = [];
+  const announcements: Promise<AnnouncementDetail>[] = [];
   for (const classData of classes) {
     const announcementsData: AnnouncementCreatePersistenceParams[] = [
       {
@@ -332,7 +332,7 @@ export const insertAnnouncements = async (): Promise<AnnouncementDetail[]> => {
 export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
   const classes = await insertClassesWithStudents();
   const learningPaths = await insertLearningPaths();
-  const assignments = [];
+  const assignments: Promise<AssignmentDetail>[] = [];
   for (const classData of classes) {
     const groups = classData.students.map((student) => [student.id]);
     for (const path of learningPaths) {
@@ -350,7 +350,7 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
 
 export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissionDetail[]> => {
   const assignments = await insertAssignments();
-  const submissions = [];
+  const submissions: Promise<AssignmentSubmissionDetail>[] = [];
   for (const assignemnt of assignments) {
     for (const group of assignemnt.groups) {
       for (const learningPathNode of assignemnt.learningPath.learningPathNodes) {
@@ -388,7 +388,7 @@ export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissi
 
 export const insertDiscussions = async (): Promise<DiscussionDetail[]> => {
   const assignments = await insertAssignments();
-  const discussions = [];
+  const discussions: Promise<DiscussionDetail>[] = [];
   for (const assignemnt of assignments) {
     for (const group of assignemnt.groups) {
       const discussionData: DiscussionCreateParams = {
@@ -411,7 +411,7 @@ export const insertDiscussions = async (): Promise<DiscussionDetail[]> => {
 
 export const insertMessages = async (): Promise<MessageDetail[]> => {
   const discussions = await insertDiscussions();
-  const messages = [];
+  const messages: Promise<MessageDetail>[] = [];
   for (const discussion of discussions) {
     const messagesData: MessageCreateParams[] = [
       {

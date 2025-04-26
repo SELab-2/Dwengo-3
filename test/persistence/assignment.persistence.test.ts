@@ -48,7 +48,23 @@ describe('assignment persistence test', () => {
           .filter((ass) => ass.class.id === assignment.class.id)
           .map((ass) => ({
             id: ass.id,
-            learningPathId: ass.learningPath.id,
+            groups: ass.groups.map((group) => ({
+              id: group.id,
+              name: group.name,
+              progress: group.progress,
+              students: group.students.map((student) => ({
+                id: student.id,
+              })),
+            })),
+            learningPath: {
+              id: ass.learningPath.id,
+              learningPathNodes: ass.learningPath.learningPathNodes.map((learningPathNode) => ({
+                learningObject: {
+                  estimatedTime: learningPathNode.learningObject.estimatedTime,
+                },
+              })),
+              title: ass.learningPath.title,
+            },
           }));
         expect(expectedAssignments).not.toEqual([]);
         await expect(req).resolves.toEqual({
@@ -68,7 +84,25 @@ describe('assignment persistence test', () => {
           const expectedAssignments = [
             {
               id: assignment.id,
-              learningPathId: assignment.learningPath.id,
+              groups: assignment.groups.map((group) => ({
+                id: group.id,
+                name: group.name,
+                progress: group.progress,
+                students: group.students.map((student) => ({
+                  id: student.id,
+                })),
+              })),
+              learningPath: {
+                id: assignment.learningPath.id,
+                learningPathNodes: assignment.learningPath.learningPathNodes.map(
+                  (learningPathNode) => ({
+                    learningObject: {
+                      estimatedTime: learningPathNode.learningObject.estimatedTime,
+                    },
+                  }),
+                ),
+                title: assignment.learningPath.title,
+              },
             },
           ];
           expect(expectedAssignments).not.toEqual([]);
@@ -81,9 +115,25 @@ describe('assignment persistence test', () => {
     });
 
     test('request with existing teacherId responds correctly', async () => {
-      const expectedAssignments = assignments.map((assignment) => ({
-        id: assignment.id,
-        learningPathId: assignment.learningPath.id,
+      const expectedAssignments = assignments.map((ass) => ({
+        id: ass.id,
+        groups: ass.groups.map((group) => ({
+          id: group.id,
+          name: group.name,
+          progress: group.progress,
+          students: group.students.map((student) => ({
+            id: student.id,
+          })),
+        })),
+        learningPath: {
+          id: ass.learningPath.id,
+          learningPathNodes: ass.learningPath.learningPathNodes.map((learningPathNode) => ({
+            learningObject: {
+              estimatedTime: learningPathNode.learningObject.estimatedTime,
+            },
+          })),
+          title: ass.learningPath.title,
+        },
       }));
       expect(expectedAssignments).not.toEqual([]);
       for (const assignment of assignments) {
@@ -102,9 +152,25 @@ describe('assignment persistence test', () => {
     });
 
     test('request with existing studentId responds correctly', async () => {
-      const expectedAssignments = assignments.map((assignment) => ({
-        id: assignment.id,
-        learningPathId: assignment.learningPath.id,
+      const expectedAssignments = assignments.map((ass) => ({
+        id: ass.id,
+        groups: ass.groups.map((group) => ({
+          id: group.id,
+          name: group.name,
+          progress: group.progress,
+          students: group.students.map((student) => ({
+            id: student.id,
+          })),
+        })),
+        learningPath: {
+          id: ass.learningPath.id,
+          learningPathNodes: ass.learningPath.learningPathNodes.map((learningPathNode) => ({
+            learningObject: {
+              estimatedTime: learningPathNode.learningObject.estimatedTime,
+            },
+          })),
+          title: ass.learningPath.title,
+        },
       }));
       expect(expectedAssignments).not.toEqual([]);
       for (const assignment of assignments) {

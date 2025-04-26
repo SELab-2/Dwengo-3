@@ -14,7 +14,7 @@ const usersPersistence: UsersPersistence = new UsersPersistence();
 describe('student persistence test', () => {
   beforeAll(async () => {
     const classesDetail = await insertClassesWithStudents();
-    const studentPromises = [];
+    const studentPromises: Promise<FullUserType | null>[] = [];
 
     for (const classData of classesDetail) {
       for (const student of classData.students) {

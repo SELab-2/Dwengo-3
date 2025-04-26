@@ -79,7 +79,7 @@ let deleteMessageInvalidId = 'id';
 describe('message domain', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    mockMessagePeristence.getMessageById.mockImplementation((id: string) => {
+    mockMessagePeristence.getMessageById.mockImplementation((id: number) => {
       let found = testMessages.find((m) => m.id === id);
       if (found) {
         return found;

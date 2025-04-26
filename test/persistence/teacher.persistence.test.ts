@@ -14,7 +14,7 @@ const usersPersistence: UsersPersistence = new UsersPersistence();
 describe('teacher persistence test', () => {
   beforeAll(async () => {
     const classesDetail = await insertClassesWithStudents();
-    const teacherPromises = [];
+    const teacherPromises: Promise<FullUserType | null>[] = [];
     for (const classData of classesDetail) {
       for (const teacher of classData.teachers) {
         teacherPromises.push(usersPersistence.getUserById(teacher.userId));

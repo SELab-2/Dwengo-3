@@ -9,5 +9,5 @@ cd ../db
 npx prisma migrate dev
 
 cd ../test
-vitest -c vitest.config.integration.ts
+vitest --no-file-parallelism -c vitest.config.integration.ts
 docker compose down
