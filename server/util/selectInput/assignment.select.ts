@@ -6,7 +6,7 @@ import { teacherSelectShort } from './teacher.select';
 export const assignmentSelectDetail = {
   id: true,
   teacher: {
-    select: teacherSelectShort
+    select: teacherSelectShort,
   },
   class: {
     select: classSelectShort,

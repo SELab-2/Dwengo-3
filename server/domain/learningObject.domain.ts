@@ -44,7 +44,7 @@ export class LearningObjectDomain {
     return learningObject;
   }
 
-  public async getLearningObjects(query: LearningObjectFilterParams) {
+  public async getLearningObjects(query: any) {
     if (typeof query.keywords === 'string') {
       query.keywords = [query.keywords];
     }
