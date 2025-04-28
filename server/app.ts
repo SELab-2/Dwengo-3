@@ -24,10 +24,8 @@ import session from 'express-session';
 import { errorHandling } from './errorHandling';
 import cors from 'cors';
 import { FavoritesController } from './routes/favorites.routes';
-import { OutgoingHttpHeader, OutgoingHttpHeaders } from 'node:http';
 
 export const app: Express = express();
-const port = 3001;
 
 // Allow requests from frontend
 // TODO: change this for production
@@ -121,7 +119,3 @@ apiRouter.use('/favorites', new FavoritesController().router);
 
 // Error handling middleware
 app.use(errorHandling);
-
-app.listen(port, () => {
-  console.log(`[SERVER] - listening on http://localhost:${port}`);
-});

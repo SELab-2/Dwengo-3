@@ -1,8 +1,4 @@
-import {
-  Box,
-  Button,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar';
@@ -24,13 +20,19 @@ function ClassAssignmentsPage() {
   const teacherId = user?.teacher?.id;
   const studentId = user?.student?.id;
 
-  const {data: classData, isLoading: isLoadingClass} = useClassById(classId!);
+  const { data: classData, isLoading: isLoadingClass } = useClassById(classId!);
 
-  const {data: paginatedData, isLoading: isLoadingAssignment} = useAssignments(classId, undefined, studentId, teacherId, 1, 10);
+  const { data: paginatedData, isLoading: isLoadingAssignment } = useAssignments(
+    classId,
+    undefined,
+    studentId,
+    teacherId,
+    1,
+    10,
+  );
 
   const assignments: AssignmentShort2[] = paginatedData?.data ?? [];
   const totalPages = paginatedData?.totalPages ?? 0;
-
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>
@@ -39,8 +41,16 @@ function ClassAssignmentsPage() {
           {t('loading')}
         </Typography>
       ) : (
-       <ClassNavigationBar id={classData!.id} className={classData!.name} />)}
-      <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: teacherId ? 800 : 1200 }, p: 2 }}>
+        <ClassNavigationBar id={classData!.id} className={classData!.name} />
+      )}
+      <Box
+        sx={{
+          mx: 'auto',
+          width: '100%',
+          maxWidth: { xs: '90%', sm: teacherId ? 800 : 1200 },
+          p: 2,
+        }}
+      >
         <Typography variant="h4" gutterBottom>
           {t('assignments')}
         </Typography>
