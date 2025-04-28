@@ -1,0 +1,31 @@
+name: Test on PR to dev/main
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache node modules for server, client, and db
+        uses: actions/cache@v4
+        with:
+          path: |
+            server/node_modules
+            client/node_modules
+            db/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: |
+          cd server && npm install && cd ../client && npm install && cd ../db && npm install && cd ../test && npm install
+      - name: Run tests
+        run: |
+          cd test && npm run test:all
