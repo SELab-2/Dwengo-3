@@ -2,93 +2,143 @@
   "testUsers": [
     {
       "id": "1a2b3c4d-1111-2222-3333-444455556666",
+      "provider": "LOCAL",
       "username": "user1",
       "email": "user1@example.com",
       "password": "password1",
       "surname": "Smith",
       "name": "John",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "teacher": {
+        "id": "3b06702b-1111-2222-3333-444455556666",
+        "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+      }
     },
     {
       "id": "2b3c4d5e-2222-3333-4444-555566667777",
+      "provider": "LOCAL",
       "username": "user2",
       "email": "user2@example.com",
       "password": "password2",
       "surname": "Johnson",
       "name": "Emma",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "teacher": {
+        "id": "3b06702b-2222-3333-4444-555566667777",
+        "userId": "2b3c4d5e-2222-3333-4444-555566667777"
+      }
     },
     {
       "id": "3c4d5e6f-3333-4444-5555-666677778888",
+      "provider": "LOCAL",
       "username": "user3",
       "email": "user3@example.com",
       "password": "password3",
       "surname": "Brown",
       "name": "Liam",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "teacher": {
+        "id": "3b06702b-3333-4444-5555-666677778888",
+        "userId": "3c4d5e6f-3333-4444-5555-666677778888"
+      }
     },
     {
       "id": "4d5e6f7g-4444-5555-6666-777788889999",
+      "provider": "LOCAL",
       "username": "user4",
       "email": "user4@example.com",
       "password": "password4",
       "surname": "Williams",
       "name": "Olivia",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "teacher": {
+        "id": "3b06702b-4444-5555-6666-777788889999",
+        "userId": "4d5e6f7g-4444-5555-6666-777788889999"
+      }
     },
     {
       "id": "5e6f7g8h-5555-6666-7777-888899990000",
+      "provider": "LOCAL",
       "username": "user5",
       "email": "user5@example.com",
       "password": "password5",
       "surname": "Jones",
       "name": "Noah",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "teacher": {
+        "id": "3b06702b-5555-6666-7777-888899990000",
+        "userId": "5e6f7g8h-5555-6666-7777-888899990000"
+      }
     },
     {
       "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+      "provider": "LOCAL",
       "username": "user6",
       "email": "user6@example.com",
       "password": "password6",
       "surname": "Garcia",
       "name": "Sophia",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "student": {
+        "id": "4c07803c-1111-2222-3333-444455556666",
+        "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+      }
     },
     {
       "id": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17",
+      "provider": "LOCAL",
       "username": "user7",
       "email": "user7@example.com",
       "password": "password7",
       "surname": "Martinez",
       "name": "James",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "student": {
+        "id": "4c07803c-2222-3333-4444-555566667777",
+        "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+      }
     },
     {
       "id": "8h9i0j1k-8888-9999-0000-111122223333",
+      "provider": "LOCAL",
       "username": "user8",
       "email": "user8@example.com",
       "password": "password8",
       "surname": "Davis",
       "name": "Mia",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "student": {
+        "id": "4c07803c-3333-4444-5555-666677778888",
+        "userId": "8h9i0j1k-8888-9999-0000-111122223333"
+      }
     },
     {
       "id": "9i0j1k2l-9999-0000-1111-222233334444",
+      "provider": "LOCAL",
       "username": "user9",
       "email": "user9@example.com",
       "password": "password9",
       "surname": "Rodriguez",
       "name": "Benjamin",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "student": {
+        "id": "4c07803c-4444-5555-6666-777788889999",
+        "userId": "9i0j1k2l-9999-0000-1111-222233334444"
+      }
     },
     {
       "id": "0j1k2l3m-0000-1111-2222-333344445555",
+      "provider": "LOCAL",
       "username": "user10",
       "email": "user10@example.com",
       "password": "password10",
       "surname": "Wilson",
       "name": "Charlotte",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "student": {
+        "id": "4c07803c-5555-6666-7777-888899990000",
+        "userId": "0j1k2l3m-0000-1111-2222-333344445555"
+      }
     }
   ],
   "testTeachers": [
@@ -219,7 +269,7 @@
       }
     }
   ],
-  "testAnnouncements": [
+  "testAnnnouncements": [
     {
       "id": "07cca202-e34c-459a-b289-56a383231cdd",
       "title": "announcement1",
@@ -312,8 +362,9 @@
       "language": "nl",
       "title": "This is a titleeeee",
       "description": "This is a description",
+      "contentType": "TEXT_MARKDOWN",
       "target_ages": [4, 3],
-      "teacherExclusive": true,
+      "teacher_exclusive": true,
       "skos_concepts": [
         "http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen",
         "http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso"
@@ -360,8 +411,9 @@
       "language": "fr",
       "title": "This is a titleeeee",
       "description": "This is a description",
+      "contentType": "TEXT_MARKDOWN",
       "target_ages": [4, 3],
-      "teacherExclusive": true,
+      "teacher_exclusive": true,
       "skos_concepts": ["http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen"],
       "educational_goals": [
         {
