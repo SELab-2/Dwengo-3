@@ -8,8 +8,9 @@ import {
 } from '../util/types/message.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { messageSelectDetail, messageSelectShort } from '../util/selectInput/message.select';
+
 import { NotFoundError } from '../util/types/error.types';
+import { messageSelectDetail, messageSelectShort } from '../util/selectInput/select';
 
 export class MessagePersistence {
   private prisma: PrismaClient;
