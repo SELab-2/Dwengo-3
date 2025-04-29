@@ -10,7 +10,7 @@ fi
 cd db && dotenv -e "../$ENV_FILE" -- npx prisma generate --no-hints
 
 if (( $# > 1 )) && [[ "$1" == "migrate" ]]; then
-    dotenv -e "../$ENV_FILE" -- npx prisma migrate "$2" "$3" --no-hints
+    dotenv -e "../$ENV_FILE" -- npx prisma migrate "$2" "$3"
 fi
 
 cp -r node_modules/@prisma ../server/node_modules/
