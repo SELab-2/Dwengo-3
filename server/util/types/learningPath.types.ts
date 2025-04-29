@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { Uuid } from './assignment.types';
-import { Prisma } from '.prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   learningPathSelectDetail,
   learningPathSelectShort,

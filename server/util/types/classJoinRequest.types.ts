@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Prisma } from '.prisma/client';
+import { Prisma } from '@prisma/client';
 import { classJoinRequestSelectDetail } from '../selectInput/classJoinRequest.select';
 
 export const ClassJoinRequestCreateScheme = z.object({

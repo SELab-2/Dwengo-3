@@ -1,7 +1,5 @@
 import { z } from 'zod';
-import { Uuid } from './assignment.types';
-import { Decimal } from '@prisma/client/runtime/library';
-import { Prisma } from '.prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   learningObjectSelectDetail,
   learningObjectSelectShort,
