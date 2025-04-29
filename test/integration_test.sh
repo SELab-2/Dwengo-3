@@ -9,7 +9,6 @@ if [[ -z "${DATABASE_URL}" ]]; then
   exit 1
 fi
 
-../prisma.sh
 echo "Copying prisma files"
 cp -r ../db/node_modules/.prisma ../db/node_modules/@prisma node_modules/
 
