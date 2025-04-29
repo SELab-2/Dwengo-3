@@ -24,6 +24,7 @@ import session from 'express-session';
 import { errorHandling } from './errorHandling';
 import cors from 'cors';
 import { FavoritesController } from './routes/favorites.routes';
+import { LearningThemeController } from './routes/learningTheme.routes';
 
 export const app: Express = express();
 
@@ -116,6 +117,7 @@ apiRouter.use('/auth', auth);
 apiRouter.use('/discussion', new DiscussionController().router);
 apiRouter.use('/message', new MessageController().router);
 apiRouter.use('/favorites', new FavoritesController().router);
+apiRouter.use('/learningTheme', new LearningThemeController().router);
 
 // Error handling middleware
 app.use(errorHandling);

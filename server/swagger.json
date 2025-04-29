@@ -1695,6 +1695,79 @@
           }
         },
         "required": ["fileName", "filePath"]
+      },
+      "LearningThemeShort": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the theme.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the theme.",
+            "example": "AI in Climate"
+          },
+          "image": {
+            "type": "string",
+            "description": "The URL of the image associated with the theme.",
+            "example": "https://example.com/image.jpg"
+          }
+        }
+      },
+      "LearningThemeDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the theme.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the theme.",
+            "example": "AI in Climate"
+          },
+          "image": {
+            "type": "string",
+            "description": "The URL of the image associated with the theme.",
+            "example": "https://example.com/image.jpg"
+          },
+          "keywords": {
+            "type": "array",
+            "description": "A list of keywords associated with the theme.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["AI", "Climate", "Sustainability"]
+          }
+        }
+      },
+      "LearningThemeCreate": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the theme.",
+            "example": "AI in Climate"
+          },
+          "image": {
+            "type": "string",
+            "description": "The URL of the image associated with the theme.",
+            "example": "https://example.com/image.jpg"
+          },
+          "keywords": {
+            "type": "array",
+            "description": "A list of keywords associated with the theme.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["AI", "Climate", "Sustainability"]
+          }
+        }
       }
     }
   }
