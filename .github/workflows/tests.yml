@@ -13,9 +13,8 @@ on:
 run-name: ${{ github.actor }} has pushed an update to ${{ github.ref }} branch 🚀
 
 jobs:
-  test:
+  install:
     runs-on: self-hosted
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,11 +33,18 @@ jobs:
           ./install.sh;
           cd test && npm install;
 
+  setup:
+    needs: [ install ]
+    runs-on: self-hosted
+    steps:
       - name: Set up database
         run: |
           export ENV_FILE=test/.env.test;
           ./prisma.sh migrate reset --force;
-
+  test:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
       - name: Run tests
         run: |
           cd test && npm run test:all
