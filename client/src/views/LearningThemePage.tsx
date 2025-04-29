@@ -52,9 +52,6 @@ function LearningPathsOverviewPage() {
     });
   };
 
-  console.log('Learning Paths:', learningPaths);
-  console.log('data:', data);
-
   if (isLoading && page === 1) return <div>Loading...</div>;
   if (isError) return <div>Error: {error?.message}</div>;
   if (!data) return <div>No data available</div>;
@@ -62,8 +59,6 @@ function LearningPathsOverviewPage() {
   if (learningPaths.length === 0) {
     return <div>No learningpaths available for this theme...</div>;
   }
-
-  console.log('test');
 
   const targetAgesRange = (index: number) => {
     const nodes = learningPaths[index].learningPathNodes;
