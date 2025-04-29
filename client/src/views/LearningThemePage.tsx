@@ -8,20 +8,15 @@ import { useLearningPath } from '../hooks/useLearningPath';
 import { useState, useEffect } from 'react';
 import Masonry from '@mui/lab/Masonry';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
-
-const themeKeywordsMap = {
-  'AI in Climate': ['AI', 'Climate'],
-  'Social Robot': ['Robotics', 'AI'],
-  'AI in Healthcare': ['AI', 'Healthcare'],
-  'Language Technology': ['EN'],
-};
+import { useLearningThemeById } from '../hooks/useLearningTheme';
 
 function LearningPathsOverviewPage() {
   const { id } = useParams();
   const [page, setPage] = useState(1); // Track current page
   const [learningPaths, setLearningPaths] = useState<LearningPathShort[]>([]); // Store all loaded paths
+  const { data: learningTheme } = useLearningThemeById(id);
   const { data, isLoading, isError, error } = useLearningPath(
-    themeKeywordsMap[id as keyof typeof themeKeywordsMap],
+    learningTheme?.keywords,
     undefined,
     page,
     10,
@@ -41,8 +36,6 @@ function LearningPathsOverviewPage() {
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set()); // Use a Set for multiple expanded IDs
 
-  console.log(page);
-
   const handleLoadMore = () => {
     setPage((prevPage) => prevPage + 1); // Increment page number to load more data
   };
@@ -59,9 +52,18 @@ function LearningPathsOverviewPage() {
     });
   };
 
+  console.log('Learning Paths:', learningPaths);
+  console.log('data:', data);
+
   if (isLoading && page === 1) return <div>Loading...</div>;
   if (isError) return <div>Error: {error?.message}</div>;
   if (!data) return <div>No data available</div>;
+  console.log('test');
+  if (learningPaths.length === 0) {
+    return <div>No learningpaths available for this theme...</div>;
+  }
+
+  console.log('test');
 
   const targetAgesRange = (index: number) => {
     const nodes = learningPaths[index].learningPathNodes;
