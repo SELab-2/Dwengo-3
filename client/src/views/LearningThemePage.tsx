@@ -1,24 +1,22 @@
-import { Box, Typography, Card, CardContent, Avatar, Button } from '@mui/material';
+import { Box, Typography, Card, CardContent, Button } from '@mui/material';
+import Masonry from '@mui/lab/Masonry';
 import GroupIcon from '@mui/icons-material/Group';
 import { MarginSize } from '../util/size';
 import { Link, useParams } from 'react-router-dom';
 import theme from '../util/theme';
 import { AppRoutes } from '../util/app.routes';
 import { useLearningPath } from '../hooks/useLearningPath';
-import { useState, useEffect } from 'react';
-import Masonry from '@mui/lab/Masonry';
-import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
 import { useLearningThemeById } from '../hooks/useLearningTheme';
+import { useEffect, useState, useMemo } from 'react';
+import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
 
-// Helper function to handle image sources (Base64 or URL)
 const getImageSrc = (image: string): string => {
-  if (!image) return ''; // fallback
+  if (!image) return '';
   if (image.startsWith('data:image')) return image;
   try {
     const url = new URL(image);
     return url.href;
   } catch {
-    // Not a valid URL, assume base64 without prefix
     return `data:image/png;base64,${image}`;
   }
 };
@@ -26,78 +24,54 @@ const getImageSrc = (image: string): string => {
 function LearningPathsOverviewPage() {
   const { id } = useParams();
   const [page, setPage] = useState(1);
-  const [learningPaths, setLearningPaths] = useState<LearningPathShort[]>([]);
-  const { data: learningTheme } = useLearningThemeById(id);
-  const { data, isLoading, isError, error } = useLearningPath(
-    learningTheme?.keywords,
-    undefined,
-    page,
-    10,
-  );
+  const [paths, setPaths] = useState<LearningPathShort[]>([]);
 
-  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
-    null,
-  );
+  const { data: learningTheme } = useLearningThemeById(id);
+  const { data, isLoading } = useLearningPath(learningTheme?.keywords, undefined, page, 10);
 
   useEffect(() => {
-    if (data?.data?.length ?? 0 > 0) {
-      if (page === 1) {
-        setLearningPaths([]);
-      }
-      setLearningPaths((prevPaths) => [...prevPaths, ...(data?.data ?? [])]);
+    setPaths([]);
+    setPage(1);
+  }, [id]);
+
+  useEffect(() => {
+    if (data?.data?.length) {
+      setPaths((prev) => [...prev, ...data.data]);
     }
-  }, [data, page]);
+  }, [data]);
 
   const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
+    setPage((prev) => prev + 1);
   };
 
-  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
-    setImageDimensions({
-      width: naturalWidth,
-      height: naturalHeight,
-    });
-  };
+  // Memoize targetAgesRange calculation to prevent unnecessary recalculations
+  const targetAgesRange = useMemo(
+    () => (index: number) => {
+      const nodes = paths[index].learningPathNodes;
+      const ages = nodes.flatMap((n) => n.learningObject?.targetAges || []);
+      return ages.length === 0 ? 'N/A' : `${Math.min(...ages)} - ${Math.max(...ages)}`;
+    },
+    [paths],
+  );
 
   if (isLoading && page === 1) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error?.message}</div>;
   if (!data) return <div>No data available</div>;
-
-  if (learningPaths.length === 0) {
-    return <div>No learning paths available for this theme...</div>;
-  }
-
-  const targetAgesRange = (index: number) => {
-    const nodes = learningPaths[index].learningPathNodes;
-    let ages: number[] = [];
-
-    for (const node of nodes) {
-      if (node.learningObject?.targetAges) {
-        ages = ages.concat(node.learningObject.targetAges);
-      }
-    }
-
-    if (ages.length === 0) return 'N/A';
-
-    const minAge = Math.min(...ages);
-    const maxAge = Math.max(...ages);
-
-    return `${minAge} - ${maxAge}`;
-  };
+  if (paths.length === 0) return <div>No learning paths available for this theme...</div>;
 
   return (
     <Box
       sx={{
         p: MarginSize.large,
-        maxWidth: '80%',
-        maxHeight: '80vh',
-        overflowY: 'auto',
+        maxWidth: '70%',
         margin: '0 auto',
+        flex: '1 1 auto',
+        minHeight: 0,
+        height: '70vh',
+        overflowY: 'auto',
       }}
     >
       <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 5 }} spacing={3}>
-        {learningPaths.map(({ id, title, image, description }, index) => (
+        {paths.map(({ id, title, image, description }, index) => (
           <Card
             key={id}
             sx={{
@@ -110,58 +84,43 @@ function LearningPathsOverviewPage() {
                 ],
               ),
               boxShadow: 3,
-              display: 'flex',
-              flexDirection: 'column',
+              display: 'block',
+              width: '100%',
             }}
           >
-            <Link
-              to={AppRoutes.learningPath(id)}
-              style={{ textDecoration: 'none' }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Box sx={{ position: 'relative' }}>
+            <Link to={AppRoutes.learningPath(id)} replace style={{ textDecoration: 'none' }}>
+              <Box sx={{ width: '100%', display: 'block' }}>
                 <img
                   src={getImageSrc(image)}
                   alt={title}
-                  style={{ display: 'none' }}
-                  onLoad={handleImageLoad}
-                />
-                <Avatar
-                  src={getImageSrc(image)}
-                  variant="square"
-                  sx={{
+                  style={{
                     width: '100%',
-                    height: imageDimensions
-                      ? `${(imageDimensions.height / imageDimensions.width) * 100}%`
-                      : '150px',
-                    objectFit: 'cover',
+                    height: 'auto',
+                    display: 'block',
                   }}
                 />
               </Box>
             </Link>
 
-            <Link
-              to={AppRoutes.learningPath(id)}
-              style={{ textDecoration: 'none', position: 'absolute', top: 3, right: 3 }}
-              onClick={(e) => e.stopPropagation()}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 3,
+                right: 3,
+                backgroundColor: theme.palette.primary.main,
+                color: 'black',
+                borderRadius: '8px',
+                px: 1.5,
+                py: 0.5,
+                fontSize: '0.75rem',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+              }}
             >
-              <Box
-                sx={{
-                  backgroundColor: theme.palette.primary.main,
-                  color: 'black',
-                  borderRadius: '8px',
-                  px: 1.5,
-                  py: 0.5,
-                  fontSize: '0.75rem',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5,
-                }}
-              >
-                <GroupIcon sx={{ fontSize: 16 }} /> {targetAgesRange(index)}
-              </Box>
-            </Link>
+              <GroupIcon sx={{ fontSize: 16 }} /> {targetAgesRange(index)}
+            </Box>
 
             <Box sx={{ p: 2, color: 'white' }}>
               <Typography variant="h6" fontWeight="bold">
@@ -176,10 +135,13 @@ function LearningPathsOverviewPage() {
         ))}
       </Masonry>
 
-      {data.totalPages > page && (
-        <Button onClick={handleLoadMore} sx={{ marginTop: 2, width: '100%' }}>
-          Load More
-        </Button>
+      {/* Load More button */}
+      {data?.totalPages > page && (
+        <Box textAlign="center" mt={3}>
+          <Button variant="contained" onClick={handleLoadMore} disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Load More'}
+          </Button>
+        </Box>
       )}
     </Box>
   );
