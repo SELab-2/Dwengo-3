@@ -4,7 +4,7 @@ import {
   assignmentSelectDetail,
   assignmentSelectShort,
   assignmentSelectShort2,
-} from '../selectInput/assignment.select';
+} from '../selectInput/select';
 
 export const AssignmentFilterSchema = z
   .object({

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { Prisma } from '@prisma/client';
-import { messageSelectDetail, messageSelectShort } from '../selectInput/message.select';
+import { Prisma } from '.prisma/client';
+import { messageSelectDetail, messageSelectShort } from '../selectInput/select';
 
 export const MessageFilterSchema = z
   .object({

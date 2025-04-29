@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { Prisma } from '@prisma/client';
-import { classJoinRequestSelectDetail } from '../selectInput/classJoinRequest.select';
+import { Prisma } from '.prisma/client';
+import { classJoinRequestSelectDetail } from '../selectInput/select';
 
 export const ClassJoinRequestCreateScheme = z.object({
   classId: z.string().uuid('ClassId must be a valid UUID'),

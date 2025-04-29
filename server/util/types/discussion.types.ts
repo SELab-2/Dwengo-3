@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { Prisma } from '@prisma/client';
-import { discussionSelectDetail, discussionSelectShort } from '../selectInput/discussion.select';
+import { Prisma } from '.prisma/client';
+import { discussionSelectDetail, discussionSelectShort } from '../selectInput/select';
 
 export const DiscussionFilterSchema = z
   .object({

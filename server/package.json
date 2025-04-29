@@ -4,7 +4,7 @@
   "description": "Dwengo leerplatform",
   "main": "app.ts",
   "scripts": {
-    "start": "nodemon app.ts",
+    "start": "nodemon server.ts",
     "start:dev": "ts-node app.ts",
     "debug": "nodemon app.ts",
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",

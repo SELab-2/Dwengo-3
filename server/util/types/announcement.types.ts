@@ -1,9 +1,6 @@
 import { z } from 'zod';
-import { Prisma } from '@prisma/client';
-import {
-  announcementSelectDetail,
-  announcementSelectShort,
-} from '../selectInput/announcement.select';
+import { Prisma } from '.prisma/client';
+import { announcementSelectDetail, announcementSelectShort } from '../selectInput/select';
 
 export enum FilterType {
   BEFORE = 'BEFORE',
