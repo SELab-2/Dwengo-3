@@ -41,6 +41,7 @@ jobs:
         run: |
           export ENV_FILE=test/.env.test;
           ./prisma.sh migrate reset --force;
+          ./prisma.sh;
       - name: Run tests
         run: |
           cd test && npm run test:all
