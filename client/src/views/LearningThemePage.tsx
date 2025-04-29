@@ -10,10 +10,23 @@ import Masonry from '@mui/lab/Masonry';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
 import { useLearningThemeById } from '../hooks/useLearningTheme';
 
+// Helper function to handle image sources (Base64 or URL)
+const getImageSrc = (image: string): string => {
+  if (!image) return ''; // fallback
+  if (image.startsWith('data:image')) return image;
+  try {
+    const url = new URL(image);
+    return url.href;
+  } catch {
+    // Not a valid URL, assume base64 without prefix
+    return `data:image/png;base64,${image}`;
+  }
+};
+
 function LearningPathsOverviewPage() {
   const { id } = useParams();
-  const [page, setPage] = useState(1); // Track current page
-  const [learningPaths, setLearningPaths] = useState<LearningPathShort[]>([]); // Store all loaded paths
+  const [page, setPage] = useState(1);
+  const [learningPaths, setLearningPaths] = useState<LearningPathShort[]>([]);
   const { data: learningTheme } = useLearningThemeById(id);
   const { data, isLoading, isError, error } = useLearningPath(
     learningTheme?.keywords,
@@ -22,42 +35,37 @@ function LearningPathsOverviewPage() {
     10,
   );
 
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
+    null,
+  );
+
   useEffect(() => {
     if (data?.data?.length ?? 0 > 0) {
       if (page === 1) {
-        // React keeps the state across page navigation, so when we go back to this page,
-        // we need to reset the learningPaths state.
         setLearningPaths([]);
       }
-
       setLearningPaths((prevPaths) => [...prevPaths, ...(data?.data ?? [])]);
     }
   }, [data, page]);
 
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set()); // Use a Set for multiple expanded IDs
-
   const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1); // Increment page number to load more data
+    setPage((prevPage) => prevPage + 1);
   };
 
-  const handleToggleExpanded = (id: string) => {
-    setExpandedIds((prev) => {
-      const newExpandedIds = new Set(prev);
-      if (newExpandedIds.has(id)) {
-        newExpandedIds.delete(id); // If already expanded, collapse it
-      } else {
-        newExpandedIds.add(id); // If collapsed, expand it
-      }
-      return newExpandedIds;
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const { naturalWidth, naturalHeight } = event.target as HTMLImageElement;
+    setImageDimensions({
+      width: naturalWidth,
+      height: naturalHeight,
     });
   };
 
   if (isLoading && page === 1) return <div>Loading...</div>;
   if (isError) return <div>Error: {error?.message}</div>;
   if (!data) return <div>No data available</div>;
-  console.log('test');
+
   if (learningPaths.length === 0) {
-    return <div>No learningpaths available for this theme...</div>;
+    return <div>No learning paths available for this theme...</div>;
   }
 
   const targetAgesRange = (index: number) => {
@@ -79,11 +87,16 @@ function LearningPathsOverviewPage() {
   };
 
   return (
-    <Box sx={{ p: MarginSize.large, maxHeight: '80vh', overflowY: 'auto' }}>
-      <Masonry
-        columns={{ xs: 1, sm: 2, md: 3, lg: 5 }} // Responsive columns
-        spacing={3}
-      >
+    <Box
+      sx={{
+        p: MarginSize.large,
+        maxWidth: '80%',
+        maxHeight: '80vh',
+        overflowY: 'auto',
+        margin: '0 auto',
+      }}
+    >
+      <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 5 }} spacing={3}>
         {learningPaths.map(({ id, title, image, description }, index) => (
           <Card
             key={id}
@@ -106,11 +119,25 @@ function LearningPathsOverviewPage() {
               style={{ textDecoration: 'none' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <Avatar
-                src={image}
-                variant="square"
-                sx={{ width: '100%', height: 150, objectFit: 'cover' }}
-              />
+              <Box sx={{ position: 'relative' }}>
+                <img
+                  src={getImageSrc(image)}
+                  alt={title}
+                  style={{ display: 'none' }}
+                  onLoad={handleImageLoad}
+                />
+                <Avatar
+                  src={getImageSrc(image)}
+                  variant="square"
+                  sx={{
+                    width: '100%',
+                    height: imageDimensions
+                      ? `${(imageDimensions.height / imageDimensions.width) * 100}%`
+                      : '150px',
+                    objectFit: 'cover',
+                  }}
+                />
+              </Box>
             </Link>
 
             <Link
@@ -143,12 +170,7 @@ function LearningPathsOverviewPage() {
             </Box>
 
             <CardContent>
-              <ExpandableDescription
-                id={id}
-                description={description}
-                expanded={expandedIds.has(id)} // Check if this ID is in the set of expanded IDs
-                onToggle={() => handleToggleExpanded(id)}
-              />
+              <Typography variant="body2">{description}</Typography>
             </CardContent>
           </Card>
         ))}
@@ -160,37 +182,6 @@ function LearningPathsOverviewPage() {
         </Button>
       )}
     </Box>
-  );
-}
-
-type ExpandableDescriptionProps = {
-  id: string;
-  description: string;
-  expanded: boolean;
-  onToggle: () => void;
-};
-
-function ExpandableDescription({ description, expanded, onToggle }: ExpandableDescriptionProps) {
-  const shortDescription =
-    description.length > 100 ? description.slice(0, 97) + '...' : description;
-
-  return (
-    <>
-      <Typography variant="body2">{expanded ? description : shortDescription}</Typography>
-      {description.length > 100 && (
-        <Button
-          size="small"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onToggle();
-          }}
-          sx={{ color: 'white' }}
-        >
-          {expanded ? 'Read Less' : 'Read More'}
-        </Button>
-      )}
-    </>
   );
 }
 
