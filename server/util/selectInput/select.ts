@@ -209,16 +209,7 @@ export const classSelectDetail = {
 export const assignmentSelectShort2 = {
   id: true,
   groups: {
-    select: {
-      id: true,
-      progress: true,
-      name: true,
-      students: {
-        select: {
-          id: true,
-        },
-      },
-    },
+    select: groupSelectShort,
   },
   learningPath: {
     select: {
