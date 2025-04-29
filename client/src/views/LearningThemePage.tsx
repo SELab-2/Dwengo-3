@@ -32,7 +32,7 @@ function LearningPathsOverviewPage() {
 
       setLearningPaths((prevPaths) => [...prevPaths, ...(data?.data ?? [])]);
     }
-  }, [data]);
+  }, [data, page]);
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set()); // Use a Set for multiple expanded IDs
 
