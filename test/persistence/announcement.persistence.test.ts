@@ -4,6 +4,7 @@ import { AnnouncementPersistence } from '../../server/persistence/announcement.p
 import { deleteAllData, insertAnnouncements } from './testData';
 import { ClassPersistence } from '../../server/persistence/class.persistence';
 import { PrismaSingleton } from '../../server/persistence/prismaSingleton';
+import { PrismaClient } from '@prisma/client';
 
 let announcements: AnnouncementDetail[] = [];
 const announcementPersistence: AnnouncementPersistence = new AnnouncementPersistence();
@@ -15,7 +16,7 @@ describe('announcement persistence test', () => {
 
   afterAll(async () => {
     await deleteAllData();
-    await PrismaSingleton.instance.$disconnect();
+    PrismaSingleton.instance = new PrismaClient();
   });
 
   describe('test get announcement by id', () => {

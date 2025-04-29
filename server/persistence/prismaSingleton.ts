@@ -21,4 +21,11 @@ export class PrismaSingleton {
 
     return PrismaSingleton.#instance;
   }
+
+  /**
+   * The static method that allows the client to set the instance
+   */
+  public static set instance(prismaClient: PrismaClient) {
+    PrismaSingleton.#instance = prismaClient;
+  }
 }
