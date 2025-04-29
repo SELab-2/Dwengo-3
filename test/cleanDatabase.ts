@@ -1,11 +1,16 @@
 import { deleteRecords } from '../db/cleanDatabase';
 import { PrismaClient } from '@prisma/client';
 
-async function main() {
+async function clean() {
   console.log('Starting database cleanup...');
   const prismaClient = new PrismaClient();
-  // @ts-ignore
   await deleteRecords(prismaClient, true);
 }
 
-main();
+export async function setup() {
+  await clean();
+}
+
+export async function teardown() {
+  await clean();
+}

@@ -14,6 +14,7 @@ if (( $# > 1 )) && [[ "$1" == "migrate" ]]; then
 fi
 
 cp -r node_modules/@prisma ../server/node_modules/
+cp -r node_modules/@prisma ../test/node_modules/
 
 if (( $# <= 1 )) || [[ "$2" != "deploy" ]]; then
   cp -r node_modules/.prisma ../server/node_modules/
