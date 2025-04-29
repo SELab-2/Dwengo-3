@@ -60,7 +60,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Setup clean
-        run: ./prisma && cd test && npm run clean
+        run: cd test && npm run clean
       - name: Integration tests
         run: cd test && npm run test:int
       - name: Teardown clean
