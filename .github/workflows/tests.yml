@@ -5,6 +5,10 @@ on:
     branches:
       - dev
       - main
+  push:
+    branches:
+      - dev
+      - main
 
 run-name: ${{ github.actor }} has pushed an update to ${{ github.ref }} branch 🚀
 
