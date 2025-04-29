@@ -1,19 +1,18 @@
 #!/bin/bash
+set -uo pipefail -o noclobber -o allexport
+source .env.test
+set +o allexport
 
-if command -v docker-compose >/dev/null 2>&1 && docker-compose version >/dev/null 2>&1; then
-    DOCKER_COMPOSE="docker-compose"
-else
-    DOCKER_COMPOSE="docker compose"
+# check if the DATABASE_URL is set
+if [[ -z "${DATABASE_URL}" ]]; then
+  echo "DATABASE_URL is not set. Please set it in the .env.test file."
+  exit 1
 fi
 
-source ./setenv.sh
-$DOCKER_COMPOSE up -d
-echo 'Waiting for database to be ready...'
-./wait-for-it.sh "${DATABASE_URL}" -- echo 'Database is ready!'
+cp -r ../db/node_modules/.prisma ../db/node_modules/@prisma ../test/node_modules/
 
-cd ../db
-npx prisma migrate dev
+ts-node cleanDatabase.ts
 
-cd ../test
 vitest --run --no-file-parallelism -c vitest.config.integration.ts
-docker compose down
+
+ts-node cleanDatabase.ts

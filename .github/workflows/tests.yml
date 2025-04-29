@@ -6,6 +6,8 @@ on:
       - dev
       - main
 
+run-name: ${{ github.actor }} has pushed an update to ${{ github.ref }} branch 🚀
+
 jobs:
   test:
     runs-on: self-hosted
@@ -25,7 +27,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd server && npm install && cd ../client && npm install && cd ../db && npm install && cd ../test && npm install
+          ./install.sh;
+          cd test && npm install;
+
+      - name: Set up database
+        run: |
+          export ENV_FILE=test/.env.test
+          ./prisma.sh migrate deploy
+
       - name: Run tests
         run: |
           cd test && npm run test:all

@@ -1,11 +1,16 @@
 #!/bin/bash
 
-set -uo pipefail -o noclobber
+set -o pipefail -o noclobber
 
-cd db && dotenv -e ../.env -- npx prisma generate --no-hints
+#if env is not set, set default to .env
+if [[ -z "${ENV_FILE}" ]]; then
+  ENV_FILE='.env'
+fi
+
+cd db && dotenv -e "../$ENV_FILE" -- npx prisma generate --no-hints
 
 if (( $# > 1 )) && [[ "$1" == "migrate" ]]; then
-    dotenv -e ../.env -- npx prisma migrate "$2"
+    dotenv -e "../$ENV_FILE" -- npx prisma migrate "$2"
 fi
 
 cp -r node_modules/@prisma ../server/node_modules/
