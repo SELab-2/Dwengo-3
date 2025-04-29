@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchLearningThemeById, fetchLearningThemes } from '../api/learningTheme';
 
 /**
- * Fetches a list of leanringThemes based on page, and pageSize.
+ * Fetches a list of learningThemes based on page, and pageSize.
  *
  * @param page - The page number for pagination.
  * @param pageSize - The number of items per page for pagination.
