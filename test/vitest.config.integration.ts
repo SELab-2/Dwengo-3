@@ -4,7 +4,6 @@ export default defineConfig({
   test: {
     include: ['test/persistence/*.persistence.test.ts'],
     globalSetup: ['./cleanDatabase.ts'],
-    globalTeardown: ['./cleanDatabase.ts'],
     coverage: {
       reporter: ['text', 'json', 'html'],
       provider: 'v8',
