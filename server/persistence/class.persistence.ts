@@ -9,8 +9,8 @@ import { Prisma } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { UserEntity } from '../util/types/user.types';
-import { classSelectDetail, classSelectShort } from '../util/selectInput/class.select';
 import { NotFoundError } from '../util/types/error.types';
+import { classSelectShort, classSelectDetail } from '../util/selectInput/select';
 
 export class ClassPersistence {
   private prisma;
