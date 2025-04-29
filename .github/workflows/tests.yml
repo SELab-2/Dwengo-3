@@ -39,9 +39,29 @@ jobs:
     steps:
       - name: Set up database
         run: |
-          export ENV_FILE=test/.env.test;
-          ./prisma.sh migrate reset --force;
-          ./prisma.sh;
-      - name: Run tests
-        run: |
-          cd test && npm run test:all
+          export ENV_FILE=test/.env.test && ./prisma.sh migrate reset --force;
+
+  test-domain:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Domain tests
+        run: cd test && npm run test:domain
+
+  test-router:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Router tests
+        run: cd test && npm run test:router
+
+  test-integration:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Setup clean
+        run: cd test && npm run clean
+      - name: Integration tests
+        run: cd test && npm run test:int
+      - name: Teardown clean
+        run: cd test && npm run clean

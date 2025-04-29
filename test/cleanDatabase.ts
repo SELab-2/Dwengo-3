@@ -8,10 +8,4 @@ async function clean() {
   await deleteRecords(prismaClient, true);
 }
 
-export async function setup() {
-  await clean();
-}
-
-export async function teardown() {
-  await clean();
-}
+clean().then();
