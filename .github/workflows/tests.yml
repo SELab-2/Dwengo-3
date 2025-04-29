@@ -37,7 +37,7 @@ jobs:
       - name: Set up database
         run: |
           export ENV_FILE=test/.env.test;
-          ./prisma.sh migrate deploy;
+          ./prisma.sh migrate reset --force;
 
       - name: Run tests
         run: |
