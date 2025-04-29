@@ -1,4 +1,5 @@
-// --- User ---
+/* The order of these selects in this file is important to avoid reference before instantiation */
+
 export const userSelectShort = {
   id: true,
   surname: true,
@@ -6,7 +7,6 @@ export const userSelectShort = {
   role: true,
 };
 
-// --- Teacher ---
 export const teacherSelectShort = {
   id: true,
   userId: true,
@@ -18,21 +18,6 @@ export const teacherSelectShort = {
   },
 };
 
-export const teacherSelectDetail = {
-  id: true,
-  userId: true,
-  user: {
-    select: {
-      name: true,
-      surname: true,
-    },
-  },
-  classes: {
-    select: () => classSelectShort,
-  },
-};
-
-// --- Student ---
 export const studentSelectShort = {
   id: true,
   userId: true,
@@ -41,6 +26,21 @@ export const studentSelectShort = {
       name: true,
       surname: true,
     },
+  },
+};
+
+export const classSelectShort = {
+  id: true,
+  name: true,
+};
+
+export const groupSelectShort = {
+  id: true,
+  progress: true,
+  assignmentId: true,
+  name: true,
+  students: {
+    select: studentSelectShort,
   },
 };
 
@@ -54,60 +54,27 @@ export const studentSelectDetail = {
     },
   },
   classes: {
-    select: () => classSelectShort,
+    select: classSelectShort,
   },
   groups: {
-    select: () => groupSelectShort,
+    select: groupSelectShort,
   },
 };
 
-// --- Class ---
-export const classSelectShort = {
+export const teacherSelectDetail = {
   id: true,
-  name: true,
-};
-
-export const classSelectDetail = {
-  id: true,
-  name: true,
-  teachers: {
-    select: () => teacherSelectShort,
+  userId: true,
+  user: {
+    select: {
+      name: true,
+      surname: true,
+    },
   },
-  students: {
-    select: () => studentSelectShort,
-  },
-  assignments: {
-    select: () => assignmentSelectShort,
+  classes: {
+    select: classSelectShort,
   },
 };
 
-// --- Group ---
-export const groupSelectShort = {
-  id: true,
-  progress: true,
-  assignmentId: true,
-  name: true,
-  students: {
-    select: studentSelectShort,
-  },
-};
-
-export const groupSelectDetail = {
-  id: true,
-  name: true,
-  progress: true,
-  assignment: {
-    select: () => assignmentSelectShort,
-  },
-  discussion: {
-    select: () => discussionSelectShort,
-  },
-  students: {
-    select: studentSelectShort,
-  },
-};
-
-// --- Announcement ---
 export const announcementSelectShort = {
   id: true,
   title: true,
@@ -125,7 +92,6 @@ export const announcementSelectDetail = {
   },
 };
 
-// --- Learning Object ---
 export const learningObjectSelectShort = {
   id: true,
   title: true,
@@ -170,7 +136,6 @@ export const learningObjectSelectDetail = {
   },
 };
 
-// --- Learning Path Node Transition ---
 export const learningPathNodeTransitionSelectDetail = {
   id: true,
   learningPathNodeId: true,
@@ -178,7 +143,6 @@ export const learningPathNodeTransitionSelectDetail = {
   toNodeIndex: true,
 };
 
-// --- Learning Path Node ---
 export const learningPathNodeSelectShort = {
   id: true,
   learningObject: {
@@ -199,7 +163,6 @@ export const learningPathNodeSelectDetail = {
   },
 };
 
-// --- Learning Path ---
 export const learningPathSelectShort = {
   id: true,
   title: true,
@@ -224,10 +187,23 @@ export const learningPathSelectDetail = {
   },
 };
 
-// --- Assignment ---
 export const assignmentSelectShort = {
   id: true,
   learningPathId: true,
+};
+
+export const classSelectDetail = {
+  id: true,
+  name: true,
+  teachers: {
+    select: teacherSelectShort,
+  },
+  students: {
+    select: studentSelectShort,
+  },
+  assignments: {
+    select: assignmentSelectShort,
+  },
 };
 
 export const assignmentSelectShort2 = {
@@ -277,9 +253,17 @@ export const assignmentSelectDetail = {
   },
 };
 
-// --- Assignment Submission ---
 export const assignmentSubmissionSelectShort = {
   id: true,
+};
+
+export const favoriteSelectShort = {
+  id: true,
+  userId: true,
+  progress: true,
+  learningPath: {
+    select: learningPathSelectShort,
+  },
 };
 
 export const assignmentSubmissionSelectDetail = {
@@ -293,21 +277,11 @@ export const assignmentSubmissionSelectDetail = {
     select: learningPathNodeSelectShort,
   },
   favorite: {
-    select: () => FavoriteSelectShort,
+    select: favoriteSelectShort,
   },
 };
 
-// --- Favorite ---
-export const FavoriteSelectShort = {
-  id: true,
-  userId: true,
-  progress: true,
-  learningPath: {
-    select: learningPathSelectShort,
-  },
-};
-
-export const FavoriteSelectDetail = {
+export const favoriteSelectDetail = {
   id: true,
   progress: true,
   learningPath: {
@@ -318,25 +292,25 @@ export const FavoriteSelectDetail = {
   },
 };
 
-// --- Discussion ---
 export const discussionSelectShort = {
   id: true,
 };
 
-export const discussionSelectDetail = {
+export const groupSelectDetail = {
   id: true,
-  group: {
-    select: groupSelectShort,
+  name: true,
+  progress: true,
+  assignment: {
+    select: assignmentSelectShort,
   },
-  members: {
-    select: userSelectShort,
+  discussion: {
+    select: discussionSelectShort,
   },
-  messages: {
-    select: () => messageSelectDetail,
+  students: {
+    select: studentSelectShort,
   },
 };
 
-// --- Message ---
 export const messageSelectShort = {
   id: true,
   content: true,
@@ -356,7 +330,19 @@ export const messageSelectDetail = {
   createdAt: true,
 };
 
-// --- Class Join Request ---
+export const discussionSelectDetail = {
+  id: true,
+  group: {
+    select: groupSelectShort,
+  },
+  members: {
+    select: userSelectShort,
+  },
+  messages: {
+    select: messageSelectDetail,
+  },
+};
+
 export const classJoinRequestSelectDetail = {
   id: true,
   class: {
