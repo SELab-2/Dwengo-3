@@ -175,7 +175,7 @@ model Group {
 model Assignment {
   id             String       @id @default(uuid())
   name           String
-  description    String?
+  description    String
   learningPathId String
   teacherId      String
   classId        String
