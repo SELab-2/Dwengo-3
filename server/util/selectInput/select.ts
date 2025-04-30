@@ -208,6 +208,7 @@ export const classSelectDetail = {
 
 export const assignmentSelectShort2 = {
   id: true,
+  name: true,
   groups: {
     select: groupSelectShort,
   },
@@ -230,6 +231,8 @@ export const assignmentSelectShort2 = {
 
 export const assignmentSelectDetail = {
   id: true,
+  name: true,
+  description: true,
   teacher: {
     select: teacherSelectShort,
   },
