@@ -189,6 +189,7 @@ export const learningPathSelectDetail = {
 
 export const assignmentSelectShort = {
   id: true,
+  name: true,
   learningPathId: true,
 };
 
