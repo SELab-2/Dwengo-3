@@ -5,17 +5,21 @@ import { TeacherShort } from './teacher.interfaces';
 
 export interface AssignmentShort {
   id: string;
+  name: string;
   learningPathId: string;
 }
 
 export interface AssignmentShort2 {
   id: string;
+  name: string;
   groups: GroupShort[];
   learningPath: LearningPathDetail;
 }
 
 export interface AssignmentDetail {
   id: string;
+  name: string;
+  description: string;
   teacher: TeacherShort;
   class: ClassShort;
   groups: GroupShort[];
@@ -24,6 +28,8 @@ export interface AssignmentDetail {
 
 export interface PopulatedAssignment {
   id: string;
+  name: string;
+  description: string;
   teacherId: string;
   class: ClassShort;
   groups: GroupShort[];
@@ -31,6 +37,8 @@ export interface PopulatedAssignment {
 }
 
 export interface AssignmentCreate {
+  name: string;
+  description: string;
   groups: string[][];
   learningPathId: string;
   classId: string;
