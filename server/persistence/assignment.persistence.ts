@@ -60,6 +60,9 @@ export class AssignmentPersistence {
                   },
                 },
               },
+              deadline: {
+                gt: new Date()
+              }
             }
           : {},
       ],

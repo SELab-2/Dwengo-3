@@ -342,6 +342,7 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
         teacherId: classData.teachers[0].id,
         groups: groups,
         learningPathId: path.id,
+        deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
       });
       assignments.push(assignmentPersistence.createAssignment(assignment));
     }
