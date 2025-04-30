@@ -3,11 +3,12 @@ import { UserEntity } from '../util/types/user.types';
 import { BadRequestError } from '../util/types/error.types';
 import { LearningThemePersistence } from '../persistence/learningTheme.persistence';
 import {
+  LearningThemeCreateParams,
   LearningThemeCreateSchema,
   LearningThemeDetail,
   LearningThemeShort,
 } from '../util/types/theme.types';
-import { PaginationFilterSchema } from '../util/types/pagination.types';
+import { PaginationApiParams, PaginationFilterSchema } from '../util/types/pagination.types';
 
 export class LearningThemeDomain {
   private themePersistence: LearningThemePersistence;
@@ -17,7 +18,7 @@ export class LearningThemeDomain {
   }
 
   public async getLearningThemes(
-    query: any,
+    query: PaginationApiParams,
   ): Promise<{ data: LearningThemeShort[]; totalPages: number }> {
     const pagination = PaginationFilterSchema.parse(query);
     return this.themePersistence.getThemes(pagination);
@@ -27,7 +28,10 @@ export class LearningThemeDomain {
     return await this.themePersistence.getLearningThemeById(id);
   }
 
-  public async createLearningTheme(query: any, user: UserEntity): Promise<LearningThemeDetail> {
+  public async createLearningTheme(
+    query: LearningThemeCreateParams,
+    user: UserEntity,
+  ): Promise<LearningThemeDetail> {
     const data = LearningThemeCreateSchema.parse(query);
     if (user.role !== ClassRole.TEACHER) {
       throw new BadRequestError(40046);

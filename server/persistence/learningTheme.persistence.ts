@@ -2,10 +2,7 @@ import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { NotFoundError } from '../util/types/error.types';
-import {
-  LearningThemeSelectDetail,
-  LearningThemeSelectShort,
-} from '../util/selectInput/learningTheme.select';
+import { LearningThemeSelectDetail, LearningThemeSelectShort } from '../util/selectInput/select';
 import { LearningThemeCreateParams } from '../util/types/theme.types';
 
 export class LearningThemePersistence {
