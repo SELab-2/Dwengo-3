@@ -161,6 +161,7 @@ function AssignmentCreatePage() {
               fullWidth
               value={name}
               onChange={(e) => setName(e.target.value)}
+              helperText={`${name.length}/255`}
             />
             <TextField
               id="description-assignment"
@@ -172,6 +173,8 @@ function AssignmentCreatePage() {
               fullWidth
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              slotProps={{ htmlInput: { maxLength: 500 } }}
+              helperText={`${description.length}/500`}
             />
             <DateTextField />
           </Grid>
