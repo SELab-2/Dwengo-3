@@ -5,8 +5,8 @@
   "main": "server.ts",
   "scripts": {
     "start": "nodemon server.ts",
-    "start:dev": "ts-node server.ts",
-    "debug": "nodemon server.ts",
+    "start:dev": "ts-node app.ts",
+    "debug": "nodemon app.ts",
     "insertData": "ts-node util/db-scripts/deleteData.ts && ts-node util/db-scripts/insertData.ts",
     "readData": "ts-node util/db-scripts/readData.ts",
     "deleteData": "ts-node util/db-scripts/deleteData.ts",

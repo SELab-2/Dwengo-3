@@ -3,7 +3,7 @@ import { z } from 'zod';
 import {
   assignmentSubmissionSelectDetail,
   assignmentSubmissionSelectShort,
-} from '../selectInput/assignmentSubmission.select';
+} from '../selectInput/select';
 
 const FileSubmissionSchema = z.object({
   fileName: z.string(),
