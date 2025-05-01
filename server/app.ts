@@ -24,6 +24,8 @@ import session from 'express-session';
 import { errorHandling } from './errorHandling';
 import cors from 'cors';
 import { FavoritesController } from './routes/favorites.routes';
+import { RedisStore } from 'connect-redis';
+import { createClient } from 'redis';
 
 export const app: Express = express();
 
@@ -66,11 +68,17 @@ if (process.env.SESSION_SECRET === undefined) {
   throw new Error('Secret for cookies not present');
 }
 
+const redisClient = createClient({
+  url: process.env.REDIS_URL,
+});
+redisClient.connect().catch(console.error);
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: new RedisStore({ client: redisClient }),
     cookie: {
       secure: false,
       httpOnly: true,
