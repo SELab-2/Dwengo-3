@@ -59,6 +59,7 @@ export const fr = {
     announcements: 'Annonces',
     discussions: 'Discussions',
     students: 'Étudiants',
+    teachers: 'Enseignants',
     details: 'Détails',
     admissionRequests: "Demandes d'admission",
     approve: 'Approuver',
@@ -83,5 +84,6 @@ export const fr = {
     submission: 'Soumission',
     back: 'Retourner',
     score: 'Score',
+    editClass: 'Modifier la classe',
   },
 };

@@ -1,0 +1,177 @@
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import {
+  AppBar,
+  Box,
+  Button,
+  Grid,
+  GridLegacy,
+  LinearProgress,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
+import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
+import { useClassById } from '../hooks/useClass.ts';
+import theme from '../util/theme.ts';
+import { MarginSize } from '../util/size.ts';
+import { AppRoutes } from '../util/app.routes.ts';
+import { UserDataTableComponent } from '../components/UserDataTableComponent.tsx';
+import { deleteTeacherFromClass, deleteStudentFromClass } from '../api/class.ts';
+import { useAuth } from '../hooks/useAuth.ts';
+import ErrorSnackBar from '../components/ErrorSnackBar.tsx';
+import { useError } from '../hooks/useError.ts';
+import { updateClass } from '../api/class.ts';
+
+export function ClassGroupEditPage() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const { classId } = useParams<{ classId: string }>();
+  const {
+    data: classData,
+    isLoading: isClassDataLoading,
+    refetch: refetchClassData,
+  } = useClassById(classId!);
+  const error = useError();
+  const [className, setClassName] = useState<string>('');
+  const [classDescription, setClassDescription] = useState<string>('');
+
+  useEffect(() => {
+    if (classData) {
+      setClassName(classData.name);
+    }
+  }, [classData]);
+
+  return isClassDataLoading ? (
+    <div>loading</div>
+  ) : (
+    <Box sx={{ p: 3 }}>
+      <Paper
+        elevation={3}
+        sx={{
+          mb: 2,
+          borderRadius: 2,
+          overflow: 'hidden',
+        }}
+      >
+        <AppBar
+          position="static"
+          sx={{
+            p: MarginSize.small,
+            backgroundColor: theme.palette.primary.main,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'white' }}>
+            {t('editClass')}: {className}
+          </Typography>
+          <Button
+            onClick={async () => {
+              await updateClass(classId!, {
+                name: className,
+                description: classDescription,
+              });
+              navigate(AppRoutes.class(classId!));
+            }}
+            sx={{ color: 'white' }}
+          >
+            {t('save')}
+          </Button>
+        </AppBar>
+      </Paper>
+
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 3,
+            m: MarginSize.small,
+            width: 'calc(100% / 3)',
+            height: '100%',
+          }}
+        >
+          <TextField
+            label={t('className')}
+            sx={{ width: '100%' }}
+            value={className}
+            onChange={(e: any) => setClassName(e.target.value)}
+          />
+          <TextField
+            multiline={true}
+            rows={6}
+            sx={{ width: '100%' }}
+            label={t('classDescription')}
+            onChange={(e: any) => setClassDescription(e.target.value)}
+          />
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 5,
+            width: '100%',
+          }}
+        >
+          <UserDataTableComponent
+            data={classData!!.students.map((student) => {
+              return {
+                id: student.id,
+                name: student.user.name,
+                surname: student.user.surname,
+              };
+            })}
+            title={t('students')}
+            onActionPressed={async (id: string) => await deleteStudentFromClass(classId!!, id)}
+          />
+
+          {/* Teachers */}
+          <UserDataTableComponent
+            data={classData!!.teachers.map((teacher) => {
+              return {
+                id: teacher.id,
+                name: teacher.user.name,
+                surname: teacher.user.surname,
+              };
+            })}
+            title={t('teachers')}
+            onActionPressed={async (id: string) => {
+              if (
+                user!!.teacher &&
+                classData!!.teachers.find((teacher) => teacher.id === user!!.teacher!!.id)
+              ) {
+                error.setError("You can't remove yourself");
+                return;
+              }
+              await deleteTeacherFromClass(classId!!, id);
+            }}
+          />
+        </Box>
+      </Box>
+    </Box>
+  );
+}

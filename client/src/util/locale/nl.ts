@@ -56,6 +56,7 @@ export const nl = {
     announcements: 'Aankondigingen',
     discussions: 'Discussies',
     students: 'Studenten',
+    teachers: 'Leerkrachten',
     details: 'Details',
     admissionRequests: 'Toelatingsverzoeken',
     approve: 'Goedkeuren',
@@ -80,5 +81,6 @@ export const nl = {
     submission: 'Indiening',
     back: 'Terug',
     score: 'Score',
+    editClass: 'Klas bewerken',
   },
 };

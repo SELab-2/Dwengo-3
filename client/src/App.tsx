@@ -28,6 +28,7 @@ import { Box } from '@mui/material';
 import ClassAddPage from './views/ClassAddPage.tsx';
 import { AppRoutes } from './util/app.routes.ts';
 import ClassDiscussionsPage from './views/ClassDiscussionsPage.tsx';
+import { ClassGroupEditPage } from './views/ClassGroupEditPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -87,6 +88,10 @@ function App() {
                       <Route
                         path={AppRoutes.classAnnouncements(':classId')}
                         element={<ClassAnnouncementsPage />}
+                      />
+                      <Route
+                        path={AppRoutes.classEdit(':classId')}
+                        element={<ClassGroupEditPage />}
                       />
                       <Route
                         path={AppRoutes.announcement(':announcementId')}

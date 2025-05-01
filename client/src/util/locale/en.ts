@@ -57,6 +57,7 @@ export const en = {
     announcements: 'Announcements',
     discussions: 'Discussions',
     students: 'Students',
+    teachers: 'Teachers',
     details: 'Details',
     admissionRequests: 'Admission Requests',
     approve: 'Approve',
@@ -81,5 +82,6 @@ export const en = {
     submission: 'Submission',
     back: 'Back',
     score: 'Score',
+    editClass: 'Editing class',
   },
 };

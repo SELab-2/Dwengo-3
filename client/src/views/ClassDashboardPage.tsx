@@ -173,8 +173,7 @@ function ClassDashboardPage() {
               variant="contained"
               sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
               onClick={() => {
-                // TODO: add link to edit class page
-                alert('TODO: Navigate to Edit Class Page');
+                navigate(AppRoutes.classEdit(classId!));
               }} // Replace with actual navigation
             >
               {t('editClassGroup')}

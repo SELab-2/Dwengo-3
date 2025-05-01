@@ -33,4 +33,5 @@ export interface ClassCreate {
 
 export interface ClassUpdate {
   name?: string;
+  description?: string;
 }

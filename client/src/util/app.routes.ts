@@ -15,6 +15,7 @@ export const AppRoutes = {
   learningThemes: '/learning-themes',
   learningTheme: (id: string) => `/learning-themes/${id}`,
   class: (id: string) => `/class/${id}`,
+  classEdit: (classId: string) => `/class/${classId}/edit`,
   classStudentDetails: (classId: string, studentId: string) =>
     `/class/${classId}/student/${studentId}`,
   classAdd: '/class/add',
