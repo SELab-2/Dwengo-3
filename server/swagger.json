@@ -180,18 +180,6 @@
           "image": {
             "type": "string",
             "description": "The image associated with the learning path in bytes."
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date and time when the learning path was created.",
-            "example": "2023-06-25T10:00:00Z"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date and time when the learning path was last updated.",
-            "example": "2023-06-25T10:00:00Z"
           }
         },
         "required": ["hruid", "language", "title"]
