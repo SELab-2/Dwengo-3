@@ -5,7 +5,6 @@ import {
   assignmentSelectShort,
   assignmentSelectShort2,
 } from '../selectInput/select';
-import { off } from 'node:process';
 
 export const AssignmentFilterSchema = z
   .object({
@@ -26,7 +25,7 @@ export const AssignmentCreateSchema = z.object({
   classId: z.string().uuid(),
   teacherId: z.string().uuid().optional(),
   learningPathId: z.string(),
-  deadline: z.string().datetime({ offset: true}),
+  deadline: z.string().datetime({ offset: true }),
 });
 
 export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;
