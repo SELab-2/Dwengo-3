@@ -27,7 +27,6 @@ const DiscussionCreatePage: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
 
   const { data: classData, isLoading: isLoadingClass } = useClassById(classId ?? '');
-  const [selectedAssignment, setSelectedAssignment] = useState<AssignmentShort2>();
   const [message, setMessage] = useState<string>('');
   const { setError } = useError();
 
@@ -37,6 +36,13 @@ const DiscussionCreatePage: React.FC = () => {
     classId,
   });
   const { data: assignments, totalPages } = paginatedData || { data: [], totalPages: 0 };
+  console.log('Assignments:', assignments);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState<string>(
+    assignments[0]?.id ?? '',
+  );
+  const selectedAssignment = assignments.find(
+    (a: AssignmentShort2) => a.id === selectedAssignmentId,
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,15 +75,15 @@ const DiscussionCreatePage: React.FC = () => {
             <InputLabel id="assignment-label">{t('assignment')}</InputLabel>
             <Select
               labelId="assignment-label"
-              value={selectedAssignment}
+              value={selectedAssignmentId}
               label={t('assignment')}
-              onChange={(e) => setSelectedAssignment(e.target.value as AssignmentShort2)}
+              onChange={(e) => setSelectedAssignmentId(e.target.value as string)}
               required
               disabled={isLoading}
             >
-              {assignments?.map((assignment: any) => (
-                <MenuItem key={assignment.id} value={assignment}>
-                  {assignment.title}
+              {assignments?.map((assignment: AssignmentShort2) => (
+                <MenuItem key={assignment.id} value={assignment.id}>
+                  {assignment.learningPath.title}
                 </MenuItem>
               ))}
             </Select>

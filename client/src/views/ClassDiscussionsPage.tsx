@@ -1,15 +1,15 @@
-import { Box, Button, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Divider, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 import { Add } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
-import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
 import DiscussionListCard from '../components/DiscussionListCard.tsx';
 import { useAuth } from '../hooks/useAuth.ts';
 import { ClassRoleEnum } from '../util/interfaces/class.interfaces.ts';
 import { AppRoutes } from '../util/app.routes.ts';
+import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
 
 function DiscussionsPage() {
   const { classId } = useParams();
@@ -17,8 +17,12 @@ function DiscussionsPage() {
   const { user } = useAuth();
 
   const { data: classData, isLoading } = useClassById(classId ? classId : '');
-  const { data: paginatedData } = useAssignmentsOfClass(classId ? classId : '');
-  const { data: assignments, totalPages } = paginatedData || { data: [], totalPages: 0 };
+
+  const { data: paginatedAssignments, isLoading: isLoadingAssignments } = useAssignmentsOfClass(
+    classId ? classId : '',
+  );
+  const { data: assignments } = paginatedAssignments || { data: [] };
+  console.log('Assignments:', assignments);
 
   return isLoading ? (
     <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
@@ -53,15 +57,22 @@ function DiscussionsPage() {
             </Button>
           )}
         </Box>
-
         <Divider sx={{ mb: 2 }} />
-
-        {/* Discussions listed per assignment */}
-        <Stack spacing={2} sx={{ mt: 2 }}>
-          {assignments.map((assignment) => (
-            <DiscussionListCard key={assignment.id} assignment={assignment} />
-          ))}
-        </Stack>
+        {isLoadingAssignments ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+            <CircularProgress size={24} />
+          </Box>
+        ) : assignments.length === 0 ? (
+          <Typography variant="body2" color="text.secondary">
+            {t('noDiscussionsFound')}
+          </Typography>
+        ) : (
+          <Stack spacing={2} sx={{ mt: 2 }}>
+            {assignments.map((assignment) => (
+              <DiscussionListCard key={assignment.id} assignment={assignment} />
+            ))}
+          </Stack>
+        )}
       </Box>
     </Box>
   );

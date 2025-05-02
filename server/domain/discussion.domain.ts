@@ -32,9 +32,15 @@ export class DiscussionDomain {
   ): Promise<{ data: DiscussionShort[]; totalPages: number }> {
     const parseResult = queryWithPaginationParser(query, DiscussionFilterSchema);
     const filters = parseResult.dataSchema;
-    if (user.id !== filters.userId) {
+
+    if (filters.userId && user.id !== filters.userId) {
       throw new Error("User ID doesn't correspond with the provided userId.");
     }
+
+    // TODO: Check if the user is in the group
+    if (filters.assignmentId) {
+    }
+
     return this.discussionPersistence.getDiscussions(filters, parseResult.dataPagination);
   }
 

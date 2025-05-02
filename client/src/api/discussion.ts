@@ -10,28 +10,24 @@ import apiClient from './apiClient';
 /**
  * Fetches a list of discussions based on the provided filters.
  *
+ * @param userId - The ID of the user whose discussions need to be fetched
+ * @param assignmentId - The ID of the assignment whose discussions need to be fetched
  * @param page - The pagenumber of the pagination you want to fetch
  * @param pageSize - The number of items you want to fetch
- * @param groupIds - A list of the groupIds of which the discussions need to be fetched
  * @returns Paginated data containing the list of discussions.
  */
-export async function fetchDiscussions(groupIds?: string[], page?: number, pageSize?: number) {
+export async function fetchDiscussions(
+  userId?: string,
+  assignmentId?: string,
+  page?: number,
+  pageSize?: number,
+) {
   const response = await apiClient.get(ApiRoutes.discussion.list, {
     params: {
+      userId,
+      assignmentId,
       page,
       pageSize,
-      ...(groupIds && groupIds.length > 0 ? { groupIds } : {}),
-    },
-    paramsSerializer: (params) => {
-      const searchParams = new URLSearchParams();
-      if (params.page !== undefined) searchParams.append('page', params.page);
-      if (params.pageSize !== undefined) searchParams.append('pageSize', params.pageSize);
-      if (params.groupIds) {
-        (Array.isArray(params.groupIds) ? params.groupIds : [params.groupIds]).forEach(
-          (id: string) => searchParams.append('groupIds', id),
-        );
-      }
-      return searchParams.toString();
     },
   });
 
