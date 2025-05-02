@@ -48,12 +48,19 @@ describe('assignment persistence test', () => {
           .filter((ass) => ass.class.id === assignment.class.id)
           .map((ass) => ({
             id: ass.id,
+            deadline: ass.deadline,
             groups: ass.groups.map((group) => ({
+              assignmentId: ass.id,
               id: group.id,
               name: group.name,
               progress: group.progress,
               students: group.students.map((student) => ({
                 id: student.id,
+                user: {
+                  name: student.user.name,
+                  surname: student.user.surname,
+                },
+                userId: student.userId,
               })),
             })),
             learningPath: {
@@ -84,12 +91,19 @@ describe('assignment persistence test', () => {
           const expectedAssignments = [
             {
               id: assignment.id,
+              deadline: assignment.deadline,
               groups: assignment.groups.map((group) => ({
+                assignmentId: assignment.id,
                 id: group.id,
                 name: group.name,
                 progress: group.progress,
                 students: group.students.map((student) => ({
                   id: student.id,
+                  user: {
+                    name: student.user.name,
+                    surname: student.user.surname,
+                  },
+                  userId: student.userId,
                 })),
               })),
               learningPath: {
@@ -105,7 +119,7 @@ describe('assignment persistence test', () => {
               },
             },
           ];
-          expect(expectedAssignments).not.toEqual([]);
+          expect(expectedAssignments.sort((a, b) => a.id.localeCompare(b.id))).not.toEqual([]);
           await expect(req).resolves.toEqual({
             data: expect.arrayContaining(expectedAssignments),
             totalPages: 1,
@@ -117,12 +131,19 @@ describe('assignment persistence test', () => {
     test('request with existing teacherId responds correctly', async () => {
       const expectedAssignments = assignments.map((ass) => ({
         id: ass.id,
+        deadline: ass.deadline,
         groups: ass.groups.map((group) => ({
+          assignmentId: ass.id,
           id: group.id,
           name: group.name,
           progress: group.progress,
           students: group.students.map((student) => ({
             id: student.id,
+            user: {
+              name: student.user.name,
+              surname: student.user.surname,
+            },
+            userId: student.userId,
           })),
         })),
         learningPath: {
@@ -154,12 +175,19 @@ describe('assignment persistence test', () => {
     test('request with existing studentId responds correctly', async () => {
       const expectedAssignments = assignments.map((ass) => ({
         id: ass.id,
+        deadline: ass.deadline,
         groups: ass.groups.map((group) => ({
+          assignmentId: ass.id,
           id: group.id,
           name: group.name,
           progress: group.progress,
           students: group.students.map((student) => ({
             id: student.id,
+            user: {
+              name: student.user.name,
+              surname: student.user.surname,
+            },
+            userId: student.userId,
           })),
         })),
         learningPath: {
