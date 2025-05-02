@@ -29,10 +29,9 @@ export function useAssignments({
   return useQuery({
     queryKey: ['assignments', studentId, classId, groupId, teacherId, page, pageSize],
     queryFn: async () => {
-      return await fetchAssignments({ studentId, classId, groupId, teacherId, page, pageSize });
+      return await fetchAssignments({ classId, groupId, studentId, teacherId, page, pageSize });
     },
-    enabled: !!studentId || !!classId || !!groupId || !!teacherId,
-    refetchOnWindowFocus: false,
+    enabled: !!classId || !!groupId || !!studentId || !!teacherId,
   });
 }
 

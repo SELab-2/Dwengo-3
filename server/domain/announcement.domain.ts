@@ -87,13 +87,13 @@ export class AnnouncementDomain {
     return this.announcementPersistence.updateAnnouncement(id, data);
   }
 
-  private async checkUserIsTeacher(user: UserEntity) {
+  private checkUserIsTeacher(user: UserEntity) {
     if (user.role !== ClassRoleEnum.TEACHER) {
       throw new BadRequestError(40012);
     }
   }
 
-  private async checkUserIsStudent(user: UserEntity) {
+  private checkUserIsStudent(user: UserEntity) {
     if (user.role !== ClassRoleEnum.STUDENT) {
       throw new BadRequestError(40013);
     }

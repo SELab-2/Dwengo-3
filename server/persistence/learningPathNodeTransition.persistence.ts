@@ -1,4 +1,4 @@
-import { learningPathNodeTransitionSelectDetail } from '../util/selectInput/learningPathNodeTransition.select';
+import { learningPathNodeTransitionSelectDetail } from '../util/selectInput/select';
 import { LearningPathNodeTransitionCreateParams } from '../util/types/learningPathNodeTransition.types';
 import { PrismaSingleton } from './prismaSingleton';
 

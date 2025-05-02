@@ -8,12 +8,10 @@ import {
 } from '../util/types/discussion.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import {
-  discussionSelectDetail,
-  discussionSelectShort,
-} from '../util/selectInput/discussion.select';
+
 import { Uuid } from '../util/types/assignment.types';
 import { NotFoundError } from '../util/types/error.types';
+import { discussionSelectDetail, discussionSelectShort } from '../util/selectInput/select';
 
 export class DiscussionPersistence {
   private prisma: PrismaClient;

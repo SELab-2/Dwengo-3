@@ -1,12 +1,12 @@
 import { ClassRole, User } from '@prisma/client';
 import { PrismaSingleton } from '../prismaSingleton';
 import { FullUserType } from '../../util/types/user.types';
-import { RegisterParams } from '../../util/types/auth.types';
+import { CreateUserParams } from '../../util/types/auth.types';
 
 export class UsersPersistence {
   private readonly prisma = PrismaSingleton.instance;
 
-  async saveUser(user: RegisterParams): Promise<FullUserType> {
+  async saveUser(user: CreateUserParams): Promise<FullUserType> {
     const data: any = {
       ...user,
     };

@@ -6,11 +6,9 @@ import {
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import {
-  learningPathSelectDetail,
-  learningPathSelectShort,
-} from '../util/selectInput/learningPath.select';
+
 import { NotFoundError } from '../util/types/error.types';
+import { learningPathSelectDetail, learningPathSelectShort } from '../util/selectInput/select';
 
 export class LearningPathPersistence {
   private prisma: PrismaClient;
