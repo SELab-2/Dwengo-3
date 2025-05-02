@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserDetail | null>(null);
   const location = useLocation();
   const { setError } = useError();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check if the user is logged in
@@ -24,7 +25,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const response = await apiClient.get(ApiRoutes.me); // Backend endpoint to fetch user info
           setUser(response.data);
         } catch (error) {
-          setError('Failed to fetch user data. Please log in again.');
+          // TODO: throw error
+        } finally {
+          setIsLoading(false);
         }
       };
 
@@ -48,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
