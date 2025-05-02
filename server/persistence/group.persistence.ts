@@ -1,7 +1,7 @@
 import { Assignment, Class, Group, PrismaClient, Student, Teacher } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { Uuid } from '../util/types/assignment.types';
-import { groupSelectDetail } from '../util/selectInput/group.select';
+import { groupSelectDetail } from '../util/selectInput/select';
 
 export class GroupPersistence {
   private prisma: PrismaClient;

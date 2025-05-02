@@ -1,10 +1,7 @@
 import { z } from 'zod';
 import { Uuid } from './assignment.types';
 import { Prisma } from '.prisma/client';
-import {
-  learningPathSelectDetail,
-  learningPathSelectShort,
-} from '../selectInput/learningPath.select';
+import { learningPathSelectShort, learningPathSelectDetail } from '../selectInput/select';
 
 export const LearningPathFilterSchema = z.object({
   keywords: z.array(z.string()).optional(),

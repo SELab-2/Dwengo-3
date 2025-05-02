@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Prisma } from '.prisma/client';
-import { messageSelectDetail, messageSelectShort } from '../selectInput/message.select';
+import { messageSelectDetail, messageSelectShort } from '../selectInput/select';
 
 export const MessageFilterSchema = z
   .object({
@@ -18,11 +18,11 @@ export const MessageCreateSchema = z.object({
 });
 
 export const MessageUpdateSchema = z.object({
-  id: z.number().positive().safe(),
+  id: z.number().positive(),
   content: z.string(),
 });
 
-export const MessageIdSchema = z.number().positive().safe();
+export const MessageIdSchema = z.number().positive();
 
 export type MessageFilterParams = z.infer<typeof MessageFilterSchema>;
 export type MessageCreateParams = z.infer<typeof MessageCreateSchema>;
