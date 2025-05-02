@@ -80,5 +80,8 @@ export const nl = {
     submission: 'Indiening',
     back: 'Terug',
     score: 'Score',
+    chooseFile: 'Kies een bestand',
+    noFileSelected: 'Geen bestand geselecteerd',
+    submit: 'Indienen',
   },
 };

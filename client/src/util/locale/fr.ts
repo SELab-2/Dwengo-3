@@ -83,5 +83,8 @@ export const fr = {
     submission: 'Soumission',
     back: 'Retourner',
     score: 'Score',
+    chooseFile: 'Choisir un fichier',
+    noFileSelected: 'Aucun fichier sélectionné',
+    submit: 'Soumettre',
   },
 };

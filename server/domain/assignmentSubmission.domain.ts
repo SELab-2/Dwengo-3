@@ -17,6 +17,7 @@ import { BadRequestError, NotFoundError } from '../util/types/error.types';
 import { Uuid } from '../util/types/assignment.types';
 import { LearningPathNodePersistence } from '../persistence/learningPathNode.persistence';
 import { FavoritesPersistence } from '../persistence/favorites.persistence';
+import fs from 'fs';
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
@@ -134,5 +135,9 @@ export class AssignmentSubmissionDomain {
     }
 
     return this.assignmentSubmissionPersistence.updateAssignmentSubmission(req.params.id, data);
+  }
+
+  private deleteFile = (filePath: string) => {
+    fs.unlink(filePath, (err) => err ?? console.log(err));
   }
 }

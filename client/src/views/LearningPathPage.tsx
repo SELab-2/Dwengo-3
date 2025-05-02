@@ -9,6 +9,7 @@ import { ErrorOutline } from '@mui/icons-material';
 import FileTextField from '../components/textfields/FileTextField';
 import { useCreateAssignmentSubmission } from '../hooks/useAssignmentSubmission';
 import { SubmissionType } from '../util/interfaces/assignmentSubmission.interfaces';
+import { useError } from '../hooks/useError';
 
 interface MultipleChoice {
   question: string;
@@ -19,6 +20,7 @@ function LearningPathPage() {
   const { t } = useTranslation();
   const { id } = useParams();
   const submissionCreate = useCreateAssignmentSubmission();
+  const { setError } = useError();
   const [activeIndex, setActiveIndex] = useState(0); // The index of the node that is currently shown
   const [furthestIndex, setFurthestIndex] = useState(0); // The current to be solved question index
   const [progress, setProgress] = useState<number[]>([]); // The list of nodes that have been solved
@@ -77,6 +79,26 @@ function LearningPathPage() {
       setSnackbarOpen(true);
     }
   };
+
+  const handleFileSubmission = () => {
+    if (!file) return;
+
+    const data = {
+      nodeId: currentNode!.id,
+      groupId: "4166d7ef-2b51-4d05-a212-2db8982585fd", //TODO: get groupId or favoriteId
+      submissionType: SubmissionType.FILE,
+      file: file,
+    };
+
+    submissionCreate.mutate(data, {
+      onSuccess: () => {
+        setFile(null);
+      },
+      onError: (error) => {
+        setError(error.message);
+      },
+    });
+  }
 
   const nodeColor = (index: number) => {
     const isActive = index === activeIndex;
@@ -170,21 +192,15 @@ function LearningPathPage() {
                   ))}
                 </Box>
               </Box>) : isFile() ? ( 
-                  <Box mt={3}>
+                  <Box mt={3} >
                     <FileTextField setFile={setFile}/>
-                    <Button variant="contained" color="primary" onClick={() => {
-                      if (file) {
-                        submissionCreate.mutate({
-                          nodeId: currentNode!.id,
-                          groupId: "79c72d66-c73a-4fa2-9723-3dfc69310716", //TODO: get groupId or favoriteId
-                          submissionType: SubmissionType.FILE,
-                          file: file,
-                        });
-                      }
-                    }}>
-                      {t('submit')}
-                    </Button>
-
+                    <Box justifyContent={"center"} display={"flex"}>
+                      <Button variant="contained" color="primary" sx={{ width: { xs: '100%', sm: '40%' } }} onClick={() => {
+                          handleFileSubmission();
+                      }}>
+                        {t('submit')}
+                      </Button>
+                    </Box>
                   </Box>
               ): null
             }

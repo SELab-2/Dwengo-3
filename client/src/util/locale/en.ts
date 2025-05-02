@@ -1,3 +1,5 @@
+import { chown } from "fs";
+
 export const en = {
   translation: {
     yes: 'Yes',
@@ -81,5 +83,8 @@ export const en = {
     submission: 'Submission',
     back: 'Back',
     score: 'Score',
+    chooseFile: 'Choose file',
+    noFileSelected: 'No file selected',
+    submit: 'Submit',
   },
 };

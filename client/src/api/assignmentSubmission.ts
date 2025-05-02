@@ -47,8 +47,26 @@ export async function fetchAssignmentSubmissions(
  * @returns The assignmentSubmissiondetails
  */
 export async function createAssignmentSubmission(data: AssignmentSubmissionCreate) {
-  const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, data);
+  if (data.submissionType === 'FILE') {
+    const formData = new FormData();
 
+    // Append primitive fields
+    if (data.groupId) formData.append("groupId", data.groupId);
+    if (data.favoriteId) formData.append("favoriteId", data.favoriteId);
+    formData.append("nodeId", data.nodeId);
+    formData.append("submissionType", data.submissionType);
+    formData.append("file", data.file!);
+  
+    const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  }
+  const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, data);
+  
   return response.data;
 }
 

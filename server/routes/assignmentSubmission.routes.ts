@@ -3,6 +3,7 @@ import { AssignmentSubmissionDomain } from '../domain/assignmentSubmission.domai
 import multer, { Multer } from 'multer';
 import { UserDomain } from '../domain/user.domain';
 import { isAuthenticated } from './auth.routes';
+import path from 'path';
 
 export class AssignmentSubmissionController {
   public router: Router;
@@ -20,7 +21,9 @@ export class AssignmentSubmissionController {
         cb(null, './submission_files/');
       },
       filename: (req, file, cb) => {
-        cb(null, Math.random().toString()); //TODO
+        const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).substring(2)}`;
+        const extension = path.extname(file.originalname);
+        cb(null, `${uniqueSuffix}${extension}`);
       },
     });
     this.upload = multer({
