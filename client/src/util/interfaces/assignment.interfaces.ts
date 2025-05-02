@@ -12,6 +12,7 @@ export interface AssignmentShort2 {
   id: string;
   groups: GroupShort[];
   learningPath: LearningPathDetail;
+  deadline?: string;
 }
 
 export interface AssignmentDetail {
@@ -20,6 +21,7 @@ export interface AssignmentDetail {
   class: ClassShort;
   groups: GroupShort[];
   learningPath: LearningPathShort;
+  deadline?: string;
 }
 
 export interface PopulatedAssignment {
@@ -35,4 +37,5 @@ export interface AssignmentCreate {
   learningPathId: string;
   classId: string;
   teacherId: string;
+  deadline?: string;
 }

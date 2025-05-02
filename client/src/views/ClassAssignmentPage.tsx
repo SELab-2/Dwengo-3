@@ -20,6 +20,7 @@ import BackButton from '../components/BackButton.tsx';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import { useAssignmentById } from '../hooks/useAssignment.ts';
+import DateTypography from '../components/DateTypography.tsx';
 
 const calculateProgress = (
   progress: number[],
@@ -69,7 +70,12 @@ function ClassAssignmentPage() {
           {`${t('givenBy')}: ${assignment!.teacher.user.name} ${assignment!.teacher.user.surname}`}
         </Typography>
 
-        {/*<DateTypography text={`${t('deadline')}: `} date={assignment.deadline} variant='h5' />*/}
+        {
+          assignment!.deadline && (
+            <DateTypography text={`${t('deadline')}: `} date={new Date(assignment!.deadline!)} variant='h5' />
+          )
+        }
+  
 
         <GroupListDialog
           students={assignment?.groups[selectedGroupIndex]?.students ?? []}

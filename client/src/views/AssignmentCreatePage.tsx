@@ -62,6 +62,7 @@ function AssignmentCreatePage() {
     useState<LearningPathShort[]>(learningPaths);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
   const [groups, setGroups] = useState<StudentShort[][]>(studentsData.map((student) => [student]));
+  const [deadline, setDeadline] = useState<Date | null>(null);
 
   useEffect(() => {
     const updatedPaths = learningPaths.filter(
@@ -99,6 +100,7 @@ function AssignmentCreatePage() {
       teacherId: teacherId!,
       groups: groups.map((group) => group.map((student) => student.id)),
       learningPathId: selectedLearningPath!.id,
+      deadline: deadline ? new Date(deadline).toISOString() : undefined,
     };
     assignmentMutation.mutate(data, {
       onSuccess: (response: AssignmentDetail) => {
@@ -165,7 +167,7 @@ function AssignmentCreatePage() {
               rows={5}
               fullWidth
             />
-            <DateTextField />
+            <DateTextField date={deadline} setDate={setDeadline}/>
           </Grid>
 
           {/* Keywords & Learning Paths */}
