@@ -2,6 +2,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import FileTextField from '../components/textfields/FileTextField';
 
 function HomePage() {
   const { user } = useAuth();

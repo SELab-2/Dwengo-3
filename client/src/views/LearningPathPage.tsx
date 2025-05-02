@@ -6,6 +6,9 @@ import { useLearningObjectById } from '../hooks/useLearningObject';
 import { useLearningPathNodeById } from '../hooks/useLearningPathNode';
 import { useTranslation } from 'react-i18next';
 import { ErrorOutline } from '@mui/icons-material';
+import FileTextField from '../components/textfields/FileTextField';
+import { useCreateAssignmentSubmission } from '../hooks/useAssignmentSubmission';
+import { SubmissionType } from '../util/interfaces/assignmentSubmission.interfaces';
 
 interface MultipleChoice {
   question: string;
@@ -15,11 +18,13 @@ interface MultipleChoice {
 function LearningPathPage() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const submissionCreate = useCreateAssignmentSubmission();
   const [activeIndex, setActiveIndex] = useState(0); // The index of the node that is currently shown
   const [furthestIndex, setFurthestIndex] = useState(0); // The current to be solved question index
   const [progress, setProgress] = useState<number[]>([]); // The list of nodes that have been solved
   const [wrongAnswer, setWrongAnswer] = useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const { data: learningPath } = useLearningPathById(id);
   const { data: currentNode } = useLearningPathNodeById(
     learningPath?.learningPathNodes[activeIndex].id,
@@ -38,6 +43,10 @@ function LearningPathPage() {
     if (!currentObject) return undefined;
     return currentObject.multipleChoice as unknown as MultipleChoice;
   };
+
+  const isFile = (): boolean => {
+    return currentObject?.submissionType === SubmissionType.FILE;
+  }
 
   const handleAnswerClick = (answer: string) => {
     if (activeIndex <= furthestIndex) {
@@ -138,28 +147,47 @@ function LearningPathPage() {
               {currentNode?.instruction ?? t('loading')}
             </Typography>
 
-            <Box mt={3}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                {multipleChoice()?.question ?? t('loading')}
-              </Typography>
-              <Box
-                mt={2}
-                display="grid"
-                gap={1}
-                gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
-              >
-                {multipleChoice()?.options.map((option, index) => (
-                  <Button
-                    key={index}
-                    variant="outlined"
-                    onClick={() => handleAnswerClick(option)}
-                    sx={{ width: '100%', textTransform: 'none' }}
-                  >
-                    {option}
-                  </Button>
-                ))}
-              </Box>
-            </Box>
+            {multipleChoice() ? (
+              <Box mt={3}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {multipleChoice()?.question ?? t('loading')}
+                </Typography>
+                <Box
+                  mt={2}
+                  display="grid"
+                  gap={1}
+                  gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
+                >
+                  {multipleChoice()?.options.map((option, index) => (
+                    <Button
+                      key={index}
+                      variant="outlined"
+                      onClick={() => handleAnswerClick(option)}
+                      sx={{ width: '100%', textTransform: 'none' }}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </Box>
+              </Box>) : isFile() ? ( 
+                  <Box mt={3}>
+                    <FileTextField setFile={setFile}/>
+                    <Button variant="contained" color="primary" onClick={() => {
+                      if (file) {
+                        submissionCreate.mutate({
+                          nodeId: currentNode!.id,
+                          groupId: "79c72d66-c73a-4fa2-9723-3dfc69310716", //TODO: get groupId or favoriteId
+                          submissionType: SubmissionType.FILE,
+                          file: file,
+                        });
+                      }
+                    }}>
+                      {t('submit')}
+                    </Button>
+
+                  </Box>
+              ): null
+            }
 
             {wrongAnswer && (
               <Box
