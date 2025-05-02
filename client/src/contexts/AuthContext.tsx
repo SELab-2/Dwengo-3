@@ -4,28 +4,22 @@ import { UserDetail } from '../util/interfaces/user.interfaces';
 import apiClient from '../api/apiClient';
 import { ApiRoutes } from '../api/api.routes';
 import { useLocation } from 'react-router-dom';
-import { useError } from '../hooks/useError';
+import { PublicRoutes } from '../util/app.routes';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserDetail | null>(null);
   const location = useLocation();
-  const { setError } = useError();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if the user is logged in
-    const excludedRoutes = ['/login', '/register'];
-
     // Fetch user info when the component mounts
-    if (!excludedRoutes.includes(location.pathname)) {
+    if (!PublicRoutes.includes(location.pathname)) {
       const fetchUser = async () => {
         try {
           const response = await apiClient.get(ApiRoutes.me); // Backend endpoint to fetch user info
           setUser(response.data);
-        } catch (error) {
-          // TODO: throw error
         } finally {
           setIsLoading(false);
         }
