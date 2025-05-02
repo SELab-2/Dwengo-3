@@ -1,8 +1,6 @@
 import { z } from 'zod';
-import { Uuid } from './assignment.types';
-import { classSelectDetail, classSelectShort } from '../selectInput/class.select';
 import { Prisma } from '@prisma/client';
-import { Select } from '@prisma/client/runtime/library';
+import { classSelectDetail, classSelectShort } from '../selectInput/select';
 
 export const ClassFilterSchema = z
   .object({

@@ -1,0 +1,37 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "Testing",
+  "main": "app.ts",
+  "scripts": {
+    "test:domain": "vitest --run -c vitest.config.domain.ts",
+    "test:router": "vitest --run -c vitest.config.router.ts",
+    "test:int": "./integration_test.sh",
+    "test:all": "npm run test:int && npm run test:domain && npm run test:router"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SELab-2/Dwengo-3.git"
+  },
+  "keywords": [
+    "dwengo"
+  ],
+  "author": "SELab groep-3",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SELab-2/Dwengo-3/issues"
+  },
+  "homepage": "https://github.com/SELab-2/Dwengo-3#readme",
+  "devDependencies": {
+    "@testing-library/react": "^16.2.0",
+    "supertest": "^7.1.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9",
+    "vitest-dom": "^0.1.1"
+  },
+  "dependencies": {
+    "@types/node": "^22.15.2",
+    "dotenv": "^16.5.0",
+    "zod": "^3.24.2"
+  }
+}

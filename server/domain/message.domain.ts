@@ -49,8 +49,8 @@ export class MessageDomain {
     const messageId = MessageIdSchema.parse(id);
     const message = await this.messagePersistence.getMessageById(messageId);
     if (
-      (user.role === ClassRole.TEACHER && user.student!.userId !== message.sender.id) ||
-      (user.role === ClassRole.STUDENT && user.teacher!.userId !== message.sender.id)
+      (user.role === ClassRole.TEACHER && user.teacher!.userId !== message.sender.id) ||
+      (user.role === ClassRole.STUDENT && user.student!.userId !== message.sender.id)
     ) {
       throw new BadRequestError(40008);
     }

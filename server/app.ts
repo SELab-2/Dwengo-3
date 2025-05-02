@@ -26,11 +26,15 @@ import cors from 'cors';
 import { FavoritesController } from './routes/favorites.routes';
 
 export const app: Express = express();
-const port = 3001;
 
 // Allow requests from frontend
 // TODO: change this for production
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3001'];
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3001',
+  'https://sel2-3.ugent.be',
+];
 
 app.use(
   cors({
@@ -68,7 +72,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
       httpOnly: true,
       sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
       maxAge: 1000 * 60 * 60 * 5, // 5 hours
@@ -79,6 +83,15 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
+
+// todo: i am leaving it here as this is handy to debug some responses from express to the client
+// app.use(function(req, res, next) {
+//   res.on('finish', () => {
+//     console.log(`request url = ${req.originalUrl}`);
+//     console.log(res.getHeaders());
+//   });
+//   next();
+// });
 
 const apiRouter = express.Router();
 if (process.env.NODE_ENV === 'development') {
@@ -106,7 +119,3 @@ apiRouter.use('/favorites', new FavoritesController().router);
 
 // Error handling middleware
 app.use(errorHandling);
-
-app.listen(port, () => {
-  console.log(`[SERVER] - listening on http://localhost:${port}`);
-});
