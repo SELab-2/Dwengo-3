@@ -911,6 +911,12 @@
             "format": "uuid",
             "description": "The unique identifier for the teacher.",
             "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The deadline for the assignment.",
+            "example": "2023-06-25T10:00:00Z"
           }
         }
       },
