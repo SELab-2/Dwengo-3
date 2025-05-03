@@ -8,7 +8,7 @@ import { fetchLearningPaths, fetchLearningPathById } from '../api/learningPath';
  * @param ages - The ages to filter the learningPaths.
  * @param page - The page number for pagination.
  * @param pageSize - The number of items per page for pagination.
- * @returns The query object containing the class data.
+ * @returns The query object containing the learningPath data.
  */
 export function useLearningPath(
   keywords?: string[],
@@ -21,6 +21,7 @@ export function useLearningPath(
     queryFn: async () => {
       return await fetchLearningPaths(keywords, ages, page, pageSize);
     },
+    enabled: !!keywords,
     refetchOnWindowFocus: false,
   });
 }

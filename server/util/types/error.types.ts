@@ -91,6 +91,8 @@ export class NotFoundError extends APIError {
         return 'Favorite not found...';
       case 40415:
         return 'Announcement not found...';
+      case 40416:
+        return 'learningTheme not found...';
       default:
         return 'Not found...';
     }
@@ -195,6 +197,8 @@ export class BadRequestError extends APIError {
         return 'Invalid data provided...';
       case 40046:
         return 'User already exists...';
+      case 40046:
+        return 'You must be a teacher to manage learningThemes...';
       default:
         return 'Bad request...';
     }
