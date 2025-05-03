@@ -83,6 +83,14 @@ export const ApiRoutes = {
     delete: (id: string) => `/api/favorites/${id}`,
   },
 
+  // LearningTheme
+  learningTheme: {
+    list: '/api/learningTheme',
+    create: '/api/learningTheme',
+    get: (id: string) => `/api/learningTheme/${id}`,
+    delete: (id: string) => `/api/learningTheme/${id}`,
+  },
+
   // LearningObject
   learningObject: {
     list: '/api/learningObject',
