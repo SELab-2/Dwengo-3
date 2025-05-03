@@ -1,15 +1,8 @@
 import { z } from 'zod';
 import { AuthenticationProvider, ClassRoleEnum } from './user.types';
 
-export const LoginSchema = z
-  .object({
-    email: z.string().nonempty(),
-    password: z.string().nonempty(),
-  })
-  .required();
-
 export const RegisterSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid('invalid uuid format').optional(),
   username: z.string().nonempty(),
   email: z.string().email('invalid email'),
   password: z.string().nonempty(),
@@ -19,7 +12,7 @@ export const RegisterSchema = z.object({
 });
 
 export const CreateUserSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid('invalid uuid format').optional(),
   username: z.string().nonempty(),
   provider: z.nativeEnum(AuthenticationProvider),
   email: z.string().email('invalid email'),
