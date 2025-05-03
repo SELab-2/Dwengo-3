@@ -41,12 +41,24 @@ function LearningPathPage() {
     learningPath?.learningPathNodes[activeIndex].id,
   );
   const { data: currentObject } = useLearningObjectById(currentNode?.learningObject.id);
-  const { data: submissions } = useAssignmentSubmissions(groupId ?? undefined, favoriteId ?? undefined, currentNode?.id);
-  const { data: submission } = useAssignmentSubmissionById(submissions?.data[0]?.id!);
+  const { data: submissions, isLoading: isSubmissionsLoading } = useAssignmentSubmissions(
+    groupId ?? undefined,
+    favoriteId ?? undefined,
+    currentNode?.id
+  );
+  
+  const submissionId = submissions?.data?.[0]?.id;
+  const { data: submission, isLoading: isSubmissionLoading } = useAssignmentSubmissionById(submissionId!);
+  const [currentSubmission, setCurrentSubmission] = useState<AssignmentSubmissionDetail | undefined>(undefined);
+  
+  useEffect(() => {
+    if (submission) {
+      setCurrentSubmission(submission);
+    }
+  }, [submission]);
+  
 
-  const [ currentSubmission, setCurrentSubmission ] = useState<AssignmentSubmissionDetail | undefined>(submission);
-
-  if (!learningPath) {
+  if (!learningPath || isSubmissionsLoading || isSubmissionLoading) {
     return <div>{t('loading')}</div>;
   }
 
