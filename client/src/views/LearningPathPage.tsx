@@ -7,13 +7,18 @@ import { useLearningPathNodeById } from '../hooks/useLearningPathNode';
 import { useTranslation } from 'react-i18next';
 import { ErrorOutline } from '@mui/icons-material';
 import FileTextField from '../components/textfields/FileTextField';
-import { useCreateAssignmentSubmission } from '../hooks/useAssignmentSubmission';
-import { SubmissionType } from '../util/interfaces/assignmentSubmission.interfaces';
+import { useAssignmentSubmissionById, useAssignmentSubmissions, useCreateAssignmentSubmission, useUpdateAssignmentSubmission } from '../hooks/useAssignmentSubmission';
+import { AssignmentSubmissionDetail, SubmissionType } from '../util/interfaces/assignmentSubmission.interfaces';
 import { useError } from '../hooks/useError';
 
 interface MultipleChoice {
   question: string;
   options: string[];
+}
+
+interface FileSubmission {
+  fileName: string;
+  filePath: string;
 }
 
 function LearningPathPage() {
@@ -23,6 +28,7 @@ function LearningPathPage() {
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
   const submissionCreate = useCreateAssignmentSubmission();
+  const submissionUpdate = useUpdateAssignmentSubmission();
   const { setError } = useError();
   const [activeIndex, setActiveIndex] = useState(0); // The index of the node that is currently shown
   const [furthestIndex, setFurthestIndex] = useState(0); // The current to be solved question index
@@ -35,6 +41,10 @@ function LearningPathPage() {
     learningPath?.learningPathNodes[activeIndex].id,
   );
   const { data: currentObject } = useLearningObjectById(currentNode?.learningObject.id);
+  const { data: submissions } = useAssignmentSubmissions(groupId ?? undefined, favoriteId ?? undefined, currentNode?.id);
+  const { data: submission } = useAssignmentSubmissionById(submissions?.data[0]?.id!);
+
+  const [ currentSubmission, setCurrentSubmission ] = useState<AssignmentSubmissionDetail | undefined>(submission);
 
   if (!learningPath) {
     return <div>{t('loading')}</div>;
@@ -49,6 +59,11 @@ function LearningPathPage() {
     return currentObject.multipleChoice as unknown as MultipleChoice;
   };
 
+  const fileSubmission = () => {
+    if (!currentSubmission) return undefined;
+    return currentSubmission.submission as unknown as FileSubmission;
+  }
+  
   const isFile = (): boolean => {
     return currentObject?.submissionType === SubmissionType.FILE;
   }
@@ -86,22 +101,44 @@ function LearningPathPage() {
   const handleFileSubmission = () => {
     if (!file) return;
 
-    const data = {
-      nodeId: currentNode!.id,
-      groupId: groupId ?? undefined,
-      favoriteId: favoriteId ?? undefined,
-      submissionType: SubmissionType.FILE,
-      file: file,
-    };
-
-    submissionCreate.mutate(data, {
-      onSuccess: () => {
-        setFile(null);
-      },
-      onError: (error) => {
-        setError(error.message);
-      },
-    });
+    currentSubmission ?
+      submissionUpdate.mutate(
+        {
+          id: currentSubmission.id,
+          data :{
+            submissionType: SubmissionType.FILE,
+            file: file,
+          }
+        },
+        {
+          onSuccess: (response) => {
+            setFile(null);
+            setCurrentSubmission(response);
+          },
+          onError: (error) => {
+            setError(error.message);
+          },
+        },
+    ) :
+      submissionCreate.mutate(
+        {
+          nodeId: currentNode!.id,
+          groupId: groupId ?? undefined,
+          favoriteId: favoriteId ?? undefined,
+          submissionType: SubmissionType.FILE,
+          file: file,
+        }
+        , 
+        {
+          onSuccess: (response) => {
+            setFile(null);
+            setCurrentSubmission(response);
+          },
+          onError: (error) => {
+            setError(error.message);
+          },
+      }
+  );
   }
 
   const nodeColor = (index: number) => {
@@ -195,8 +232,22 @@ function LearningPathPage() {
                     </Button>
                   ))}
                 </Box>
-              </Box>) : isFile() ? ( 
+              </Box>) : isFile() ? (
                   <Box mt={3} >
+                    {currentSubmission ? (
+                      <Box>
+                        <Typography mt={2} variant='subtitle1'>
+                          {`${t('fileSubmitted')}: ${fileSubmission()!.fileName}`}
+                        </Typography>
+                        <Typography mt={2} variant='subtitle1'>
+                          {t('submitOtherFile')}
+                        </Typography>
+                      </Box>
+                    ): (
+                      <Typography mt={2} variant='subtitle1'>
+                        {t('noFileSubmitted')}
+                      </Typography>
+                    )}
                     <FileTextField setFile={setFile}/>
                     <Box justifyContent={"center"} display={"flex"}>
                       <Button 

@@ -6,6 +6,7 @@ import {
   AssignmentSubFilterParams,
   AssignmentSubmissionDetail,
   AssignmentSubmissionShort,
+  FileSubmission,
   SubmissionCreateSchema,
   SubmissionFilterSchema,
   SubmissionUpdateSchema,
@@ -130,6 +131,13 @@ export class AssignmentSubmissionDomain {
       if (!req.file) {
         throw new BadRequestError(40034);
       }
+      const submission = await this.assignmentSubmissionPersistence.getAssignmentSubmissionById(
+        req.params.id,
+      );
+
+      const submissionData = submission.submission as FileSubmission;
+      this.deleteFile(submissionData.filePath);
+      
       data.submission = {
         fileName: req.file!.originalname,
         filePath: req.file!.path,

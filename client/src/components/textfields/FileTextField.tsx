@@ -19,6 +19,7 @@ function FileTextField({ setFile }: { setFile: (file: File | null) => void }) {
         direction="row"
         sx={{
             marginBottom: MarginSize.xsmall,
+            marginTop: MarginSize.xsmall,
         }}
         borderColor={"black"}
         border={1}

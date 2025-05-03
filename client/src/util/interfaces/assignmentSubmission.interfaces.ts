@@ -31,5 +31,6 @@ export interface AssignmentSubmissionCreate {
 
 export interface AssignmentSubmissionUpdate {
   submissionType?: SubmissionType;
-  submission?: string | object;
+  submission?: string;
+  file?: File;
 }

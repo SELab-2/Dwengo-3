@@ -91,6 +91,21 @@ export async function fetchAssignmentSubmissionById(assignmentSubmissionId: stri
  * @returns The AssignmentSubmissionDetails
  */
 export async function updateAssignmentSubmission(id: string, data: AssignmentSubmissionUpdate) {
+  if (data.submissionType === 'FILE') {
+    const formData = new FormData();
+
+    // Append primitive fields
+    formData.append("submissionType", data.submissionType);
+    formData.append("file", data.file!);
+  
+    const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  }
   const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), data);
 
   return response.data;
