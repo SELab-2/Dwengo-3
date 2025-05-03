@@ -100,10 +100,7 @@ function ClassStudentDetails() {
                           cursor: 'pointer',
                           textDecoration: 'underline',
                         }}
-                        onClick={() => {
-                          console.log(assignment.groups[0].id)
-                          navigate(AppRoutes.learningPath(assignment.learningPath.id))}
-                        }
+                        onClick={() => navigate(AppRoutes.learningPath(assignment.learningPath.id, assignment.groups[0].id))}
                       >
                         {assignment.learningPath.title}
                       </Typography>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Typography, LinearProgress, Paper, Stack, Snackbar } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useLearningPathById } from '../hooks/useLearningPath';
 import { useLearningObjectById } from '../hooks/useLearningObject';
 import { useLearningPathNodeById } from '../hooks/useLearningPathNode';
@@ -19,6 +19,9 @@ interface MultipleChoice {
 function LearningPathPage() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const groupId = searchParams.get('groupId');
+  const favoriteId = searchParams.get('favoriteId');
   const submissionCreate = useCreateAssignmentSubmission();
   const { setError } = useError();
   const [activeIndex, setActiveIndex] = useState(0); // The index of the node that is currently shown
@@ -85,7 +88,8 @@ function LearningPathPage() {
 
     const data = {
       nodeId: currentNode!.id,
-      groupId: "4166d7ef-2b51-4d05-a212-2db8982585fd", //TODO: get groupId or favoriteId
+      groupId: groupId ?? undefined,
+      favoriteId: favoriteId ?? undefined,
       submissionType: SubmissionType.FILE,
       file: file,
     };
@@ -195,9 +199,12 @@ function LearningPathPage() {
                   <Box mt={3} >
                     <FileTextField setFile={setFile}/>
                     <Box justifyContent={"center"} display={"flex"}>
-                      <Button variant="contained" color="primary" sx={{ width: { xs: '100%', sm: '40%' } }} onClick={() => {
-                          handleFileSubmission();
-                      }}>
+                      <Button 
+                        variant="contained" 
+                        color="primary" 
+                        sx={{ width: { xs: '100%', sm: '40%' } }}
+                        disabled={!groupId && !favoriteId}
+                        onClick={handleFileSubmission}>
                         {t('submit')}
                       </Button>
                     </Box>
