@@ -2,7 +2,7 @@
   "name": "dwengo",
   "version": "1.0.0",
   "description": "Dwengo leerplatform",
-  "main": "app.ts",
+  "main": "server.ts",
   "scripts": {
     "start": "nodemon server.ts",
     "start:dev": "ts-node app.ts",
