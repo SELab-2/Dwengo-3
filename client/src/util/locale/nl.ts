@@ -83,5 +83,7 @@ export const nl = {
     chooseFile: 'Kies een bestand',
     noFileSelected: 'Geen bestand geselecteerd',
     submit: 'Indienen',
+    fileSubmitted: "Ingediend bestand",
+    submitOtherFile: "Dien een andere bestand in, opgepast het oude wordt verwijderd",
   },
 };

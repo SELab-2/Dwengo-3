@@ -86,5 +86,8 @@ export const en = {
     chooseFile: 'Choose file',
     noFileSelected: 'No file selected',
     submit: 'Submit',
+    fileSubmitted: "Submitted file",
+    submitOtherFile: "Submit another file, note that the previous one will be replaced",
+
   },
 };

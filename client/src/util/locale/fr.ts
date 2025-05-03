@@ -86,5 +86,7 @@ export const fr = {
     chooseFile: 'Choisir un fichier',
     noFileSelected: 'Aucun fichier sélectionné',
     submit: 'Soumettre',
+    fileSubmitted: "Fichier soumis",
+    submitOtherFile: "Soumettez un autre fichier, attention le précédent sera remplacé",
   },
 };

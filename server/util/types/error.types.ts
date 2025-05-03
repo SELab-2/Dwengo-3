@@ -91,6 +91,8 @@ export class NotFoundError extends APIError {
         return 'Favorite not found...';
       case 40415:
         return 'Announcement not found...';
+      case 40416:
+        return 'File not found...';
       default:
         return 'Not found...';
     }
@@ -209,5 +211,16 @@ export class UnauthorizedError extends APIError {
 
   get statusCode(): number {
     return 401;
+  }
+}
+
+export class FileDownloadError extends APIError {
+  constructor(errorCode: number, message?: string) {
+    super(errorCode, message);
+    this.name = 'FileDownloadError';
+  }
+
+  get statusCode(): number {
+    return 500;
   }
 }

@@ -110,3 +110,25 @@ export async function updateAssignmentSubmission(id: string, data: AssignmentSub
 
   return response.data;
 }
+
+
+/**
+ * Download a file submission
+ *
+ * @param id - The id of the assignmentSubmission to be downloaded
+ * @param fileName - The name of the file to be downloaded
+ */
+export async function downloadFileSubmission(id: string, fileName: string) {
+  const response = await apiClient.get(ApiRoutes.assignmentSubmission.download(id), {
+    responseType: 'blob',
+  });
+
+  const blob = new Blob([response.data], { type: response.headers['content-type'] });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}

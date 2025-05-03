@@ -14,7 +14,7 @@ import {
 import { UserEntity } from '../util/types/user.types';
 import { checkIfUserIsInGroup } from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
-import { BadRequestError, NotFoundError } from '../util/types/error.types';
+import { BadRequestError } from '../util/types/error.types';
 import { Uuid } from '../util/types/assignment.types';
 import { LearningPathNodePersistence } from '../persistence/learningPathNode.persistence';
 import { FavoritesPersistence } from '../persistence/favorites.persistence';
@@ -145,6 +145,26 @@ export class AssignmentSubmissionDomain {
     }
 
     return this.assignmentSubmissionPersistence.updateAssignmentSubmission(req.params.id, data);
+  }
+
+  public async getFileSubmissionPath(
+    id: Uuid,
+    user: UserEntity,
+  ): Promise<string | undefined> {
+    const submission = await this.assignmentSubmissionPersistence.getAssignmentSubmissionById(id);
+
+    if (submission.favorite) {
+      if (submission.favorite!.userId != user.id) {
+        throw new BadRequestError(40043);
+      }
+    } else {
+      await checkIfUserIsInGroup(user, submission.group!.id, this.groupPersistence);
+    }
+
+    if (submission.submissionType === SubmissionType.FILE) {
+      return (submission.submission as FileSubmission).filePath;
+    }
+
   }
 
   private deleteFile = (filePath: string) => {

@@ -10,6 +10,10 @@ import FileTextField from '../components/textfields/FileTextField';
 import { useAssignmentSubmissionById, useAssignmentSubmissions, useCreateAssignmentSubmission, useUpdateAssignmentSubmission } from '../hooks/useAssignmentSubmission';
 import { AssignmentSubmissionDetail, SubmissionType } from '../util/interfaces/assignmentSubmission.interfaces';
 import { useError } from '../hooks/useError';
+import { downloadFileSubmission } from '../api/assignmentSubmission';
+import DownloadIcon from '@mui/icons-material/Download';
+import { useAuth } from '../hooks/useAuth';
+
 
 interface MultipleChoice {
   question: string;
@@ -24,6 +28,7 @@ interface FileSubmission {
 function LearningPathPage() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
@@ -249,28 +254,37 @@ function LearningPathPage() {
                     {currentSubmission ? (
                       <Box>
                         <Typography mt={2} variant='subtitle1'>
-                          {`${t('fileSubmitted')}: ${fileSubmission()!.fileName}`}
+                          {`${t('fileSubmitted')}: `}
+                          <Button
+                            endIcon={<DownloadIcon />}
+                            onClick={() => downloadFileSubmission(currentSubmission.id, fileSubmission()?.fileName!)}>
+                              {fileSubmission()?.fileName}
+                          </Button>
                         </Typography>
-                        <Typography mt={2} variant='subtitle1'>
+                        {user?.student &&
+                        <Typography mt={2} variant='subtitle1' fontWeight="bold">
                           {t('submitOtherFile')}
-                        </Typography>
+                        </Typography>}
                       </Box>
                     ): (
                       <Typography mt={2} variant='subtitle1'>
                         {t('noFileSubmitted')}
                       </Typography>
                     )}
-                    <FileTextField setFile={setFile}/>
-                    <Box justifyContent={"center"} display={"flex"}>
-                      <Button 
-                        variant="contained" 
-                        color="primary" 
-                        sx={{ width: { xs: '100%', sm: '40%' } }}
-                        disabled={!groupId && !favoriteId}
-                        onClick={handleFileSubmission}>
-                        {t('submit')}
-                      </Button>
-                    </Box>
+                    {user?.student &&
+                    <Box>
+                      <FileTextField setFile={setFile}/>
+                      <Box justifyContent={"center"} display={"flex"}>
+                        <Button 
+                          variant="contained" 
+                          color="primary" 
+                          sx={{ width: { xs: '100%', sm: '40%' } }}
+                          disabled={!groupId && !favoriteId}
+                          onClick={handleFileSubmission}>
+                          {t('submit')}
+                        </Button>
+                      </Box>
+                    </Box>}
                   </Box>
               ): null
             }
