@@ -1,37 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  AppBar,
-  Box,
-  Button,
-  Grid,
-  GridLegacy,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography,
-} from '@mui/material';
-import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
+import { AppBar, Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { useClassById } from '../hooks/useClass.ts';
 import theme from '../util/theme.ts';
 import { MarginSize } from '../util/size.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { UserDataTableComponent } from '../components/UserDataTableComponent.tsx';
-import { deleteTeacherFromClass, deleteStudentFromClass } from '../api/class.ts';
+import { deleteStudentFromClass, deleteTeacherFromClass, updateClass } from '../api/class.ts';
 import { useAuth } from '../hooks/useAuth.ts';
-import ErrorSnackBar from '../components/ErrorSnackBar.tsx';
 import { useError } from '../hooks/useError.ts';
-import { updateClass } from '../api/class.ts';
 
 export function ClassGroupEditPage() {
   const { t } = useTranslation();
@@ -51,6 +29,7 @@ export function ClassGroupEditPage() {
   useEffect(() => {
     if (classData) {
       setClassName(classData.name);
+      setClassDescription(classData.description);
     }
   }, [classData]);
 
@@ -79,17 +58,14 @@ export function ClassGroupEditPage() {
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'white' }}>
             {t('editClass')}: {className}
           </Typography>
+
           <Button
-            onClick={async () => {
-              await updateClass(classId!, {
-                name: className,
-                description: classDescription,
-              });
+            onClick={() => {
               navigate(AppRoutes.class(classId!));
             }}
             sx={{ color: 'white' }}
           >
-            {t('save')}
+            {t('cancel')}
           </Button>
         </AppBar>
       </Paper>
@@ -125,8 +101,26 @@ export function ClassGroupEditPage() {
             rows={6}
             sx={{ width: '100%' }}
             label={t('classDescription')}
+            value={classDescription}
             onChange={(e: any) => setClassDescription(e.target.value)}
           />
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'end' }}>
+            <Button
+              onClick={async () => {
+                await updateClass(classId!, {
+                  name: className,
+                  description: classDescription,
+                });
+                navigate(AppRoutes.class(classId!));
+              }}
+              sx={{
+                color: theme.palette.primary.main,
+                border: `1px solid ${theme.palette.primary.main}`,
+              }}
+            >
+              {t('save')}
+            </Button>
+          </Box>
         </Box>
 
         <Box

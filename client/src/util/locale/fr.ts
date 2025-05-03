@@ -85,5 +85,6 @@ export const fr = {
     back: 'Retourner',
     score: 'Score',
     editClass: 'Modifier la classe',
+    classDescription: 'Description de la classe',
   },
 };

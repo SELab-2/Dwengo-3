@@ -15,6 +15,7 @@ export interface ClassShort {
 export interface ClassDetail {
   id: string;
   name: string;
+  description: string;
   students: StudentShort[];
   teachers: TeacherShort[];
   assignments: AssignmentShort[];

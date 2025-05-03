@@ -146,7 +146,7 @@ model Teacher {
 model Class {
   id                String             @id @default(uuid())
   name              String             @default("New class")
-  description       String?
+  description       String             @default("")
   students          Student[]
   teachers          Teacher[]
   assignments       Assignment[]

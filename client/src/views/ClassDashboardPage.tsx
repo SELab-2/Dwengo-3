@@ -162,11 +162,10 @@ function ClassDashboardPage() {
             </List>
 
             <Typography variant="h6" sx={{ mt: 3, fontWeight: 'bold' }}>
-              {t('notes')}
+              {t('classDescription')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'gray' }}>
-              {classData!.notes || // TODO add notes to class
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}
+              {classData!.description}
             </Typography>
 
             <Button
@@ -174,7 +173,7 @@ function ClassDashboardPage() {
               sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
               onClick={() => {
                 navigate(AppRoutes.classEdit(classId!));
-              }} // Replace with actual navigation
+              }}
             >
               {t('editClassGroup')}
             </Button>

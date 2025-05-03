@@ -83,5 +83,6 @@ export const en = {
     back: 'Back',
     score: 'Score',
     editClass: 'Editing class',
+    classDescription: 'Class description',
   },
 };

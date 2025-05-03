@@ -82,5 +82,6 @@ export const nl = {
     back: 'Terug',
     score: 'Score',
     editClass: 'Klas bewerken',
+    classDescription: 'Klasbeschrijving',
   },
 };
