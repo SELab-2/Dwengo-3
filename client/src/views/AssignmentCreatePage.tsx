@@ -95,7 +95,16 @@ function AssignmentCreatePage() {
   };
 
   const handleSubmit = () => {
-    //TODO: add (name, description) and deadline
+    //TODO: deadline
+    if (!name.trim()) {
+      setError(t('assignmentNameRequired'));
+      return;
+    }
+    if (!selectedLearningPath) {
+      setError(t('learningPathRequired'));
+      return;
+    }
+
     const data: AssignmentCreate = {
       name: name,
       description: description,

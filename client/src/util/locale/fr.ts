@@ -83,5 +83,7 @@ export const fr = {
     submission: 'Soumission',
     back: 'Retourner',
     score: 'Score',
+    assignmentNameRequired: 'Le nom du devoir est requis',
+    learningPathRequired: "Le parcours d'apprentissage est requis",
   },
 };
