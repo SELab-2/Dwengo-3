@@ -88,5 +88,6 @@ export const fr = {
     submit: 'Soumettre',
     fileSubmitted: "Fichier soumis",
     submitOtherFile: "Soumettez un autre fichier, attention le précédent sera remplacé",
+    noFileSubmitted: "Aucun fichier n’a encore été soumis",
   },
 };

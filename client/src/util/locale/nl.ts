@@ -85,5 +85,6 @@ export const nl = {
     submit: 'Indienen',
     fileSubmitted: "Ingediend bestand",
     submitOtherFile: "Dien een andere bestand in, opgepast het oude wordt verwijderd",
+    noFileSubmitted: "Er is nog geen bestand ingediend",
   },
 };
