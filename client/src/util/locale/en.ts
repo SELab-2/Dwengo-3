@@ -59,6 +59,7 @@ export const en = {
     discussions: 'Discussions',
     startDiscussion: 'Start a new discussion',
     createADiscussion: 'Create a new discussion',
+    noDiscussionsFound: 'No discussions found',
     firstMessage: 'First message',
     students: 'Students',
     details: 'Details',
@@ -85,5 +86,8 @@ export const en = {
     submission: 'Submission',
     back: 'Back',
     score: 'Score',
+    sendNewMessage: 'Send new message',
+    newMessage: 'New message',
+    noMessegesYet: 'No messages yet',
   },
 };

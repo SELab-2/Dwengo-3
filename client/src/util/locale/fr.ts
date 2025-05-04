@@ -61,6 +61,7 @@ export const fr = {
     discussions: 'Discussions',
     startDiscussion: 'Démarrer une nouvelle discussion',
     createADiscussion: 'Créer une nouvelle discussion',
+    noDiscussionsFound: 'Aucune discussion trouvée',
     firstMessage: 'Premier message',
     students: 'Étudiants',
     details: 'Détails',
@@ -87,5 +88,8 @@ export const fr = {
     submission: 'Soumission',
     back: 'Retourner',
     score: 'Score',
+    sendNewMessage: 'Envoyer un nouveau message',
+    newMessage: 'Nouveau message',
+    noMessagesYet: 'Pas encore de messages',
   },
 };

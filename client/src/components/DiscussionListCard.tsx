@@ -3,10 +3,12 @@ import { useDiscussions } from '../hooks/useDiscussion';
 import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import DiscussionCard from './DiscussionCard';
 import { DiscussionShort } from '../util/interfaces/discussion.interfaces';
+import { useTranslation } from 'react-i18next';
 
 function DiscussionListCard({ assignment }: { assignment: AssignmentShort2 }) {
   const { data: paginatedDiscussions, isLoading } = useDiscussions({ assignmentId: assignment.id });
   const { data: discussions } = paginatedDiscussions || { data: [] };
+  const { t } = useTranslation();
 
   if (!isLoading && discussions.length != 0) {
     return (
@@ -37,7 +39,7 @@ function DiscussionListCard({ assignment }: { assignment: AssignmentShort2 }) {
               </Box>
             ) : discussions.length === 0 ? (
               <Typography variant="body2" color="text.secondary">
-                Geen discussies gevonden.
+                {t('noDiscussionsFound')}
               </Typography>
             ) : (
               discussions.map((discussion: DiscussionShort) => (

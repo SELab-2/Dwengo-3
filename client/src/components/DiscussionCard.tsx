@@ -21,6 +21,7 @@ import { useState } from 'react';
 import { useCreateMessage } from '../hooks/useMessage';
 import { useError } from '../hooks/useError';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
   const { data: discussionDetails } = useDiscussionById(discussion.id);
@@ -31,6 +32,7 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
   const createMessageMutation = useCreateMessage();
   const queryClient = useQueryClient();
   const theme = useTheme();
+  const { t } = useTranslation();
 
   if (!discussionDetails) {
     return null;
@@ -105,7 +107,7 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
               onClick={() => setShowNewMessage(true)}
               sx={{ mr: 1, textTransform: 'none' }}
             >
-              Send new message
+              {t('sendNewMessage')}
             </Button>
           </Box>
 
@@ -116,21 +118,21 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
                 fullWidth
                 multiline
                 minRows={2}
-                label="New Message"
+                label={t('newMessage')}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 sx={{ mb: 2 }}
               />
               <Box display="flex" justifyContent="flex-end" gap={1}>
                 <Button variant="outlined" onClick={() => setShowNewMessage(false)}>
-                  Cancel
+                  {t('cancel')}
                 </Button>
                 <Button
                   variant="contained"
                   onClick={handleSendMessage}
                   disabled={!newMessage.trim()}
                 >
-                  Send
+                  {t('send')}
                 </Button>
               </Box>
             </Paper>
@@ -151,7 +153,7 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
               ))
             ) : (
               <Typography variant="body2" color="text.secondary">
-                No messages yet.
+                {t('noMessegesYet')}
               </Typography>
             )}
           </Box>

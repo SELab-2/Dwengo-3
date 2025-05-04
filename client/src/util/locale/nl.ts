@@ -58,6 +58,7 @@ export const nl = {
     discussions: 'Discussies',
     startDiscussion: 'Nieuwe discussie starten',
     createADiscussion: 'Een nieuwe discussie starten',
+    noDiscussionsFound: 'Geen discussies gevonden',
     firstMessage: 'Eerste bericht',
     students: 'Studenten',
     details: 'Details',
@@ -84,5 +85,8 @@ export const nl = {
     submission: 'Indiening',
     back: 'Terug',
     score: 'Score',
+    sendNewMessage: 'Verzend nieuw bericht',
+    newMessage: 'Nieuw bericht',
+    noMessegesYet: 'Nog geen berichten',
   },
 };
