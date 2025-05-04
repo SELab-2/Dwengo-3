@@ -92,7 +92,6 @@ passport.use(
 
         if (user === null) {
           user = await userDomain.createUser({
-            id: profile.id,
             email: profile.emails!![0].value,
             name: profile.name!!.givenName,
             password: '',
