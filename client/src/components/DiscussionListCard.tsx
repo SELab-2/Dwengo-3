@@ -2,23 +2,31 @@ import { Card, CardContent, Typography, Box, CircularProgress } from '@mui/mater
 import { useDiscussions } from '../hooks/useDiscussion';
 import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import DiscussionCard from './DiscussionCard';
+import { DiscussionShort } from '../util/interfaces/discussion.interfaces';
 
 function DiscussionListCard({ assignment }: { assignment: AssignmentShort2 }) {
   const { data: paginatedDiscussions, isLoading } = useDiscussions({ assignmentId: assignment.id });
   const { data: discussions } = paginatedDiscussions || { data: [] };
 
-  console.log('Discussions:', discussions);
-
   if (!isLoading && discussions.length != 0) {
     return (
-      <Card variant="outlined" sx={{ width: '100%', mb: 2 }}>
+      <Card
+        variant="outlined"
+        sx={{
+          width: '100%',
+          mb: 2,
+          borderRadius: 2,
+          border: '2px solid',
+          borderColor: 'primary.main',
+          boxShadow: 0,
+        }}
+      >
         <CardContent>
           <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
             {assignment.learningPath.title}
           </Typography>
           <Box
             sx={{
-              maxHeight: 300,
               overflowY: 'auto',
               pr: 1,
             }}
@@ -32,7 +40,7 @@ function DiscussionListCard({ assignment }: { assignment: AssignmentShort2 }) {
                 Geen discussies gevonden.
               </Typography>
             ) : (
-              discussions.map((discussion: any) => (
+              discussions.map((discussion: DiscussionShort) => (
                 <DiscussionCard key={discussion.id} discussion={discussion} />
               ))
             )}

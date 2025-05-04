@@ -9,7 +9,7 @@ import DiscussionListCard from '../components/DiscussionListCard.tsx';
 import { useAuth } from '../hooks/useAuth.ts';
 import { ClassRoleEnum } from '../util/interfaces/class.interfaces.ts';
 import { AppRoutes } from '../util/app.routes.ts';
-import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
+import { useAssignments } from '../hooks/useAssignment.ts';
 
 function DiscussionsPage() {
   const { classId } = useParams();
@@ -18,11 +18,12 @@ function DiscussionsPage() {
 
   const { data: classData, isLoading } = useClassById(classId ? classId : '');
 
-  const { data: paginatedAssignments, isLoading: isLoadingAssignments } = useAssignmentsOfClass(
-    classId ? classId : '',
-  );
+  const { data: paginatedAssignments, isLoading: isLoadingAssignments } = useAssignments({
+    classId: classId,
+    studentId: user?.student?.id,
+    teacherId: user?.teacher?.id,
+  });
   const { data: assignments } = paginatedAssignments || { data: [] };
-  console.log('Assignments:', assignments);
 
   return isLoading ? (
     <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>

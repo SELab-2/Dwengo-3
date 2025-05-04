@@ -58,8 +58,7 @@ export function useDiscussionById(id: string) {
 
 export function useCreateDiscussion() {
   return useMutation({
-    mutationFn: async ({ groupId, message }: { groupId: string; message: string }) => {
-      //TODO: update the created discussion with the message as soon as the endpoint is available
+    mutationFn: async ({ groupId }: { groupId: string }) => {
       return await createDiscussion({ groupId });
     },
   });

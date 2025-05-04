@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useAssignments } from '../hooks/useAssignment';
 import { useAuth } from '../hooks/useAuth';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCreateDiscussion } from '../hooks/useDiscussion';
 import { useError } from '../hooks/useError';
 import { useTranslation } from 'react-i18next';
@@ -20,23 +20,27 @@ import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useClassById } from '../hooks/useClass';
 import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import { GroupShort } from '../util/interfaces/group.interfaces';
+import { AppRoutes } from '../util/app.routes';
+import { useCreateMessage } from '../hooks/useMessage';
 
 const DiscussionCreatePage: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { classId } = useParams<{ classId: string }>();
+  const navigate = useNavigate();
 
   const { data: classData, isLoading: isLoadingClass } = useClassById(classId ?? '');
   const [message, setMessage] = useState<string>('');
   const { setError } = useError();
 
   const createDiscussionMutation = useCreateDiscussion();
+  const createMessageMutation = useCreateMessage();
+
   const { data: paginatedData, isLoading } = useAssignments({
     studentId: user?.student?.id,
     classId,
   });
   const { data: assignments, totalPages } = paginatedData || { data: [], totalPages: 0 };
-  console.log('Assignments:', assignments);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string>(
     assignments[0]?.id ?? '',
   );
@@ -53,9 +57,24 @@ const DiscussionCreatePage: React.FC = () => {
       )[0].id ?? '';
 
     createDiscussionMutation.mutate(
-      { groupId, message },
+      { groupId },
       {
-        onSuccess: () => {},
+        onSuccess: (response) => {
+          createMessageMutation.mutate(
+            {
+              discussionId: response.id,
+              content: message,
+            },
+            {
+              onSuccess: () => {
+                navigate(AppRoutes.classDiscussions(classId!));
+              },
+              onError: (error: any) => {
+                setError(error.message);
+              },
+            },
+          );
+        },
         onError: (error: any) => {
           setError(error.message);
         },
