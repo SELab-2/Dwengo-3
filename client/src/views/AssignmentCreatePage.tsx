@@ -40,7 +40,7 @@ function AssignmentCreatePage() {
   const { setError } = useError();
 
   const teacherId = user?.teacher?.id;
-  const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath();
+  const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath([]);
   const learningPaths = paginatedData?.data ?? [];
 
   const keywords = Array.from(

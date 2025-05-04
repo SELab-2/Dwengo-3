@@ -14,8 +14,13 @@ function ProtectContent({ children }: { children: React.ReactNode }) {
     return <>{children}</>; // Render children if on public routes
   }
 
+  // Don't render anything while loading
+  if (isLoading) {
+    return null;
+  }
+
   // Redirect to login if not authenticated
-  if (!isLoading && !user) {
+  if (!user) {
     return <Navigate to={AppRoutes.login} replace />;
   }
 
