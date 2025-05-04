@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { ErrorOutline } from '@mui/icons-material';
 import { MathJaxContext, MathJax } from 'better-react-mathjax';
 import parse from 'html-react-parser';
+import { SubmissionType } from '../util/interfaces/learningObject.interfaces';
+import { LearningPathNodeTransitionDetail } from '../util/interfaces/LearningPathNodeTransition.interfaces';
 
 interface MultipleChoice {
   question: string;
@@ -45,28 +47,30 @@ function LearningPathPage() {
   const maxIndex = totalSteps - 1;
 
   const multipleChoice = () => {
-    if (!currentObject) return undefined;
+    if (!currentObject || currentObject.submissionType !== SubmissionType.MULTIPLE_CHOICE) {
+      return undefined;
+    }
+
     return currentObject.multipleChoice as unknown as MultipleChoice;
   };
 
-  const handleAnswerClick = (answer: string) => {
+  const handleTransition = (
+    rightAnswer: boolean,
+    transition?: LearningPathNodeTransitionDetail,
+  ) => {
     if (activeIndex <= furthestIndex) {
-      const transition = currentNode?.transitions.find((t) => {
-        const match = t.condition.match(/answer\s*==\s*(.+)/);
-        const expected = match?.[1]?.replace(/['"]+/g, '').trim();
-        return expected === answer;
-      });
-
-      if (transition) {
+      if (transition || rightAnswer) {
         if (!progress.includes(activeIndex)) {
           setProgress((prev) => [...prev, activeIndex]);
         }
 
-        if (transition.toNodeIndex > furthestIndex) {
+        if (transition && transition.toNodeIndex > furthestIndex) {
           setFurthestIndex(transition.toNodeIndex);
         }
 
-        if (transition.toNodeIndex == -1) {
+        // Because multiplechoice questions require a corresponding transition for a correct answer, when this is the last node,
+        // it should point to the index -1. When this is the last node and it isn't a multiplechoice question, it doesn't have a transition.
+        if ((transition && transition.toNodeIndex === -1) || (rightAnswer && !transition)) {
           setFurthestIndex(maxIndex + 1);
         }
 
@@ -76,6 +80,24 @@ function LearningPathPage() {
       }
     } else {
       setSnackbarOpen(true);
+    }
+  };
+
+  const handleAnswerClick = (answer: string) => {
+    const transition = currentNode?.transitions.find((t) => {
+      const match = t.condition.match(/answer\s*==\s*(.+)/);
+      const expected = match?.[1]?.replace(/['"]+/g, '').trim();
+      return expected === answer;
+    });
+
+    handleTransition(!!transition, transition);
+  };
+
+  const handleReadClick = () => {
+    const transition = currentNode?.transitions[0];
+    handleTransition(true, transition);
+    if (activeIndex < maxIndex) {
+      setActiveIndex(activeIndex + 1);
     }
   };
 
@@ -89,10 +111,6 @@ function LearningPathPage() {
     if (index < furthestIndex) return 'lightblue';
     return 'white';
   };
-
-  console.log('Learning Path:', learningPath);
-  console.log('Current Node:', currentNode);
-  console.log('Current Object:', currentObject);
 
   return (
     <Box display="flex" height="90vh">
@@ -160,28 +178,51 @@ function LearningPathPage() {
               </MathJax>
             </MathJaxContext>
 
-            <Box mt={3}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                {multipleChoice()?.question ?? t('loading')}
-              </Typography>
-              <Box
-                mt={2}
-                display="grid"
-                gap={1}
-                gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
-              >
-                {multipleChoice()?.options.map((option, index) => (
-                  <Button
-                    key={index}
-                    variant="outlined"
-                    onClick={() => handleAnswerClick(option)}
-                    sx={{ width: '100%', textTransform: 'none' }}
-                  >
-                    {option}
-                  </Button>
-                ))}
+            {/* Handle submission types */}
+            {currentObject?.submissionType === SubmissionType.MULTIPLE_CHOICE && (
+              <Box mt={3}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {multipleChoice()?.question ?? t('loading')}
+                </Typography>
+                <Box
+                  mt={2}
+                  display="grid"
+                  gap={1}
+                  gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
+                >
+                  {multipleChoice()?.options.map((option, index) => (
+                    <Button
+                      key={index}
+                      variant="outlined"
+                      onClick={() => handleAnswerClick(option)}
+                      sx={{ width: '100%', textTransform: 'none' }}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </Box>
               </Box>
-            </Box>
+            )}
+
+            {currentObject?.submissionType === SubmissionType.FILE && (
+              <Box mt={3}>
+                <Typography variant="h6" fontWeight="medium">
+                  {t('TODO')}
+                </Typography>
+              </Box>
+            )}
+
+            {currentObject?.submissionType === SubmissionType.READ && (
+              <Box mt={3}>
+                <Typography variant="h6" fontWeight="medium">
+                  {t('readContent')}
+                </Typography>
+                <Button variant="contained" onClick={() => handleReadClick()} sx={{ mt: 2 }}>
+                  {t('continue')}
+                </Button>
+              </Box>
+            )}
+
             {wrongAnswer && (
               <Box
                 mt={2}
@@ -203,6 +244,7 @@ function LearningPathPage() {
                 </Stack>
               </Box>
             )}
+
             <Snackbar
               open={snackbarOpen}
               autoHideDuration={6000}

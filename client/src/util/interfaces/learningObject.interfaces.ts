@@ -1,6 +1,6 @@
 import { keyword } from './keyword.interfaces';
 
-enum contentType {
+export enum ContentType {
   'TEXT_PLAIN',
   'TEXT_MARKDOWN',
   'IMAGE_IMAGE_BLOCK',
@@ -10,6 +10,13 @@ enum contentType {
   'EXTERN',
   'BLOCKLY',
 }
+
+export enum SubmissionType {
+  'MULTIPLE_CHOICE' = 'MULTIPLE_CHOICE',
+  'FILE' = 'FILE',
+  'READ' = 'READ',
+}
+
 export interface LearningObjectShort {
   id: string;
   title: string;
@@ -26,7 +33,7 @@ export interface LearningObjectDetail {
   language: string;
   title: string;
   description: string;
-  contentType: contentType;
+  contentType: ContentType;
   contentLocation: string;
   targetAges: number[];
   teacherExclusive: boolean;
@@ -39,6 +46,7 @@ export interface LearningObjectDetail {
   returnValue: JSON;
   available: boolean;
   createdAt: Date;
+  submissionType: SubmissionType;
   updatedAt: Date;
   content: string;
   multipleChoice: JSON;
@@ -52,7 +60,7 @@ export interface LearningObjectCreate {
   language: string;
   title: string;
   description?: string;
-  contentType?: contentType;
+  contentType?: ContentType;
   targetAges?: number[];
   teacherExclusive?: boolean;
   skosConcepts?: string[];
@@ -72,7 +80,7 @@ export interface LearningObjectUpdate {
   version?: number;
   title?: string;
   description?: string;
-  contentType?: contentType;
+  contentType?: ContentType;
   targetAges?: number[];
   teacherExclusive?: boolean;
   skosConcepts?: string[];
