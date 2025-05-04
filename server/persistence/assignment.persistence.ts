@@ -9,12 +9,13 @@ import {
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+
+import { NotFoundError } from '../util/types/error.types';
 import {
   assignmentSelectDetail,
   assignmentSelectShort2,
-} from '../util/selectInput/assignment.select';
-import { NotFoundError } from '../util/types/error.types';
-import { groupSelectShort } from '../util/selectInput/group.select';
+  groupSelectShort,
+} from '../util/selectInput/select';
 
 export class AssignmentPersistence {
   public async getAssignments(

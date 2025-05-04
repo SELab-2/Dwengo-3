@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { classSelectDetail, classSelectShort } from '../selectInput/class.select';
 import { Prisma } from '@prisma/client';
+import { classSelectDetail, classSelectShort } from '../selectInput/select';
 
 export const ClassFilterSchema = z
   .object({

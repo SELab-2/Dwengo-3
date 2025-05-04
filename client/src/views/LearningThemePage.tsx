@@ -44,19 +44,26 @@ function LearningPathsOverviewPage() {
     setPage((prev) => prev + 1);
   };
 
-  // Memoize targetAgesRange calculation to prevent unnecessary recalculations
-  const targetAgesRange = useMemo(
-    () => (index: number) => {
-      const nodes = paths[index].learningPathNodes;
-      const ages = nodes.flatMap((n) => n.learningObject?.targetAges || []);
-      return ages.length === 0 ? 'N/A' : `${Math.min(...ages)} - ${Math.max(...ages)}`;
-    },
-    [paths],
-  );
-
   if (isLoading && page === 1) return <div>Loading...</div>;
   if (!data) return <div>No data available</div>;
-  if (paths.length === 0) return <div>No learning paths available for this theme...</div>;
+
+  const targetAgesRange = (index: number) => {
+    const nodes = paths[index].learningPathNodes;
+    let ages: number[] = [];
+
+    for (const node of nodes) {
+      if (node.learningObject?.targetAges) {
+        ages = ages.concat(node.learningObject.targetAges);
+      }
+    }
+
+    if (ages.length === 0) return 'N/A';
+
+    const minAge = Math.min(...ages);
+    const maxAge = Math.max(...ages);
+
+    return `${minAge} - ${maxAge}`;
+  };
 
   return (
     <Box
