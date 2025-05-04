@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Box, Button, Typography, LinearProgress, Paper, Stack, Snackbar } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useLearningPathById } from '../hooks/useLearningPath';
@@ -6,11 +6,21 @@ import { useLearningObjectById } from '../hooks/useLearningObject';
 import { useLearningPathNodeById } from '../hooks/useLearningPathNode';
 import { useTranslation } from 'react-i18next';
 import { ErrorOutline } from '@mui/icons-material';
+import { MathJaxContext, MathJax } from 'better-react-mathjax';
+import parse from 'html-react-parser';
 
 interface MultipleChoice {
   question: string;
   options: string[];
 }
+
+const mathJaxConfig = {
+  loader: { load: ['[tex]/ams'] },
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+  },
+};
 
 function LearningPathPage() {
   const { t } = useTranslation();
@@ -80,6 +90,10 @@ function LearningPathPage() {
     return 'white';
   };
 
+  console.log('Learning Path:', learningPath);
+  console.log('Current Node:', currentNode);
+  console.log('Current Object:', currentObject);
+
   return (
     <Box display="flex" height="90vh">
       {/* Sidebar */}
@@ -133,10 +147,18 @@ function LearningPathPage() {
             <Typography variant="h6" fontWeight="medium">
               {currentObject?.title ?? t('loading')}
             </Typography>
-
-            <Typography mt={2} color="text.secondary">
-              {currentNode?.instruction ?? t('loading')}
-            </Typography>
+            {currentNode?.instruction && (
+              <Typography mt={2} color="text.secondary">
+                {currentNode.instruction}
+              </Typography>
+            )}
+            <MathJaxContext version={3} config={mathJaxConfig}>
+              <MathJax hideUntilTypeset="first">
+                <Typography mt={2} color="text.secondary" component="div">
+                  {parse(currentObject?.content ?? t('loading'))}
+                </Typography>
+              </MathJax>
+            </MathJaxContext>
 
             <Box mt={3}>
               <Typography variant="subtitle1" fontWeight="bold">
@@ -160,7 +182,6 @@ function LearningPathPage() {
                 ))}
               </Box>
             </Box>
-
             {wrongAnswer && (
               <Box
                 mt={2}
@@ -182,7 +203,6 @@ function LearningPathPage() {
                 </Stack>
               </Box>
             )}
-
             <Snackbar
               open={snackbarOpen}
               autoHideDuration={6000}
