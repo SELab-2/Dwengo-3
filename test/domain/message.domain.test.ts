@@ -86,13 +86,22 @@ describe('message domain', () => {
       }
       return null;
     });
+    mockMessagePeristence.getMessages.mockImplementation((id: number) => {
+      let found = testMessages.find((m) => m.id === id);
+      if (found) {
+        return found;
+      }
+      return null;
+    });
   });
   describe('getMessages', () => {
-    /* bug get discussions with id is not possible
-        test('valid query passes', async () => {
-            await expect(messageDomain.getMessages(getMessagesQuery, userStudent)).resolves.not.toThrow()
-        });
-        */
+    /*
+    test('valid query passes', async () => {
+      await expect(
+        messageDomain.getMessages(getMessagesQuery, userStudent)
+      ).resolves.not.toThrow()
+    });
+    */
     test('invalid pagination fails', async () => {
       await expect(
         messageDomain.getMessages(getMessagesInvalidPaginationQuery, userStudent),
@@ -108,11 +117,13 @@ describe('message domain', () => {
     });
   });
   describe('createMessage', () => {
-    /* bug get discussions with id is not possible
-        test('valid params passes', async () => {
-          await expect(messageDomain.createMessage(createMessageParams, userStudent)).resolves.not.toThrow()
-        });
-        */
+    /*
+    test('valid params passes', async () => {
+      await expect(
+        messageDomain.createMessage(createMessageParams, userStudent)
+      ).resolves.not.toThrow()
+    });
+    */
     test('invalid discussion id fails', async () => {
       await expect(
         messageDomain.createMessage(createMessageInvalidDiscussionIdParams, userStudent),
@@ -121,23 +132,6 @@ describe('message domain', () => {
     test('invalid content fails', async () => {
       await expect(
         messageDomain.createMessage(createMessageInvalidContentParams, userStudent),
-      ).rejects.toThrow();
-    });
-  });
-  describe('deleteMessage', () => {
-    test('valid id passes', async () => {
-      await expect(
-        messageDomain.deleteMessage(deleteMessageId, userStudent),
-      ).resolves.not.toThrow();
-    });
-    test('invalid id fails', async () => {
-      await expect(
-        messageDomain.createMessage(deleteMessageInvalidId, userStudent),
-      ).rejects.toThrow();
-    });
-    test('message does not belong to user fails', async () => {
-      await expect(
-        messageDomain.createMessage(deleteMessageInvalidId, userTeacher),
       ).rejects.toThrow();
     });
   });

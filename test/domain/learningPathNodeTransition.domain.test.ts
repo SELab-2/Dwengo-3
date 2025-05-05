@@ -66,7 +66,7 @@ describe('learningPathNodeTransition domain', () => {
           createLearningPathNodeTransitionParams,
           userStudent,
         ),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40009 });
     });
     test('invalid pathnode id fails', async () => {
       await expect(

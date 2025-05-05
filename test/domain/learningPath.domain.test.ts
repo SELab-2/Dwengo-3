@@ -109,7 +109,7 @@ describe('learningPath domain', () => {
     test('user is student fails', async () => {
       await expect(
         learningPathDomain.createLearningPath(createLearningPathParams, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40009 });
     });
     test('invalid hruid fails', async () => {
       await expect(
