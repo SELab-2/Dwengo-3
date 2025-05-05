@@ -91,5 +91,7 @@ export const fr = {
     sendNewMessage: 'Envoyer un nouveau message',
     newMessage: 'Nouveau message',
     noMessagesYet: 'Pas encore de messages',
+    assignmentNameRequired: 'Le nom du devoir est requis',
+    learningPathRequired: "Le parcours d'apprentissage est requis",
   },
 };

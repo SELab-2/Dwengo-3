@@ -88,5 +88,7 @@ export const nl = {
     sendNewMessage: 'Verzend nieuw bericht',
     newMessage: 'Nieuw bericht',
     noMessegesYet: 'Nog geen berichten',
+    assignmentNameRequired: 'Opdrachtnaam is verplicht',
+    learningPathRequired: 'Leerpad is verplicht',
   },
 };

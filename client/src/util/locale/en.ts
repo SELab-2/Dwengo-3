@@ -89,5 +89,7 @@ export const en = {
     sendNewMessage: 'Send new message',
     newMessage: 'New message',
     noMessegesYet: 'No messages yet',
+    assignmentNameRequired: 'Assignment name is required',
+    learningPathRequired: 'Learning path is required',
   },
 };

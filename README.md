@@ -51,10 +51,19 @@ Run the following command to start a PostgreSQL database container:
 ```bash
 read -sp "Postgres password: " password && echo \
               && sudo docker run --name docker_db \
+                  --restart always \
                   -e POSTGRES_USER=postgres \
                   -e POSTGRES_PASSWORD=$password \
                   -e POSTGRES_DB=dwengo_db \
                   -p 5432:5432 -d postgres
+
+# start the database for tests:
+sudo docker run --name integration_tests_prisma \
+                  --restart always \
+                  -e POSTGRES_USER=postgres \
+                  -e POSTGRES_PASSWORD=password \
+                  -e POSTGRES_DB=dwengo_test_db \
+                  -p 5433:5432 -d postgres
 ```
 
 Confirm the database is running:

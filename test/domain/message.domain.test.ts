@@ -7,11 +7,11 @@ import {
 } from '../../server/util/types/user.types';
 import {
   testDiscussions,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
   testMessages,
+  testPaginationFilter,
+  testStudents,
+  testTeachers,
+  testUsers,
 } from '../testObjects.json';
 
 // message persistence mock
@@ -127,7 +127,7 @@ describe('message domain', () => {
   describe('deleteMessage', () => {
     test('valid id passes', async () => {
       await expect(
-        messageDomain.deleteMessage(deleteMessageId.toString(), userStudent),
+        messageDomain.deleteMessage(deleteMessageId, userStudent),
       ).resolves.not.toThrow();
     });
     test('invalid id fails', async () => {
