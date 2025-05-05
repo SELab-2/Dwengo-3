@@ -94,6 +94,8 @@ export class AssignmentPersistence {
     //create assignment
     const assignment = await PrismaSingleton.instance.assignment.create({
       data: {
+        name: params.name,
+        description: params.description,
         class: {
           connect: {
             id: params.classId,

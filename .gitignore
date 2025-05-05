@@ -5,5 +5,5 @@ node_modules
 .vscode/
 db/schemaspy/result/
 db/schemaspy/schemaspy.properties
-test/.env.test
-
+server/util/test-files/.env.test
+test/coverage

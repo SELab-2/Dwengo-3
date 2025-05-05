@@ -3,6 +3,7 @@ import {
   Button,
   LinearProgress,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -62,20 +63,45 @@ function ClassAssignmentPage() {
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 1000 }, p: 2 }}>
         <BackButton link={`/class/${classData!.id}/assignments`} />
 
-        <Typography variant="h3" gutterBottom>
-          {/*assignment!.name*/}
-          {assignment!.learningPath.title}
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          {`${t('givenBy')}: ${assignment!.teacher.user.name} ${assignment!.teacher.user.surname}`}
-        </Typography>
+        <Stack spacing={3} sx={{ mb: 4 }}>
+          <Typography variant="h3">{assignment!.name}</Typography>
 
-        {
-          assignment!.deadline && (
-            <DateTypography text={`${t('deadline')}: `} date={new Date(assignment!.deadline!)} variant='h5' />
-          )
-        }
-  
+          <Box
+            sx={{
+              backgroundColor: '#f9f9f9',
+              borderRadius: 2,
+              p: 2,
+              boxShadow: 1,
+              position: 'relative',
+            }}
+          >
+            {/* Given By - top right */}
+            <Typography
+              variant="subtitle2"
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 12,
+                fontStyle: 'italic',
+                color: 'text.secondary',
+              }}
+            >
+              {t('givenBy')}: {assignment!.teacher.user.name} {assignment!.teacher.user.surname}
+            </Typography>
+
+            {/* Description content */}
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+              {t('description')}
+            </Typography>
+            <Typography variant="body1">{assignment!.description}</Typography>
+            {
+              assignment!.deadline && (
+                <DateTypography text={`${t('deadline')}: `} date={new Date(assignment!.deadline!)} variant='h5' />
+              )
+            }
+          </Box>
+        </Stack>
+        {/*<DateTypography text={`${t('deadline')}: `} date={assignment.deadline} variant='h5' />*/}
 
         <GroupListDialog
           students={assignment?.groups[selectedGroupIndex]?.students ?? []}

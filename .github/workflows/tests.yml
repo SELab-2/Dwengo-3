@@ -1,0 +1,67 @@
+name: Test on PR to dev/main
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+  push:
+    branches:
+      - dev
+      - main
+
+run-name: ${{ github.actor }} has pushed an update to ${{ github.ref }} branch 🚀
+
+jobs:
+  install:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache node modules for server, client, and db
+        uses: actions/cache@v4
+        with:
+          path: |
+            server/node_modules
+            client/node_modules
+            db/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: |
+          ./install.sh;
+          cd test && npm install;
+
+  setup:
+    needs: [ install ]
+    runs-on: self-hosted
+    steps:
+      - name: Set up database
+        run: |
+          export ENV_FILE=test/.env.test && ./prisma.sh migrate reset --force;
+
+  test-domain:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Domain tests
+        run: cd test && npm run test:domain
+
+  test-router:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Router tests
+        run: cd test && npm run test:router
+
+  test-integration:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Setup clean
+        run: cd test && npm run clean
+      - name: Integration tests
+        run: cd test && npm run test:int
+      - name: Teardown clean
+        run: cd test && npm run clean

@@ -57,6 +57,13 @@ model LearningObjectKeyword {
   @@id([learningObjectId, keyword])
 }
 
+model LearningTheme {
+  id       String   @id @default(uuid())
+  image    String
+  title    String
+  keywords String[]
+}
+
 model LearningPathNode {
   id                    String                   @id @default(uuid())
   learningPathId        String
@@ -174,6 +181,8 @@ model Group {
 
 model Assignment {
   id             String       @id @default(uuid())
+  name           String
+  description    String
   learningPathId String
   teacherId      String
   classId        String
@@ -233,12 +242,12 @@ model Message {
 }
 
 model Announcement {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   title     String
   content   String
   classId   String
   createdAt DateTime @default(now()) @db.Timestamp
-  class     Class   @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   teacherId String
-  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
