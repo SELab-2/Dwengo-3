@@ -78,7 +78,7 @@ describe('class domain', () => {
   describe('getClasses', () => {
     beforeEach(() => {
       mockClassPeristence.getClasses.mockImplementation(() => {
-        return [testClasses[0]];
+        return testClasses;
       });
     });
     test('teacher id provided and corresponds with user teacher id passes', async () => {
@@ -112,12 +112,12 @@ describe('class domain', () => {
     test('student id provided and user is student with other id fails', async () => {
       await expect(
         classDomain.getClasses(getClassesOtherStudentQuery, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40004 });
     });
     test('teacher id provided and user is teacher with other id fails', async () => {
       await expect(
         classDomain.getClasses(getClassesOtherTeacherQuery, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40004 });
     });
   });
   describe('getClassById', () => {
@@ -139,12 +139,12 @@ describe('class domain', () => {
     test('student does not belong to class fails', async () => {
       await expect(
         classDomain.getClassById(getClassByIdUserDoesntBelongId, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40002 });
     });
     test('teacher does not belong to class fails', async () => {
       await expect(
         classDomain.getClassById(getClassByIdUserDoesntBelongId, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40001 });
     });
   });
   describe('createClass', () => {
@@ -153,7 +153,9 @@ describe('class domain', () => {
       await expect(classDomain.createClass(createClassParams, userTeacher)).resolves.not.toThrow();
     });
     test('user is student fails', async () => {
-      await expect(classDomain.createClass(createClassParams, userStudent)).rejects.toThrow();
+      await expect(classDomain.createClass(createClassParams, userStudent)).rejects.toMatchObject({
+        _errorCode: 40005,
+      });
     });
     test('invalid param fails', async () => {
       await expect(
@@ -191,12 +193,12 @@ describe('class domain', () => {
           updateClassTeacherDoesntBelongParams,
           userTeacher,
         ),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40006 });
     });
     test('user is student fails', async () => {
       await expect(
         classDomain.updateClass(testClasses[0].id, updateClassParams, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40006 });
     });
   });
 });

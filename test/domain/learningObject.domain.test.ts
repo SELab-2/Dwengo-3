@@ -132,7 +132,7 @@ describe('learningObject domain', () => {
     test('user is student fails', async () => {
       await expect(
         learningObjectDomain.createLearningObject(createLearningObjectParams, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40009 });
     });
   });
   describe('updateLearningObject', () => {
@@ -145,17 +145,7 @@ describe('learningObject domain', () => {
         ),
       ).resolves.not.toThrow();
     });
-    /* geen user check
-    test('user is student fails', async () => {
-      await expect(learningObjectDomain.updateLearningObject(learningObjectId, updateLearningObjectParams, userStudent)).rejects.toThrow()
-    });
-    */
   });
-  /* geen id uuid check
-  describe('getLearningObjectById', () => {
-
-  });
-  */
   describe('deleteLearningObject', () => {
     test('existing learningobject and no nodes passes', async () => {
       mockLearningObjectPeristence.getLearningObjectById.mockImplementation((id: string) => {
@@ -173,12 +163,12 @@ describe('learningObject domain', () => {
     test('nonexisting learningobject fails', async () => {
       await expect(
         learningObjectDomain.deleteLearningObject(deleteLearningObjectUnexistingId, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40029 });
     });
     test('existing nodes fails', async () => {
       await expect(
         learningObjectDomain.deleteLearningObject(deleteLearningObjectId, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40030 });
     });
   });
 });

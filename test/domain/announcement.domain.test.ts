@@ -50,6 +50,12 @@ let userTeacher: UserEntity = {
   teacher: testTeachers[0],
   provider: AuthenticationProvider.LOCAL,
 };
+let userTeacherNoAnnouncements: UserEntity = {
+  ...testUsers[2],
+  role: testUsers[2].role as ClassRoleEnum,
+  teacher: testTeachers[2],
+  provider: AuthenticationProvider.LOCAL,
+};
 let userStudent: UserEntity = {
   ...testUsers[5],
   role: testUsers[5].role as ClassRoleEnum,
@@ -157,15 +163,7 @@ describe('announcement domain', () => {
     mockAnnouncementPeristence.getAnnouncementById.mockImplementation((id: string) => {
       let found = testAnnouncements.find((a) => a.id === id);
       if (found) {
-        return {
-          id: found.id,
-          title: found.title,
-          content: found.content,
-          teacherId: found.teacherId,
-          class: {
-            id: found.classId,
-          },
-        };
+        return found;
       }
       return null;
     });
@@ -218,17 +216,17 @@ describe('announcement domain', () => {
     test('user does not belong to class fails', async () => {
       await expect(
         announcementDomain.getAnnouncements(getAnnouncementsNotOfClassQuery, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40007 });
     });
     test('student id is not user fails', async () => {
       await expect(
         announcementDomain.getAnnouncements(getAnnouncementsStudentNotUserQuery, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40011 });
     });
     test('teacher id is not user fails', async () => {
       await expect(
         announcementDomain.getAnnouncements(getAnnouncementsTeacherNotUserQuery, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40010 });
     });
   });
   describe('getAnnouncementById', () => {
@@ -245,7 +243,7 @@ describe('announcement domain', () => {
     test('user does not belong to class fails', async () => {
       await expect(
         announcementDomain.getAnnouncementById(getAnnouncementByIdNotOfClassId, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40007 });
     });
   });
   describe('createAnnouncement', () => {
@@ -272,12 +270,12 @@ describe('announcement domain', () => {
     test('user is not teacher fails', async () => {
       await expect(
         announcementDomain.createAnnouncement(createAnnouncementParams, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40012 });
     });
     test('user does not belong to class fails', async () => {
       await expect(
         announcementDomain.createAnnouncement(createAnnouncementNotOfClassParams, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40007 });
     });
   });
   describe('updateAnnouncement', () => {
@@ -315,8 +313,16 @@ describe('announcement domain', () => {
           updateAnnouncementParams,
           userStudent,
         ),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40012 });
     });
-    /* TODO announcement from teacher throws error in persistence, shoulde be domain */
+    test('announcement does not belong to teacher fails', async () => {
+      await expect(
+        announcementDomain.updateAnnouncement(
+          updateAnnouncementId,
+          updateAnnouncementParams,
+          userTeacherNoAnnouncements,
+        ),
+      ).rejects.toMatchObject({ _errorCode: 40037 });
+    });
   });
 });

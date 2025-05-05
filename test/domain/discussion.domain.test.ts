@@ -161,7 +161,7 @@ describe('discussion domain', () => {
     test('user does not belong to group fails', async () => {
       await expect(
         discussionDomain.getDiscussionById(getDiscussionByIdId, userTeacherOtherGroup),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40001 });
     });
   });
   describe('createDiscussion', () => {
@@ -173,7 +173,7 @@ describe('discussion domain', () => {
     test('user does not belong to group fails', async () => {
       await expect(
         discussionDomain.createDiscussion(createDiscussionParams, userTeacherOtherGroup),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40001 });
     });
     test('invalid group id fails', async () => {
       await expect(
