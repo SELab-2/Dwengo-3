@@ -1,4 +1,9 @@
 /**
+ * This constant contains the routes that are accessible to all users,
+ */
+export const PublicRoutes = ['/login', '/register'];
+
+/**
  * This constant contains the routes for the application.
  */
 export const AppRoutes = {

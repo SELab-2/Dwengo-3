@@ -17,8 +17,6 @@ export const LearningPathCreateSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   image: z.string().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
 });
 
 export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;

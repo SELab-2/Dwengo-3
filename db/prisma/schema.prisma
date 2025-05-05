@@ -57,6 +57,13 @@ model LearningObjectKeyword {
   @@id([learningObjectId, keyword])
 }
 
+model LearningTheme {
+  id       String   @id @default(uuid())
+  image    String
+  title    String
+  keywords String[]
+}
+
 model LearningPathNode {
   id                    String                   @id @default(uuid())
   learningPathId        String

@@ -74,7 +74,15 @@ sudo docker ps -a
 
 ---
 
-## 3. Configure the environment
+## 3. Redis store
+
+Set up the redis container used to store sessions:
+
+```bash
+sudo docker run -d --name <a name> -p 6379:6379 redis
+```
+
+## 4. Configure the environment
 
 Create a `.env` file in the root directory and add the following:
 
@@ -86,7 +94,7 @@ Replace `<your_password>` with the password you set when running the `docker` co
 
 ---
 
-## 4. Install dependencies & Prisma
+## 5. Install dependencies & Prisma
 
 Install dependencies for both the server and client, generate the Prisma client and apply the migrations:
 
@@ -101,7 +109,7 @@ Change `dev` to `deploy` to apply the migrations to the production database.
 
 ---
 
-## 5. Synchronize the database
+## 6. Synchronize the database
 
 Run the following command to synchronize your local database with Dwengo database:
 
@@ -116,7 +124,7 @@ Add the script to pm2 for automatic synchronization at midnight
 
 ---
 
-## 6. Run the development servers
+## 7. Run the development servers
 
 - **Start the server:**
 
@@ -139,7 +147,7 @@ You can change the ports in the `.env` file, if the ports are not configured the
 
 ---
 
-## 7. Verifying setup
+## 8. Verifying setup
 
 - Ensure the database container is running:
 
