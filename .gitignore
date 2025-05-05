@@ -6,4 +6,5 @@ node_modules
 db/schemaspy/result/
 db/schemaspy/schemaspy.properties
 server/util/test-files/.env.test
+test/coverage
 
