@@ -7,6 +7,7 @@ import {
   AssignmentSubmissionShort,
   AssignmentSubmissionUpdate,
 } from '../util/interfaces/assignmentSubmission.interfaces';
+import { AxiosProgressEvent } from 'axios';
 
 /**
  * Fetch a list of assignmentSubmissions
@@ -46,7 +47,10 @@ export async function fetchAssignmentSubmissions(
  * @param data - The data of the assignmentSubmission to be created
  * @returns The assignmentSubmissiondetails
  */
-export async function createAssignmentSubmission(data: AssignmentSubmissionCreate) {
+export async function createAssignmentSubmission(
+  data: AssignmentSubmissionCreate,
+  setProgressEvent?: (progressEvent: AxiosProgressEvent) => void
+) { 
   if (data.submissionType === 'FILE') {
     const formData = new FormData();
 
@@ -61,6 +65,9 @@ export async function createAssignmentSubmission(data: AssignmentSubmissionCreat
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      onUploadProgress(event) {
+        setProgressEvent && setProgressEvent(event);
+      }
     });
 
     return response.data;
@@ -90,7 +97,11 @@ export async function fetchAssignmentSubmissionById(assignmentSubmissionId: stri
  * @param data - The update-data
  * @returns The AssignmentSubmissionDetails
  */
-export async function updateAssignmentSubmission(id: string, data: AssignmentSubmissionUpdate) {
+export async function updateAssignmentSubmission(
+  id: string, 
+  data: AssignmentSubmissionUpdate,
+  setProgressEvent?: (progressEvent: AxiosProgressEvent) => void
+) {
   if (data.submissionType === 'FILE') {
     const formData = new FormData();
 
@@ -102,6 +113,9 @@ export async function updateAssignmentSubmission(id: string, data: AssignmentSub
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      onUploadProgress(event) {
+        setProgressEvent && setProgressEvent(event);
+      }
     });
 
     return response.data;

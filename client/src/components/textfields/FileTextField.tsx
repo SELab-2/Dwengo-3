@@ -1,9 +1,10 @@
-import { Button, Typography, Box, Stack } from "@mui/material";
+import { Button, Typography, Box, Stack, LinearProgress } from "@mui/material";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MarginSize } from "../../util/size";
+import { AxiosProgressEvent } from "axios";
 
-function FileTextField({ setFile }: { setFile: (file: File | null) => void }) {
+function FileTextField({ setFile, progressEvent }: { setFile: (file: File | null) => void, progressEvent?: AxiosProgressEvent }) {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState("");
@@ -15,6 +16,7 @@ function FileTextField({ setFile }: { setFile: (file: File | null) => void }) {
   };
 
   return (
+    <Box>
       <Stack
         direction="row"
         sx={{
@@ -38,6 +40,18 @@ function FileTextField({ setFile }: { setFile: (file: File | null) => void }) {
         {fileName || t("noFileSelected")}
       </Typography>
     </Stack>
+    {progressEvent &&
+    <LinearProgress
+      variant="determinate"
+      value={Math.round((progressEvent.loaded * 100) / progressEvent.total!)}
+      sx={{
+        height: 8,
+        borderRadius: 5,
+        minWidth: { xs: '80px', sm: '150px', md: '200px' },
+        marginBottom: MarginSize.xsmall
+      }}
+    />}
+  </Box>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AssignmentSubmissionCreate, AssignmentSubmissionUpdate } from "../util/interfaces/assignmentSubmission.interfaces";
 import { createAssignmentSubmission, fetchAssignmentSubmissionById, fetchAssignmentSubmissions, updateAssignmentSubmission } from "../api/assignmentSubmission";
+import { AxiosProgressEvent } from "axios";
 
 
 /**
@@ -8,10 +9,12 @@ import { createAssignmentSubmission, fetchAssignmentSubmissionById, fetchAssignm
  *
  * @returns The mutation object for creating an assignment submission.
  */
-export function useCreateAssignmentSubmission() {
+export function useCreateAssignmentSubmission(setProgressEvent?: (progressEvent: AxiosProgressEvent) => void) {
     return useMutation({
-        mutationFn: async(data: AssignmentSubmissionCreate) => {
-            return await createAssignmentSubmission(data);
+        mutationFn: async(
+            data: AssignmentSubmissionCreate,
+        ) => {
+            return await createAssignmentSubmission(data, setProgressEvent);
         },
     });
 }
@@ -63,10 +66,10 @@ export function useAssignmentSubmissions(
  *
  * @returns The mutation object for updating an assignment submission.
  */
-export function useUpdateAssignmentSubmission() {
+export function useUpdateAssignmentSubmission(setProgressEvent?: (progressEvent: AxiosProgressEvent) => void) {
     return useMutation({
         mutationFn: async ({id, data}: {id: string, data: AssignmentSubmissionUpdate}) => {
-            return await updateAssignmentSubmission(id, data);
+            return await updateAssignmentSubmission(id, data, setProgressEvent);
         },
     });
 }

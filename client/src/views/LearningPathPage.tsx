@@ -13,6 +13,7 @@ import { useError } from '../hooks/useError';
 import { downloadFileSubmission } from '../api/assignmentSubmission';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useAuth } from '../hooks/useAuth';
+import { AxiosProgressEvent } from 'axios';
 
 
 interface MultipleChoice {
@@ -32,8 +33,9 @@ function LearningPathPage() {
   const [searchParams] = useSearchParams();
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
-  const submissionCreate = useCreateAssignmentSubmission();
-  const submissionUpdate = useUpdateAssignmentSubmission();
+  const [progressEvent, setProgressEvent] = useState<AxiosProgressEvent | undefined>(undefined);
+  const submissionCreate = useCreateAssignmentSubmission(setProgressEvent);
+  const submissionUpdate = useUpdateAssignmentSubmission(setProgressEvent);
   const { setError } = useError();
   const [activeIndex, setActiveIndex] = useState(0); // The index of the node that is currently shown
   const [furthestIndex, setFurthestIndex] = useState(0); // The current to be solved question index
@@ -129,6 +131,7 @@ function LearningPathPage() {
         },
         {
           onSuccess: (response) => {
+            setProgressEvent(undefined);
             setFile(null);
             setCurrentSubmission(response);
           },
@@ -148,6 +151,7 @@ function LearningPathPage() {
         , 
         {
           onSuccess: (response) => {
+            setProgressEvent(undefined);
             setFile(null);
             setCurrentSubmission(response);
           },
@@ -273,7 +277,7 @@ function LearningPathPage() {
                     )}
                     {user?.student &&
                     <Box>
-                      <FileTextField setFile={setFile}/>
+                      <FileTextField setFile={setFile} progressEvent={progressEvent}/>
                       <Box justifyContent={"center"} display={"flex"}>
                         <Button 
                           variant="contained" 
