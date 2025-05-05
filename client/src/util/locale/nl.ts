@@ -80,5 +80,7 @@ export const nl = {
     submission: 'Indiening',
     back: 'Terug',
     score: 'Score',
+    assignmentNameRequired: 'Opdrachtnaam is verplicht',
+    learningPathRequired: 'Leerpad is verplicht',
   },
 };

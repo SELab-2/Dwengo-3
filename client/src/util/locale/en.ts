@@ -81,5 +81,7 @@ export const en = {
     submission: 'Submission',
     back: 'Back',
     score: 'Score',
+    assignmentNameRequired: 'Assignment name is required',
+    learningPathRequired: 'Learning path is required',
   },
 };
