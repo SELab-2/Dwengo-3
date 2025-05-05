@@ -1,4 +1,26 @@
 {
+  "testCreateUsers": [
+    {
+      "id": "861a2072-9ceb-4028-8ac0-932ffb5f4920",
+      "provider": "LOCAL",
+      "username": "user1",
+      "email": "user1@example.com",
+      "password": "password1",
+      "surname": "Smith",
+      "name": "John",
+      "role": "TEACHER"
+    },
+    {
+      "id": "f3113be5-2ecb-43bc-91c8-52251f3db83e",
+      "provider": "LOCAL",
+      "username": "user1",
+      "email": "user1@example.com",
+      "password": "password1",
+      "surname": "Smith",
+      "name": "John",
+      "role": "STUDENT"
+    }
+  ],
   "testUsers": [
     {
       "id": "1a2b3c4d-1111-2222-3333-444455556666",
@@ -269,7 +291,7 @@
       }
     }
   ],
-  "testAnnnouncements": [
+  "testAnnouncements": [
     {
       "id": "07cca202-e34c-459a-b289-56a383231cdd",
       "title": "announcement1",

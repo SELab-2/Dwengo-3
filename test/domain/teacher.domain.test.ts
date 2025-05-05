@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {} from '../testObjects.json';
 import { TeacherDomain } from '../../server/domain/teacher.domain';
 import {
+  testCreateUsers,
   testTeachers,
   testUsers,
   testStudents,
@@ -110,7 +111,7 @@ describe('teacher domain', () => {
   });
   describe('createTeacher', () => {
     beforeEach(() => {
-      createUser = testUsers[0];
+      createUser = testCreateUsers[0];
       createExistingUsers = [createUser, testUsers[1]];
       createTeacherResult = testTeachers[0];
       mockTeacherPeristence.createTeacher.mockImplementation((userId: string) => {
