@@ -4,7 +4,7 @@
   "description": "Testing",
   "main": "app.ts",
   "scripts": {
-    "clean": "dotenv -e .env.test -- ts-node cleanDatabase.ts && ../prisma.sh migrate dev",
+    "clean": "dotenv -e .env.test -- ts-node cleanDatabase.ts",
     "test:domain": "vitest --run -c vitest.config.domain.ts --coverage --dir ../",
     "test:router": "dotenv -e .env.test -- vitest --run -c vitest.config.router.ts --coverage --dir ../",
     "test:int": "dotenv -e .env.test -- vitest --run --no-file-parallelism -c vitest.config.integration.ts --coverage --dir ../",
