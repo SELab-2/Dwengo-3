@@ -49,6 +49,7 @@ describe('assignment persistence test', () => {
           .map((ass) => ({
             id: ass.id,
             deadline: ass.deadline,
+            name: ass.name,
             groups: ass.groups.map((group) => ({
               assignmentId: ass.id,
               id: group.id,
@@ -92,6 +93,7 @@ describe('assignment persistence test', () => {
             {
               id: assignment.id,
               deadline: assignment.deadline,
+              name: assignment.name,
               groups: assignment.groups.map((group) => ({
                 assignmentId: assignment.id,
                 id: group.id,
@@ -132,6 +134,7 @@ describe('assignment persistence test', () => {
       const expectedAssignments = assignments.map((ass) => ({
         id: ass.id,
         deadline: ass.deadline,
+        name: ass.name,
         groups: ass.groups.map((group) => ({
           assignmentId: ass.id,
           id: group.id,
@@ -176,6 +179,7 @@ describe('assignment persistence test', () => {
       const expectedAssignments = assignments.map((ass) => ({
         id: ass.id,
         deadline: ass.deadline,
+        name: ass.name,
         groups: ass.groups.map((group) => ({
           assignmentId: ass.id,
           id: group.id,

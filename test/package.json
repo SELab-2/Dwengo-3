@@ -8,7 +8,8 @@
     "test:domain": "vitest --run -c vitest.config.domain.ts --coverage --dir ../",
     "test:router": "dotenv -e .env.test -- vitest --run -c vitest.config.router.ts --coverage --dir ../",
     "test:int": "dotenv -e .env.test -- vitest --run --no-file-parallelism -c vitest.config.integration.ts --coverage --dir ../",
-    "test:all": "npm run test:int && npm run test:domain && npm run test:router"
+    "test:all": "npm run test:int && npm run test:domain && npm run test:router",
+    "test:int:local": "./integration_test.sh"
   },
   "repository": {
     "type": "git",
