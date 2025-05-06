@@ -21,6 +21,7 @@ import BackButton from '../components/BackButton.tsx';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import { useAssignmentById } from '../hooks/useAssignment.ts';
+import DateTypography from '../components/DateTypography.tsx';
 
 const calculateProgress = (
   progress: number[],
@@ -93,6 +94,23 @@ function ClassAssignmentPage() {
               {t('description')}
             </Typography>
             <Typography variant="body1">{assignment!.description}</Typography>
+            <br />
+            {
+              assignment!.deadline && (
+                <DateTypography 
+                  text={`${t('deadline')}: `} 
+                  date={new Date(assignment!.deadline!)} 
+                  variant='subtitle2' 
+                  sx={{
+                    position: 'absolute',
+                    right: 12,
+                    bottom: 8,
+                    fontStyle: 'italic',
+                    color: 'text.secondary'
+                  }}
+                  />
+              )
+            }
           </Box>
         </Stack>
         {/*<DateTypography text={`${t('deadline')}: `} date={assignment.deadline} variant='h5' />*/}

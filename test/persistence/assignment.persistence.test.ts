@@ -48,6 +48,8 @@ describe('assignment persistence test', () => {
           .filter((ass) => ass.class.id === assignment.class.id)
           .map((ass) => ({
             id: ass.id,
+            deadline: ass.deadline,
+            name: ass.name,
             groups: ass.groups.map((group) => ({
               assignmentId: ass.id,
               id: group.id,
@@ -90,6 +92,8 @@ describe('assignment persistence test', () => {
           const expectedAssignments = [
             {
               id: assignment.id,
+              deadline: assignment.deadline,
+              name: assignment.name,
               groups: assignment.groups.map((group) => ({
                 assignmentId: assignment.id,
                 id: group.id,
@@ -129,6 +133,8 @@ describe('assignment persistence test', () => {
     test('request with existing teacherId responds correctly', async () => {
       const expectedAssignments = assignments.map((ass) => ({
         id: ass.id,
+        deadline: ass.deadline,
+        name: ass.name,
         groups: ass.groups.map((group) => ({
           assignmentId: ass.id,
           id: group.id,
@@ -172,6 +178,8 @@ describe('assignment persistence test', () => {
     test('request with existing studentId responds correctly', async () => {
       const expectedAssignments = assignments.map((ass) => ({
         id: ass.id,
+        deadline: ass.deadline,
+        name: ass.name,
         groups: ass.groups.map((group) => ({
           assignmentId: ass.id,
           id: group.id,

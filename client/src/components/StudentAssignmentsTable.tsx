@@ -120,8 +120,15 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  {/*<DateTypography date={assignment.deadline} />*/}
-                  <DateTypography date={new Date()} />
+                  {
+                    assignment.deadline ? (
+                    <DateTypography date={new Date(assignment.deadline!)} />
+                    ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      /
+                    </Typography>
+                    )
+                  }
                 </TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>
                   <Button
