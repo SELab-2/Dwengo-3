@@ -94,9 +94,21 @@ function ClassAssignmentPage() {
               {t('description')}
             </Typography>
             <Typography variant="body1">{assignment!.description}</Typography>
+            <br />
             {
               assignment!.deadline && (
-                <DateTypography text={`${t('deadline')}: `} date={new Date(assignment!.deadline!)} variant='h5' />
+                <DateTypography 
+                  text={`${t('deadline')}: `} 
+                  date={new Date(assignment!.deadline!)} 
+                  variant='subtitle2' 
+                  sx={{
+                    position: 'absolute',
+                    right: 12,
+                    bottom: 8,
+                    fontStyle: 'italic',
+                    color: 'text.secondary'
+                  }}
+                  />
               )
             }
           </Box>
