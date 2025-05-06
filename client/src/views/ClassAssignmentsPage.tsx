@@ -22,14 +22,13 @@ function ClassAssignmentsPage() {
 
   const { data: classData, isLoading: isLoadingClass } = useClassById(classId!);
 
-  const { data: paginatedData, isLoading: isLoadingAssignment } = useAssignments(
+  const { data: paginatedData, isLoading: isLoadingAssignment } = useAssignments({
     classId,
-    undefined,
     studentId,
     teacherId,
-    1,
-    10,
-  );
+    page: 1,
+    pageSize: 10,
+  });
 
   const assignments: AssignmentShort2[] = paginatedData?.data ?? [];
   const totalPages = paginatedData?.totalPages ?? 0;
