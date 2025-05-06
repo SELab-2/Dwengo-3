@@ -86,5 +86,7 @@ export const nl = {
     fileSubmitted: "Ingediend bestand",
     submitOtherFile: "Dien een andere bestand in, opgepast het oude wordt verwijderd",
     noFileSubmitted: "Er is nog geen bestand ingediend",
+    assignmentNameRequired: 'Opdrachtnaam is verplicht',
+    learningPathRequired: 'Leerpad is verplicht',
   },
 };

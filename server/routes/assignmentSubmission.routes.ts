@@ -281,7 +281,7 @@ export class AssignmentSubmissionController {
         }
       });
     } else {
-      throw new NotFoundError(40416);
+      throw new NotFoundError(40417);
     }
   }
 }

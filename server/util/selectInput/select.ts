@@ -189,6 +189,7 @@ export const learningPathSelectDetail = {
 
 export const assignmentSelectShort = {
   id: true,
+  name: true,
   learningPathId: true,
 };
 
@@ -208,9 +209,11 @@ export const classSelectDetail = {
 
 export const assignmentSelectShort2 = {
   id: true,
+  name: true,
   groups: {
     select: groupSelectShort,
   },
+  deadline: true,
   learningPath: {
     select: {
       id: true,
@@ -230,6 +233,8 @@ export const assignmentSelectShort2 = {
 
 export const assignmentSelectDetail = {
   id: true,
+  name: true,
+  description: true,
   teacher: {
     select: teacherSelectShort,
   },
@@ -242,6 +247,7 @@ export const assignmentSelectDetail = {
   learningPath: {
     select: learningPathSelectShort,
   },
+  deadline: true
 };
 
 export const assignmentSubmissionSelectShort = {
@@ -342,4 +348,17 @@ export const classJoinRequestSelectDetail = {
   user: {
     select: userSelectShort,
   },
+};
+
+export const LearningThemeSelectShort = {
+  id: true,
+  image: true,
+  title: true,
+};
+
+export const LearningThemeSelectDetail = {
+  id: true,
+  image: true,
+  title: true,
+  keywords: true,
 };

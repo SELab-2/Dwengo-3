@@ -49,6 +49,16 @@ CREATE TABLE "LearningObjectKeyword" (
 );
 
 -- CreateTable
+CREATE TABLE "LearningTheme" (
+    "id" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "keywords" TEXT[],
+
+    CONSTRAINT "LearningTheme_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "LearningPathNode" (
     "id" TEXT NOT NULL,
     "learningPathId" TEXT NOT NULL,
@@ -144,9 +154,12 @@ CREATE TABLE "Group" (
 -- CreateTable
 CREATE TABLE "Assignment" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     "learningPathId" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
     "classId" TEXT NOT NULL,
+    "deadline" TIMESTAMP,
 
     CONSTRAINT "Assignment_pkey" PRIMARY KEY ("id")
 );
@@ -198,6 +211,7 @@ CREATE TABLE "Announcement" (
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "classId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "teacherId" TEXT NOT NULL,
 
     CONSTRAINT "Announcement_pkey" PRIMARY KEY ("id")
@@ -287,10 +301,10 @@ ALTER TABLE "LearningNodeTransition" ADD CONSTRAINT "LearningNodeTransition_lear
 ALTER TABLE "LearningPath" ADD CONSTRAINT "LearningPath_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "Student" ADD CONSTRAINT "Student_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "Student" ADD CONSTRAINT "Student_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "Teacher" ADD CONSTRAINT "Teacher_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "Teacher" ADD CONSTRAINT "Teacher_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "ClassJoinRequest" ADD CONSTRAINT "ClassJoinRequest_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

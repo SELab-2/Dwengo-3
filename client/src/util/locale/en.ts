@@ -89,5 +89,7 @@ export const en = {
     fileSubmitted: "Submitted file",
     submitOtherFile: "Submit another file, note that the previous one will be replaced",
     noFileSubmitted: "No file has been submitted yet",
+    assignmentNameRequired: 'Assignment name is required',
+    learningPathRequired: 'Learning path is required',
   },
 };

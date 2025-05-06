@@ -2,7 +2,7 @@
   "name": "dwengo",
   "version": "1.0.0",
   "description": "Dwengo leerplatform",
-  "main": "app.ts",
+  "main": "server.ts",
   "scripts": {
     "start": "nodemon server.ts",
     "start:dev": "ts-node app.ts",
@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
+    "connect-redis": "^8.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -65,6 +66,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
+    "redis": "^5.0.0",
     "zod": "^3.24.2"
   }
 }
