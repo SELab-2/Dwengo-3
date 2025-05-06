@@ -339,6 +339,7 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
     for (const path of learningPaths) {
       const assignment = AssignmentCreateSchema.parse({
         name: 'test',
+        description: 'testDescription',
         classId: classData.id,
         teacherId: classData.teachers[0].id,
         groups: groups,
