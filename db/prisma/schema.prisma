@@ -186,6 +186,7 @@ model Assignment {
   learningPathId String
   teacherId      String
   classId        String
+  deadline       DateTime?    @db.Timestamp
   groups         Group[]
   class          Class        @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   teacher        Teacher      @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)

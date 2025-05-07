@@ -213,6 +213,7 @@ export const assignmentSelectShort2 = {
   groups: {
     select: groupSelectShort,
   },
+  deadline: true,
   learningPath: {
     select: {
       id: true,
@@ -246,6 +247,7 @@ export const assignmentSelectDetail = {
   learningPath: {
     select: learningPathSelectShort,
   },
+  deadline: true
 };
 
 export const assignmentSubmissionSelectShort = {

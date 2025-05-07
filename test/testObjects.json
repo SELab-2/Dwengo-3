@@ -208,7 +208,9 @@
       "class": {
         "id": "8b07803c-4444-5555-6666-777788889999",
         "name": "class1"
-      }
+      },
+      "name": "Assignment 1",
+      "description": "Test assignment"
     },
     {
       "id": "6e312a15-dcc0-45d3-8660-17c749910839",
@@ -220,7 +222,9 @@
       "class": {
         "id": "8b07853c-4444-5555-6666-777788889999",
         "name": "class2"
-      }
+      },
+      "name": "Assignment 2",
+      "description": "Test assignment"
     }
   ],
   "testAnnouncements": [
