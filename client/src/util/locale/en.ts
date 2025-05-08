@@ -84,5 +84,7 @@ export const en = {
     score: 'Score',
     editClass: 'Editing class',
     classDescription: 'Class description',
+    assignmentNameRequired: 'Assignment name is required',
+    learningPathRequired: 'Learning path is required',
   },
 };

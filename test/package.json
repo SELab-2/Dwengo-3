@@ -4,10 +4,12 @@
   "description": "Testing",
   "main": "app.ts",
   "scripts": {
-    "test:domain": "vitest --run -c vitest.config.domain.ts",
-    "test:router": "vitest --run -c vitest.config.router.ts",
-    "test:int": "./integration_test.sh",
-    "test:all": "npm run test:int && npm run test:domain && npm run test:router"
+    "clean": "dotenv -e .env.test -- ts-node cleanDatabase.ts",
+    "test:domain": "vitest --run -c vitest.config.domain.ts --coverage --dir ../",
+    "test:router": "dotenv -e .env.test -- vitest --run -c vitest.config.router.ts --coverage --dir ../",
+    "test:int": "dotenv -e .env.test -- vitest --run --no-file-parallelism -c vitest.config.integration.ts --coverage --dir ../",
+    "test:all": "npm run test:int && npm run test:domain && npm run test:router",
+    "test:int:local": "./integration_test.sh"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
   "homepage": "https://github.com/SELab-2/Dwengo-3#readme",
   "devDependencies": {
     "@testing-library/react": "^16.2.0",
+    "@vitest/coverage-v8": "^3.0.9",
     "supertest": "^7.1.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9",

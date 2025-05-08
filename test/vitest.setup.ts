@@ -1,8 +1,5 @@
-import dotenv from 'dotenv';
 import { vi } from 'vitest';
 import * as crypto from 'node:crypto';
-
-dotenv.config({ path: '../.env' });
 
 vi.mock('../server/domain/user.domain', () => ({
   UserDomain: vi.fn().mockImplementation(() => ({

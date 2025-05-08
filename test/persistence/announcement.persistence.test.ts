@@ -15,7 +15,7 @@ describe('announcement persistence test', () => {
 
   afterAll(async () => {
     await deleteAllData();
-    await PrismaSingleton.instance.$disconnect();
+    PrismaSingleton.instance.$disconnect();
   });
 
   describe('test get announcement by id', () => {
@@ -52,7 +52,7 @@ describe('announcement persistence test', () => {
     });
   });
 
-  describe('test get announcemnts', () => {
+  describe('test get announcements', () => {
     test('request with existing classId responds correctly', async () => {
       for (const announcement of announcements) {
         const req = announcementPersistence.getAnnouncements(
@@ -117,7 +117,7 @@ describe('announcement persistence test', () => {
   });
 
   describe('test update announcement', async () => {
-    test('request with existing id should update announcemnent correctly', async () => {
+    test('request with existing id should update announcement correctly', async () => {
       for (const announcement of announcements) {
         announcement.title = 'new title';
         announcement.content = 'new content';

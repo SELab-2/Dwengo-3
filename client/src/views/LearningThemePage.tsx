@@ -8,20 +8,15 @@ import { useLearningPath } from '../hooks/useLearningPath';
 import { useState, useEffect } from 'react';
 import Masonry from '@mui/lab/Masonry';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
-
-const themeKeywordsMap = {
-  'AI in Climate': ['AI', 'Climate'],
-  'Social Robot': ['Robotics', 'AI'],
-  'AI in Healthcare': ['AI', 'Healthcare'],
-  'Language Technology': ['EN'],
-};
+import { useLearningThemeById } from '../hooks/useLearningTheme';
 
 function LearningPathsOverviewPage() {
   const { id } = useParams();
   const [page, setPage] = useState(1); // Track current page
   const [learningPaths, setLearningPaths] = useState<LearningPathShort[]>([]); // Store all loaded paths
+  const { data: learningTheme } = useLearningThemeById(id);
   const { data, isLoading, isError, error } = useLearningPath(
-    themeKeywordsMap[id as keyof typeof themeKeywordsMap],
+    learningTheme?.keywords,
     undefined,
     page,
     10,
@@ -37,11 +32,9 @@ function LearningPathsOverviewPage() {
 
       setLearningPaths((prevPaths) => [...prevPaths, ...(data?.data ?? [])]);
     }
-  }, [data]);
+  }, [data, page]);
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set()); // Use a Set for multiple expanded IDs
-
-  console.log(page);
 
   const handleLoadMore = () => {
     setPage((prevPage) => prevPage + 1); // Increment page number to load more data

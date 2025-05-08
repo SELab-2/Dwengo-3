@@ -29,3 +29,8 @@ export const PaginationFilterSchema = z
   });
 
 export type PaginationParams = z.infer<typeof PaginationFilterSchema>;
+
+export type PaginationApiParams = {
+  page?: string;
+  pageSize?: string;
+};

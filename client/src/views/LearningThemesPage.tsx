@@ -1,36 +1,17 @@
 import { Box, Typography, Card, Avatar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
-
-// TODO: Get data from endpoint
-const learningThemes = [
-  {
-    title: 'AI in Climate',
-    image:
-      'https://www.cryptopolitan.com/wp-content/uploads/2024/01/photo_5823672334651866888_y.jpg',
-  },
-  {
-    title: 'Social Robot',
-    image:
-      'https://www.laingbuissonnews.com/wp-content/uploads/sites/3/2023/06/Moxie_Lifestyle_HP_M.jpg',
-  },
-  {
-    title: 'AI in Healthcare',
-    image:
-      'https://www.usnews.com/cmsmedia/e7/92/b354714945c697881b3207311271/h18-b-f2-ai-editorial.jpg',
-  },
-  {
-    title: 'Language Technology',
-    image: 'https://miro.medium.com/v2/resize:fit:1018/1*tjyq7DrWkcK_rgym6YJ1Pw.png',
-  },
-];
+import { useLearningTheme } from '../hooks/useLearningTheme';
+import { useTranslation } from 'react-i18next';
 
 function LearningThemesPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const { data: learningThemes } = useLearningTheme();
 
-  const handleThemeClick = (themeTitle: string) => {
-    navigate(`${encodeURI(AppRoutes.learningTheme(themeTitle))}`);
-  };
+  if (!learningThemes) {
+    return <div>{t('loading')}</div>;
+  }
 
   return (
     <Box sx={{ p: 4, textAlign: 'center' }}>
@@ -42,10 +23,10 @@ function LearningThemesPage() {
           justifyContent: 'center',
         }}
       >
-        {learningThemes.map(({ title, image }) => (
+        {learningThemes.data.map(({ id, title, image }) => (
           <Card
-            key={title}
-            onClick={() => handleThemeClick(title)}
+            key={id}
+            onClick={() => navigate(AppRoutes.learningTheme(id))}
             sx={{
               borderRadius: 3,
               overflow: 'hidden',

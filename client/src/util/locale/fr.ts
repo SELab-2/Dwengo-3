@@ -86,5 +86,7 @@ export const fr = {
     score: 'Score',
     editClass: 'Modifier la classe',
     classDescription: 'Description de la classe',
+    assignmentNameRequired: 'Le nom du devoir est requis',
+    learningPathRequired: "Le parcours d'apprentissage est requis",
   },
 };

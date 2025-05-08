@@ -83,5 +83,7 @@ export const nl = {
     score: 'Score',
     editClass: 'Klas bewerken',
     classDescription: 'Klasbeschrijving',
+    assignmentNameRequired: 'Opdrachtnaam is verplicht',
+    learningPathRequired: 'Leerpad is verplicht',
   },
 };
