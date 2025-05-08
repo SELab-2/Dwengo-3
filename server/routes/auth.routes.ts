@@ -82,9 +82,8 @@ if (process.env.NODE_ENV !== 'testing') {
         done: VerifyCallback,
       ) => {
         try {
-          let user: UserEntity | null = await userDomain.getUserById(profile.id);
+          let user: UserEntity | null = await userDomain.getUserByEmail(profile.emails!![0].value);
           const role = req.query.state as ClassRoleEnum;
-
           if (user === null) {
             user = await userDomain.createUser({
               email: profile.emails!![0].value,
