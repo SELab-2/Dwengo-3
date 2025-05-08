@@ -10,6 +10,7 @@ import { UserDataTableComponent } from '../components/UserDataTableComponent.tsx
 import { deleteStudentFromClass, deleteTeacherFromClass, updateClass } from '../api/class.ts';
 import { useAuth } from '../hooks/useAuth.ts';
 import { useError } from '../hooks/useError.ts';
+import { LoadingButton } from '@mui/lab';
 
 export function ClassGroupEditPage() {
   const { t } = useTranslation();
@@ -33,16 +34,15 @@ export function ClassGroupEditPage() {
     }
   }, [classData]);
 
-  return isClassDataLoading ? (
-    <div>loading</div>
-  ) : (
-    <Box sx={{ p: 3 }}>
+  return (
+    <Box sx={{ width: '100vw' }}>
       <Paper
         elevation={3}
         sx={{
-          mb: 2,
+          m: '2% auto',
           borderRadius: 2,
           overflow: 'hidden',
+          width: '90%',
         }}
       >
         <AppBar
@@ -56,7 +56,7 @@ export function ClassGroupEditPage() {
           }}
         >
           <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'white' }}>
-            {t('editClass')}: {className}
+            {t('editClass')}
           </Typography>
 
           <Button
@@ -74,97 +74,105 @@ export function ClassGroupEditPage() {
         sx={{
           width: '100%',
           display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: { xs: 'center', md: 'space-evenly' },
+          alignItems: 'center',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 3,
-            m: MarginSize.small,
-            width: 'calc(100% / 3)',
-            height: '100%',
-          }}
-        >
-          <TextField
-            label={t('className')}
-            sx={{ width: '100%' }}
-            value={className}
-            onChange={(e: any) => setClassName(e.target.value)}
-          />
-          <TextField
-            multiline={true}
-            rows={6}
-            sx={{ width: '100%' }}
-            label={t('classDescription')}
-            value={classDescription}
-            onChange={(e: any) => setClassDescription(e.target.value)}
-          />
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'end' }}>
-            <Button
-              onClick={async () => {
-                await updateClass(classId!, {
-                  name: className,
-                  description: classDescription,
-                });
-                navigate(AppRoutes.class(classId!));
-              }}
+        {!isClassDataLoading ? (
+          <>
+            <Box
               sx={{
-                color: theme.palette.primary.main,
-                border: `1px solid ${theme.palette.primary.main}`,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 3,
+                m: MarginSize.small,
+                width: { xs: '80%', md: 'calc(100% / 3)' },
+                height: '100%',
               }}
             >
-              {t('save')}
-            </Button>
-          </Box>
-        </Box>
+              <TextField
+                label={t('className')}
+                sx={{ width: '100%' }}
+                value={className}
+                onChange={(e: any) => setClassName(e.target.value)}
+              />
+              <TextField
+                multiline={true}
+                rows={6}
+                sx={{ width: '100%' }}
+                label={t('classDescription')}
+                value={classDescription}
+                onChange={(e: any) => setClassDescription(e.target.value)}
+              />
+              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'end' }}>
+                <Button
+                  onClick={async () => {
+                    await updateClass(classId!, {
+                      name: className,
+                      description: classDescription,
+                    });
+                    navigate(AppRoutes.class(classId!));
+                  }}
+                  sx={{
+                    color: theme.palette.primary.main,
+                    border: `1px solid ${theme.palette.primary.main}`,
+                  }}
+                >
+                  {t('save')}
+                </Button>
+              </Box>
+            </Box>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 5,
-            width: '100%',
-          }}
-        >
-          <UserDataTableComponent
-            data={classData!!.students.map((student) => {
-              return {
-                id: student.id,
-                name: student.user.name,
-                surname: student.user.surname,
-              };
-            })}
-            title={t('students')}
-            onActionPressed={async (id: string) => await deleteStudentFromClass(classId!!, id)}
-          />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 5,
+                width: '100%',
+                p: 3,
+              }}
+            >
+              <UserDataTableComponent
+                data={classData!!.students.map((student) => {
+                  return {
+                    id: student.id,
+                    name: student.user.name,
+                    surname: student.user.surname,
+                  };
+                })}
+                title={t('students')}
+                onActionPressed={async (id: string) => await deleteStudentFromClass(classId!!, id)}
+              />
 
-          {/* Teachers */}
-          <UserDataTableComponent
-            data={classData!!.teachers.map((teacher) => {
-              return {
-                id: teacher.id,
-                name: teacher.user.name,
-                surname: teacher.user.surname,
-              };
-            })}
-            title={t('teachers')}
-            onActionPressed={async (id: string) => {
-              if (
-                user!!.teacher &&
-                classData!!.teachers.find((teacher) => teacher.id === user!!.teacher!!.id)
-              ) {
-                error.setError("You can't remove yourself");
-                return;
-              }
-              await deleteTeacherFromClass(classId!!, id);
-            }}
-          />
-        </Box>
+              {/* Teachers */}
+              <UserDataTableComponent
+                data={classData!!.teachers.map((teacher) => {
+                  return {
+                    id: teacher.id,
+                    name: teacher.user.name,
+                    surname: teacher.user.surname,
+                  };
+                })}
+                title={t('teachers')}
+                onActionPressed={async (id: string) => {
+                  if (
+                    user!!.teacher &&
+                    classData!!.teachers.find((teacher) => teacher.id === user!!.teacher!!.id)
+                  ) {
+                    error.setError("You can't remove yourself");
+                    return;
+                  }
+                  await deleteTeacherFromClass(classId!!, id);
+                }}
+              />
+            </Box>
+          </>
+        ) : (
+          <Typography>{t('loading')}</Typography>
+        )}
       </Box>
     </Box>
   );
