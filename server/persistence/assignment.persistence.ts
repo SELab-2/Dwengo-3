@@ -163,7 +163,7 @@ export class AssignmentPersistence {
     }))!.teachers;
     if (teachers.length == 0) {
       for (const group of assignment.groups) {
-        await this.submissionPersistence.deleteAssignemtnSubmissions(
+        await this.submissionPersistence.deleteAssignmentSubmissions(
           { groupId: group.id}
         );
       }

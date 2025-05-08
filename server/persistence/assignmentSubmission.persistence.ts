@@ -105,7 +105,7 @@ export class AssignmentSubmissionPersistence {
     });
   }
 
-  public async deleteAssignemtnSubmissions(
+  public async deleteAssignmentSubmissions(
     {groupId, favoriteId} : {groupId?: string, favoriteId?: string}
   ) {
     const submissions = await PrismaSingleton.instance.assignmentSubmission.findMany({
@@ -118,11 +118,7 @@ export class AssignmentSubmissionPersistence {
     for (const submission of submissions) {
       if (submission.submissionType === SubmissionType.FILE) {
         const filePath = (submission.submission as FileSubmission).filePath;
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error("Failed to delete file:", filePath, err);
-          }
-        });
+        fs.unlink(filePath, (_) => {});
       }
       await PrismaSingleton.instance.assignmentSubmission.delete({
         where: { id: submission.id}

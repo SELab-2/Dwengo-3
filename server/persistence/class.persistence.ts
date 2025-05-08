@@ -113,6 +113,7 @@ export class ClassPersistence {
       },
       select: classSelectDetail,
     });
+    console.log(classData);
     if (classData.teachers.length == 0) {
       await this.prisma.class.delete({
         where: { id: classId }

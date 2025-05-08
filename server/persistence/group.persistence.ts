@@ -84,28 +84,23 @@ export class GroupPersistence {
       });
     }    
 
-    this.submissionPersistence.deleteAssignemtnSubmissions(
+    await this.submissionPersistence.deleteAssignmentSubmissions(
       { groupId: group.id }
     );
-
-    const assignment = await this.prisma.assignment.update({
-      where: { id: group.assignment.id},
-      data: {
-        groups: {
-          disconnect: { id: group.id}
-        }
-      },
-      select: assignmentSelectDetail
-    });
-
-    if (assignment.groups.length == 0) {
-      await this.prisma.assignment.delete({
-        where: { id: assignment.id }
-      });
-    }
 
     await this.prisma.group.delete({
       where: { id: group.id }
     });
+
+    const remainingGroups = await this.prisma.group.findMany({
+      where: { assignmentId: group.assignment.id }
+    });
+
+    if (remainingGroups.length === 0) {
+      await this.prisma.assignment.delete({
+        where: { id: group.assignment.id }
+      });
+    }
+
   }
 }

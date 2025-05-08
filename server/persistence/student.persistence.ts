@@ -147,7 +147,7 @@ export class StudentPersistence {
     }))!.favorites;
 
     for (const favorite of favorites) {
-      await this.submissionPersistence.deleteAssignemtnSubmissions({
+      await this.submissionPersistence.deleteAssignmentSubmissions({
         favoriteId: favorite.id
       });
     }

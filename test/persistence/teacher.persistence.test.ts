@@ -26,6 +26,8 @@ describe('teacher persistence test', () => {
 
   afterAll(async () => {
     await deleteAllData();
+    const count = PrismaSingleton.instance.student.count();
+    expect(count).resolves.toBe(0);
     await PrismaSingleton.instance.$disconnect();
   });
 

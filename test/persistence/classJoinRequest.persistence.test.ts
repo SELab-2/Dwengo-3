@@ -16,6 +16,8 @@ describe('classJoinRequest persistence test', () => {
 
   afterAll(async () => {
     await deleteAllData();
+    const count = PrismaSingleton.instance.classJoinRequest.count();
+    expect(count).resolves.toBe(0);
     await PrismaSingleton.instance.$disconnect();
   });
 
