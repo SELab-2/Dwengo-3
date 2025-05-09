@@ -24,12 +24,14 @@ import NotLoggedIn from '../components/NotLoggedIn';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { useError } from '../hooks/useError';
+import { useDeleteUser } from '../hooks/useUser';
 
 function ProfilePage() {
   // TODO: call to API to get user data?
   const { user } = useAuth();
   const { t } = useTranslation();
   const logoutMutation = useLogout();
+  const deleteUserMutation = useDeleteUser();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { setError } = useError();
@@ -51,7 +53,16 @@ function ProfilePage() {
   };
 
   const handleDeleteAccount = () => {
-    // TODO: Implement account deletion logic
+    deleteUserMutation.mutateAsync({studentId: user?.student?.id, teacherId: user?.teacher?.id}, {
+      onSuccess: () => {
+        logout();
+        navigate(AppRoutes.login);
+      },
+
+      onError: (error) => {
+        setError("Delete user failed: " + error.message);
+      }
+    })
   };
 
   if (!user) {

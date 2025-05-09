@@ -128,11 +128,13 @@ export const ApiRoutes = {
   student: {
     list: '/api/student',
     get: (id: string) => `/api/student/${id}`,
+    delete: (id: string) => `/api/student/${id}`,
   },
 
   // Teacher
   teacher: {
     list: '/api/teacher',
     get: (id: string) => `/api/teacher/${id}`,
+    delete: (id: string) => `/api/teacher/${id}`,
   },
 };

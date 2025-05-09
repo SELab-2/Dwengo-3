@@ -48,3 +48,13 @@ export async function fetchTeacherById(id: string) {
 
   return result;
 }
+
+/**
+ * Delete a teacher by their ID.
+ * 
+ * @param id - The ID of the teacher
+ */
+
+export async function deleteTeacher(id: string) {
+  await apiClient.delete(ApiRoutes.teacher.delete(id));
+}
