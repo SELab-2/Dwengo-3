@@ -34,7 +34,7 @@ export class LearningThemeDomain {
   ): Promise<LearningThemeDetail> {
     const data = LearningThemeCreateSchema.parse(query);
     if (user.role !== ClassRole.TEACHER) {
-      throw new BadRequestError(40046);
+      throw new BadRequestError(40047);
     }
 
     return this.themePersistence.createLearningTheme(data);
@@ -42,7 +42,7 @@ export class LearningThemeDomain {
 
   public async deleteLearningTheme(id: string, user: UserEntity): Promise<LearningThemeDetail> {
     if (user.role !== ClassRole.TEACHER) {
-      throw new BadRequestError(40046);
+      throw new BadRequestError(40047);
     }
 
     return this.themePersistence.deleteLearningTheme(id);
