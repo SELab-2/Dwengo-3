@@ -141,7 +141,7 @@ export class TeacherPersistence {
     }
 
     for (const classData of teacher.classes) {
-      this.classPersistence.removeTeacherFromClass(classData.id, id);
+      await this.classPersistence.removeTeacherFromClass(classData.id, id);
     }
 
     await this.prisma.user.delete({

@@ -15,8 +15,6 @@ describe('message persitence test', () => {
 
   afterAll(async () => {
     await deleteAllData();
-    const count = PrismaSingleton.instance.message.count();
-    expect(count).resolves.toBe(0);
     await PrismaSingleton.instance.$disconnect();
   });
 

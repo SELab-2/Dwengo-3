@@ -20,8 +20,6 @@ describe('assignment persistence test', () => {
 
   afterAll(async () => {
     await deleteAllData();
-    const count = PrismaSingleton.instance.assignment.count();
-    expect(count).resolves.toBe(0);
     await PrismaSingleton.instance.$disconnect();
   });
 

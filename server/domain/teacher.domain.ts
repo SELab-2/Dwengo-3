@@ -104,7 +104,7 @@ export class TeacherDomain {
 
   public async deleteTeacher(id: string, user: UserEntity) {
     if (!user.teacher || user.teacher.id !== id) {
-      throw new BadRequestError(40047);
+      throw new BadRequestError(40048);
     }
     this.teacherPersistence.deleteTeacher(id);
   }
