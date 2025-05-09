@@ -111,9 +111,10 @@ export class ClassPersistence {
           disconnect: { id: teacherId },
         },
       },
-      select: classSelectDetail,
+      include: {
+        teachers: true
+      }
     });
-    console.log(classData);
     if (classData.teachers.length == 0) {
       await this.prisma.class.delete({
         where: { id: classId }
