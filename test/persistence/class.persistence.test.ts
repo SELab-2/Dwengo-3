@@ -3,6 +3,7 @@ import { PrismaSingleton } from '../../server/persistence/prismaSingleton';
 import { deleteAllData, insertClasses } from './testData';
 import { ClassPersistence } from '../../server/persistence/class.persistence';
 import { ClassDetail } from '../../server/util/types/class.types';
+import { classSelectDetail } from '../../server/util/selectInput/select';
 
 let classes: ClassDetail[] = [];
 const classPersistence: ClassPersistence = new ClassPersistence();

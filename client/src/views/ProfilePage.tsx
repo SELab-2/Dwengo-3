@@ -18,21 +18,25 @@ import {
   ExitToApp as ExitToAppIcon,
 } from '@mui/icons-material';
 import { MarginSize } from '../util/size';
-import { useAuth, useLogout } from '../hooks/useAuth';
+import { useAuth, useDelete, useLogout } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import NotLoggedIn from '../components/NotLoggedIn';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { useError } from '../hooks/useError';
+import { useState } from 'react';
+import YesNoDialogProps from '../components/YesNoDialog';
 
 function ProfilePage() {
   // TODO: call to API to get user data?
   const { user } = useAuth();
   const { t } = useTranslation();
   const logoutMutation = useLogout();
+  const deleteMutation = useDelete();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { setError } = useError();
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleLogout = () => {
     logoutMutation.mutateAsync(undefined, {
@@ -51,7 +55,16 @@ function ProfilePage() {
   };
 
   const handleDeleteAccount = () => {
-    // TODO: Implement account deletion logic
+    deleteMutation.mutateAsync(undefined, {
+      onSuccess: () => {
+        logout();
+        navigate(AppRoutes.login);
+      },
+
+      onError: (error) => {
+        setError("Delete user failed: " + error.message);
+      }
+    })
   };
 
   if (!user) {
@@ -68,6 +81,16 @@ function ProfilePage() {
           gap: MarginSize.small,
         }}
       >
+        <YesNoDialogProps 
+          title={t('deleteAccountMessage')}
+          warning={t('deleteAccountWarning')}
+          open={open}
+          onClose={() => setOpen(false)}
+          onYes={() => {
+            setOpen(false);
+            handleDeleteAccount();
+          }}
+        />
         <Paper elevation={5} sx={{ p: 3, width: '100%', flexGrow: 1 }}>
           <Box display="flex" alignItems="center" mb={3}>
             <Avatar sx={{ width: 80, height: 80, mr: 3 }} />
@@ -104,7 +127,7 @@ function ProfilePage() {
           <Divider sx={{ my: 2 }} />
           <Box display="flex" flexDirection="row" justifyContent="space-between">
             <List sx={{ width: '48%' }}>
-              <ListItem component="button" onClick={() => handleDeleteAccount()}>
+              <ListItem component="button" onClick={() => setOpen(true)}>
                 <ListItemIcon>
                   <DeleteIcon color="error" />
                 </ListItemIcon>

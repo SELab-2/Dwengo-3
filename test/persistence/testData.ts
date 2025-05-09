@@ -437,15 +437,14 @@ export const insertMessages = async (): Promise<MessageDetail[]> => {
 };
 
 export const deleteAllData = async (): Promise<void> => {
-  await PrismaSingleton.instance.classJoinRequest.deleteMany();
-  await PrismaSingleton.instance.assignmentSubmission.deleteMany();
-  await PrismaSingleton.instance.announcement.deleteMany();
-  await PrismaSingleton.instance.message.deleteMany();
-  await PrismaSingleton.instance.discussion.deleteMany();
-  await PrismaSingleton.instance.group.deleteMany();
-  await PrismaSingleton.instance.assignment.deleteMany();
-  await PrismaSingleton.instance.user.deleteMany();
-  await PrismaSingleton.instance.class.deleteMany();
+  const students = await PrismaSingleton.instance.student.findMany();
+  for (const student of students) {
+    await studentPersistence.deleteStudent(student.id);
+  }
+  const teachers = await PrismaSingleton.instance.teacher.findMany();
+  for (const teacher of teachers) {
+    await teacherPersistence.deleteTeacher(teacher.id);
+  }
   await PrismaSingleton.instance.learningPathNode.deleteMany();
   await PrismaSingleton.instance.learningPath.deleteMany();
   await PrismaSingleton.instance.learningObject.deleteMany();

@@ -201,6 +201,8 @@ export class BadRequestError extends APIError {
         return 'User already exists...';
       case 40047:
         return 'You must be a teacher to manage learningThemes...';
+      case 40048:
+        return 'You can only delete your own account...'
       default:
         return 'Bad request...';
     }
