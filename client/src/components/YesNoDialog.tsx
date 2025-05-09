@@ -16,7 +16,7 @@ function YesNoDialogProps({open, title, warning, onClose, onYes}: YesNoDialogPro
     
     return (
         <Dialog open={open} onClose={onClose} fullWidth>
-            <DialogTitle>{title}</DialogTitle>
+            <DialogTitle sx={{ textAlign: 'center' }}>{title}</DialogTitle>
             <DialogContent>
                 {warning && (
                     <Typography
