@@ -93,7 +93,9 @@ export class AssignmentSubmissionDomain {
         !groupData ||
         !groupData.students.some((student) => user.student && student.id === user.student.id)
       ) {
-        req.file ?? this.deleteFile(req.file!.path);
+        if (req.file) {
+          this.deleteFile(req.file.path);
+        }
         throw new BadRequestError(40039);
       }
 
@@ -104,7 +106,9 @@ export class AssignmentSubmissionDomain {
     } else if (data.favoriteId) {
       const favoriteData = await this.favoritesPersistence.getFavoriteById(data.favoriteId);
       if (favoriteData.user.id !== user.id) {
-        req.file ?? this.deleteFile(req.file!.path);
+        if (req.file) {
+          this.deleteFile(req.file.path);
+        }
         throw new BadRequestError(40044);
       }
 

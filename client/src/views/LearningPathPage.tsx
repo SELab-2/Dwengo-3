@@ -8,23 +8,12 @@ import { useTranslation } from 'react-i18next';
 import { ErrorOutline } from '@mui/icons-material';
 import FileTextField from '../components/textfields/FileTextField';
 import { useAssignmentSubmissionById, useAssignmentSubmissions, useCreateAssignmentSubmission, useUpdateAssignmentSubmission } from '../hooks/useAssignmentSubmission';
-import { AssignmentSubmissionDetail, SubmissionType } from '../util/interfaces/assignmentSubmission.interfaces';
+import { AssignmentSubmissionDetail, FileSubmission, MultipleChoice, SubmissionType } from '../util/interfaces/assignmentSubmission.interfaces';
 import { useError } from '../hooks/useError';
 import { downloadFileSubmission } from '../api/assignmentSubmission';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useAuth } from '../hooks/useAuth';
 import { AxiosProgressEvent } from 'axios';
-
-
-interface MultipleChoice {
-  question: string;
-  options: string[];
-}
-
-interface FileSubmission {
-  fileName: string;
-  filePath: string;
-}
 
 function LearningPathPage() {
   const { t } = useTranslation();
