@@ -6,6 +6,7 @@ import {
   AssignmentSubFilterParams,
   AssignmentSubmissionDetail,
   AssignmentSubmissionShort,
+  FileSubmission,
   SubmissionCreateSchema,
   SubmissionFilterSchema,
   SubmissionUpdateSchema,
@@ -13,10 +14,11 @@ import {
 import { UserEntity } from '../util/types/user.types';
 import { checkIfUserIsInGroup } from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
-import { BadRequestError, NotFoundError } from '../util/types/error.types';
+import { BadRequestError } from '../util/types/error.types';
 import { Uuid } from '../util/types/assignment.types';
 import { LearningPathNodePersistence } from '../persistence/learningPathNode.persistence';
 import { FavoritesPersistence } from '../persistence/favorites.persistence';
+import fs from 'fs';
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;
@@ -91,6 +93,9 @@ export class AssignmentSubmissionDomain {
         !groupData ||
         !groupData.students.some((student) => user.student && student.id === user.student.id)
       ) {
+        if (req.file) {
+          this.deleteFile(req.file.path);
+        }
         throw new BadRequestError(40039);
       }
 
@@ -101,6 +106,9 @@ export class AssignmentSubmissionDomain {
     } else if (data.favoriteId) {
       const favoriteData = await this.favoritesPersistence.getFavoriteById(data.favoriteId);
       if (favoriteData.user.id !== user.id) {
+        if (req.file) {
+          this.deleteFile(req.file.path);
+        }
         throw new BadRequestError(40044);
       }
 
@@ -127,6 +135,13 @@ export class AssignmentSubmissionDomain {
       if (!req.file) {
         throw new BadRequestError(40034);
       }
+      const submission = await this.assignmentSubmissionPersistence.getAssignmentSubmissionById(
+        req.params.id,
+      );
+
+      const submissionData = submission.submission as FileSubmission;
+      this.deleteFile(submissionData.filePath);
+      
       data.submission = {
         fileName: req.file!.originalname,
         filePath: req.file!.path,
@@ -134,5 +149,29 @@ export class AssignmentSubmissionDomain {
     }
 
     return this.assignmentSubmissionPersistence.updateAssignmentSubmission(req.params.id, data);
+  }
+
+  public async getFileSubmissionPath(
+    id: Uuid,
+    user: UserEntity,
+  ): Promise<string | undefined> {
+    const submission = await this.assignmentSubmissionPersistence.getAssignmentSubmissionById(id);
+
+    if (submission.favorite) {
+      if (submission.favorite!.userId != user.id) {
+        throw new BadRequestError(40043);
+      }
+    } else {
+      await checkIfUserIsInGroup(user, submission.group!.id, this.groupPersistence);
+    }
+
+    if (submission.submissionType === SubmissionType.FILE) {
+      return (submission.submission as FileSubmission).filePath;
+    }
+
+  }
+
+  private deleteFile = (filePath: string) => {
+    fs.unlink(filePath, (err) => err ?? console.log(err));
   }
 }

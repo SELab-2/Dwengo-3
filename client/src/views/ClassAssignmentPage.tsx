@@ -21,6 +21,7 @@ import BackButton from '../components/BackButton.tsx';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import { useAssignmentById } from '../hooks/useAssignment.ts';
+import { AppRoutes } from '../util/app.routes.ts';
 import DateTypography from '../components/DateTypography.tsx';
 
 const calculateProgress = (
@@ -190,7 +191,7 @@ function ClassAssignmentPage() {
                         padding: { xs: '5px 10px', sm: '8px 16px' },
                         minWidth: { xs: '60px', sm: '100px' },
                       }}
-                      onClick={() => alert('TODO')}
+                      onClick={() => navigate(AppRoutes.learningPath(assignment?.learningPath.id!, group.id))}
                     >
                       {t('details')}
                     </Button>

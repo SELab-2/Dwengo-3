@@ -67,7 +67,7 @@ export class AssignmentSubmissionPersistence {
             },
           },
           submissionType: params.submissionType,
-          submission: params.submission,
+          submission: params.submission!,
         },
         select: assignmentSubmissionSelectDetail,
       });
@@ -85,7 +85,7 @@ export class AssignmentSubmissionPersistence {
             },
           },
           submissionType: params.submissionType,
-          submission: params.submission,
+          submission: params.submission!,
         },
         select: assignmentSubmissionSelectDetail,
       });

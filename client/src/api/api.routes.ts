@@ -41,6 +41,7 @@ export const ApiRoutes = {
     list: '/api/assignmentSubmission',
     get: (id: string) => `/api/assignmentSubmission/${id}`,
     update: (id: string) => `/api/assignmentSubmission/${id}`,
+    download: (id: string) => `/api/assignmentSubmission/${id}/download`,
   },
 
   // Class

@@ -3,6 +3,8 @@ import { AssignmentSubmissionDomain } from '../domain/assignmentSubmission.domai
 import multer, { Multer } from 'multer';
 import { UserDomain } from '../domain/user.domain';
 import { isAuthenticated } from './auth.routes';
+import path from 'path';
+import { FileDownloadError, NotFoundError } from '../util/types/error.types';
 
 export class AssignmentSubmissionController {
   public router: Router;
@@ -20,7 +22,9 @@ export class AssignmentSubmissionController {
         cb(null, './submission_files/');
       },
       filename: (req, file, cb) => {
-        cb(null, Math.random().toString()); //TODO
+        const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).substring(2)}`;
+        const extension = path.extname(file.originalname);
+        cb(null, `${uniqueSuffix}${extension}`);
       },
     });
     this.upload = multer({
@@ -208,6 +212,12 @@ export class AssignmentSubmissionController {
       this.upload.single('file'),
       this.updateAssignmentSubmission.bind(this),
     ); //TODO change 'file' to the correct field name
+
+    this.router.get(
+      '/:id/download',
+      isAuthenticated,
+      this.downloadFileSubmission.bind(this),
+    );
   }
 
   private async getAssignmentSubmission(req: Request, res: Response): Promise<void> {
@@ -257,5 +267,21 @@ export class AssignmentSubmissionController {
         await this.userDomain.getUserFromReq(req),
       ),
     );
+  }
+
+  private async downloadFileSubmission(req: Request, res: Response): Promise<void> {
+    const filePath = await this.assignmentSubmissionsDomain.getFileSubmissionPath(
+      req.params.id,
+      await this.userDomain.getUserFromReq(req),
+    );
+    if (filePath) {
+      res.download(filePath, (err) => {
+        if (err) {
+          throw new FileDownloadError(40400, err.message);
+        }
+      });
+    } else {
+      throw new NotFoundError(40417);
+    }
   }
 }
