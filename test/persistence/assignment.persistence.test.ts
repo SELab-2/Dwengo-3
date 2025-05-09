@@ -47,7 +47,6 @@ describe('assignment persistence test', () => {
         const expectedAssignments = assignments
           .filter((ass) => ass.class.id === assignment.class.id)
           .map((ass) => ({
-            name: ass.name,
             id: ass.id,
             deadline: ass.deadline,
             name: ass.name,
@@ -136,7 +135,6 @@ describe('assignment persistence test', () => {
         name: ass.name,
         id: ass.id,
         deadline: ass.deadline,
-        name: ass.name,
         groups: ass.groups.map((group) => ({
           assignmentId: ass.id,
           id: group.id,
@@ -182,7 +180,6 @@ describe('assignment persistence test', () => {
         name: ass.name,
         id: ass.id,
         deadline: ass.deadline,
-        name: ass.name,
         groups: ass.groups.map((group) => ({
           assignmentId: ass.id,
           id: group.id,

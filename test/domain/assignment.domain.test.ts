@@ -123,8 +123,6 @@ let createAssigmentParams = {
   classId: testClasses[0].id,
   teacherId: testTeachers[0].id,
   learningPathId: testLearningPaths[0].id,
-  name: testAssignments[0].name,
-  description: testAssignments[0].description
 };
 let createAssigmentInvalidGroupType1Params = {
   ...createAssigmentParams,

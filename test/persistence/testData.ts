@@ -345,8 +345,6 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
         groups: groups,
         learningPathId: path.id,
         deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        name: "Test",
-        description: "Test assignment"
       });
       assignments.push(assignmentPersistence.createAssignment(assignment));
     }
