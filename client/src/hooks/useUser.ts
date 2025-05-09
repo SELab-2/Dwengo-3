@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteStudent, fetchStudentById, fetchStudents } from '../api/student';
-import { deleteTeacher, fetchTeachers } from '../api/teacher';
+import { fetchStudentById, fetchStudents } from '../api/student';
+import { fetchTeachers } from '../api/teacher';
 
 /**
  * Fetches the list of students for the given parameters.
@@ -49,16 +49,4 @@ export function useTeacher(userId?: string, classId?: string, groupId?: string) 
     enabled: !!userId || !!classId || !!groupId,
     refetchOnWindowFocus: false,
   });
-}
-
-export function useDeleteUser() {
-  return useMutation({
-    mutationFn: async ({studentId, teacherId}: {studentId?: string, teacherId?: string}) => {
-      if (studentId) {
-        await deleteStudent(studentId);
-      } else if (teacherId) {
-        await deleteTeacher(teacherId);
-      }
-    }
-  })
 }

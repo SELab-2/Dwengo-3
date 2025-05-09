@@ -20,6 +20,8 @@ export const ApiRoutes = {
   // Me (get the logged in user)
   me: '/api/auth/me',
 
+  delete: '/api/auth/delete',
+
   // Announcement
   announcement: {
     list: '/api/announcement',
@@ -129,13 +131,11 @@ export const ApiRoutes = {
   student: {
     list: '/api/student',
     get: (id: string) => `/api/student/${id}`,
-    delete: (id: string) => `/api/student/${id}`,
   },
 
   // Teacher
   teacher: {
     list: '/api/teacher',
     get: (id: string) => `/api/teacher/${id}`,
-    delete: (id: string) => `/api/teacher/${id}`,
   },
 };

@@ -30,15 +30,6 @@ export class StudentController {
     );
   };
 
-  private deleteStudent = async (req: Request, res: Response) => {
-    res.json(
-      await this.studentDomain.deleteStudent(
-        req.params.id,
-        await this.userDomain.getUserFromReq(req),
-      ),
-    );
-  };
-
   private initializeRoutes() {
     /**
      * @swagger
@@ -122,7 +113,5 @@ export class StudentController {
      *         description: Student not found.
      */
     this.router.get('/:id', isAuthenticated, this.getStudentById);
-
-    this.router.delete('/:id', isAuthenticated, this.deleteStudent);
   }
 }

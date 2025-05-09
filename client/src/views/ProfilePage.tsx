@@ -18,20 +18,19 @@ import {
   ExitToApp as ExitToAppIcon,
 } from '@mui/icons-material';
 import { MarginSize } from '../util/size';
-import { useAuth, useLogout } from '../hooks/useAuth';
+import { useAuth, useDelete, useLogout } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import NotLoggedIn from '../components/NotLoggedIn';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { useError } from '../hooks/useError';
-import { useDeleteUser } from '../hooks/useUser';
 
 function ProfilePage() {
   // TODO: call to API to get user data?
   const { user } = useAuth();
   const { t } = useTranslation();
   const logoutMutation = useLogout();
-  const deleteUserMutation = useDeleteUser();
+  const deleteMutation = useDelete();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { setError } = useError();
@@ -53,7 +52,7 @@ function ProfilePage() {
   };
 
   const handleDeleteAccount = () => {
-    deleteUserMutation.mutateAsync({studentId: user?.student?.id, teacherId: user?.teacher?.id}, {
+    deleteMutation.mutateAsync(undefined, {
       onSuccess: () => {
         logout();
         navigate(AppRoutes.login);

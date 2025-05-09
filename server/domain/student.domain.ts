@@ -281,11 +281,4 @@ export class StudentDomain {
       classData.students.some((student: { id: string }) => student.id === studentId),
     );
   }
-
-  public async deleteStudent(id: string, user: UserEntity) {
-    if (!user.student || user.student.id !== id) {
-      throw new BadRequestError(40048);
-    }
-    this.studentPersistence.deleteStudent(id);
-  }
 }

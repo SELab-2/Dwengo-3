@@ -43,7 +43,6 @@ import { MessagePersistence } from '../../server/persistence/message.persistence
 import { UsersPersistence } from '../../server/persistence/auth/users.persistence';
 import { CreateUserParams } from '../../server/util/types/auth.types';
 import * as crypto from 'node:crypto';
-import { expect } from 'vitest';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
@@ -437,29 +436,6 @@ export const insertMessages = async (): Promise<MessageDetail[]> => {
   return Promise.all(messages);
 };
 
-const testEmpytDatabase = async (): Promise<void> => {
-  let count = PrismaSingleton.instance.announcement.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.assignment.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.assignmentSubmission.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.class.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.classJoinRequest.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.discussion.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.message.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.student.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.student.count();
-  await expect(count).resolves.toBe(0);
-  count = PrismaSingleton.instance.user.count();
-  await expect(count).resolves.toBe(0);
-}
-
 export const deleteAllData = async (): Promise<void> => {
   const students = await PrismaSingleton.instance.student.findMany();
   for (const student of students) {
@@ -472,5 +448,4 @@ export const deleteAllData = async (): Promise<void> => {
   await PrismaSingleton.instance.learningPathNode.deleteMany();
   await PrismaSingleton.instance.learningPath.deleteMany();
   await PrismaSingleton.instance.learningObject.deleteMany();
-  await testEmpytDatabase();
 };

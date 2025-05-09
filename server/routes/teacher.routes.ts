@@ -25,15 +25,6 @@ export class TeacherController {
     res.json(await this.teacherDomain.getTeacherById(req.params.id));
   };
 
-  private deleteTeacher = async (req: Request, res: Response) => {
-    res.json(
-      await this.teacherDomain.deleteTeacher(
-        req.params.id, 
-        await this.userDomain.getUserFromReq(req),
-      ),
-    );
-  };
-
   private initializeRoutes() {
     /**
      * @swagger
@@ -112,7 +103,5 @@ export class TeacherController {
      *         description: Teacher not found.
      */
     this.router.get('/:id', isAuthenticated, this.getTeacherById);
-
-    this.router.delete('/:id', isAuthenticated, this.deleteTeacher);
   }
 }
