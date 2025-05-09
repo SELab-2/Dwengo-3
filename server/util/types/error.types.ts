@@ -197,7 +197,7 @@ export class BadRequestError extends APIError {
         return 'Invalid data provided...';
       case 40046:
         return 'User already exists...';
-      case 40046:
+      case 40047:
         return 'You must be a teacher to manage learningThemes...';
       default:
         return 'Bad request...';
