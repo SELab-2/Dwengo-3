@@ -62,6 +62,7 @@ function AssignmentCreatePage() {
     useState<LearningPathShort[]>(learningPaths);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
   const [groups, setGroups] = useState<StudentShort[][]>(studentsData.map((student) => [student]));
+  const [deadline, setDeadline] = useState<Date | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
@@ -112,6 +113,7 @@ function AssignmentCreatePage() {
       teacherId: teacherId!,
       groups: groups.map((group) => group.map((student) => student.id)),
       learningPathId: selectedLearningPath!.id,
+      deadline: deadline ? new Date(deadline).toISOString() : undefined,
     };
     assignmentMutation.mutate(data, {
       onSuccess: (response: AssignmentDetail) => {
@@ -185,7 +187,7 @@ function AssignmentCreatePage() {
               slotProps={{ htmlInput: { maxLength: 500 } }}
               helperText={`${description.length}/500`}
             />
-            <DateTextField />
+            <DateTextField date={deadline} setDate={setDeadline}/>
           </Grid>
 
           {/* Keywords & Learning Paths */}

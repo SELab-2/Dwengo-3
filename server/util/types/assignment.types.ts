@@ -27,6 +27,7 @@ export const AssignmentCreateSchema = z.object({
   classId: z.string().uuid(),
   teacherId: z.string().uuid().optional(),
   learningPathId: z.string(),
+  deadline: z.string().datetime({ offset: true }).optional(),
 });
 
 export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;
