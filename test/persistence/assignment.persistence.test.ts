@@ -132,9 +132,9 @@ describe('assignment persistence test', () => {
 
     test('request with existing teacherId responds correctly', async () => {
       const expectedAssignments = assignments.map((ass) => ({
+        name: ass.name,
         id: ass.id,
         deadline: ass.deadline,
-        name: ass.name,
         groups: ass.groups.map((group) => ({
           assignmentId: ass.id,
           id: group.id,
@@ -177,9 +177,9 @@ describe('assignment persistence test', () => {
 
     test('request with existing studentId responds correctly', async () => {
       const expectedAssignments = assignments.map((ass) => ({
+        name: ass.name,
         id: ass.id,
         deadline: ass.deadline,
-        name: ass.name,
         groups: ass.groups.map((group) => ({
           assignmentId: ass.id,
           id: group.id,

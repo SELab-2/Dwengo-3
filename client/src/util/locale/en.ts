@@ -1,3 +1,5 @@
+import { chown } from 'fs';
+
 export const en = {
   translation: {
     yes: 'Yes',
@@ -84,6 +86,12 @@ export const en = {
     score: 'Score',
     editClass: 'Editing class',
     classDescription: 'Class description',
+    chooseFile: 'Choose file',
+    noFileSelected: 'No file selected',
+    submit: 'Submit',
+    fileSubmitted: 'Submitted file',
+    submitOtherFile: 'Submit another file, note that the previous one will be replaced',
+    noFileSubmitted: 'No file has been submitted yet',
     assignmentNameRequired: 'Assignment name is required',
     learningPathRequired: 'Learning path is required',
   },

@@ -2,9 +2,20 @@ import { FavoriteShort } from './favorite.interfaces';
 import { GroupShort } from './group.interfaces';
 import { LearningPathNodeShort } from './learningPathNode.interfaces';
 
-enum SubmissionType {
-  'FILE',
-  'MULTIPLE_CHOICE',
+export enum SubmissionType {
+  'FILE' = 'FILE',
+  'MULTIPLE_CHOICE' = 'MULTIPLE_CHOICE',
+  'READ' = 'READ',
+}
+
+export interface MultipleChoice {
+  question: string;
+  options: string[];
+}
+
+export interface FileSubmission {
+  fileName: string;
+  filePath: string;
 }
 
 export interface AssignmentSubmissionShort {
@@ -24,11 +35,12 @@ export interface AssignmentSubmissionCreate {
   favoriteId?: string;
   nodeId: string;
   submissionType: SubmissionType;
-  submission: string | object;
-  file?: string;
+  submission?: string;
+  file?: File;
 }
 
 export interface AssignmentSubmissionUpdate {
   submissionType?: SubmissionType;
-  submission?: string | object;
+  submission?: string;
+  file?: File;
 }

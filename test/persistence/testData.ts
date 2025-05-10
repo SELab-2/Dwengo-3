@@ -338,13 +338,13 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
     const groups = classData.students.map((student) => [student.id]);
     for (const path of learningPaths) {
       const assignment = AssignmentCreateSchema.parse({
+        name: 'test',
+        description: 'testDescription',
         classId: classData.id,
         teacherId: classData.teachers[0].id,
         groups: groups,
         learningPathId: path.id,
         deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        name: 'Test',
-        description: 'Test assignment',
       });
       assignments.push(assignmentPersistence.createAssignment(assignment));
     }
