@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { Box, Button, Typography, LinearProgress, Paper, Stack, Snackbar } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Box, Button, LinearProgress, Paper, Snackbar, Stack, Typography } from '@mui/material';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useLearningPathById } from '../hooks/useLearningPath';
 import { useLearningObjectById } from '../hooks/useLearningObject';
 import { useLearningPathNodeById } from '../hooks/useLearningPathNode';
 import { useTranslation } from 'react-i18next';
 import { ErrorOutline } from '@mui/icons-material';
-import { MathJaxContext, MathJax } from 'better-react-mathjax';
+import { MathJax, MathJaxContext } from 'better-react-mathjax';
 import parse from 'html-react-parser';
-import { SubmissionType } from '../util/interfaces/learningObject.interfaces';
 import { LearningPathNodeTransitionDetail } from '../util/interfaces/LearningPathNodeTransition.interfaces';
+import { createAssignmentSubmission } from '../api/assignmentSubmission.ts';
+import { useAuth } from '../hooks/useAuth.ts';
+import { useStudent } from '../hooks/useUser.ts';
+import { SubmissionType } from '../util/interfaces/learningObject.interfaces.ts';
 
 interface MultipleChoice {
   question: string;
@@ -27,9 +30,21 @@ const mathJaxConfig = {
 function LearningPathPage() {
   const { t } = useTranslation();
   const { id } = useParams();
-  const [activeIndex, setActiveIndex] = useState(0); // The index of the node that is currently shown
-  const [furthestIndex, setFurthestIndex] = useState(0); // The current to be solved question index
-  const [progress, setProgress] = useState<number[]>([]); // The list of nodes that have been solved
+  const [searchParams] = useSearchParams();
+  const classId = searchParams.get('classId');
+  const groupId = searchParams.get('groupId');
+
+  const { user } = useAuth();
+  const student = useStudent(user?.id);
+
+  // The index of the node that is currently shown
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  // The current to be solved question index
+
+  const [furthestIndex, setFurthestIndex] = useState(0);
+  // The list of nodes that have been solved
+  const [progress, setProgress] = useState<number[]>([]);
   const [wrongAnswer, setWrongAnswer] = useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { data: learningPath } = useLearningPathById(id);
@@ -42,8 +57,13 @@ function LearningPathPage() {
     return <div>{t('loading')}</div>;
   }
 
+  // total number of nodes
   const totalSteps = learningPath.learningPathNodes.length || 0;
+
+  // progress in % to show in progress bar
   const currentProgress = (furthestIndex / totalSteps) * 100;
+
+  // last node to visit
   const maxIndex = totalSteps - 1;
 
   const multipleChoice = () => {
@@ -54,32 +74,50 @@ function LearningPathPage() {
     return currentObject.multipleChoice as unknown as MultipleChoice;
   };
 
-  const handleTransition = (
+  const handleTransition = async (
     rightAnswer: boolean,
     transition?: LearningPathNodeTransitionDetail,
   ) => {
-    if (activeIndex <= furthestIndex) {
-      if (transition || rightAnswer) {
-        if (!progress.includes(activeIndex)) {
-          setProgress((prev) => [...prev, activeIndex]);
-        }
-
-        if (transition && transition.toNodeIndex > furthestIndex) {
-          setFurthestIndex(transition.toNodeIndex);
-        }
-
-        // Because multiplechoice questions require a corresponding transition for a correct answer, when this is the last node,
-        // it should point to the index -1. When this is the last node and it isn't a multiplechoice question, it doesn't have a transition.
-        if ((transition && transition.toNodeIndex === -1) || (rightAnswer && !transition)) {
-          setFurthestIndex(maxIndex + 1);
-        }
-
-        setWrongAnswer(false);
-      } else {
-        setWrongAnswer(true);
-      }
-    } else {
+    // activeIndex is at an impossible state, show error to user
+    if (activeIndex > furthestIndex) {
       setSnackbarOpen(true);
+      return;
+    }
+
+    // cannot proceed to next node, show user wrong answer message
+    if (!transition && !rightAnswer) {
+      setWrongAnswer(true);
+      return;
+    }
+
+    // add activeIndex to progress
+    if (!progress.includes(activeIndex)) {
+      setProgress((prev) => [...prev, activeIndex]);
+    }
+
+    // update the furthest index if transition points to a node that hasn't been visited
+    if (transition && transition.toNodeIndex > furthestIndex) {
+      setFurthestIndex(transition.toNodeIndex);
+      await createAssignmentSubmission({
+        nodeId: currentNode?.id ?? '',
+        submission: '',
+        submissionType: SubmissionType.READ,
+        groupId: groupId ?? undefined,
+      });
+    }
+
+    // Because multiple choice questions require a corresponding transition for a correct answer, when this is the last node,
+    // it should point to the index -1. When this is the last node and it isn't a multiple choice question, it doesn't have a transition.
+    if ((transition && transition.toNodeIndex === -1) || (rightAnswer && !transition)) {
+      setFurthestIndex(maxIndex + 1);
+      // send new value to db
+    }
+
+    setWrongAnswer(false);
+
+    // update active index
+    if (activeIndex < maxIndex) {
+      setActiveIndex(activeIndex + 1);
     }
   };
 
@@ -96,9 +134,6 @@ function LearningPathPage() {
   const handleReadClick = () => {
     const transition = currentNode?.transitions[0];
     handleTransition(true, transition);
-    if (activeIndex < maxIndex) {
-      setActiveIndex(activeIndex + 1);
-    }
   };
 
   const nodeColor = (index: number) => {
@@ -111,6 +146,8 @@ function LearningPathPage() {
     if (index < furthestIndex) return 'lightblue';
     return 'white';
   };
+
+  console.log('activeIndex', activeIndex, 'furthestIndex', furthestIndex);
 
   return (
     <Box display="flex" height="90vh">

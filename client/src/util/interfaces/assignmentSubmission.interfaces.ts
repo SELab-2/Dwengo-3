@@ -1,11 +1,7 @@
 import { FavoriteShort } from './favorite.interfaces';
 import { GroupShort } from './group.interfaces';
 import { LearningPathNodeShort } from './learningPathNode.interfaces';
-
-enum SubmissionType {
-  'FILE',
-  'MULTIPLE_CHOICE',
-}
+import { SubmissionType } from './learningObject.interfaces.ts';
 
 export interface AssignmentSubmissionShort {
   id: string;
