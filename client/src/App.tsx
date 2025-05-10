@@ -105,61 +105,11 @@ function App() {
                           path={AppRoutes.classDiscussions(':classId')}
                           element={<ClassDiscussionsPage />}
                         />
-                      </Route>
-                      {/* Protected Routes */}
-                      <Route>
-                        <Route path={AppRoutes.home} element={<HomePage />} />
-                        <Route path={AppRoutes.profile} element={<ProfilePage />} />
-                        <Route path={AppRoutes.myClasses} element={<MyClassesPage />} />
-                        <Route path={AppRoutes.classAdd} element={<ClassAddPage />} />
-                        <Route path={AppRoutes.myLearningPaths} element={<MyLearningPathsPage />} />
-                        <Route
-                          path={AppRoutes.learningPath(':id')}
-                          element={<LearningPathPage />}
-                        />
-                        <Route path={AppRoutes.learningThemes} element={<LearningThemesPage />} />
-                        <Route
-                          path={AppRoutes.learningTheme(':id')}
-                          element={<LearningThemePage />}
-                        />
-                        <Route
-                          path={AppRoutes.class(':classId')}
-                          element={<ClassDashboardPage />}
-                        />
-                        <Route
-                          path={AppRoutes.classStudentDetails(':classId', ':studentId')}
-                          element={<ClassStudentDetails />}
-                        />
-                        <Route
-                          path={AppRoutes.classAssignments(':classId')}
-                          element={<ClassAssignmentsPage />}
-                        />
-                        <Route
-                          path={AppRoutes.classAssignmentCreate(':classId')}
-                          element={<AssignmentCreatePage />}
-                        />
-                        <Route
-                          path={AppRoutes.classAssignment(':classId', ':assignmentId')}
-                          element={<ClassAssignmentPage />}
-                        />
-                        <Route
-                          path={AppRoutes.classAnnouncements(':classId')}
-                          element={<ClassAnnouncementsPage />}
-                        />
                         <Route
                           path={AppRoutes.classEdit(':classId')}
                           element={<ClassGroupEditPage />}
                         />
-                        <Route
-                          path={AppRoutes.announcement(':announcementId')}
-                          element={<AnnouncementDetailpage />}
-                        />
-                        <Route
-                          path={AppRoutes.classDiscussions(':classId')}
-                          element={<ClassDiscussionsPage />}
-                        />
                       </Route>
-
                       {/* Redirect all other routes to an errorpage */}
                       <Route path="*" element={<ErrorPage />} />
                     </Routes>
