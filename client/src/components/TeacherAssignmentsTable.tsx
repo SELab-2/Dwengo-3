@@ -78,15 +78,13 @@ function TeacherAssignmentsTable({
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  {
-                    assignment.deadline ? (
+                  {assignment.deadline ? (
                     <DateTypography date={new Date(assignment.deadline!)} />
-                    ) : (
+                  ) : (
                     <Typography variant="body2" color="text.secondary">
                       /
                     </Typography>
-                    )
-                  }
+                  )}
                 </TableCell>
                 <TableCell align="right">
                   <Button

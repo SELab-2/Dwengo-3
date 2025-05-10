@@ -60,10 +60,7 @@ export class AssignmentPersistence {
                   },
                 },
               },
-              OR: [
-                { deadline: null },
-                { deadline: { gt: new Date() } }
-            ]
+              OR: [{ deadline: null }, { deadline: { gt: new Date() } }],
             }
           : {},
       ],
@@ -111,7 +108,7 @@ export class AssignmentPersistence {
             id: params.learningPathId,
           },
         },
-        deadline: params.deadline
+        deadline: params.deadline,
       },
       select: assignmentSelectDetail,
     });

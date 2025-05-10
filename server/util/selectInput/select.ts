@@ -196,6 +196,7 @@ export const assignmentSelectShort = {
 export const classSelectDetail = {
   id: true,
   name: true,
+  description: true,
   teachers: {
     select: teacherSelectShort,
   },
@@ -247,7 +248,7 @@ export const assignmentSelectDetail = {
   learningPath: {
     select: learningPathSelectShort,
   },
-  deadline: true
+  deadline: true,
 };
 
 export const assignmentSubmissionSelectShort = {

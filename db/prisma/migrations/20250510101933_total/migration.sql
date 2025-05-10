@@ -128,6 +128,7 @@ CREATE TABLE "Teacher" (
 CREATE TABLE "Class" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL DEFAULT 'New class',
+    "description" TEXT NOT NULL DEFAULT '',
 
     CONSTRAINT "Class_pkey" PRIMARY KEY ("id")
 );

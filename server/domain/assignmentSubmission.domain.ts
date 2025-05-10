@@ -141,7 +141,7 @@ export class AssignmentSubmissionDomain {
 
       const submissionData = submission.submission as FileSubmission;
       this.deleteFile(submissionData.filePath);
-      
+
       data.submission = {
         fileName: req.file!.originalname,
         filePath: req.file!.path,
@@ -151,10 +151,7 @@ export class AssignmentSubmissionDomain {
     return this.assignmentSubmissionPersistence.updateAssignmentSubmission(req.params.id, data);
   }
 
-  public async getFileSubmissionPath(
-    id: Uuid,
-    user: UserEntity,
-  ): Promise<string | undefined> {
+  public async getFileSubmissionPath(id: Uuid, user: UserEntity): Promise<string | undefined> {
     const submission = await this.assignmentSubmissionPersistence.getAssignmentSubmissionById(id);
 
     if (submission.favorite) {
@@ -168,10 +165,9 @@ export class AssignmentSubmissionDomain {
     if (submission.submissionType === SubmissionType.FILE) {
       return (submission.submission as FileSubmission).filePath;
     }
-
   }
 
   private deleteFile = (filePath: string) => {
     fs.unlink(filePath, (err) => err ?? console.log(err));
-  }
+  };
 }

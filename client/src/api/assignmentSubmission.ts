@@ -49,31 +49,31 @@ export async function fetchAssignmentSubmissions(
  */
 export async function createAssignmentSubmission(
   data: AssignmentSubmissionCreate,
-  setProgressEvent?: (progressEvent: AxiosProgressEvent) => void
-) { 
+  setProgressEvent?: (progressEvent: AxiosProgressEvent) => void,
+) {
   if (data.submissionType === 'FILE') {
     const formData = new FormData();
 
     // Append primitive fields
-    if (data.groupId) formData.append("groupId", data.groupId);
-    if (data.favoriteId) formData.append("favoriteId", data.favoriteId);
-    formData.append("nodeId", data.nodeId);
-    formData.append("submissionType", data.submissionType);
-    formData.append("file", data.file!);
-  
+    if (data.groupId) formData.append('groupId', data.groupId);
+    if (data.favoriteId) formData.append('favoriteId', data.favoriteId);
+    formData.append('nodeId', data.nodeId);
+    formData.append('submissionType', data.submissionType);
+    formData.append('file', data.file!);
+
     const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       onUploadProgress(event) {
         setProgressEvent && setProgressEvent(event);
-      }
+      },
     });
 
     return response.data;
   }
   const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, data);
-  
+
   return response.data;
 }
 
@@ -98,24 +98,24 @@ export async function fetchAssignmentSubmissionById(assignmentSubmissionId: stri
  * @returns The AssignmentSubmissionDetails
  */
 export async function updateAssignmentSubmission(
-  id: string, 
+  id: string,
   data: AssignmentSubmissionUpdate,
-  setProgressEvent?: (progressEvent: AxiosProgressEvent) => void
+  setProgressEvent?: (progressEvent: AxiosProgressEvent) => void,
 ) {
   if (data.submissionType === 'FILE') {
     const formData = new FormData();
 
     // Append primitive fields
-    formData.append("submissionType", data.submissionType);
-    formData.append("file", data.file!);
-  
+    formData.append('submissionType', data.submissionType);
+    formData.append('file', data.file!);
+
     const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       onUploadProgress(event) {
         setProgressEvent && setProgressEvent(event);
-      }
+      },
     });
 
     return response.data;
@@ -124,7 +124,6 @@ export async function updateAssignmentSubmission(
 
   return response.data;
 }
-
 
 /**
  * Download a file submission

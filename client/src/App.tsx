@@ -28,6 +28,7 @@ import { Box } from '@mui/material';
 import ClassAddPage from './views/ClassAddPage.tsx';
 import { AppRoutes } from './util/app.routes.ts';
 import ClassDiscussionsPage from './views/ClassDiscussionsPage.tsx';
+import { ClassGroupEditPage } from './views/ClassGroupEditPage.tsx';
 import ProtectContent from './components/ProtectContent.tsx';
 
 const queryClient = new QueryClient();
@@ -104,8 +105,11 @@ function App() {
                           path={AppRoutes.classDiscussions(':classId')}
                           element={<ClassDiscussionsPage />}
                         />
+                        <Route
+                          path={AppRoutes.classEdit(':classId')}
+                          element={<ClassGroupEditPage />}
+                        />
                       </Route>
-
                       {/* Redirect all other routes to an errorpage */}
                       <Route path="*" element={<ErrorPage />} />
                     </Routes>

@@ -187,7 +187,7 @@ function AssignmentCreatePage() {
               slotProps={{ htmlInput: { maxLength: 500 } }}
               helperText={`${description.length}/500`}
             />
-            <DateTextField date={deadline} setDate={setDeadline}/>
+            <DateTextField date={deadline} setDate={setDeadline} />
           </Grid>
 
           {/* Keywords & Learning Paths */}

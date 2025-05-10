@@ -213,11 +213,7 @@ export class AssignmentSubmissionController {
       this.updateAssignmentSubmission.bind(this),
     ); //TODO change 'file' to the correct field name
 
-    this.router.get(
-      '/:id/download',
-      isAuthenticated,
-      this.downloadFileSubmission.bind(this),
-    );
+    this.router.get('/:id/download', isAuthenticated, this.downloadFileSubmission.bind(this));
   }
 
   private async getAssignmentSubmission(req: Request, res: Response): Promise<void> {
