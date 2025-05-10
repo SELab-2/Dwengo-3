@@ -13,7 +13,19 @@ export interface AssignmentShort2 {
   id: string;
   name: string;
   groups: GroupShort[];
-  learningPath: LearningPathDetail;
+  class: {
+    id: string;
+    name: string;
+  };
+  learningPath: {
+    id: string;
+    title: string;
+    learningPathNodes: {
+      learningObject: {
+        estimatedTime: number;
+      };
+    }[];
+  };
   deadline?: string;
 }
 
