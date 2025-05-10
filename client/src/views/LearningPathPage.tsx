@@ -74,6 +74,16 @@ function LearningPathPage() {
     return currentObject.multipleChoice as unknown as MultipleChoice;
   };
 
+  const submit = async (submissionType: SubmissionType, submission: string | object = '') => {
+    console.log(currentNode?.id);
+    // return await createAssignmentSubmission({
+    //   nodeId: currentNode?.id ?? "",
+    //   submission: submission,
+    //   submissionType: submissionType,
+    //   groupId: groupId ?? undefined,
+    // });
+  };
+
   const handleTransition = async (
     rightAnswer: boolean,
     transition?: LearningPathNodeTransitionDetail,
@@ -98,19 +108,21 @@ function LearningPathPage() {
     // update the furthest index if transition points to a node that hasn't been visited
     if (transition && transition.toNodeIndex > furthestIndex) {
       setFurthestIndex(transition.toNodeIndex);
-      await createAssignmentSubmission({
-        nodeId: currentNode?.id ?? '',
-        submission: '',
-        submissionType: SubmissionType.READ,
-        groupId: groupId ?? undefined,
-      });
+
+      // todo: submission type not always READ
+      await submit(SubmissionType.READ);
     }
+
+    // (t & t.i > fI) || (t & t.i === -1) || (!t & rA)
+    // (t & (t.i > fI || t.i === -1)) || (!t & rA)
 
     // Because multiple choice questions require a corresponding transition for a correct answer, when this is the last node,
     // it should point to the index -1. When this is the last node and it isn't a multiple choice question, it doesn't have a transition.
     if ((transition && transition.toNodeIndex === -1) || (rightAnswer && !transition)) {
       setFurthestIndex(maxIndex + 1);
-      // send new value to db
+
+      // todo: submission type not always READ
+      await submit(SubmissionType.READ);
     }
 
     setWrongAnswer(false);
