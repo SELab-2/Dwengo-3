@@ -1,4 +1,6 @@
 import { vi } from 'vitest';
+import { useParams } from '../../client/node_modules/react-router-dom';
+import { useAuth } from '../../client/src/hooks/useAuth';
 
 // Mocks
 vi.mock('../../client/node_modules/react-router-dom', async () => {
@@ -35,9 +37,6 @@ vi.mock('../../client/node_modules/@mui/material', async () => {
 vi.mock('../../client/src/hooks/useAuth', () => ({
   useAuth: vi.fn(),
 }));
-
-import { useParams } from '../../client/node_modules/react-router-dom';
-import { useAuth } from '../../client/src/hooks/useAuth';
 
 export function setUseParamsOutput(output: any) {
   (useParams as any).mockReturnValue(output);
