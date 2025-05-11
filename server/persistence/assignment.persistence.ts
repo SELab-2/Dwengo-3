@@ -9,12 +9,13 @@ import {
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+
+import { NotFoundError } from '../util/types/error.types';
 import {
   assignmentSelectDetail,
   assignmentSelectShort2,
-} from '../util/selectInput/assignment.select';
-import { NotFoundError } from '../util/types/error.types';
-import { groupSelectShort } from '../util/selectInput/group.select';
+  groupSelectShort,
+} from '../util/selectInput/select';
 
 export class AssignmentPersistence {
   public async getAssignments(
@@ -59,6 +60,10 @@ export class AssignmentPersistence {
                   },
                 },
               },
+              OR: [
+                { deadline: null },
+                { deadline: { gt: new Date() } }
+            ]
             }
           : {},
       ],
@@ -89,6 +94,8 @@ export class AssignmentPersistence {
     //create assignment
     const assignment = await PrismaSingleton.instance.assignment.create({
       data: {
+        name: params.name,
+        description: params.description,
         class: {
           connect: {
             id: params.classId,
@@ -104,6 +111,7 @@ export class AssignmentPersistence {
             id: params.learningPathId,
           },
         },
+        deadline: params.deadline
       },
       select: assignmentSelectDetail,
     });

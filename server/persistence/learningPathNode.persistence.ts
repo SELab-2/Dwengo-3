@@ -1,7 +1,7 @@
-import { learningPathNodeSelectDetail } from '../util/selectInput/learningPathNode.select';
 import { LearningPathNodeCreateParams } from '../util/types/learningPathNode.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { NotFoundError } from '../util/types/error.types';
+import { learningPathNodeSelectDetail } from '../util/selectInput/select';
 
 export class LearningPathNodePersistence {
   public async createLearningPathNode(

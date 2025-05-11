@@ -9,11 +9,12 @@ import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { Uuid } from '../util/types/assignment.types';
-import {
-  assignmentSubmissionSelectDetail,
-  assignmentSubmissionSelectShort,
-} from '../util/selectInput/assignmentSubmission.select';
+
 import { NotFoundError } from '../util/types/error.types';
+import {
+  assignmentSubmissionSelectShort,
+  assignmentSubmissionSelectDetail,
+} from '../util/selectInput/select';
 
 export class AssignmentSubmissionPersistence {
   public async getAssignmentSubmissions(
@@ -64,7 +65,7 @@ export class AssignmentSubmissionPersistence {
             },
           },
           submissionType: params.submissionType,
-          submission: params.submission,
+          submission: params.submission!,
         },
         select: assignmentSubmissionSelectDetail,
       });
@@ -82,7 +83,7 @@ export class AssignmentSubmissionPersistence {
             },
           },
           submissionType: params.submissionType,
-          submission: params.submission,
+          submission: params.submission!,
         },
         select: assignmentSubmissionSelectDetail,
       });

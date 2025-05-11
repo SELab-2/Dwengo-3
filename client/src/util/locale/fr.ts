@@ -83,5 +83,13 @@ export const fr = {
     submission: 'Soumission',
     back: 'Retourner',
     score: 'Score',
+    chooseFile: 'Choisir un fichier',
+    noFileSelected: 'Aucun fichier sélectionné',
+    submit: 'Soumettre',
+    fileSubmitted: "Fichier soumis",
+    submitOtherFile: "Soumettez un autre fichier, attention le précédent sera remplacé",
+    noFileSubmitted: "Aucun fichier n’a encore été soumis",
+    assignmentNameRequired: 'Le nom du devoir est requis',
+    learningPathRequired: "Le parcours d'apprentissage est requis",
   },
 };

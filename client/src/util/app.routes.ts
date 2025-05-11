@@ -1,4 +1,9 @@
 /**
+ * This constant contains the routes that are accessible to all users,
+ */
+export const PublicRoutes = ['/login', '/register'];
+
+/**
  * This constant contains the routes for the application.
  */
 export const AppRoutes = {
@@ -11,7 +16,21 @@ export const AppRoutes = {
   profile: '/profile',
   myClasses: '/classes',
   myLearningPaths: '/learning-paths',
-  learningPath: (id: string) => `/learning-paths/${id}`,
+  learningPath: (id: string, groupId?: string, favoriteId?: string): string => {
+    if (groupId && favoriteId) {
+      throw new Error("Only one of groupId or favoriteId should be provided.");
+    }
+
+    let url = `/learning-paths/${id}`;
+
+    if (groupId) {
+      url += `?groupId=${encodeURIComponent(groupId)}`;
+    } else if (favoriteId) {
+      url += `?favoriteId=${encodeURIComponent(favoriteId)}`;
+    }
+
+    return url;
+  },
   learningThemes: '/learning-themes',
   learningTheme: (id: string) => `/learning-themes/${id}`,
   class: (id: string) => `/class/${id}`,

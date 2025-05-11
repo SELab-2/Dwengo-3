@@ -3,8 +3,8 @@ import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { TeacherFilterParams, TeacherIncludeParams } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { teacherSelectDetail, teacherSelectShort } from '../util/selectInput/teacher.select';
 import { NotFoundError } from '../util/types/error.types';
+import { teacherSelectDetail, teacherSelectShort } from '../util/selectInput/select';
 
 export class TeacherPersistence {
   private prisma: PrismaClient;
