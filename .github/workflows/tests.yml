@@ -65,3 +65,10 @@ jobs:
         run: cd test && npm run test:int
       - name: Teardown clean
         run: cd test && npm run clean
+
+  test-views:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Views tests
+        run: cd test && npm run test:views
