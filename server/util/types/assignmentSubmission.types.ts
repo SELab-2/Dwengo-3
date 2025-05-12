@@ -27,19 +27,22 @@ export const SubmissionCreateSchema = z
   .object({
     groupId: z.string().uuid().optional(),
     favoriteId: z.string().uuid().optional(),
-    nodeId: z.string().uuid(),
+    nodeId: z.string(),
     submissionType: z.nativeEnum(SubmissionType),
-    submission: z.union([FileSubmissionSchema, MultipleChoiceSubSchema]),
+    submission: z.union([FileSubmissionSchema, MultipleChoiceSubSchema]).optional(),
   })
   .refine(
     (data) =>
       (data.submissionType === SubmissionType.MULTIPLE_CHOICE &&
         typeof data.submission === 'string') ||
       (data.submissionType === SubmissionType.FILE &&
-        FileSubmissionSchema.safeParse(data.submission).success),
+        FileSubmissionSchema.safeParse(data.submission).success) ||
+      (data.submission === undefined && data.submissionType === SubmissionType.READ),
     {
+      // submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE
       message:
-        'submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE',
+        'Submission must be present if submissionType is FILE or MULTIPLE_CHOICE,' +
+        'and must match the type (string for MULTIPLE_CHOICE, object for FILE)',
       path: ['submission'],
     },
   )

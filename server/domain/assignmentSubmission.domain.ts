@@ -71,6 +71,8 @@ export class AssignmentSubmissionDomain {
       throw new BadRequestError(40033);
     }
 
+    console.log(req.body);
+
     const data = SubmissionCreateSchema.parse(req.body);
 
     if (data.submissionType === SubmissionType.FILE) {

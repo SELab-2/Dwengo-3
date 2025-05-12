@@ -20,7 +20,7 @@ export interface AssignmentSubmissionCreate {
   favoriteId?: string;
   nodeId: string;
   submissionType: SubmissionType;
-  submission: string | object;
+  submission?: string | object;
   file?: string;
 }
 

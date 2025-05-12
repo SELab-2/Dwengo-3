@@ -202,7 +202,7 @@ model AssignmentSubmission {
   favoriteId     String?
   nodeId         String
   submissionType SubmissionType
-  submission     Json
+  submission     Json?
   node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   group          Group?           @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   favorite       Favorite?        @relation(fields: [favoriteId], references: [id], onDelete: NoAction, onUpdate: NoAction)

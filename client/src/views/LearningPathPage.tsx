@@ -13,6 +13,7 @@ import { createAssignmentSubmission } from '../api/assignmentSubmission.ts';
 import { useAuth } from '../hooks/useAuth.ts';
 import { useStudent } from '../hooks/useUser.ts';
 import { SubmissionType } from '../util/interfaces/learningObject.interfaces.ts';
+import { useGroup } from '../hooks/useGroup.ts';
 
 interface MultipleChoice {
   question: string;
@@ -31,20 +32,19 @@ function LearningPathPage() {
   const { t } = useTranslation();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
-  const classId = searchParams.get('classId');
+
   const groupId = searchParams.get('groupId');
+  const favoriteId = searchParams.get('favoriteId');
 
-  const { user } = useAuth();
-  const student = useStudent(user?.id);
-
-  // The index of the node that is currently shown
-
-  const [activeIndex, setActiveIndex] = useState(0);
+  const { data: group } = useGroup(groupId ?? undefined, favoriteId ?? undefined);
   // The current to be solved question index
 
-  const [furthestIndex, setFurthestIndex] = useState(0);
   // The list of nodes that have been solved
-  const [progress, setProgress] = useState<number[]>([]);
+  const [progress, setProgress] = useState<number[]>(group?.progress || []);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [furthestIndex, setFurthestIndex] = useState(
+    progress.length > 0 ? Math.max(...progress) : 0,
+  );
   const [wrongAnswer, setWrongAnswer] = useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const { data: learningPath } = useLearningPathById(id);
@@ -74,14 +74,18 @@ function LearningPathPage() {
     return currentObject.multipleChoice as unknown as MultipleChoice;
   };
 
-  const submit = async (submissionType: SubmissionType, submission: string | object = '') => {
-    console.log(currentNode?.id);
-    // return await createAssignmentSubmission({
-    //   nodeId: currentNode?.id ?? "",
-    //   submission: submission,
-    //   submissionType: submissionType,
-    //   groupId: groupId ?? undefined,
-    // });
+  const submit = async (
+    submissionType: SubmissionType,
+    submission: string | object | undefined = undefined,
+  ) => {
+    const data = {
+      nodeId: currentNode?.id ?? '',
+      submission: submission,
+      submissionType: submissionType,
+      groupId: groupId ?? undefined,
+    };
+
+    return await createAssignmentSubmission(data);
   };
 
   const handleTransition = async (
@@ -133,19 +137,19 @@ function LearningPathPage() {
     }
   };
 
-  const handleAnswerClick = (answer: string) => {
+  const handleAnswerClick = async (answer: string) => {
     const transition = currentNode?.transitions.find((t) => {
       const match = t.condition.match(/answer\s*==\s*(.+)/);
       const expected = match?.[1]?.replace(/['"]+/g, '').trim();
       return expected === answer;
     });
 
-    handleTransition(!!transition, transition);
+    await handleTransition(!!transition, transition);
   };
 
-  const handleReadClick = () => {
+  const handleReadClick = async () => {
     const transition = currentNode?.transitions[0];
-    handleTransition(true, transition);
+    await handleTransition(true, transition);
   };
 
   const nodeColor = (index: number) => {
@@ -243,7 +247,7 @@ function LearningPathPage() {
                     <Button
                       key={index}
                       variant="outlined"
-                      onClick={() => handleAnswerClick(option)}
+                      onClick={async () => await handleAnswerClick(option)}
                       sx={{ width: '100%', textTransform: 'none' }}
                     >
                       {option}
@@ -266,7 +270,11 @@ function LearningPathPage() {
                 <Typography variant="h6" fontWeight="medium">
                   {t('readContent')}
                 </Typography>
-                <Button variant="contained" onClick={() => handleReadClick()} sx={{ mt: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={async () => await handleReadClick()}
+                  sx={{ mt: 2 }}
+                >
                   {t('continue')}
                 </Button>
               </Box>

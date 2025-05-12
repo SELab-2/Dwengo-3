@@ -135,4 +135,11 @@ export const ApiRoutes = {
     list: '/api/teacher',
     get: (id: string) => `/api/teacher/${id}`,
   },
+
+  // Group
+  group: {
+    get(groupId: string) {
+      return `/api/group/${groupId}`;
+    },
+  },
 };

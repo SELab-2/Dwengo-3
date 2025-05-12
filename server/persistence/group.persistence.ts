@@ -1,7 +1,7 @@
 import { Assignment, Class, Group, PrismaClient, Student, Teacher } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { Uuid } from '../util/types/assignment.types';
-import { groupSelectDetail } from '../util/selectInput/select';
+import { groupSelectDetail, groupSelectShort } from '../util/selectInput/select';
 
 export class GroupPersistence {
   private prisma: PrismaClient;
@@ -54,5 +54,26 @@ export class GroupPersistence {
         progress,
       },
     });
+  }
+
+  public async createGroups(groups: Uuid[][], assignmentId: string) {
+    return await PrismaSingleton.instance.$transaction(
+      groups.map((group: Uuid[], index: number) =>
+        PrismaSingleton.instance.group.create({
+          data: {
+            name: `Group ${index + 1}`,
+            assignment: {
+              connect: {
+                id: assignmentId,
+              },
+            },
+            students: {
+              connect: group.map((student: Uuid) => ({ id: student })),
+            },
+          },
+          select: groupSelectShort,
+        }),
+      ),
+    );
   }
 }

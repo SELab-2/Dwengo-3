@@ -109,28 +109,7 @@ export class AssignmentPersistence {
       select: assignmentSelectDetail,
     });
 
-    // TODO: the following should be in group.persistence.ts, and should be called from assignment.domain.ts
-    // TODO: maybe we should name 'group' according to the language of the request.
     //create groups for the assignment
-    const groups = await PrismaSingleton.instance.$transaction(
-      params.groups.map((group: Uuid[], index: number) =>
-        PrismaSingleton.instance.group.create({
-          data: {
-            name: `Group ${index + 1}`,
-            assignment: {
-              connect: {
-                id: assignment.id,
-              },
-            },
-            students: {
-              connect: group.map((student: Uuid) => ({ id: student })),
-            },
-          },
-          select: groupSelectShort,
-        }),
-      ),
-    );
-    assignment.groups = groups;
     return assignment;
   }
 }
