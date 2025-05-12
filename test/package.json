@@ -12,7 +12,8 @@
     "test:int:local": "./integration_test.sh",
     "test:views": "vitest --run -c vitest.config.views.ts",
     "test:components": "vitest --run -c vitest.config.components.ts",
-    "test:hooks": "vitest --run -c vitest.config.hooks.ts"
+    "test:hooks": "vitest --run -c vitest.config.hooks.ts",
+    "test:api": "vitest --run -c vitest.config.api.ts"
   },
   "repository": {
     "type": "git",
