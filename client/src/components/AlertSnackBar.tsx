@@ -1,6 +1,6 @@
 import { Alert, AlertColor, Snackbar } from '@mui/material';
 
-export default function AllertSnackBar({
+export default function AlertSnackBar({
   open,
   setOpen,
   message,
