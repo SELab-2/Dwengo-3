@@ -72,3 +72,24 @@ jobs:
     steps:
       - name: Views tests
         run: cd test && npm run test:views
+  
+  test-components:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Component tests
+        run: cd test && npm run test:components
+  
+  test-hooks:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: Hook tests
+        run: cd test && npm run test:hooks
+  
+  test-apiCalls:
+    needs: [ setup ]
+    runs-on: self-hosted
+    steps:
+      - name: ApiCalls tests
+        run: cd test && npm run test:api
