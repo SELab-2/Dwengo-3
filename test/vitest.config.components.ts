@@ -7,6 +7,6 @@ export default defineConfig({
     globals: true,
     setupFiles: './setUpMocks.tsx',
     environment: 'jsdom',
-    include: ['views/*.test.tsx'],
+    include: ['components/*.test.tsx'],
   },
 });

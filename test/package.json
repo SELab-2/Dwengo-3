@@ -10,7 +10,8 @@
     "test:int": "dotenv -e .env.test -- vitest --run --no-file-parallelism -c vitest.config.integration.ts --coverage --dir ../",
     "test:all": "npm run test:int && npm run test:domain && npm run test:router",
     "test:int:local": "./integration_test.sh",
-    "test:views": "vitest --run -c vitest.config.views.ts"
+    "test:views": "vitest --run -c vitest.config.views.ts",
+    "test:components": "vitest --run -c vitest.config.components.ts"
   },
   "repository": {
     "type": "git",

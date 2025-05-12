@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import AnnouncementDetailpage from '../../client/src/views/AnnouncementDetailpage';
 import { useAnnouncementById } from '../../client/src/hooks/useAnnouncement';
 import '@testing-library/jest-dom';
-import { setUseAuthOutput, setUseParamsOutput } from './setUpMocks';
+import { setUseAuthOutput, setUseParamsOutput } from '../setUpMocks';
 
 vi.mock('../../client/src/hooks/useAnnouncement', () => ({
   useAnnouncementById: vi.fn(),
