@@ -1,4 +1,4 @@
-import { chown } from "fs";
+import { chown } from 'fs';
 
 export const en = {
   translation: {
@@ -86,10 +86,11 @@ export const en = {
     chooseFile: 'Choose file',
     noFileSelected: 'No file selected',
     submit: 'Submit',
-    fileSubmitted: "Submitted file",
-    submitOtherFile: "Submit another file, note that the previous one will be replaced",
-    noFileSubmitted: "No file has been submitted yet",
+    fileSubmitted: 'Submitted file',
+    submitOtherFile: 'Submit another file, note that the previous one will be replaced',
+    noFileSubmitted: 'No file has been submitted yet',
     assignmentNameRequired: 'Assignment name is required',
     learningPathRequired: 'Learning path is required',
+    joinRequestSucces: 'Request to join the class has been successfully sent',
   },
 };

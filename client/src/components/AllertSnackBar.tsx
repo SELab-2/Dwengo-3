@@ -1,13 +1,15 @@
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, AlertColor, Snackbar } from '@mui/material';
 
-export default function ErrorSnackBar({
+export default function AllertSnackBar({
   open,
   setOpen,
-  error,
+  message,
+  severity,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  error: string;
+  message: string;
+  severity: AlertColor;
 }) {
   return (
     <Snackbar
@@ -16,8 +18,8 @@ export default function ErrorSnackBar({
       onClose={() => setOpen(false)}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
     >
-      <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
-        {error}
+      <Alert severity={severity} variant="filled" sx={{ width: '100%' }}>
+        {message}
       </Alert>
     </Snackbar>
   );

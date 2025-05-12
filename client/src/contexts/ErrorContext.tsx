@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import ErrorSnackBar from '../components/ErrorSnackBar';
+import AllertSnackBar from '../components/AllertSnackBar';
 
 export interface ErrorContextType {
   setError: (message: string) => void;
@@ -20,7 +20,7 @@ export function ErrorProvider({ children }: { children: React.ReactNode }) {
     <ErrorContext.Provider value={{ setError: triggerError }}>
       {children}
       {/* Render the ErrorSnackBar globally */}
-      <ErrorSnackBar open={open} setOpen={setOpen} error={error || ''} />
+      <AllertSnackBar severity="error" open={open} setOpen={setOpen} message={error || ''} />
     </ErrorContext.Provider>
   );
 }
