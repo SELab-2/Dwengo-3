@@ -115,6 +115,8 @@ const DiscussionCreatePage: React.FC = () => {
             margin="normal"
             multiline
             minRows={6}
+            slotProps={{ htmlInput: { maxLength: 500 } }}
+            helperText={`${message.length}/500`}
             required
           />
           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>

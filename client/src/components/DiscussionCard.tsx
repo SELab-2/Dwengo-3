@@ -120,6 +120,8 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
                 minRows={2}
                 label={t('newMessage')}
                 value={newMessage}
+                slotProps={{ htmlInput: { maxLength: 500 } }}
+                helperText={`${newMessage.length}/500`}
                 onChange={(e) => setNewMessage(e.target.value)}
                 sx={{ mb: 2 }}
               />
