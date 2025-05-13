@@ -147,7 +147,7 @@ export const checkIfUserInAssignment = async (
     const teacherInClass = classgroup.teachers.some((teacher) => teacher.id === user.teacher?.id);
 
     if (!teacherInClass) {
-      throw new BadRequestError(40049);
+      throw new BadRequestError(40050);
     }
   }
 
@@ -158,7 +158,7 @@ export const checkIfUserInAssignment = async (
     );
 
     if (!studentInAssignment) {
-      throw new BadRequestError(40049);
+      throw new BadRequestError(40050);
     }
   }
 };

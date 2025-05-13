@@ -20,6 +20,8 @@ export const ApiRoutes = {
   // Me (get the logged in user)
   me: '/api/auth/me',
 
+  delete: '/api/auth/delete',
+
   // Announcement
   announcement: {
     list: '/api/announcement',

@@ -7,6 +7,8 @@ import { BadRequestError } from '../util/types/error.types';
 import { UsersPersistence } from '../persistence/auth/users.persistence';
 import { ClassFilterParams, ClassShort } from '../util/types/class.types';
 import { ClassDomain } from './class.domain';
+import { StudentPersistence } from '../persistence/student.persistence';
+import { TeacherPersistence } from '../persistence/teacher.persistence';
 
 export class UserDomain {
   private readonly providerMap = {
@@ -21,6 +23,8 @@ export class UserDomain {
 
   private readonly persistence = new UsersPersistence();
   private readonly classDomain = new ClassDomain();
+  private readonly studentPersistence = new StudentPersistence();
+  private readonly teacherPersistence = new TeacherPersistence();
 
   async createUser(userData: CreateUserParams): Promise<UserEntity> {
     if (userData.email === null || userData.email.trim().length === 0) {
@@ -76,12 +80,13 @@ export class UserDomain {
    * Deletes a user by their ID.
    *
    * @param id - The ID of the user to delete.
-   *
-   * @returns `true` if the user was successfully deleted, `false` otherwise.
    */
-  async deleteUser(id: string): Promise<boolean> {
-    const user: User | null = await this.persistence.deleteUser(id);
-    return user !== null;
+  async deleteUser(user: UserEntity): Promise<void> {
+    if (user.student) {
+      await this.studentPersistence.deleteStudent(user.student.id);
+    } else if (user.teacher) {
+      await this.teacherPersistence.deleteTeacher(user.teacher.id);
+    }
   }
 
   /**

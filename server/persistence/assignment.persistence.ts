@@ -16,8 +16,16 @@ import {
   assignmentSelectShort2,
   groupSelectShort,
 } from '../util/selectInput/select';
+import { GroupPersistence } from './group.persistence';
+import { AssignmentSubmissionPersistence } from './assignmentSubmission.persistence';
 
 export class AssignmentPersistence {
+  private submissionPersistence: AssignmentSubmissionPersistence;
+
+  public constructor() {
+    this.submissionPersistence = new AssignmentSubmissionPersistence();
+  }
+
   public async getAssignments(
     filters: AssignmentFilterParams,
     paginationParams: PaginationParams,
@@ -136,5 +144,39 @@ export class AssignmentPersistence {
     );
     assignment.groups = groups;
     return assignment;
+  }
+
+  public async deleteTeacherFromAssignment(teacherId: string, assignmentId: string) {
+    const assignment = await this.getAssignmentId(assignmentId);
+    const teachers = (await PrismaSingleton.instance.class.findUnique({
+      where: { id: assignment.class.id },
+      include: {
+        teachers: {
+          where: {
+            NOT: { id: teacherId },
+          },
+        },
+      },
+    }))!.teachers;
+    if (teachers.length == 0) {
+      for (const group of assignment.groups) {
+        await this.submissionPersistence.deleteAssignmentSubmissions({ groupId: group.id });
+      }
+      await PrismaSingleton.instance.group.deleteMany({
+        where: { assignmentId: assignmentId },
+      });
+      await PrismaSingleton.instance.assignment.delete({
+        where: { id: assignmentId },
+      });
+    } else {
+      await PrismaSingleton.instance.assignment.update({
+        where: { id: assignmentId },
+        data: {
+          teacher: {
+            connect: { id: teachers[0].id },
+          },
+        },
+      });
+    }
   }
 }
