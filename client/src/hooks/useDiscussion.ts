@@ -63,3 +63,15 @@ export function useCreateDiscussion() {
     },
   });
 }
+
+export function useDetailedDiscussionsByIds(ids: string[]) {
+  return useQuery({
+    queryKey: ['discussions', ids],
+    queryFn: async () => {
+      const discussions = await Promise.all(ids.map((id) => fetchDiscussionById(id)));
+      return discussions;
+    },
+    enabled: !!ids.length,
+    refetchOnWindowFocus: false,
+  });
+}
