@@ -1,3 +1,4 @@
+import { SubmissionType } from './assignmentSubmission.interfaces';
 import { keyword } from './keyword.interfaces';
 
 export enum ContentType {
@@ -9,12 +10,6 @@ export enum ContentType {
   'APPLICATION_PDF',
   'EXTERN',
   'BLOCKLY',
-}
-
-export enum SubmissionType {
-  'MULTIPLE_CHOICE' = 'MULTIPLE_CHOICE',
-  'FILE' = 'FILE',
-  'READ' = 'READ',
 }
 
 export interface LearningObjectShort {

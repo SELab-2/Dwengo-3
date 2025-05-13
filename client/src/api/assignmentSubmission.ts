@@ -7,6 +7,7 @@ import {
   AssignmentSubmissionShort,
   AssignmentSubmissionUpdate,
 } from '../util/interfaces/assignmentSubmission.interfaces';
+import { AxiosProgressEvent } from 'axios';
 
 /**
  * Fetch a list of assignmentSubmissions
@@ -44,9 +45,34 @@ export async function fetchAssignmentSubmissions(
  * Create an assignmentSubmission
  *
  * @param data - The data of the assignmentSubmission to be created
+ * @param setProgressEvent
  * @returns The assignmentSubmissiondetails
  */
-export async function createAssignmentSubmission(data: AssignmentSubmissionCreate) {
+export async function createAssignmentSubmission(
+  data: AssignmentSubmissionCreate,
+  setProgressEvent?: (progressEvent: AxiosProgressEvent) => void,
+) {
+  if (data.submissionType === 'FILE') {
+    const formData = new FormData();
+
+    // Append primitive fields
+    if (data.groupId) formData.append('groupId', data.groupId);
+    if (data.favoriteId) formData.append('favoriteId', data.favoriteId);
+    formData.append('nodeId', data.nodeId);
+    formData.append('submissionType', data.submissionType);
+    formData.append('file', data.file!);
+
+    const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress(event) {
+        setProgressEvent && setProgressEvent(event);
+      },
+    });
+
+    return response.data;
+  }
   const response = await apiClient.put(ApiRoutes.assignmentSubmission.create, data);
 
   return response.data;
@@ -72,8 +98,51 @@ export async function fetchAssignmentSubmissionById(assignmentSubmissionId: stri
  * @param data - The update-data
  * @returns The AssignmentSubmissionDetails
  */
-export async function updateAssignmentSubmission(id: string, data: AssignmentSubmissionUpdate) {
+export async function updateAssignmentSubmission(
+  id: string,
+  data: AssignmentSubmissionUpdate,
+  setProgressEvent?: (progressEvent: AxiosProgressEvent) => void,
+) {
+  if (data.submissionType === 'FILE') {
+    const formData = new FormData();
+
+    // Append primitive fields
+    formData.append('submissionType', data.submissionType);
+    formData.append('file', data.file!);
+
+    const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress(event) {
+        setProgressEvent && setProgressEvent(event);
+      },
+    });
+
+    return response.data;
+  }
   const response = await apiClient.patch(ApiRoutes.assignmentSubmission.update(id), data);
 
   return response.data;
+}
+
+/**
+ * Download a file submission
+ *
+ * @param id - The id of the assignmentSubmission to be downloaded
+ * @param fileName - The name of the file to be downloaded
+ */
+export async function downloadFileSubmission(id: string, fileName: string) {
+  const response = await apiClient.get(ApiRoutes.assignmentSubmission.download(id), {
+    responseType: 'blob',
+  });
+
+  const blob = new Blob([response.data], { type: response.headers['content-type'] });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
 }

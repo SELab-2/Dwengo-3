@@ -11,7 +11,6 @@ import FooterBar from './components/FooterBar';
 import MainAppBar from './components/MainAppBar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
-import { ErrorProvider } from './contexts/ErrorContext';
 import MyClassesPage from './views/MyClassesPage';
 import MyLearningPathsPage from './views/MyLearningPathsPage';
 import LearningThemesPage from './views/LearningThemesPage';
@@ -29,12 +28,13 @@ import ClassAddPage from './views/ClassAddPage.tsx';
 import { AppRoutes } from './util/app.routes.ts';
 import ClassDiscussionsPage from './views/ClassDiscussionsPage.tsx';
 import ProtectContent from './components/ProtectContent.tsx';
+import { NotificationProvider } from './contexts/NotificationContext.tsx';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <ErrorProvider>
+    <NotificationProvider>
       <BrowserRouter>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
@@ -117,7 +117,7 @@ function App() {
           </QueryClientProvider>
         </AuthProvider>
       </BrowserRouter>
-    </ErrorProvider>
+    </NotificationProvider>
   );
 }
 

@@ -70,26 +70,44 @@ if (process.env.SESSION_SECRET === undefined) {
   throw new Error('Secret for cookies not present');
 }
 
-const redisClient = createClient({
-  url: process.env.REDIS_URL,
-});
-redisClient.connect().catch(console.error);
+if (process.env.NODE_ENV != 'testing') {
+  const redisClient = createClient({
+    url: process.env.REDIS_URL,
+  });
+  redisClient.connect().catch(console.error);
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: new RedisStore({ client: redisClient }),
-    cookie: {
-      secure: false,
-      httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-      maxAge: 1000 * 60 * 60 * 5, // 5 hours
-      path: '/',
-    },
-  }),
-);
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      store: new RedisStore({ client: redisClient }),
+      cookie: {
+        secure: false,
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+        maxAge: 1000 * 60 * 60 * 5, // 5 hours
+        path: '/',
+      },
+    }),
+  );
+} else {
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        secure: false,
+        httpOnly: true,
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 60 * 5, // 5 hours
+        path: '/',
+      },
+    }),
+  );
+}
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());

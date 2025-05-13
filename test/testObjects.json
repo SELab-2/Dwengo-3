@@ -200,23 +200,31 @@
   "testAssignments": [
     {
       "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
+      "name": "test",
+      "description": "testDescription",
       "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
       "teacherId": "3b06702b-1111-2222-3333-444455556666",
       "classId": "8b07803c-4444-5555-6666-777788889999",
       "class": {
         "id": "8b07803c-4444-5555-6666-777788889999",
         "name": "class1"
-      }
+      },
+      "name": "Assignment 1",
+      "description": "Test assignment"
     },
     {
       "id": "6e312a15-dcc0-45d3-8660-17c749910839",
+      "name": "test",
+      "description": "testDescription",
       "learningPathId": "91aa27dc-2c50-5e6e-b789-769de70cf653",
       "teacherId": "3b06702b-2222-3333-4444-555566667777",
       "classId": "8b07853c-4444-5555-6666-777788889999",
       "class": {
         "id": "8b07853c-4444-5555-6666-777788889999",
         "name": "class2"
-      }
+      },
+      "name": "Assignment 2",
+      "description": "Test assignment"
     }
   ],
   "testAnnouncements": [
