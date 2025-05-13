@@ -18,7 +18,7 @@ export const AppRoutes = {
   myLearningPaths: '/learning-paths',
   learningPath: (id: string, groupId?: string, favoriteId?: string): string => {
     if (groupId && favoriteId) {
-      throw new Error("Only one of groupId or favoriteId should be provided.");
+      throw new Error('Only one of groupId or favoriteId should be provided.');
     }
 
     let url = `/learning-paths/${id}`;
@@ -44,4 +44,6 @@ export const AppRoutes = {
   classAnnouncements: (classId: string) => `/class/${classId}/announcements`,
   announcement: (announcementId: string) => `/announcement/${announcementId}`,
   classDiscussions: (classId: string) => `/class/${classId}/discussions`,
+  groupSubmission: (classId: string, assignmentId: string, groupId: string) =>
+    `/class/${classId}/assignments/${assignmentId}/group/${groupId}`,
 };
