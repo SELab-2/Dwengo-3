@@ -91,6 +91,8 @@ export const en = {
     noFileSubmitted: 'No file has been submitted yet',
     assignmentNameRequired: 'Assignment name is required',
     learningPathRequired: 'Learning path is required',
+    deleteAccountMessage: 'Are you sure you want to delete your account?',
+    deleteAccountWarning: 'Warning: Deleting your account is permanent and cannot be undone.',
     joinRequestSucces: 'Request to join the class has been successfully sent',
   },
 };

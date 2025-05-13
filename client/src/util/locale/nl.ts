@@ -88,6 +88,9 @@ export const nl = {
     noFileSubmitted: 'Er is nog geen bestand ingediend',
     assignmentNameRequired: 'Opdrachtnaam is verplicht',
     learningPathRequired: 'Leerpad is verplicht',
+    deleteAccountMessage: 'Weet je zeker dat je je account wilt verwijderen?',
+    deleteAccountWarning:
+      'Waarschuwing: Het verwijderen van je account is permanent en kan niet ongedaan worden gemaakt.',
     joinRequestSucces: 'Verzoek om toegevoegd te worden aan klas is succesvol verstuurd',
   },
 };
