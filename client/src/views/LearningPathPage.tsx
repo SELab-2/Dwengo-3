@@ -7,8 +7,18 @@ import { useLearningPathNodeById } from '../hooks/useLearningPathNode';
 import { useTranslation } from 'react-i18next';
 import { ErrorOutline } from '@mui/icons-material';
 import FileTextField from '../components/textfields/FileTextField';
-import { useAssignmentSubmissionById, useAssignmentSubmissions, useCreateAssignmentSubmission, useUpdateAssignmentSubmission } from '../hooks/useAssignmentSubmission';
-import { AssignmentSubmissionDetail, FileSubmission, MultipleChoice, SubmissionType } from '../util/interfaces/assignmentSubmission.interfaces';
+import {
+  useAssignmentSubmissionById,
+  useAssignmentSubmissions,
+  useCreateAssignmentSubmission,
+  useUpdateAssignmentSubmission,
+} from '../hooks/useAssignmentSubmission';
+import {
+  AssignmentSubmissionDetail,
+  FileSubmission,
+  MultipleChoice,
+  SubmissionType,
+} from '../util/interfaces/assignmentSubmission.interfaces';
 import { useError } from '../hooks/useError';
 import { downloadFileSubmission } from '../api/assignmentSubmission';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -40,21 +50,20 @@ function LearningPathPage() {
   const { data: submissions, isLoading: isSubmissionsLoading } = useAssignmentSubmissions(
     groupId ?? undefined,
     favoriteId ?? undefined,
-    currentNode?.id
+    currentNode?.id,
   );
-  
-  const submissionId = submissions?.data?.[0]?.id;
-  const { data: submission, isLoading: isSubmissionLoading } = useAssignmentSubmissionById(submissionId!);
-  const [currentSubmission, setCurrentSubmission] = useState<AssignmentSubmissionDetail | undefined>(undefined);
-  
-  useEffect(() => {
-    if (submission) {
-      setCurrentSubmission(submission);
-    }
-  }, [submission]);
-  
 
-  if (!learningPath || isSubmissionsLoading || isSubmissionLoading) {
+  const [currentSubmission, setCurrentSubmission] = useState<
+    AssignmentSubmissionDetail | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (submissions && submissions.length > 0) {
+      setCurrentSubmission(submissions[0]);
+    }
+  }, [submissions]);
+
+  if (!learningPath || isSubmissionsLoading) {
     return <div>{t('loading')}</div>;
   }
 
@@ -70,11 +79,11 @@ function LearningPathPage() {
   const fileSubmission = () => {
     if (!currentSubmission) return undefined;
     return currentSubmission.submission as unknown as FileSubmission;
-  }
-  
+  };
+
   const isFile = (): boolean => {
     return currentObject?.submissionType === SubmissionType.FILE;
-  }
+  };
 
   const handleAnswerClick = (answer: string) => {
     if (activeIndex <= furthestIndex) {
@@ -109,47 +118,46 @@ function LearningPathPage() {
   const handleFileSubmission = () => {
     if (!file) return;
 
-    currentSubmission ?
-      submissionUpdate.mutate(
-        {
-          id: currentSubmission.id,
-          data :{
+    currentSubmission
+      ? submissionUpdate.mutate(
+          {
+            id: currentSubmission.id,
+            data: {
+              submissionType: SubmissionType.FILE,
+              file: file,
+            },
+          },
+          {
+            onSuccess: (response) => {
+              setProgressEvent(undefined);
+              setFile(null);
+              setCurrentSubmission(response);
+            },
+            onError: (error) => {
+              setError(error.message);
+            },
+          },
+        )
+      : submissionCreate.mutate(
+          {
+            nodeId: currentNode!.id,
+            groupId: groupId ?? undefined,
+            favoriteId: favoriteId ?? undefined,
             submissionType: SubmissionType.FILE,
             file: file,
-          }
-        },
-        {
-          onSuccess: (response) => {
-            setProgressEvent(undefined);
-            setFile(null);
-            setCurrentSubmission(response);
           },
-          onError: (error) => {
-            setError(error.message);
+          {
+            onSuccess: (response) => {
+              setProgressEvent(undefined);
+              setFile(null);
+              setCurrentSubmission(response);
+            },
+            onError: (error) => {
+              setError(error.message);
+            },
           },
-        },
-    ) :
-      submissionCreate.mutate(
-        {
-          nodeId: currentNode!.id,
-          groupId: groupId ?? undefined,
-          favoriteId: favoriteId ?? undefined,
-          submissionType: SubmissionType.FILE,
-          file: file,
-        }
-        , 
-        {
-          onSuccess: (response) => {
-            setProgressEvent(undefined);
-            setFile(null);
-            setCurrentSubmission(response);
-          },
-          onError: (error) => {
-            setError(error.message);
-          },
-      }
-  );
-  }
+        );
+  };
 
   const nodeColor = (index: number) => {
     const isActive = index === activeIndex;
@@ -242,45 +250,51 @@ function LearningPathPage() {
                     </Button>
                   ))}
                 </Box>
-              </Box>) : isFile() ? (
-                  <Box mt={3} >
-                    {currentSubmission ? (
-                      <Box>
-                        <Typography mt={2} variant='subtitle1'>
-                          {`${t('fileSubmitted')}: `}
-                          <Button
-                            endIcon={<DownloadIcon />}
-                            onClick={() => downloadFileSubmission(currentSubmission.id, fileSubmission()?.fileName!)}>
-                              {fileSubmission()?.fileName}
-                          </Button>
-                        </Typography>
-                        {user?.student &&
-                        <Typography mt={2} variant='subtitle1' fontWeight="bold">
-                          {t('submitOtherFile')}
-                        </Typography>}
-                      </Box>
-                    ): (
-                      <Typography mt={2} variant='subtitle1'>
-                        {t('noFileSubmitted')}
+              </Box>
+            ) : isFile() ? (
+              <Box mt={3}>
+                {currentSubmission ? (
+                  <Box>
+                    <Typography mt={2} variant="subtitle1">
+                      {`${t('fileSubmitted')}: `}
+                      <Button
+                        endIcon={<DownloadIcon />}
+                        onClick={() =>
+                          downloadFileSubmission(currentSubmission.id, fileSubmission()?.fileName!)
+                        }
+                      >
+                        {fileSubmission()?.fileName}
+                      </Button>
+                    </Typography>
+                    {user?.student && (
+                      <Typography mt={2} variant="subtitle1" fontWeight="bold">
+                        {t('submitOtherFile')}
                       </Typography>
                     )}
-                    {user?.student &&
-                    <Box>
-                      <FileTextField setFile={setFile} progressEvent={progressEvent}/>
-                      <Box justifyContent={"center"} display={"flex"}>
-                        <Button 
-                          variant="contained" 
-                          color="primary" 
-                          sx={{ width: { xs: '100%', sm: '40%' } }}
-                          disabled={!groupId && !favoriteId}
-                          onClick={handleFileSubmission}>
-                          {t('submit')}
-                        </Button>
-                      </Box>
-                    </Box>}
                   </Box>
-              ): null
-            }
+                ) : (
+                  <Typography mt={2} variant="subtitle1">
+                    {t('noFileSubmitted')}
+                  </Typography>
+                )}
+                {user?.student && (
+                  <Box>
+                    <FileTextField setFile={setFile} progressEvent={progressEvent} />
+                    <Box justifyContent={'center'} display={'flex'}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ width: { xs: '100%', sm: '40%' } }}
+                        disabled={!groupId && !favoriteId}
+                        onClick={handleFileSubmission}
+                      >
+                        {t('submit')}
+                      </Button>
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+            ) : null}
 
             {wrongAnswer && (
               <Box
