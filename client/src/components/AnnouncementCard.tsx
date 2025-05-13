@@ -1,5 +1,5 @@
 import { Avatar, Box, Card, CardContent, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { TeacherShort } from '../util/interfaces/teacher.interfaces';
