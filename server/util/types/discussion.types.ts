@@ -2,10 +2,15 @@ import { z } from 'zod';
 import { Prisma } from '.prisma/client';
 import { discussionSelectDetail, discussionSelectShort } from '../selectInput/select';
 
-export const DiscussionFilterSchema = z.object({
-  userId: z.string().uuid().optional(),
-  assignmentId: z.string().uuid().optional(),
-});
+export const DiscussionFilterSchema = z
+  .object({
+    userId: z.string().uuid().optional(),
+    assignmentId: z.string().uuid().optional(),
+  })
+  .refine((data) => Object.values(data).some((value) => value !== undefined), {
+    message: 'At least one filter must be provided.',
+    path: [],
+  });
 
 export const DiscussionCreateSchema = z.object({
   groupId: z.string().uuid(),
