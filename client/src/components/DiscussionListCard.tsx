@@ -4,9 +4,14 @@ import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import DiscussionCard from './DiscussionCard';
 import { DiscussionShort } from '../util/interfaces/discussion.interfaces';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../hooks/useAuth';
 
 function DiscussionListCard({ assignment }: { assignment: AssignmentShort2 }) {
-  const { data: paginatedDiscussions, isLoading } = useDiscussions({ assignmentId: assignment.id });
+  const { user } = useAuth();
+  const { data: paginatedDiscussions, isLoading } = useDiscussions({
+    assignmentId: assignment.id,
+    userId: user?.id,
+  });
   const { data: discussions } = paginatedDiscussions || { data: [] };
   const { t } = useTranslation();
 

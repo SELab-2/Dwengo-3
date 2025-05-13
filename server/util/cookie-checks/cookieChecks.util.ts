@@ -5,6 +5,7 @@ import { ClassRoleEnum, UserEntity } from '../types/user.types';
 import { ClassPersistence } from '../../persistence/class.persistence';
 import { GroupPersistence } from '../../persistence/group.persistence';
 import { BadRequestError, NotFoundError } from '../types/error.types';
+import { AssignmentPersistence } from '../../persistence/assignment.persistence';
 
 export const compareUserIdWithFilterId = async (
   user: UserEntity,
@@ -121,5 +122,43 @@ export const checkIfUsersAreInSameGroup = async (
   const check = users.every((user) => groupStudendtIds.has(user) || teacherIds.has(user));
   if (!check) {
     throw new BadRequestError(40041);
+  }
+};
+
+/**
+ * Checks if the user is in the assignment and throws an appropriate error if not.
+ *
+ * @param user - The user to check
+ * @param assignmentId - The assignment ID to check
+ * @param assignmentPersistence - The assignment persistence object
+ * @param classPersistence - The class persistence object
+ */
+export const checkIfUserInAssignment = async (
+  user: UserEntity,
+  assignmentId: Uuid,
+  assignmentPersistence: AssignmentPersistence,
+  classPersistence: ClassPersistence,
+): Promise<void> => {
+  const assignment = await assignmentPersistence.getAssignmentId(assignmentId);
+
+  // A teacher can only get assignments of a class he's in
+  if (user.role == ClassRoleEnum.TEACHER) {
+    const classgroup = await classPersistence.getClassById(assignment.class.id);
+    const teacherInClass = classgroup.teachers.some((teacher) => teacher.id === user.teacher?.id);
+
+    if (!teacherInClass) {
+      throw new BadRequestError(40049);
+    }
+  }
+
+  // A student can only get assignments if he's a member of the assignment
+  if (user.role == ClassRoleEnum.STUDENT) {
+    const studentInAssignment = assignment.groups.some((group) =>
+      group.students.some((student) => student.userId === user.id),
+    );
+
+    if (!studentInAssignment) {
+      throw new BadRequestError(40049);
+    }
   }
 };

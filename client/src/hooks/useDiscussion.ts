@@ -17,7 +17,7 @@ export function useDiscussions({
   page,
   pageSize,
 }: {
-  userId?: string;
+  userId: string | undefined;
   assignmentId?: string;
   page?: number;
   pageSize?: number;
@@ -33,7 +33,7 @@ export function useDiscussions({
       );
       return result;
     },
-    enabled: !!userId || !!assignmentId,
+    enabled: !!userId,
     refetchOnWindowFocus: false,
   });
 }

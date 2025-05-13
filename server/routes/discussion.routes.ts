@@ -30,7 +30,7 @@ export class DiscussionController {
      *       - name: userId
      *         in: query
      *         description: Filter by userId
-     *         required: false
+     *         required: true
      *         schema:
      *           type: string
      *           format: uuid
