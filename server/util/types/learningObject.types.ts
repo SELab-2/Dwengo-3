@@ -23,10 +23,16 @@ export const learningObjectKeywordSchema = z.object({
 
 export type LearningObjectKeywordParams = z.infer<typeof learningObjectKeywordSchema>;
 
-const multipleChoiseShema = z.object({
-  question: z.string().min(1, 'Question is required'),
-  options: z.string().array().nonempty(),
-});
+const multipleChoiseShema = z
+  .object({
+    question: z.string().min(1, 'Question is required'),
+    options: z.string().array().nonempty(),
+    solution: z.number().positive(),
+  })
+  .refine((data) => data.solution >= data.options.length, {
+    message: 'The solution index need to be between 0 and options.length',
+    path: [],
+  });
 
 export type MultipleChoice = z.infer<typeof multipleChoiseShema>;
 

@@ -10,7 +10,9 @@ const FileSubmissionSchema = z.object({
   filePath: z.string(),
 });
 
-const MultipleChoiceSubSchema = z.string();
+const MultipleChoiceSubSchema = z.object({
+  answer: z.number(),
+});
 
 export const SubmissionFilterSchema = z
   .object({
@@ -32,14 +34,13 @@ export const SubmissionCreateSchema = z
     submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()]),
   })
   .refine(
-    (data) =>
-      {
-        if (data.submissionType === SubmissionType.MULTIPLE_CHOICE) {
-          return data.submission !== null && data.submission !== undefined;
-        }
-        return true; // Accept any value for FILE or other types
-      },
-      {
+    (data) => {
+      if (data.submissionType === SubmissionType.MULTIPLE_CHOICE) {
+        return data.submission !== null && data.submission !== undefined;
+      }
+      return true; // Accept any value for FILE or other types
+    },
+    {
       message:
         'submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE',
       path: ['submission'],
@@ -56,14 +57,13 @@ export const SubmissionUpdateSchema = z
     submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()]),
   })
   .refine(
-    (data) =>
-      {
-        if (data.submissionType === SubmissionType.MULTIPLE_CHOICE) {
-          return data.submission !== null && data.submission !== undefined;
-        }
-        return true; // Accept any value for FILE or other types
-      },
-      {
+    (data) => {
+      if (data.submissionType === SubmissionType.MULTIPLE_CHOICE) {
+        return data.submission !== null && data.submission !== undefined;
+      }
+      return true; // Accept any value for FILE or other types
+    },
+    {
       message:
         'submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE',
       path: ['submission'],

@@ -28,7 +28,7 @@ import { useLearningObjects } from '../hooks/useLearningObject';
 import {
   AssignmentSubmissionDetail,
   FileSubmission,
-  MultipleChoice,
+  MultipleChoiceSubmission,
   SubmissionType,
 } from '../util/interfaces/assignmentSubmission.interfaces';
 import DoneIcon from '@mui/icons-material/Done';
@@ -37,6 +37,7 @@ import { LearningObjectDetail } from '../util/interfaces/learningObject.interfac
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
 import { useAssignmentSubmissions } from '../hooks/useAssignmentSubmission';
 import { downloadFileSubmission } from '../api/assignmentSubmission';
+import { ClearIcon } from '@mui/x-date-pickers';
 
 const calculateProgress = (progress: number[], learningPath: LearningPathShort) => {
   const total_nodes = learningPath.learningPathNodes.length;
@@ -79,12 +80,12 @@ function SubmissionPage() {
     setOpenItems((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const multipleChoice = (object: LearningObjectDetail) => {
-    return object.multipleChoice as unknown as MultipleChoice;
-  };
-
   const fileSubmission = (submission: AssignmentSubmissionDetail) => {
     return submission.submission as unknown as FileSubmission;
+  };
+
+  const multipleChoiceSubmission = (submission: AssignmentSubmissionDetail) => {
+    return submission.submission as unknown as MultipleChoiceSubmission;
   };
 
   return (
@@ -164,7 +165,12 @@ function SubmissionPage() {
                     <ListItemButton
                       onClick={() => handleClick(object.id)}
                       sx={{
-                        backgroundColor: made ? theme.palette.primary.main : 'gray',
+                        backgroundColor: made
+                          ? multipleChoiceSubmission(submission!).answer ===
+                            object.multipleChoice.solution
+                            ? theme.palette.primary.main
+                            : 'red'
+                          : 'gray',
                         color: 'white',
                       }}
                       key={object.id}
@@ -179,13 +185,31 @@ function SubmissionPage() {
                       {
                         <Box>
                           <Typography>
-                            {`${t('question')}: ${multipleChoice(object).question}?`}
+                            {`${t('question')}: ${object.multipleChoice.question}?`}
                           </Typography>
-                          {multipleChoice(object).options.map((option, index) => (
-                            <Typography marginLeft={MarginSize.small}>
-                              {`${index + 1}: ${option}`}
-                            </Typography>
-                          ))}
+                          <List>
+                            {object.multipleChoice.options.map((option, index) => (
+                              <ListItem
+                                key={option}
+                                sx={{
+                                  bgcolor:
+                                    submission &&
+                                    multipleChoiceSubmission(submission).answer === index
+                                      ? theme.palette.primary.light
+                                      : 'transparent',
+                                }}
+                              >
+                                <ListItemText primary={`${index + 1}: ${option}`} />
+                                <ListItemIcon>
+                                  {index == object.multipleChoice.solution ? (
+                                    <DoneIcon color="primary" />
+                                  ) : (
+                                    <ClearIcon color="error" />
+                                  )}
+                                </ListItemIcon>
+                              </ListItem>
+                            ))}
+                          </List>
                         </Box>
                       }
                     </Collapse>
@@ -208,6 +232,11 @@ function SubmissionPage() {
                       primary={object.hruid}
                       secondary={made ? fileSubmission(submission!).fileName : ''}
                     />
+                    {made && (
+                      <ListItemIcon>
+                        <DoneIcon />
+                      </ListItemIcon>
+                    )}
                   </ListItemButton>
                 );
               })}
