@@ -207,7 +207,8 @@ export class BadRequestError extends APIError {
         return "Can't fetch discussions from another user...";
       case 40050:
         return "Can't fetch info from an assignment you're not a member of...";
-
+      case 40051:
+        return 'A group can only have one discussion...';
       default:
         return 'Bad request...';
     }

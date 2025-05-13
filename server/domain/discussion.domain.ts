@@ -46,7 +46,7 @@ export class DiscussionDomain {
 
     // Check if the userId's match if the userId is used as a filter
     if (filters.userId && user.id !== filters.userId) {
-      throw new BadRequestError(40048);
+      throw new BadRequestError(40049);
     }
 
     // Check if the user is a member of the assignment if the assignmentId is used as a filter
@@ -71,6 +71,7 @@ export class DiscussionDomain {
   public async createDiscussion(query: any, user: UserEntity): Promise<DiscussionDetail> {
     const data = DiscussionCreateSchema.parse(query);
     await checkIfUserIsInGroup(user, data.groupId, this.groupPersistence);
+    await this.checkIfGroupAlreadyHasDiscussion(data.groupId);
 
     // get all the users that are supposed to see the discussion
     // This includes all the group members and the teachers in the class
@@ -88,5 +89,13 @@ export class DiscussionDomain {
     const memberIds = groupMemberUserIds.concat(teacherIds);
 
     return this.discussionPersistence.createDiscussion(data, memberIds);
+  }
+
+  public async checkIfGroupAlreadyHasDiscussion(groupId: Uuid): Promise<void> {
+    const group = await this.groupPersistence.getGroupById(groupId);
+
+    if (group && group.discussion) {
+      throw new BadRequestError(40051);
+    }
   }
 }
