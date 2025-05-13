@@ -118,6 +118,8 @@ let existingAssignments = testAssignments;
 
 let createAssigmentParams = {
   groups: [[testStudents[0].id, testStudents[1].id]],
+  name: 'test',
+  description: 'testDescription',
   classId: testClasses[0].id,
   teacherId: testTeachers[0].id,
   learningPathId: testLearningPaths[0].id,

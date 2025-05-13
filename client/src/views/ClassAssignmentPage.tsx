@@ -3,6 +3,7 @@ import {
   Button,
   LinearProgress,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -20,6 +21,8 @@ import BackButton from '../components/BackButton.tsx';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import { useAssignmentById } from '../hooks/useAssignment.ts';
+import { AppRoutes } from '../util/app.routes.ts';
+import DateTypography from '../components/DateTypography.tsx';
 
 const calculateProgress = (
   progress: number[],
@@ -61,14 +64,54 @@ function ClassAssignmentPage() {
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 1000 }, p: 2 }}>
         <BackButton link={`/class/${classData!.id}/assignments`} />
 
-        <Typography variant="h3" gutterBottom>
-          {/*assignment!.name*/}
-          {assignment!.learningPath.title}
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          {`${t('givenBy')}: ${assignment!.teacher.user.name} ${assignment!.teacher.user.surname}`}
-        </Typography>
+        <Stack spacing={3} sx={{ mb: 4 }}>
+          <Typography variant="h3">{assignment!.name}</Typography>
 
+          <Box
+            sx={{
+              backgroundColor: '#f9f9f9',
+              borderRadius: 2,
+              p: 2,
+              boxShadow: 1,
+              position: 'relative',
+            }}
+          >
+            {/* Given By - top right */}
+            <Typography
+              variant="subtitle2"
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 12,
+                fontStyle: 'italic',
+                color: 'text.secondary',
+              }}
+            >
+              {t('givenBy')}: {assignment!.teacher.user.name} {assignment!.teacher.user.surname}
+            </Typography>
+
+            {/* Description content */}
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+              {t('description')}
+            </Typography>
+            <Typography variant="body1">{assignment!.description}</Typography>
+            <br />
+            {assignment!.deadline && (
+              <DateTypography
+                text={`${t('deadline')}: `}
+                date={new Date(assignment!.deadline!)}
+                variant="subtitle2"
+                sx={{
+                  position: 'absolute',
+                  right: 12,
+                  bottom: 8,
+                  fontStyle: 'italic',
+                  color: 'text.secondary',
+                }}
+              />
+            )}
+          </Box>
+        </Stack>
         {/*<DateTypography text={`${t('deadline')}: `} date={assignment.deadline} variant='h5' />*/}
 
         <GroupListDialog
@@ -146,7 +189,9 @@ function ClassAssignmentPage() {
                         padding: { xs: '5px 10px', sm: '8px 16px' },
                         minWidth: { xs: '60px', sm: '100px' },
                       }}
-                      onClick={() => alert('TODO')}
+                      onClick={() =>
+                        navigate(AppRoutes.learningPath(assignment?.learningPath.id!, group.id))
+                      }
                     >
                       {t('details')}
                     </Button>

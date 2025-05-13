@@ -3,7 +3,7 @@ import { Prisma } from '.prisma/client';
 import { discussionSelectDetail, discussionSelectShort } from '../selectInput/select';
 
 export const DiscussionFilterSchema = z.object({
-  userId: z.string().optional(), // TODO: add uuid check
+  userId: z.string().uuid().optional(),
   assignmentId: z.string().uuid().optional(),
 });
 

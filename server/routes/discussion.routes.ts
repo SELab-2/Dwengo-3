@@ -33,6 +33,7 @@ export class DiscussionController {
      *         required: false
      *         schema:
      *           type: string
+     *           format: uuid
      *       - name: assignmentId
      *         in: query
      *         description: Filter by assignmentId
