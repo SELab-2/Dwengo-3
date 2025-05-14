@@ -9,7 +9,7 @@ import {
 } from '../../client/src/api/assignmentSubmission';
 import { SubmissionType } from '../../client/src/util/interfaces/assignmentSubmission.interfaces';
 
-describe('Test announcementApi', () => {
+describe('Test assignmentSubmissionApi', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
