@@ -559,5 +559,85 @@
         "role": "STUDENT"
       }
     }
+  ],
+  "testClassJoinRequests": [
+    {
+      "id": "86da33b4-6f8c-4ebb-8c92-776d8d004d8e",
+      "classId": "8b07803c-4444-5555-6666-777788889999",
+      "userId": "1a2b3c4d-1111-2222-3333-444455556666",
+      "user": {
+        "id": "1a2b3c4d-1111-2222-3333-444455556666",
+        "provider": "LOCAL",
+        "username": "user1",
+        "email": "user1@example.com",
+        "password": "password1",
+        "surname": "Smith",
+        "name": "John",
+        "role": "TEACHER",
+        "teacher": {
+          "id": "3b06702b-1111-2222-3333-444455556666",
+          "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+        }
+      },
+      "class": {
+        "id": "8b07803c-4444-5555-6666-777788889999",
+        "name": "class1",
+        "students": [
+          {
+            "id": "4c07803c-1111-2222-3333-444455556666",
+            "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+          },
+          {
+            "id": "4c07803c-2222-3333-4444-555566667777",
+            "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+          }
+        ],
+        "teachers": [
+          {
+            "id": "3b06702b-1111-2222-3333-444455556666",
+            "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+          }
+        ]
+      }
+    },
+    {
+      "id": "657e499e-443d-4333-a064-66020f285f54",
+      "classId": "8b07803c-4444-5555-6666-777788889999",
+      "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+      "user": {
+        "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+        "provider": "LOCAL",
+        "username": "user6",
+        "email": "user6@example.com",
+        "password": "password6",
+        "surname": "Garcia",
+        "name": "Sophia",
+        "role": "STUDENT",
+        "student": {
+          "id": "4c07803c-1111-2222-3333-444455556666",
+          "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+        }
+      },
+      "class": {
+        "id": "8b07803c-4444-5555-6666-777788889999",
+        "name": "class1",
+        "students": [
+          {
+            "id": "4c07803c-1111-2222-3333-444455556666",
+            "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+          },
+          {
+            "id": "4c07803c-2222-3333-4444-555566667777",
+            "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+          }
+        ],
+        "teachers": [
+          {
+            "id": "3b06702b-1111-2222-3333-444455556666",
+            "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+          }
+        ]
+      }
+    }
   ]
 }
