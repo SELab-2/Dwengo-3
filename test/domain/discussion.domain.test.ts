@@ -148,7 +148,7 @@ describe('discussion domain', () => {
     test('user id is not query user id fails', async () => {
       await expect(
         discussionDomain.getDiscussions(getDiscussionsQuery, userStudent),
-      ).rejects.toMatchObject({ _errorCode: 40027 });
+      ).rejects.toMatchObject({ _errorCode: 40047 });
     });
   });
   describe('getDiscussionById', () => {

@@ -34,7 +34,7 @@ export class DiscussionDomain {
     const parseResult = queryWithPaginationParser(query, DiscussionFilterSchema);
     const filters = parseResult.dataSchema;
     if (user.id !== filters.userId) {
-      throw new BadRequestError(40027);
+      throw new BadRequestError(40047);
     }
     return this.discussionPersistence.getDiscussions(filters, parseResult.dataPagination);
   }

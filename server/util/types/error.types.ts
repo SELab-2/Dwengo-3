@@ -195,7 +195,7 @@ export class BadRequestError extends APIError {
         return 'Invalid data provided...';
       case 40046:
         return 'User already exists...';
-      case 40027:
+      case 40047:
         return "Can't fetch other user's discussions...";
       default:
         return 'Bad request...';
