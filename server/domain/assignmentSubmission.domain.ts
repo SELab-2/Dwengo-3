@@ -101,6 +101,7 @@ export class AssignmentSubmissionDomain {
 
       // update the progress of the group when needed
       if (node.index > Math.max(...groupData.progress)) {
+        console.log('Updating group progress');
         const new_progress = [...groupData.progress, node.index];
         await this.groupPersistence.updateGroupProgress(data.groupId, new_progress);
       }

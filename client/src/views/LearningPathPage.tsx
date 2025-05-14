@@ -48,9 +48,18 @@ function LearningPathPage() {
   const { data: group } = useGroup(groupId ?? undefined, favoriteId ?? undefined);
 
   // The list of nodes that have been solved
-  const [progress, setProgress] = useState<number[]>(group?.progress || []);
-  const [activeIndex, setActiveIndex] = useState(group?.currentNodeIndex || 0);
-  const [furthestIndex, setFurthestIndex] = useState(group?.currentNodeIndex || 0);
+  const [progress, setProgress] = useState<number[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [furthestIndex, setFurthestIndex] = useState(0);
+
+  useEffect(() => {
+    if (!group) return;
+
+    setProgress(group.progress);
+    setFurthestIndex(group.currentNodeIndex);
+    setActiveIndex(group.currentNodeIndex);
+  }, [group]);
+
   const { user } = useAuth();
   const [progressEvent, setProgressEvent] = useState<AxiosProgressEvent | undefined>(undefined);
   const submissionCreate = useCreateAssignmentSubmission(setProgressEvent);
@@ -125,21 +134,45 @@ function LearningPathPage() {
 
     if (!progress.includes(activeIndex)) setProgress((prev) => [...prev, activeIndex]);
 
-    if (transition.toNodeIndex > furthestIndex) {
-      setFurthestIndex(transition.toNodeIndex);
-    }
-
-    if (transition.toNodeIndex === -1) {
-      setFurthestIndex(maxIndex + 1);
-    }
+    const newIndex = transition.toNodeIndex === -1 ? maxIndex + 1 : transition.toNodeIndex;
+    setFurthestIndex(newIndex);
 
     updateIndexMutation.mutate({
       groupId: groupId!!, // todo: support favorites
-      index: furthestIndex,
+      index: newIndex,
     });
 
-    // todo: is this correct?
-    setActiveIndex(furthestIndex);
+    setActiveIndex(newIndex);
+  };
+
+  const submitRead = async () => {
+    if (currentSubmission)
+      submissionUpdate.mutate(
+        {
+          id: currentSubmission.id,
+          data: {
+            submissionType: SubmissionType.READ,
+          },
+        },
+        {
+          onError: (error) => {
+            setError(error.message);
+          },
+        },
+      );
+    else
+      submissionCreate.mutate(
+        {
+          submissionType: SubmissionType.READ,
+          nodeId: currentNode!!.id,
+          groupId: groupId!!,
+        },
+        {
+          onError: (error) => {
+            setError(error.message);
+          },
+        },
+      );
   };
 
   const submitMultipleChoice = async () => {
@@ -153,10 +186,6 @@ function LearningPathPage() {
           },
         },
         {
-          onSuccess: (response) => {
-            setCurrentAnswer(null);
-            setCurrentSubmission(response);
-          },
           onError: (error) => {
             setError(error.message);
           },
@@ -167,12 +196,9 @@ function LearningPathPage() {
         {
           submissionType: SubmissionType.MULTIPLE_CHOICE,
           nodeId: currentNode!!.id,
+          groupId: groupId!!,
         },
         {
-          onSuccess: (response) => {
-            setCurrentAnswer(null);
-            setCurrentSubmission(response);
-          },
           onError: (error) => {
             setError(error.message);
           },
@@ -185,6 +211,7 @@ function LearningPathPage() {
     switch (currentObject?.submissionType) {
       // no submission needed for read nodes
       case SubmissionType.READ: {
+        await submitRead();
         const transition = currentNode?.transitions?.[0];
         if (transition === undefined) {
           setError('No transition found');
@@ -335,10 +362,11 @@ function LearningPathPage() {
 
         {/* This box grows and scrolls if needed */}
         <Box
-          flex={1}
           overflow="auto"
           sx={{
             minHeight: 0,
+            maxHeight: 'calc(100vh - var(--navbar-heigh))',
+            maxWidth: '70vw',
           }}
         >
           {currentNode !== undefined && currentObject ? (
