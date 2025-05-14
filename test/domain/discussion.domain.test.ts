@@ -16,7 +16,6 @@ import {
   testLearningPaths,
 } from '../testObjects.json';
 
-// discussion persistence mock
 const {
   mockDiscussionPeristence,
   mockGroupPersistence,
@@ -136,11 +135,6 @@ describe('discussion domain', () => {
         discussionDomain.getDiscussions(getDiscussionsQuery, userTeacher),
       ).resolves.not.toThrow();
     });
-    test('user does not belong to a group fails', async () => {
-      await expect(
-        discussionDomain.getDiscussions(getDiscussionsQuery, userTeacherOtherGroup),
-      ).rejects.toThrow();
-    });
     test('invalid pagination fails', async () => {
       await expect(
         discussionDomain.getDiscussions(getDiscussionsInvalidPaginationQuery, userTeacher),
@@ -150,6 +144,11 @@ describe('discussion domain', () => {
       await expect(
         discussionDomain.getDiscussions(getDiscussionsEmptyQuery, userTeacher),
       ).rejects.toThrow();
+    });
+    test('user id is not query user id fails', async () => {
+      await expect(
+        discussionDomain.getDiscussions(getDiscussionsEmptyQuery, userTeacherOtherGroup),
+      ).rejects.toMatchObject({ _errorCode: 40027 });
     });
   });
   describe('getDiscussionById', () => {

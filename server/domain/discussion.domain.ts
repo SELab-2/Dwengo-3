@@ -12,6 +12,7 @@ import { GroupPersistence } from '../persistence/group.persistence';
 import { Uuid } from '../util/types/assignment.types';
 import { TeacherPersistence } from '../persistence/teacher.persistence';
 import { StudentPersistence } from '../persistence/student.persistence';
+import { BadRequestError } from '../util/types/error.types';
 
 export class DiscussionDomain {
   private discussionPersistence: DiscussionPersistence;
@@ -33,7 +34,7 @@ export class DiscussionDomain {
     const parseResult = queryWithPaginationParser(query, DiscussionFilterSchema);
     const filters = parseResult.dataSchema;
     if (user.id !== filters.userId) {
-      throw new Error("User ID doesn't correspond with the provided userId.");
+      throw new BadRequestError(40027);
     }
     return this.discussionPersistence.getDiscussions(filters, parseResult.dataPagination);
   }
