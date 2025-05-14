@@ -76,4 +76,15 @@ export class GroupPersistence {
       ),
     );
   }
+
+  public async updateCurrentNodeIndex(id: string, value: number) {
+    return await PrismaSingleton.instance.group.update({
+      where: {
+        id: id,
+      },
+      data: {
+        currentNodeIndex: value,
+      },
+    });
+  }
 }

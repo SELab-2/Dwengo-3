@@ -142,5 +142,6 @@ export const ApiRoutes = {
     get(groupId: string) {
       return `/api/group/${groupId}`;
     },
+    updateIndex: '/api/group/node',
   },
 };

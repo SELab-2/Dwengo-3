@@ -175,6 +175,7 @@ model Group {
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
   progress              Int[]                  @default([]) // indeces of completed nodes
+  currentNodeIndex      Int                    @default(0)
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }

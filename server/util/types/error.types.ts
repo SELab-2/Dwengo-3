@@ -201,6 +201,10 @@ export class BadRequestError extends APIError {
         return 'User already exists...';
       case 40047:
         return 'You must be a teacher to manage learningThemes...';
+      case 40048:
+        return 'New node index is lower than the current furthest visited node...';
+      case 40049:
+        return 'Could not find the group with given id...';
       default:
         return 'Bad request...';
     }
