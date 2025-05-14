@@ -8,7 +8,11 @@ import {
   testLearningPaths,
 } from '../testObjects.json';
 import { LearningPathNodeDomain } from '../../server/domain/learningPathNode.domain';
-import { ClassRoleEnum, UserEntity } from '../../server/util/types/user.types';
+import {
+  AuthenticationProvider,
+  ClassRoleEnum,
+  UserEntity,
+} from '../../server/util/types/user.types';
 
 // learningPathNode persistence mock
 const { mockLearningPathNodePeristence } = vi.hoisted(() => {
@@ -31,11 +35,13 @@ let userTeacher: UserEntity = {
   ...testUsers[0],
   role: testUsers[0].role as ClassRoleEnum,
   teacher: testTeachers[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 let userStudent: UserEntity = {
   ...testUsers[5],
   role: testUsers[5].role as ClassRoleEnum,
   student: testStudents[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 
 let createLearningPathNodeParams = testLearningPathNodes[0];
