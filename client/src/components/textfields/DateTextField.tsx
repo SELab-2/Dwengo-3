@@ -13,7 +13,13 @@ import { enUS, frFR, nlNL } from '@mui/x-date-pickers/locales';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-function DateTextField({date, setDate}: { date: Date | null; setDate: (date: Date | null) => void }) {
+function DateTextField({
+  date,
+  setDate,
+}: {
+  date: Date | null;
+  setDate: (date: Date | null) => void;
+}) {
   const { t, i18n } = useTranslation();
   const [localText, setLocalText] = useState(nlNL);
 
@@ -45,13 +51,12 @@ function DateTextField({date, setDate}: { date: Date | null; setDate: (date: Dat
         timeSteps={{ minutes: 1 }}
         value={date ? dayjs(date) : null}
         onChange={(newValue) => {
-            if (newValue) {
-              setDate(newValue.toDate());
-            } else {
-              setDate(null);
-            }
+          if (newValue) {
+            setDate(newValue.toDate());
+          } else {
+            setDate(null);
           }
-        }
+        }}
       />
     </LocalizationProvider>
   );

@@ -68,10 +68,7 @@ export class AssignmentPersistence {
                   },
                 },
               },
-              OR: [
-                { deadline: null },
-                { deadline: { gt: new Date() } }
-            ]
+              OR: [{ deadline: null }, { deadline: { gt: new Date() } }],
             }
           : {},
       ],
@@ -119,7 +116,7 @@ export class AssignmentPersistence {
             id: params.learningPathId,
           },
         },
-        deadline: params.deadline
+        deadline: params.deadline,
       },
       select: assignmentSelectDetail,
     });
@@ -156,31 +153,29 @@ export class AssignmentPersistence {
       include: {
         teachers: {
           where: {
-            NOT: {id: teacherId}
-          }
-        }
-      }
+            NOT: { id: teacherId },
+          },
+        },
+      },
     }))!.teachers;
     if (teachers.length == 0) {
       for (const group of assignment.groups) {
-        await this.submissionPersistence.deleteAssignmentSubmissions(
-          { groupId: group.id}
-        );
+        await this.submissionPersistence.deleteAssignmentSubmissions({ groupId: group.id });
       }
       await PrismaSingleton.instance.group.deleteMany({
-        where: { assignmentId: assignmentId }
+        where: { assignmentId: assignmentId },
       });
       await PrismaSingleton.instance.assignment.delete({
-        where: {id: assignmentId}
+        where: { id: assignmentId },
       });
     } else {
       await PrismaSingleton.instance.assignment.update({
         where: { id: assignmentId },
         data: {
           teacher: {
-            connect: {id: teachers[0].id}
-          }
-        }
+            connect: { id: teachers[0].id },
+          },
+        },
       });
     }
   }

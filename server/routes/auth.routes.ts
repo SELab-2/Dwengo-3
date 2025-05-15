@@ -505,21 +505,25 @@ router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: Ne
   });
 });
 
-router.delete('/delete', isAuthenticated, async (req: Request, res: Response, next: NextFunction) => {
-  const user = req.user as UserEntity;
-  req.logout((err) => {
-    if (err) return next(err);
-    else {
-      req.session.destroy( () => {
-        res.clearCookie('connect.sid');
-      });
-    }
-  });
-  await userDomain.deleteUser(user);
-  res.status(200).json({
-    message: 'Delete, successful',
-  });
-});
+router.delete(
+  '/delete',
+  isAuthenticated,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as UserEntity;
+    req.logout((err) => {
+      if (err) return next(err);
+      else {
+        req.session.destroy(() => {
+          res.clearCookie('connect.sid');
+        });
+      }
+    });
+    await userDomain.deleteUser(user);
+    res.status(200).json({
+      message: 'Delete, successful',
+    });
+  },
+);
 
 /**
  * @swagger
