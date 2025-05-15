@@ -105,14 +105,18 @@ export class AssignmentSubmissionPersistence {
     });
   }
 
-  public async deleteAssignmentSubmissions(
-    {groupId, favoriteId} : {groupId?: string, favoriteId?: string}
-  ) {
+  public async deleteAssignmentSubmissions({
+    groupId,
+    favoriteId,
+  }: {
+    groupId?: string;
+    favoriteId?: string;
+  }) {
     const submissions = await PrismaSingleton.instance.assignmentSubmission.findMany({
-          where: {
-            groupId: groupId,
-            favoriteId: favoriteId
-          }
+      where: {
+        groupId: groupId,
+        favoriteId: favoriteId,
+      },
     });
 
     for (const submission of submissions) {
@@ -121,7 +125,7 @@ export class AssignmentSubmissionPersistence {
         fs.unlink(filePath, (_) => {});
       }
       await PrismaSingleton.instance.assignmentSubmission.delete({
-        where: { id: submission.id}
+        where: { id: submission.id },
       });
     }
   }

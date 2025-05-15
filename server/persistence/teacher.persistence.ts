@@ -131,13 +131,11 @@ export class TeacherPersistence {
   public async deleteTeacher(id: string) {
     const teacher = await this.getTeacherById(id);
     const assignments = await this.prisma.assignment.findMany({
-      where: {teacherId: id}
+      where: { teacherId: id },
     });
 
     for (const assignment of assignments) {
-      await this.assignmentPersistence.deleteTeacherFromAssignment(
-        id, assignment.id
-      );
+      await this.assignmentPersistence.deleteTeacherFromAssignment(id, assignment.id);
     }
 
     for (const classData of teacher.classes) {
@@ -145,7 +143,7 @@ export class TeacherPersistence {
     }
 
     await this.prisma.user.delete({
-      where: { id: teacher.userId }
+      where: { id: teacher.userId },
     });
   }
 }

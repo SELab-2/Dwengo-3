@@ -75,6 +75,7 @@ export const ApiRoutes = {
     list: '/api/discussion',
     create: '/api/discussion',
     get: (id: string) => `/api/discussion/${id}`,
+    update: (id: string) => `/api/discussion/${id}`,
   },
 
   // Favorites

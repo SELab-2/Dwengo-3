@@ -96,22 +96,20 @@ function ClassAssignmentPage() {
             </Typography>
             <Typography variant="body1">{assignment!.description}</Typography>
             <br />
-            {
-              assignment!.deadline && (
-                <DateTypography 
-                  text={`${t('deadline')}: `} 
-                  date={new Date(assignment!.deadline!)} 
-                  variant='subtitle2' 
-                  sx={{
-                    position: 'absolute',
-                    right: 12,
-                    bottom: 8,
-                    fontStyle: 'italic',
-                    color: 'text.secondary'
-                  }}
-                  />
-              )
-            }
+            {assignment!.deadline && (
+              <DateTypography
+                text={`${t('deadline')}: `}
+                date={new Date(assignment!.deadline!)}
+                variant="subtitle2"
+                sx={{
+                  position: 'absolute',
+                  right: 12,
+                  bottom: 8,
+                  fontStyle: 'italic',
+                  color: 'text.secondary',
+                }}
+              />
+            )}
           </Box>
         </Stack>
         {/*<DateTypography text={`${t('deadline')}: `} date={assignment.deadline} variant='h5' />*/}
@@ -191,7 +189,9 @@ function ClassAssignmentPage() {
                         padding: { xs: '5px 10px', sm: '8px 16px' },
                         minWidth: { xs: '60px', sm: '100px' },
                       }}
-                      onClick={() => navigate(AppRoutes.learningPath(assignment?.learningPath.id!, group.id))}
+                      onClick={() =>
+                        navigate(AppRoutes.learningPath(assignment?.learningPath.id!, group.id))
+                      }
                     >
                       {t('details')}
                     </Button>

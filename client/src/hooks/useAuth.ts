@@ -69,6 +69,6 @@ export function useDelete() {
   return useMutation({
     mutationFn: async () => {
       await apiClient.delete(ApiRoutes.delete);
-    }
-  })
+    },
+  });
 }

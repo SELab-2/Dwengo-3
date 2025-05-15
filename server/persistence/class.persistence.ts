@@ -112,13 +112,13 @@ export class ClassPersistence {
         },
       },
       include: {
-        teachers: true
-      }
+        teachers: true,
+      },
     });
     if (classData.teachers.length == 0) {
       await this.prisma.class.delete({
-        where: { id: classId }
-      })
+        where: { id: classId },
+      });
     }
   }
 
@@ -133,6 +133,4 @@ export class ClassPersistence {
       select: classSelectDetail,
     });
   }
-
-
 }

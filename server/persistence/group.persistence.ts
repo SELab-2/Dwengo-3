@@ -1,4 +1,12 @@
-import { Assignment, Class, Group, PrismaClient, Student, SubmissionType, Teacher } from '@prisma/client';
+import {
+  Assignment,
+  Class,
+  Group,
+  PrismaClient,
+  Student,
+  SubmissionType,
+  Teacher,
+} from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { Uuid } from '../util/types/assignment.types';
 import { assignmentSelectDetail, groupSelectDetail } from '../util/selectInput/select';
@@ -67,10 +75,10 @@ export class GroupPersistence {
       where: { id: groupId },
       data: {
         students: {
-          disconnect: {id: studentId}
-        }
+          disconnect: { id: studentId },
+        },
       },
-      select: groupSelectDetail
+      select: groupSelectDetail,
     });
     if (group.students.length == 0) {
       await this.deleteGroup(group);
@@ -80,27 +88,24 @@ export class GroupPersistence {
   private async deleteGroup(group: GroupDetail) {
     if (group.discussion?.id) {
       await this.prisma.discussion.delete({
-        where: { id: group.discussion.id }
+        where: { id: group.discussion.id },
       });
-    }    
+    }
 
-    await this.submissionPersistence.deleteAssignmentSubmissions(
-      { groupId: group.id }
-    );
+    await this.submissionPersistence.deleteAssignmentSubmissions({ groupId: group.id });
 
     await this.prisma.group.delete({
-      where: { id: group.id }
+      where: { id: group.id },
     });
 
     const remainingGroups = await this.prisma.group.findMany({
-      where: { assignmentId: group.assignment.id }
+      where: { assignmentId: group.assignment.id },
     });
 
     if (remainingGroups.length === 0) {
       await this.prisma.assignment.delete({
-        where: { id: group.assignment.id }
+        where: { id: group.assignment.id },
       });
     }
-
   }
 }
