@@ -639,5 +639,63 @@
         ]
       }
     }
+  ],
+  "testFavorites": [
+    {
+      "id": "e4953103-cfb8-4317-971f-ed47eb09e120",
+      "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+      "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+      "progress": [5, 6, 7],
+      "learningPath": {
+        "id": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+        "hruid": "lp0",
+        "language": "nl",
+        "title": "title0",
+        "description": "This is a description"
+      },
+      "user": {
+        "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+        "provider": "LOCAL",
+        "username": "user6",
+        "email": "user6@example.com",
+        "password": "password6",
+        "surname": "Garcia",
+        "name": "Sophia",
+        "role": "STUDENT",
+        "student": {
+          "id": "4c07803c-1111-2222-3333-444455556666",
+          "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+        }
+      },
+      "assignmentSubmissions": []
+    },
+    {
+      "id": "80f58bb7-09d2-465e-a1d9-e99c47fcd5ab",
+      "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17",
+      "learningPathId": "91aa27dc-2c50-5e6e-b789-769de70cf653",
+      "progress": [5, 6, 7],
+      "learningPath": {
+        "id": "91aa27dc-2c50-5e6e-b789-769de70cf653",
+        "hruid": "lp1",
+        "language": "en",
+        "title": "title1",
+        "description": "This is another description"
+      },
+      "user": {
+        "id": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17",
+        "provider": "LOCAL",
+        "username": "user7",
+        "email": "user7@example.com",
+        "password": "password7",
+        "surname": "Martinez",
+        "name": "James",
+        "role": "STUDENT",
+        "student": {
+          "id": "4c07803c-2222-3333-4444-555566667777",
+          "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+        }
+      },
+      "assignmentSubmissions": []
+    }
   ]
 }
