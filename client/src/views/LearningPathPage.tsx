@@ -127,6 +127,9 @@ function LearningPathPage() {
   };
 
   const setNextIndex = (transition: LearningPathNodeTransitionDetail) => {
+    console.log('transition:', transition);
+    return;
+
     if (activeIndex > furthestIndex) {
       setSnackbarOpen(true);
       return;
@@ -146,6 +149,10 @@ function LearningPathPage() {
   };
 
   const submitRead = async () => {
+    console.debug('currentSubmission:', currentSubmission);
+    console.debug('currentNode:', currentNode);
+    return;
+
     if (currentSubmission)
       submissionUpdate.mutate(
         {
