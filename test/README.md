@@ -20,6 +20,30 @@ npm run test:domain
 npm run test:persistence
 ```
 
+#### Views tests
+
+```bash
+npm run test:views
+```
+
+#### Components tests
+
+```bash
+npm run test:components
+```
+
+#### Hooks tests
+
+```bash
+npm run test:hooks
+```
+
+#### apiCalls tests
+
+```bash
+npm run test:api
+```
+
 #### Alle tests
 
 ```bash

@@ -104,15 +104,22 @@ export class ClassPersistence {
   }
 
   public async removeTeacherFromClass(classId: string, teacherId: string) {
-    return await this.prisma.class.update({
+    const classData = await this.prisma.class.update({
       where: { id: classId },
       data: {
         teachers: {
           disconnect: { id: teacherId },
         },
       },
-      select: classSelectDetail,
+      include: {
+        teachers: true,
+      },
     });
+    if (classData.teachers.length == 0) {
+      await this.prisma.class.delete({
+        where: { id: classId },
+      });
+    }
   }
 
   public async removeStudentFromClass(classId: string, studentId: string) {

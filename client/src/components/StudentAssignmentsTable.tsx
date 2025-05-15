@@ -30,7 +30,7 @@ const calculateProgress = (
 };
 
 function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort2[] }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [students, setStudents] = useState<StudentShort[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -123,15 +123,13 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  {
-                    assignment.deadline ? (
+                  {assignment.deadline ? (
                     <DateTypography date={new Date(assignment.deadline!)} />
-                    ) : (
+                  ) : (
                     <Typography variant="body2" color="text.secondary">
                       /
                     </Typography>
-                    )
-                  }
+                  )}
                 </TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>
                   <Button
@@ -141,7 +139,11 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
                       padding: { xs: '5px 10px', sm: '8px 16px' },
                       minWidth: { xs: '60px', sm: '160px' },
                     }}
-                    onClick={() => navigate(AppRoutes.learningPath(assignment.learningPath.id, assignment.groups[0].id))}
+                    onClick={() =>
+                      navigate(
+                        AppRoutes.learningPath(assignment.learningPath.id, assignment.groups[0].id),
+                      )
+                    }
                   >
                     {t('continue')}
                   </Button>

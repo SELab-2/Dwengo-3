@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+import { createClient } from 'redis';
 
 const prisma = new PrismaClient();
 dotenv.config({ path: '../.env' });
@@ -23,6 +24,13 @@ async function main() {
   await prisma.teacher.deleteMany();
   await prisma.learningPath.deleteMany();
   await prisma.user.deleteMany();
+
+  const redisClient = createClient({
+    url: process.env.REDIS_URL,
+  });
+  await redisClient.connect().catch(console.error);
+  await redisClient.flushDb();
+  redisClient.destroy();
 }
 
 main()

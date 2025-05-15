@@ -5,12 +5,12 @@ function DateTypography({
   text,
   date,
   variant,
-  sx
+  sx,
 }: {
   text?: string;
   date: Date;
   variant?: TypographyVariant;
-  sx?: SxProps<Theme>
+  sx?: SxProps<Theme>;
 }) {
   const { i18n } = useTranslation();
 

@@ -8,11 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { useError } from '../hooks/useError';
 import { useAuth } from '../hooks/useAuth';
+import { useNotification } from '../hooks/useNotification';
 
 function ClassAddPage() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { setError } = useError();
+  const { setNotification } = useNotification();
   const navigate = useNavigate();
 
   const [className, setClassName] = useState('');
@@ -39,6 +41,7 @@ function ClassAddPage() {
       { classId, role: user!.role },
       {
         onSuccess: () => {
+          setNotification(t('joinRequestSucces'));
           navigate(AppRoutes.myClasses);
         },
         onError: (error: Error) => {
