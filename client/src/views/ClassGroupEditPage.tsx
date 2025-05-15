@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AppBar, Box, Button, Paper, TextField, Typography } from '@mui/material';
-import { useClassById } from '../hooks/useClass.ts';
+import {
+  useClassById,
+  useDeleteStudentFromClass,
+  useDeleteTeacherFromClass,
+} from '../hooks/useClass.ts';
 import theme from '../util/theme.ts';
 import { MarginSize } from '../util/size.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { UserDataTableComponent } from '../components/UserDataTableComponent.tsx';
-import { deleteStudentFromClass, deleteTeacherFromClass, updateClass } from '../api/class.ts';
+import { updateClass } from '../api/class.ts';
 import { useAuth } from '../hooks/useAuth.ts';
 import { useError } from '../hooks/useError.ts';
-import { LoadingButton } from '@mui/lab';
 
 export function ClassGroupEditPage() {
   const { t } = useTranslation();
@@ -26,6 +29,8 @@ export function ClassGroupEditPage() {
   const error = useError();
   const [className, setClassName] = useState<string>('');
   const [classDescription, setClassDescription] = useState<string>('');
+  const deleteStudent = useDeleteStudentFromClass();
+  const deleteTeacher = useDeleteTeacherFromClass();
 
   useEffect(() => {
     if (classData) {
@@ -144,7 +149,19 @@ export function ClassGroupEditPage() {
                   };
                 })}
                 title={t('students')}
-                onActionPressed={async (id: string) => await deleteStudentFromClass(classId!!, id)}
+                onActionPressed={async (id: string) => {
+                  deleteStudent.mutate(
+                    {
+                      classId: classId!!,
+                      studentId: id,
+                    },
+                    {
+                      onError: (e) => {
+                        error.setError(e.message);
+                      },
+                    },
+                  );
+                }}
               />
 
               {/* Teachers */}
@@ -158,14 +175,17 @@ export function ClassGroupEditPage() {
                 })}
                 title={t('teachers')}
                 onActionPressed={async (id: string) => {
-                  if (
-                    user!!.teacher &&
-                    classData!!.teachers.find((teacher) => teacher.id === user!!.teacher!!.id)
-                  ) {
-                    error.setError("You can't remove yourself");
-                    return;
-                  }
-                  await deleteTeacherFromClass(classId!!, id);
+                  deleteTeacher.mutate(
+                    {
+                      classId: classId!!,
+                      teacherId: id,
+                    },
+                    {
+                      onError: (e) => {
+                        error.setError(e.message);
+                      },
+                    },
+                  );
                 }}
               />
             </Box>
