@@ -43,7 +43,22 @@ export const AppRoutes = {
   classAssignmentCreate: (classId: string) => `/class/${classId}/assignments/create`,
   classAnnouncements: (classId: string) => `/class/${classId}/announcements`,
   announcement: (announcementId: string) => `/announcement/${announcementId}`,
-  classDiscussions: (classId: string) => `/class/${classId}/discussions`,
+  classDiscussions: (classId: string, assignmentIdTag?: string, groupIdTag?: string) => {
+    if (groupIdTag && !assignmentIdTag) {
+      throw new Error('groupIdTag should only be provided with assignmentIdTag.');
+    }
+
+    let url = `/class/${classId}/discussions`;
+
+    if (assignmentIdTag) {
+      url += `#${encodeURIComponent(assignmentIdTag)}`;
+      if (groupIdTag) {
+        url += `:${encodeURIComponent(groupIdTag)}`;
+      }
+    }
+
+    return url;
+  },
   discussionCreate: (classId: string, assignmentId?: string): string => {
     let url = `/class/${classId}/discussions/create`;
 

@@ -30,6 +30,7 @@ import { useAssignmentOfGroup } from '../hooks/useAssignment';
 import Tooltip from '@mui/material/Tooltip';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { useDiscussions } from '../hooks/useDiscussion';
 
 function LearningPathPage() {
   const { t } = useTranslation();
@@ -59,7 +60,16 @@ function LearningPathPage() {
     currentNode?.id,
   );
 
+  // Fetch the assignment for the group to be able to create a discussion
   const { data: assignment } = useAssignmentOfGroup(groupId!);
+
+  // Fetch the discussions for the assignment to see if there already is a discussion
+  const { data: paginatedDiscussions } = useDiscussions({
+    userId: user?.id,
+    assignmentId: assignment?.id,
+  });
+  // There should only be one discussion per assignment for this user
+  const discussion = paginatedDiscussions?.data?.[0];
 
   const submissionId = submissions?.data?.[0]?.id;
   const { data: submission, isLoading: isSubmissionLoading } = useAssignmentSubmissionById(
@@ -224,24 +234,45 @@ function LearningPathPage() {
           mb={2}
         >
           <Typography variant="h5">{learningPath.title}</Typography>
-          {/* Create Discussion button if the learningpath is an assignment */}
-          {assignment && (
-            <Tooltip title={t('createADiscussion')}>
-              <Button
-                variant="outlined"
-                startIcon={<ForumIcon />}
-                sx={{
-                  ml: 2,
-                  whiteSpace: 'nowrap',
-                  minWidth: isSmallScreen ? 0 : undefined,
-                  px: isSmallScreen ? 1 : 2,
-                }}
-                href={AppRoutes.discussionCreate(assignment.class.id, assignment.id)}
-              >
-                {!isSmallScreen && t('createADiscussion')}
-              </Button>
-            </Tooltip>
-          )}
+          {/* Show Go to Discussion if discussion exists, else show Create Discussion (students only) */}
+          {assignment &&
+            (discussion ? (
+              <Tooltip title={t('goToDiscussion')}>
+                <Button
+                  variant="outlined"
+                  startIcon={<ForumIcon />}
+                  sx={{
+                    ml: 2,
+                    whiteSpace: 'nowrap',
+                    minWidth: isSmallScreen ? 0 : undefined,
+                    px: isSmallScreen ? 1 : 2,
+                  }}
+                  href={AppRoutes.classDiscussions(
+                    assignment.class.id,
+                    assignment.id,
+                    groupId ?? undefined,
+                  )}
+                >
+                  {!isSmallScreen && t('goToDiscussion')}
+                </Button>
+              </Tooltip>
+            ) : user?.student ? (
+              <Tooltip title={t('createADiscussion')}>
+                <Button
+                  variant="outlined"
+                  startIcon={<ForumIcon />}
+                  sx={{
+                    ml: 2,
+                    whiteSpace: 'nowrap',
+                    minWidth: isSmallScreen ? 0 : undefined,
+                    px: isSmallScreen ? 1 : 2,
+                  }}
+                  href={AppRoutes.discussionCreate(assignment.class.id, assignment.id)}
+                >
+                  {!isSmallScreen && t('createADiscussion')}
+                </Button>
+              </Tooltip>
+            ) : null)}
         </Box>
 
         <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
