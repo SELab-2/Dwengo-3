@@ -133,13 +133,13 @@ function ClassDashboardPage() {
                   }}
                   component="span"
                 >
-                  {classData!.id}
+                  {classData?.id}
                 </Typography>
               </Box>
               <IconButton
                 size="small"
                 aria-label={t('copy')}
-                onClick={() => navigator.clipboard.writeText(classData!.id)}
+                onClick={() => navigator.clipboard.writeText(classData?.id ?? '')}
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon fontSize="small" />

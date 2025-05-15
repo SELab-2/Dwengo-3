@@ -202,6 +202,14 @@ export class BadRequestError extends APIError {
       case 40047:
         return 'You must be a teacher to manage learningThemes...';
       case 40048:
+        return 'You can only delete your own account...';
+      case 40049:
+        return "Can't fetch discussions from another user...";
+      case 40050:
+        return "Can't fetch info from an assignment you're not a member of...";
+      case 40051:
+        return 'A group can only have one discussion...';
+      case 40052:
         return 'You cannot remove yourself from your own class...';
       default:
         return 'Bad request...';
