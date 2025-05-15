@@ -125,35 +125,35 @@ export class StudentPersistence {
 
   public async deleteStudent(id: string) {
     const student = await this.getStudentById(id);
-    
+
     for (const group of student.groups) {
       await this.groupPersistence.deleteStudentFromGroup(id, group.id);
     }
 
     for (const classData of student.classes) {
       await this.prisma.class.update({
-        where: { id: classData.id},
+        where: { id: classData.id },
         data: {
           students: {
-            disconnect: { id: student.id }
-          }
-        }
+            disconnect: { id: student.id },
+          },
+        },
       });
     }
 
     const favorites = (await this.prisma.user.findUnique({
       where: { id: student.userId },
-      include: { favorites: true }
+      include: { favorites: true },
     }))!.favorites;
 
     for (const favorite of favorites) {
       await this.submissionPersistence.deleteAssignmentSubmissions({
-        favoriteId: favorite.id
+        favoriteId: favorite.id,
       });
     }
 
     await this.prisma.user.delete({
-      where: { id: student.userId }
+      where: { id: student.userId },
     });
   }
 }

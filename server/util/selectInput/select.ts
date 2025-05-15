@@ -247,7 +247,7 @@ export const assignmentSelectDetail = {
   learningPath: {
     select: learningPathSelectShort,
   },
-  deadline: true
+  deadline: true,
 };
 
 export const assignmentSubmissionSelectShort = {

@@ -62,9 +62,9 @@ function ProfilePage() {
       },
 
       onError: (error) => {
-        setError("Delete user failed: " + error.message);
-      }
-    })
+        setError('Delete user failed: ' + error.message);
+      },
+    });
   };
 
   if (!user) {
@@ -81,7 +81,7 @@ function ProfilePage() {
           gap: MarginSize.small,
         }}
       >
-        <YesNoDialogProps 
+        <YesNoDialogProps
           title={t('deleteAccountMessage')}
           warning={t('deleteAccountWarning')}
           open={open}
