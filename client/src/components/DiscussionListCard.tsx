@@ -30,7 +30,7 @@ function DiscussionListCard({ assignment }: { assignment: AssignmentShort2 }) {
       >
         <CardContent>
           <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-            {assignment.learningPath.title}
+            {assignment.name}
           </Typography>
           <Box
             sx={{

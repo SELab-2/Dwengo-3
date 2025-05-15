@@ -22,8 +22,14 @@ import {
 import { useError } from '../hooks/useError';
 import { downloadFileSubmission } from '../api/assignmentSubmission';
 import DownloadIcon from '@mui/icons-material/Download';
+import ForumIcon from '@mui/icons-material/Forum';
 import { useAuth } from '../hooks/useAuth';
 import { AxiosProgressEvent } from 'axios';
+import { AppRoutes } from '../util/app.routes';
+import { useAssignmentOfGroup } from '../hooks/useAssignment';
+import Tooltip from '@mui/material/Tooltip';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 function LearningPathPage() {
   const { t } = useTranslation();
@@ -53,6 +59,8 @@ function LearningPathPage() {
     currentNode?.id,
   );
 
+  const { data: assignment } = useAssignmentOfGroup(groupId!);
+
   const submissionId = submissions?.data?.[0]?.id;
   const { data: submission, isLoading: isSubmissionLoading } = useAssignmentSubmissionById(
     submissionId!,
@@ -60,6 +68,9 @@ function LearningPathPage() {
   const [currentSubmission, setCurrentSubmission] = useState<
     AssignmentSubmissionDetail | undefined
   >(undefined);
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (submission) {
@@ -205,9 +216,33 @@ function LearningPathPage() {
 
       {/* Main Content */}
       <Box flex={1} p={3} display="flex" flexDirection="column">
-        <Typography variant="h5" mb={2}>
-          {learningPath.title}
-        </Typography>
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={2}
+        >
+          <Typography variant="h5">{learningPath.title}</Typography>
+          {/* Create Discussion button if the learningpath is an assignment */}
+          {assignment && (
+            <Tooltip title={t('createADiscussion')}>
+              <Button
+                variant="outlined"
+                startIcon={<ForumIcon />}
+                sx={{
+                  ml: 2,
+                  whiteSpace: 'nowrap',
+                  minWidth: isSmallScreen ? 0 : undefined,
+                  px: isSmallScreen ? 1 : 2,
+                }}
+                href={AppRoutes.discussionCreate(assignment.class.id, assignment.id)}
+              >
+                {!isSmallScreen && t('createADiscussion')}
+              </Button>
+            </Tooltip>
+          )}
+        </Box>
 
         <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
         <Typography variant="caption" color="text.secondary" mb={2}>
