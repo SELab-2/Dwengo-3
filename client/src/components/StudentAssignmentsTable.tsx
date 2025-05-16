@@ -67,7 +67,7 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
               }}
             >
               <TableCell sx={{ minWidth: 100, width: '25%' }}>
-                <Typography variant="h6">{t('learningPath')}</Typography>
+                <Typography variant="h6">{t('name')}</Typography>
               </TableCell>
               <TableCell sx={{ minWidth: 360, width: '25%' }}>
                 <Typography variant="h6">{t('progression')}</Typography>
@@ -91,7 +91,7 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
                       fontSize: { xs: '14px', sm: '16px' },
                     }}
                   >
-                    {assignment.learningPath.title}
+                    {assignment.name}
                   </Typography>
                 </TableCell>
                 <TableCell>

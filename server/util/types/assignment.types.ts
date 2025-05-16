@@ -27,7 +27,12 @@ export const AssignmentCreateSchema = z.object({
   classId: z.string().uuid(),
   teacherId: z.string().uuid().optional(),
   learningPathId: z.string(),
-  deadline: z.string().datetime({ offset: true }).optional(),
+  deadline: z
+    .string()
+    .datetime({ offset: true })
+    .refine((value) => new Date(value) > new Date(), {
+      message: 'Deadline must be a future date.',
+    }),
 });
 
 export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;

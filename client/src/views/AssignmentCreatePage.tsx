@@ -106,6 +106,11 @@ function AssignmentCreatePage() {
       return;
     }
 
+    if (!deadline) {
+      setError(t('deadlineRequired'));
+      return;
+    }
+
     const data: AssignmentCreate = {
       name: name,
       description: description,
@@ -113,7 +118,7 @@ function AssignmentCreatePage() {
       teacherId: teacherId!,
       groups: groups.map((group) => group.map((student) => student.id)),
       learningPathId: selectedLearningPath!.id,
-      deadline: deadline ? new Date(deadline).toISOString() : undefined,
+      deadline: new Date(deadline).toISOString(),
     };
     assignmentMutation.mutate(data, {
       onSuccess: (response: AssignmentDetail) => {

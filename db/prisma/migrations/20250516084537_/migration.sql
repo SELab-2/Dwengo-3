@@ -159,7 +159,7 @@ CREATE TABLE "Assignment" (
     "learningPathId" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
     "classId" TEXT NOT NULL,
-    "deadline" TIMESTAMP,
+    "deadline" TIMESTAMP NOT NULL,
 
     CONSTRAINT "Assignment_pkey" PRIMARY KEY ("id")
 );
