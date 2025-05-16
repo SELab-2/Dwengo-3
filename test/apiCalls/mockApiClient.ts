@@ -6,5 +6,6 @@ vi.mock('../../client/src/api/apiClient', () => ({
     put: vi.fn(),
     patch: vi.fn(),
     delete: vi.fn(),
+    post: vi.fn(),
   },
 }));
