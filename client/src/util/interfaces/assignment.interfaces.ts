@@ -45,5 +45,5 @@ export interface AssignmentCreate {
   learningPathId: string;
   classId: string;
   teacherId: string;
-  deadline?: string;
+  deadline: string;
 }
