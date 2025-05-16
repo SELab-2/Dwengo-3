@@ -1,5 +1,14 @@
-import { Box, Button, LinearProgress, Paper, Snackbar, Stack, Typography } from '@mui/material';
-import { useParams, useSearchParams } from 'react-router-dom';
+import {
+  Box,
+  boxClasses,
+  Button,
+  LinearProgress,
+  Paper,
+  Snackbar,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useLearningPathById } from '../hooks/useLearningPath';
 import { useLearningObjectById } from '../hooks/useLearningObject';
@@ -15,12 +24,17 @@ import {
 } from '../hooks/useAssignmentSubmission';
 import {
   AssignmentSubmissionDetail,
+  AssignmentSubmissionShort,
   FileSubmission,
   MultipleChoice,
   SubmissionType,
 } from '../util/interfaces/assignmentSubmission.interfaces';
 import { useError } from '../hooks/useError';
-import { downloadFileSubmission } from '../api/assignmentSubmission';
+import {
+  downloadFileSubmission,
+  fetchAssignmentSubmissionById,
+  fetchAssignmentSubmissions,
+} from '../api/assignmentSubmission';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useAuth } from '../hooks/useAuth';
 import { AxiosProgressEvent } from 'axios';
@@ -28,6 +42,12 @@ import { MathJax, MathJaxContext } from 'better-react-mathjax';
 import parse from 'html-react-parser';
 import { useGroup, useUpdateCurrentIndexForGroup } from '../hooks/useGroup.ts';
 import { LearningPathNodeTransitionDetail } from '../util/interfaces/LearningPathNodeTransition.interfaces.ts';
+import { LearningPathNodeDetail } from '../util/interfaces/learningPathNode.interfaces.ts';
+import { LearningObjectDetail } from '../util/interfaces/learningObject.interfaces.ts';
+import { PaginatedData } from '../util/interfaces/general.interfaces.ts';
+import { fetchLearningObjectById } from '../api/learningObject.ts';
+import { fetchLearningPathNodeById } from '../api/learningPathNode.ts';
+import { AppRoutes } from '../util/app.routes.ts';
 
 const mathJaxConfig = {
   loader: { load: ['[tex]/ams'] },
@@ -41,27 +61,43 @@ function LearningPathPage() {
   const { t } = useTranslation();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
 
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
 
   const { data: group } = useGroup(groupId ?? undefined, favoriteId ?? undefined);
 
+  const [currentSubmission, setCurrentSubmission] = useState<
+    AssignmentSubmissionDetail | undefined
+  >(undefined);
+
   // The list of nodes that have been solved
   const [progress, setProgress] = useState<number[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [furthestIndex, setFurthestIndex] = useState(0);
 
+  const { data: learningPath } = useLearningPathById(id);
+
+  // total number of nodes
+  const totalSteps = learningPath?.learningPathNodes.length || 0;
+
+  // progress in % to show in progress bar
+  const currentProgress = (furthestIndex / totalSteps) * 100;
+
+  // last node to visit
+  const maxIndex = totalSteps - 1;
+
   useEffect(() => {
     if (!group) return;
 
     setProgress(group.progress);
-    setFurthestIndex(group.currentNodeIndex);
-    setActiveIndex(group.currentNodeIndex);
-  }, [group]);
+    setFurthestIndex(group.currentNodeIndex !== -1 ? group.currentNodeIndex : totalSteps);
+    setActiveIndex(group.currentNodeIndex !== -1 ? group.currentNodeIndex : totalSteps);
+  }, [learningPath, group]);
 
-  const { user } = useAuth();
   const [progressEvent, setProgressEvent] = useState<AxiosProgressEvent | undefined>(undefined);
+  const updateIndexMutation = useUpdateCurrentIndexForGroup();
   const submissionCreate = useCreateAssignmentSubmission(setProgressEvent);
   const submissionUpdate = useUpdateAssignmentSubmission(setProgressEvent);
   const { setError } = useError();
@@ -69,45 +105,67 @@ function LearningPathPage() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [currentAnswer, setCurrentAnswer] = useState<string | null>(null);
-  const { data: learningPath } = useLearningPathById(id);
-  const { data: currentNode } = useLearningPathNodeById(
-    learningPath?.learningPathNodes[activeIndex].id,
-  );
-  const updateIndexMutation = useUpdateCurrentIndexForGroup();
-  const { data: currentObject } = useLearningObjectById(currentNode?.learningObject.id);
-  const { data: submissions, isLoading: isSubmissionsLoading } = useAssignmentSubmissions(
-    groupId ?? undefined,
-    favoriteId ?? undefined,
-    currentNode?.id,
-  );
+  const [isLoading, setIsLoading] = useState(true);
 
-  const submissionId = submissions?.data?.[0]?.id;
-  const { data: submission, isLoading: isSubmissionLoading } = useAssignmentSubmissionById(
-    submissionId!,
-  );
-
-  const [currentSubmission, setCurrentSubmission] = useState<
-    AssignmentSubmissionDetail | undefined
-  >(undefined);
+  const [currentNode, setCurrentNode] = useState<LearningPathNodeDetail | undefined>(undefined);
+  const [currentObject, setCurrentObject] = useState<LearningObjectDetail | undefined>(undefined);
 
   useEffect(() => {
-    if (submission) {
-      setCurrentSubmission(submission);
+    const abort = new AbortController();
+    const signal = abort.signal;
+    setCurrentNode(undefined);
+    setCurrentObject(undefined);
+    setCurrentSubmission(undefined);
+
+    if (!learningPath) {
+      return () => abort.abort();
     }
-  }, [submission]);
 
-  if (!learningPath || isSubmissionsLoading || isSubmissionLoading) {
-    return <div>{t('loading')}</div>;
-  }
+    if (activeIndex === totalSteps) {
+      setIsLoading(false);
+      return () => abort.abort();
+    }
 
-  // total number of nodes
-  const totalSteps = learningPath.learningPathNodes.length || 0;
+    const fetchData = async () => {
+      try {
+        // fetch the node
+        const node = await fetchLearningPathNodeById(
+          learningPath.learningPathNodes[activeIndex].id,
+          signal,
+        );
+        setCurrentNode(node);
 
-  // progress in % to show in progress bar
-  const currentProgress = (furthestIndex / totalSteps) * 100;
+        // fetch learning object
+        const lo = await fetchLearningObjectById(node.learningObject.id);
+        setCurrentObject(lo);
 
-  // last node to visit
-  const maxIndex = totalSteps - 1;
+        // fetch submissions
+        const submissions = await fetchAssignmentSubmissions(
+          groupId ?? undefined,
+          favoriteId ?? undefined,
+          node.id,
+          undefined,
+          undefined,
+          signal,
+        );
+
+        // fetch submission
+        if (submissions && submissions.data.length > 0) {
+          const submission = await fetchAssignmentSubmissionById(submissions.data[0].id);
+          setCurrentSubmission(submission);
+        }
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+
+    // if activeIndex changes too fast, abort the request
+    return () => abort.abort();
+  }, [learningPath, activeIndex]);
 
   const multipleChoice = () => {
     if (!currentObject || currentObject.submissionType !== SubmissionType.MULTIPLE_CHOICE) {
@@ -127,9 +185,6 @@ function LearningPathPage() {
   };
 
   const setNextIndex = (transition: LearningPathNodeTransitionDetail) => {
-    console.log('transition:', transition);
-    return;
-
     if (activeIndex > furthestIndex) {
       setSnackbarOpen(true);
       return;
@@ -142,17 +197,14 @@ function LearningPathPage() {
 
     updateIndexMutation.mutate({
       groupId: groupId!!, // todo: support favorites
-      index: newIndex,
+      index: newIndex === totalSteps ? -1 : newIndex,
     });
 
+    if (newIndex === -1) return;
     setActiveIndex(newIndex);
   };
 
   const submitRead = async () => {
-    console.debug('currentSubmission:', currentSubmission);
-    console.debug('currentNode:', currentNode);
-    return;
-
     if (currentSubmission)
       submissionUpdate.mutate(
         {
@@ -221,9 +273,12 @@ function LearningPathPage() {
         await submitRead();
         const transition = currentNode?.transitions?.[0];
         if (transition === undefined) {
-          setError('No transition found');
-          return;
+          if (activeIndex === maxIndex) {
+            setNextIndex({ id: '', learningPathNodeId: '', condition: '', toNodeIndex: -1 });
+          }
+          break;
         }
+
         setNextIndex(transition);
         break;
       }
@@ -238,7 +293,9 @@ function LearningPathPage() {
         });
 
         if (transition === undefined) {
-          setError('No transition found');
+          if (activeIndex === maxIndex) {
+            setNextIndex({ id: '', learningPathNodeId: '', condition: '', toNodeIndex: -1 });
+          }
           return;
         }
 
@@ -249,7 +306,9 @@ function LearningPathPage() {
       case SubmissionType.FILE: {
         const transition = currentNode?.transitions?.[0];
         if (transition === undefined) {
-          setError('No transition found');
+          if (activeIndex === maxIndex) {
+            setNextIndex({ id: '', learningPathNodeId: '', condition: '', toNodeIndex: -1 });
+          }
           return;
         }
 
@@ -331,7 +390,7 @@ function LearningPathPage() {
           overflowY: 'auto',
         })}
       >
-        {learningPath.learningPathNodes.map((node, index) => (
+        {learningPath?.learningPathNodes.map((node, index) => (
           <Box
             key={node.id}
             onClick={() => {
@@ -359,7 +418,7 @@ function LearningPathPage() {
       {/* Main Content */}
       <Box flex={1} p={3} display="flex" flexDirection="column">
         <Typography variant="h5" mb={2}>
-          {learningPath.title}
+          {learningPath?.title}
         </Typography>
 
         <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
@@ -368,163 +427,183 @@ function LearningPathPage() {
         </Typography>
 
         {/* This box grows and scrolls if needed */}
-        <Box
-          overflow="auto"
-          sx={{
-            minHeight: 0,
-            maxHeight: 'calc(100vh - var(--navbar-heigh))',
-            maxWidth: '70vw',
-          }}
-        >
-          {currentNode !== undefined && currentObject ? (
-            <Paper elevation={3} sx={{ p: 3 }}>
-              {/* Content here */}
-              <Typography variant="h6" fontWeight="medium">
-                {currentObject.title}
-              </Typography>
-
-              <Typography mt={2} color="text.secondary">
-                {currentNode.instruction}
-              </Typography>
-
-              <MathJaxContext version={3} config={mathJaxConfig}>
-                <MathJax hideUntilTypeset="first">
-                  <Typography mt={2} color="text.secondary" component="div">
-                    {parse(currentObject.content)}
+        {!isLoading && activeIndex < totalSteps && (
+          <>
+            <Box
+              overflow="auto"
+              sx={{
+                minHeight: 0,
+                maxHeight: 'calc(100vh - var(--navbar-heigh))',
+                maxWidth: '70vw',
+              }}
+            >
+              {currentNode !== undefined && currentObject ? (
+                <Paper elevation={3} sx={{ p: 3 }}>
+                  {/* Content here */}
+                  <Typography variant="h6" fontWeight="medium">
+                    {currentObject.title}
                   </Typography>
-                </MathJax>
-              </MathJaxContext>
 
-              {multipleChoice() ? (
-                <Box mt={3}>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    {multipleChoice()?.question ?? t('loading')}
+                  <Typography mt={2} color="text.secondary">
+                    {currentNode.instruction}
                   </Typography>
-                  <Box
-                    mt={2}
-                    display="grid"
-                    gap={1}
-                    gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
-                  >
-                    {multipleChoice()?.options.map((option, index) => (
-                      <Button
-                        key={index}
-                        variant="outlined"
-                        onClick={() => handleAnswerClick(option)}
-                        sx={{
-                          width: '100%',
-                          textTransform: 'none',
-                          border: `${currentAnswer === option ? 'blue' : 'black'}`,
-                        }}
-                      >
-                        {option}
-                      </Button>
-                    ))}
-                  </Box>
-                </Box>
-              ) : isFile() ? (
-                <Box mt={3}>
-                  {currentSubmission ? (
-                    <Box>
-                      <Typography mt={2} variant="subtitle1">
-                        {`${t('fileSubmitted')}: `}
-                        <Button
-                          endIcon={<DownloadIcon />}
-                          onClick={() =>
-                            downloadFileSubmission(
-                              currentSubmission.id,
-                              fileSubmission()?.fileName!,
-                            )
-                          }
-                        >
-                          {fileSubmission()?.fileName}
-                        </Button>
+
+                  <MathJaxContext version={3} config={mathJaxConfig}>
+                    <MathJax hideUntilTypeset="first">
+                      <Typography mt={2} color="text.secondary" component="div">
+                        {parse(currentObject.content)}
                       </Typography>
-                      {user?.student && (
-                        <Typography mt={2} variant="subtitle1" fontWeight="bold">
-                          {t('submitOtherFile')}
-                        </Typography>
-                      )}
-                    </Box>
-                  ) : (
-                    <Typography mt={2} variant="subtitle1">
-                      {t('noFileSubmitted')}
-                    </Typography>
-                  )}
-                  {user?.student && (
-                    <Box>
-                      <FileTextField setFile={setFile} progressEvent={progressEvent} />
-                      <Box justifyContent={'center'} display={'flex'}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          sx={{ width: { xs: '100%', sm: '40%' } }}
-                          disabled={!groupId && !favoriteId}
-                          onClick={handleFileSubmission}
-                        >
-                          {t('submit')}
-                        </Button>
+                    </MathJax>
+                  </MathJaxContext>
+
+                  {multipleChoice() ? (
+                    <Box mt={3}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {multipleChoice()?.question ?? t('loading')}
+                      </Typography>
+                      <Box
+                        mt={2}
+                        display="grid"
+                        gap={1}
+                        gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
+                      >
+                        {multipleChoice()?.options.map((option, index) => (
+                          <Button
+                            key={index}
+                            variant="outlined"
+                            onClick={() => handleAnswerClick(option)}
+                            sx={{
+                              width: '100%',
+                              textTransform: 'none',
+                              border: `${currentAnswer === option ? 'blue' : 'black'}`,
+                            }}
+                          >
+                            {option}
+                          </Button>
+                        ))}
                       </Box>
                     </Box>
+                  ) : isFile() ? (
+                    <Box mt={3}>
+                      {currentSubmission ? (
+                        <Box>
+                          <Typography mt={2} variant="subtitle1">
+                            {`${t('fileSubmitted')}: `}
+                            <Button
+                              endIcon={<DownloadIcon />}
+                              onClick={() =>
+                                downloadFileSubmission(
+                                  currentSubmission.id,
+                                  fileSubmission()?.fileName!,
+                                )
+                              }
+                            >
+                              {fileSubmission()?.fileName}
+                            </Button>
+                          </Typography>
+                          {user?.student && (
+                            <Typography mt={2} variant="subtitle1" fontWeight="bold">
+                              {t('submitOtherFile')}
+                            </Typography>
+                          )}
+                        </Box>
+                      ) : (
+                        <Typography mt={2} variant="subtitle1">
+                          {t('noFileSubmitted')}
+                        </Typography>
+                      )}
+                      {user?.student && (
+                        <Box>
+                          <FileTextField setFile={setFile} progressEvent={progressEvent} />
+                          <Box justifyContent={'center'} display={'flex'}>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              sx={{ width: { xs: '100%', sm: '40%' } }}
+                              disabled={!groupId && !favoriteId}
+                              onClick={handleFileSubmission}
+                            >
+                              {t('submit')}
+                            </Button>
+                          </Box>
+                        </Box>
+                      )}
+                    </Box>
+                  ) : null}
+
+                  {wrongAnswer && (
+                    <Box
+                      mt={2}
+                      px={2}
+                      py={1}
+                      sx={{
+                        backgroundColor: (theme) => theme.palette.error.light,
+                        color: (theme) => theme.palette.error.contrastText,
+                        borderRadius: 1,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <ErrorOutline sx={{ fontSize: 20 }} />
+                        <Typography variant="body2" fontWeight="medium">
+                          {t('incorrectAnswer')}
+                        </Typography>
+                      </Stack>
+                    </Box>
                   )}
-                </Box>
-              ) : null}
 
-              {wrongAnswer && (
-                <Box
-                  mt={2}
-                  px={2}
-                  py={1}
-                  sx={{
-                    backgroundColor: (theme) => theme.palette.error.light,
-                    color: (theme) => theme.palette.error.contrastText,
-                    borderRadius: 1,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Stack direction="row" alignItems="center" spacing={1}>
-                    <ErrorOutline sx={{ fontSize: 20 }} />
-                    <Typography variant="body2" fontWeight="medium">
-                      {t('incorrectAnswer')}
-                    </Typography>
-                  </Stack>
-                </Box>
+                  <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={() => setSnackbarOpen(false)}
+                    message={t('completePreviousSteps')}
+                  />
+                </Paper>
+              ) : (
+                <div>{t('loading')}</div>
               )}
+            </Box>
 
-              <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={() => setSnackbarOpen(false)}
-                message={t('completePreviousSteps')}
-              />
-            </Paper>
-          ) : (
-            <div>{t('loading')}</div>
-          )}
-        </Box>
-
-        <Box mt={2} display="flex" justifyContent="space-between">
-          <Button
-            disabled={activeIndex === 0}
-            onClick={() => {
-              setWrongAnswer(false);
-              setActiveIndex(activeIndex - 1);
+            <Box mt={2} display="flex" justifyContent="space-between">
+              <Button
+                disabled={activeIndex === 0}
+                onClick={() => {
+                  setWrongAnswer(false);
+                  setActiveIndex(activeIndex - 1);
+                }}
+                sx={{ width: '48%' }}
+              >
+                &lt; {t('previous')}
+              </Button>
+              <Button
+                disabled={activeIndex === -1}
+                onClick={async () => {
+                  await toNextNode();
+                }}
+                sx={{ width: '48%' }}
+              >
+                {t('next')} &gt;
+              </Button>
+            </Box>
+          </>
+        )}
+        {!isLoading && activeIndex === totalSteps && (
+          <Link to={AppRoutes.myClasses}>{t('back')}</Link>
+        )}
+        {isLoading && (
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-            sx={{ width: '48%' }}
           >
-            &lt; {t('previous')}
-          </Button>
-          <Button
-            disabled={activeIndex === maxIndex}
-            onClick={async () => {
-              await toNextNode();
-            }}
-            sx={{ width: '48%' }}
-          >
-            {t('next')} &gt;
-          </Button>
-        </Box>
+            {t('loading')}
+          </Box>
+        )}
       </Box>
     </Box>
   );

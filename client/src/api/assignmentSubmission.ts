@@ -17,6 +17,7 @@ import { AxiosProgressEvent } from 'axios';
  * @param groupId - The group of which the assignmentSubmissions need to be fetched
  * @param favoriteId - The favorite of which the assignmentSubmissions need to be fetched
  * @param nodeId - The learningPathNode of which the assignmentSubmissions need to be fetched
+ * @param signal - signal to abort request.
  * @returns A list of assignmentSubmissions
  */
 export async function fetchAssignmentSubmissions(
@@ -25,6 +26,7 @@ export async function fetchAssignmentSubmissions(
   nodeId?: string,
   page?: number,
   pageSize?: number,
+  signal?: AbortSignal,
 ) {
   const response = await apiClient.get(ApiRoutes.assignmentSubmission.list, {
     params: {

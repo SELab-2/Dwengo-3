@@ -14,7 +14,7 @@ export class GroupDomain {
     if (group === null) {
       throw new BadRequestError(40049);
     }
-    if (group.currentNodeIndex > value) {
+    if (group.currentNodeIndex > value && value !== -1) {
       throw new BadRequestError(40048);
     }
     return await this.groupPersistence.updateCurrentNodeIndex(id, value);
