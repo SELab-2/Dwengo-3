@@ -30,6 +30,7 @@ import DiscussionCreatePage from './views/DiscussionCreatePage.tsx';
 import ClassDiscussionsPage from './views/ClassDiscussionsPage.tsx';
 import ProtectContent from './components/ProtectContent.tsx';
 import { NotificationProvider } from './contexts/NotificationContext.tsx';
+import SubmissionPage from './views/SubmissionPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -104,6 +105,10 @@ function App() {
                         <Route
                           path={AppRoutes.classDiscussions(':classId')}
                           element={<ClassDiscussionsPage />}
+                        />
+                        <Route
+                          path={AppRoutes.groupSubmission(':classId', ':assignmentId', ':groupId')}
+                          element={<SubmissionPage />}
                         />
                         <Route
                           path={AppRoutes.discussionCreate(':classId')}

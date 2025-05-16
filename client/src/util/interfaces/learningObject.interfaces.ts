@@ -12,6 +12,12 @@ enum contentType {
   'BLOCKLY',
 }
 
+export interface MultipleChoice {
+  question: string;
+  options: string[];
+  solution: number;
+}
+
 export interface LearningObjectShort {
   id: string;
   title: string;
@@ -44,7 +50,7 @@ export interface LearningObjectDetail {
   updatedAt: Date;
   content: string;
   submissionType: SubmissionType;
-  multipleChoice: JSON;
+  multipleChoice: MultipleChoice;
   keywords: keyword[];
 }
 
@@ -67,7 +73,7 @@ export interface LearningObjectCreate {
   returnValue?: JSON;
   available?: boolean;
   content: string;
-  multipleChoice?: JSON;
+  multipleChoice?: MultipleChoice;
   keywords?: keyword[];
 }
 
@@ -87,6 +93,6 @@ export interface LearningObjectUpdate {
   returnValue?: JSON;
   available?: boolean;
   content?: string;
-  multipleChoice?: JSON;
+  multipleChoice?: MultipleChoice;
   keywords?: keyword[];
 }

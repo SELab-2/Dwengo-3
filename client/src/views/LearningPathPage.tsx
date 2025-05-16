@@ -16,7 +16,6 @@ import {
 import {
   AssignmentSubmissionDetail,
   FileSubmission,
-  MultipleChoice,
   SubmissionType,
 } from '../util/interfaces/assignmentSubmission.interfaces';
 import { useError } from '../hooks/useError';
@@ -53,32 +52,23 @@ function LearningPathPage() {
     currentNode?.id,
   );
 
-  const submissionId = submissions?.data?.[0]?.id;
-  const { data: submission, isLoading: isSubmissionLoading } = useAssignmentSubmissionById(
-    submissionId!,
-  );
   const [currentSubmission, setCurrentSubmission] = useState<
     AssignmentSubmissionDetail | undefined
   >(undefined);
 
   useEffect(() => {
-    if (submission) {
-      setCurrentSubmission(submission);
+    if (submissions && submissions.length > 0) {
+      setCurrentSubmission(submissions[0]);
     }
-  }, [submission]);
+  }, [submissions]);
 
-  if (!learningPath || isSubmissionsLoading || isSubmissionLoading) {
+  if (!learningPath || isSubmissionsLoading) {
     return <div>{t('loading')}</div>;
   }
 
   const totalSteps = learningPath.learningPathNodes.length || 0;
   const currentProgress = (furthestIndex / totalSteps) * 100;
   const maxIndex = totalSteps - 1;
-
-  const multipleChoice = () => {
-    if (!currentObject) return undefined;
-    return currentObject.multipleChoice as unknown as MultipleChoice;
-  };
 
   const fileSubmission = () => {
     if (!currentSubmission) return undefined;
@@ -232,18 +222,15 @@ function LearningPathPage() {
               {currentNode?.instruction ?? t('loading')}
             </Typography>
 
-            {multipleChoice() ? (
+            {currentObject?.submissionType === SubmissionType.MULTIPLE_CHOICE ? (
               <Box mt={3}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {multipleChoice()?.question ?? t('loading')}
-                </Typography>
                 <Box
                   mt={2}
                   display="grid"
                   gap={1}
                   gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
                 >
-                  {multipleChoice()?.options.map((option, index) => (
+                  {currentObject.multipleChoice.options.map((option, index) => (
                     <Button
                       key={index}
                       variant="outlined"
