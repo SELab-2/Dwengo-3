@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useAssignments } from '../hooks/useAssignment';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   useCreateDiscussion,
   useDetailedDiscussionsByIds,
@@ -26,17 +26,21 @@ import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import { GroupShort } from '../util/interfaces/group.interfaces';
 import { AppRoutes } from '../util/app.routes';
 import { useCreateMessage } from '../hooks/useMessage';
-import { fetchDiscussionById } from '../api/discussion';
 
 const DiscussionCreatePage: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { classId } = useParams<{ classId: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  const { data: classData, isLoading: isLoadingClass } = useClassById(classId ?? '');
-  const [message, setMessage] = useState<string>('');
   const { setError } = useError();
+
+  // Id for the initial selected assignment when given in the URL
+  const assignmentId = searchParams.get('assignmentId');
+
+  const { classId } = useParams<{ classId: string }>();
+  const { data: classData, isLoading: isLoadingClass } = useClassById(classId ?? '');
+
+  const [message, setMessage] = useState<string>('');
 
   const createDiscussionMutation = useCreateDiscussion();
   const createMessageMutation = useCreateMessage();
@@ -62,12 +66,18 @@ const DiscussionCreatePage: React.FC = () => {
       !detailedDiscussions?.some((discussion) => discussion.group.assignmentId === assignment.id),
   );
 
+  // Set the selected assignment id based on the URL parameter or the first available assignment
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string>(
-    filteredAssignments[0]?.id ?? '',
+    assignmentId ?? filteredAssignments[0]?.id ?? '',
   );
-  const selectedAssignment = filteredAssignments.find(
-    (a: AssignmentShort2) => a.id === selectedAssignmentId,
-  );
+
+  // If the selected assignment id changes, update the selected assignment
+  let selectedAssignment: AssignmentShort2 | undefined;
+  useEffect(() => {
+    selectedAssignment = filteredAssignments.find(
+      (a: AssignmentShort2) => a.id === selectedAssignmentId,
+    );
+  }, [selectedAssignmentId]);
 
   // Create the discussion with the given input
   const handleSubmit = (e: React.FormEvent) => {
