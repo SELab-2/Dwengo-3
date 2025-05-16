@@ -20,6 +20,8 @@ export const ApiRoutes = {
   // Me (get the logged in user)
   me: '/api/auth/me',
 
+  delete: '/api/auth/delete',
+
   // Announcement
   announcement: {
     list: '/api/announcement',
@@ -73,6 +75,7 @@ export const ApiRoutes = {
     list: '/api/discussion',
     create: '/api/discussion',
     get: (id: string) => `/api/discussion/${id}`,
+    update: (id: string) => `/api/discussion/${id}`,
   },
 
   // Favorites

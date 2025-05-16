@@ -56,7 +56,7 @@ function TeacherAssignmentsTable({
               }}
             >
               <TableCell sx={{ minWidth: 180, width: '50%' }}>
-                <Typography variant="h6">{t('learningPath')}</Typography>
+                <Typography variant="h6">{t('name')}</Typography>
               </TableCell>
               <TableCell sx={{ minWidth: 180, width: '25%' }}>
                 <Typography variant="h6">{t('deadline')}</Typography>
@@ -74,7 +74,7 @@ function TeacherAssignmentsTable({
                       fontSize: { xs: '14px', sm: '16px' },
                     }}
                   >
-                    {assignment.learningPath.title}
+                    {assignment.name}
                   </Typography>
                 </TableCell>
                 <TableCell>

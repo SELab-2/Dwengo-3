@@ -1,21 +1,12 @@
+import { groupSelectDetail, groupSelectShort } from '../selectInput/select';
 import { AssignmentShort, Uuid } from './assignment.types';
 import { z } from 'zod';
+import { Prisma } from '.prisma/client';
 
-export type GroupShort = {
-  id: Uuid;
-  progress: number[];
-  assignmentId: Uuid;
-  name: string;
-};
+export type GroupShort = Prisma.GroupGetPayload<{
+  select: typeof groupSelectShort;
+}>;
 
-export type GroupDetail = {
-  id: Uuid;
-  name: string;
-  progress: number[];
-  assignment: AssignmentShort;
-  discussion: any;
-  students: any[];
-};
 
 export const UpdateIndexSchema = z.object({
   groupId: z.string().uuid(),
@@ -23,3 +14,7 @@ export const UpdateIndexSchema = z.object({
 });
 
 export type UpdateIndexParams = z.infer<typeof UpdateIndexSchema>;
+
+export type GroupDetail = Prisma.GroupGetPayload<{
+  select: typeof groupSelectDetail;
+}>;
