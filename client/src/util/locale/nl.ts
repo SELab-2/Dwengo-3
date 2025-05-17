@@ -108,5 +108,7 @@ export const nl = {
     content: 'Inhoud',
     createAnnouncement: 'Nieuwe aankondiging aanmaken',
     post: 'Plaatsen',
+    joinRequestSuccess: 'Toelatingsverzoek is goedgekeurd',
+    copied: 'Gekopieerd naar klembord',
   },
 };

@@ -40,6 +40,11 @@ function AssignmentCreatePage() {
   const { setError } = useError();
 
   const teacherId = user?.teacher?.id;
+
+  if (!teacherId) {
+    navigate(AppRoutes.classAssignments(classId!));
+  }
+
   const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath([]);
   const learningPaths = paginatedData?.data ?? [];
 

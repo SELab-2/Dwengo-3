@@ -110,5 +110,7 @@ export const en = {
     content: 'Content',
     createAnnouncement: 'Create new announcement',
     post: 'Post',
+    joinRequestSuccess: 'Join request has been approved',
+    copied: 'Copied to clipboard',
   },
 };
