@@ -2,9 +2,11 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { studentSelectDetail, studentSelectShort } from '../util/selectInput/student.select';
 import { StudentFilterParams } from '../util/types/student.types';
 import { NotFoundError } from '../util/types/error.types';
+import { studentSelectDetail, studentSelectShort } from '../util/selectInput/select';
+import { GroupPersistence } from './group.persistence';
+import { AssignmentSubmissionPersistence } from './assignmentSubmission.persistence';
 
 /**
  * Persistence class for Student model.
@@ -13,9 +15,13 @@ import { NotFoundError } from '../util/types/error.types';
  */
 export class StudentPersistence {
   private prisma: PrismaClient;
+  private groupPersistence: GroupPersistence;
+  private submissionPersistence: AssignmentSubmissionPersistence;
 
   constructor() {
     this.prisma = PrismaSingleton.instance;
+    this.groupPersistence = new GroupPersistence();
+    this.submissionPersistence = new AssignmentSubmissionPersistence();
   }
 
   /**
@@ -115,5 +121,39 @@ export class StudentPersistence {
     });
 
     return students.map((student) => student.userId);
+  }
+
+  public async deleteStudent(id: string) {
+    const student = await this.getStudentById(id);
+
+    for (const group of student.groups) {
+      await this.groupPersistence.deleteStudentFromGroup(id, group.id);
+    }
+
+    for (const classData of student.classes) {
+      await this.prisma.class.update({
+        where: { id: classData.id },
+        data: {
+          students: {
+            disconnect: { id: student.id },
+          },
+        },
+      });
+    }
+
+    const favorites = (await this.prisma.user.findUnique({
+      where: { id: student.userId },
+      include: { favorites: true },
+    }))!.favorites;
+
+    for (const favorite of favorites) {
+      await this.submissionPersistence.deleteAssignmentSubmissions({
+        favoriteId: favorite.id,
+      });
+    }
+
+    await this.prisma.user.delete({
+      where: { id: student.userId },
+    });
   }
 }

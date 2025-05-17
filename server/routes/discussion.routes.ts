@@ -25,16 +25,22 @@ export class DiscussionController {
      *     tags:
      *       - Discussion
      *     summary: Get list of discussions
-     *     description: Fetches a list of discussions filtered by groupIds
+     *     description: Fetches a list of discussions by userId
      *     parameters:
-     *       - name: groupIds
+     *       - name: userId
      *         in: query
-     *         description: Filter by group IDs (multiple values allowed)
+     *         description: Filter by userId
+     *         required: true
+     *         schema:
+     *           type: string
+     *           format: uuid
+     *       - name: assignmentId
+     *         in: query
+     *         description: Filter by assignmentId
      *         required: false
      *         schema:
-     *           type: array
-     *           items:
-     *             type: string
+     *           type: string
+     *           format: uuid
      *     responses:
      *       200:
      *         description: Successfully fetched list of discussions

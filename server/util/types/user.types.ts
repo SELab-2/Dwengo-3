@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ClassRole, Prisma, Student, Teacher, User } from '@prisma/client';
-import { userSelectShort } from '../selectInput/user.select';
+import { userSelectShort } from '../selectInput/select';
 
 // Must be a different name than ClassRole to avoid conflicts/ confusion with prisma client ClassRole type.
 export enum ClassRoleEnum {

@@ -20,6 +20,8 @@ export const ApiRoutes = {
   // Me (get the logged in user)
   me: '/api/auth/me',
 
+  delete: '/api/auth/delete',
+
   // Announcement
   announcement: {
     list: '/api/announcement',
@@ -41,6 +43,7 @@ export const ApiRoutes = {
     list: '/api/assignmentSubmission',
     get: (id: string) => `/api/assignmentSubmission/${id}`,
     update: (id: string) => `/api/assignmentSubmission/${id}`,
+    download: (id: string) => `/api/assignmentSubmission/${id}/download`,
   },
 
   // Class
@@ -72,6 +75,7 @@ export const ApiRoutes = {
     list: '/api/discussion',
     create: '/api/discussion',
     get: (id: string) => `/api/discussion/${id}`,
+    update: (id: string) => `/api/discussion/${id}`,
   },
 
   // Favorites
@@ -80,6 +84,14 @@ export const ApiRoutes = {
     list: '/api/favorites',
     get: (id: string) => `/api/favorites/${id}`,
     delete: (id: string) => `/api/favorites/${id}`,
+  },
+
+  // LearningTheme
+  learningTheme: {
+    list: '/api/learningTheme',
+    create: '/api/learningTheme',
+    get: (id: string) => `/api/learningTheme/${id}`,
+    delete: (id: string) => `/api/learningTheme/${id}`,
   },
 
   // LearningObject

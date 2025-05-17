@@ -1,3 +1,5 @@
+import { chown } from 'fs';
+
 export const en = {
   translation: {
     yes: 'Yes',
@@ -45,6 +47,7 @@ export const en = {
     favorites: 'Favorites',
     continue: 'Continue',
     view_edit: 'View/Edit',
+    assignment: 'Assignment',
     assignments: 'Assignments',
     noAssignments: 'No assignments yet',
     createAssignment: 'Create new assignment',
@@ -56,6 +59,10 @@ export const en = {
     dashboard: 'Dashboard',
     announcements: 'Announcements',
     discussions: 'Discussions',
+    startDiscussion: 'Start a new discussion',
+    createADiscussion: 'Create a new discussion',
+    noDiscussionsFound: 'No discussions found',
+    firstMessage: 'First message',
     students: 'Students',
     details: 'Details',
     admissionRequests: 'Admission Requests',
@@ -81,5 +88,20 @@ export const en = {
     submission: 'Submission',
     back: 'Back',
     score: 'Score',
+    sendNewMessage: 'Send new message',
+    newMessage: 'New message',
+    noMessegesYet: 'No messages yet',
+    chooseFile: 'Choose file',
+    noFileSelected: 'No file selected',
+    submit: 'Submit',
+    fileSubmitted: 'Submitted file',
+    submitOtherFile: 'Submit another file, note that the previous one will be replaced',
+    noFileSubmitted: 'No file has been submitted yet',
+    assignmentNameRequired: 'Assignment name is required',
+    learningPathRequired: 'Learning path is required',
+    deleteAccountMessage: 'Are you sure you want to delete your account?',
+    deleteAccountWarning: 'Warning: Deleting your account is permanent and cannot be undone.',
+    joinRequestSucces: 'Request to join the class has been successfully sent',
+    deadlineRequired: 'Deadline is required',
   },
 };

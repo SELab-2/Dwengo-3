@@ -3,14 +3,20 @@ import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { TeacherFilterParams, TeacherIncludeParams } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { teacherSelectDetail, teacherSelectShort } from '../util/selectInput/teacher.select';
 import { NotFoundError } from '../util/types/error.types';
+import { teacherSelectDetail, teacherSelectShort } from '../util/selectInput/select';
+import { AssignmentPersistence } from './assignment.persistence';
+import { ClassPersistence } from './class.persistence';
 
 export class TeacherPersistence {
   private prisma: PrismaClient;
+  private assignmentPersistence: AssignmentPersistence;
+  private classPersistence: ClassPersistence;
 
   constructor() {
     this.prisma = PrismaSingleton.instance;
+    this.assignmentPersistence = new AssignmentPersistence();
+    this.classPersistence = new ClassPersistence();
   }
 
   /**
@@ -120,5 +126,24 @@ export class TeacherPersistence {
       },
     });
     return teachers.map((teacher) => teacher.userId);
+  }
+
+  public async deleteTeacher(id: string) {
+    const teacher = await this.getTeacherById(id);
+    const assignments = await this.prisma.assignment.findMany({
+      where: { teacherId: id },
+    });
+
+    for (const assignment of assignments) {
+      await this.assignmentPersistence.deleteTeacherFromAssignment(id, assignment.id);
+    }
+
+    for (const classData of teacher.classes) {
+      await this.classPersistence.removeTeacherFromClass(classData.id, id);
+    }
+
+    await this.prisma.user.delete({
+      where: { id: teacher.userId },
+    });
   }
 }

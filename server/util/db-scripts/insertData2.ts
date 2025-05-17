@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { insertMessages } from '../../persistence/test/testData';
+import { insertMessages } from '../../../test/persistence/testData';
 import { PrismaSingleton } from '../../persistence/prismaSingleton';
 
 dotenv.config({ path: '../.env' });

@@ -2,21 +2,14 @@ import express, { NextFunction, Request, Response } from 'express';
 import { Profile, Strategy as GoogleStrategy, VerifyCallback } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
-import { z } from 'zod';
 
 import { UserDomain } from '../domain/user.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-  UserSchema,
-} from '../util/types/user.types';
+import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
 import { RegisterParams, RegisterSchema } from '../util/types/auth.types';
 
 const userDomain = new UserDomain();
-
 /**
  * Prevent users from registering as one role while using the endpoint for the other.
  * @param req the request being processed.
@@ -71,45 +64,45 @@ const apiCallbackUrl =
     ? 'http://localhost:3001/api/auth/callback/google'
     : 'https://sel2-3.ugent.be/api/auth/callback/google';
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: (process.env.GOOGLE_CLIENT_ID as string) ?? '',
-      clientSecret: (process.env.GOOGLE_CLIENT_SECRET as string) ?? '',
-      callbackURL: apiCallbackUrl,
-      passReqToCallback: true,
-    },
-    async (
-      req: Request,
-      accessToken: string,
-      refreshToken: string,
-      profile: Profile,
-      done: VerifyCallback,
-    ) => {
-      try {
-        let user: UserEntity | null = await userDomain.getUserById(profile.id);
-        const role = req.query.state as ClassRoleEnum;
+if (process.env.NODE_ENV !== 'testing') {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: (process.env.GOOGLE_CLIENT_ID as string) ?? '',
+        clientSecret: (process.env.GOOGLE_CLIENT_SECRET as string) ?? '',
+        callbackURL: apiCallbackUrl,
+        passReqToCallback: true,
+      },
+      async (
+        req: Request,
+        accessToken: string,
+        refreshToken: string,
+        profile: Profile,
+        done: VerifyCallback,
+      ) => {
+        try {
+          let user: UserEntity | null = await userDomain.getUserByEmail(profile.emails!![0].value);
+          const role = req.query.state as ClassRoleEnum;
+          if (user === null) {
+            user = await userDomain.createUser({
+              email: profile.emails!![0].value,
+              name: profile.name!!.givenName,
+              password: '',
+              provider: AuthenticationProvider.GOOGLE,
+              surname: profile.name!!.familyName,
+              username: profile.displayName,
+              role: role,
+            });
+          }
 
-        if (user === null) {
-          user = await userDomain.createUser({
-            id: profile.id,
-            email: profile.emails!![0].value,
-            name: profile.name!!.givenName,
-            password: '',
-            provider: AuthenticationProvider.GOOGLE,
-            surname: profile.name!!.familyName,
-            username: profile.displayName,
-            role: role,
-          });
+          return done(null, user);
+        } catch (error) {
+          return done(error, false);
         }
-
-        return done(null, user);
-      } catch (error) {
-        return done(error, false);
-      }
-    },
-  ),
-);
+      },
+    ),
+  );
+}
 
 passport.use(
   new LocalStrategy(
@@ -511,6 +504,26 @@ router.delete('/logout', isAuthenticated, (req: Request, res: Response, next: Ne
     }
   });
 });
+
+router.delete(
+  '/delete',
+  isAuthenticated,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as UserEntity;
+    req.logout((err) => {
+      if (err) return next(err);
+      else {
+        req.session.destroy(() => {
+          res.clearCookie('connect.sid');
+        });
+      }
+    });
+    await userDomain.deleteUser(user);
+    res.status(200).json({
+      message: 'Delete, successful',
+    });
+  },
+);
 
 /**
  * @swagger

@@ -1,3 +1,4 @@
+import { SubmissionType } from './assignmentSubmission.interfaces';
 import { keyword } from './keyword.interfaces';
 
 enum contentType {
@@ -10,6 +11,7 @@ enum contentType {
   'EXTERN',
   'BLOCKLY',
 }
+
 export interface LearningObjectShort {
   id: string;
   title: string;
@@ -41,6 +43,7 @@ export interface LearningObjectDetail {
   createdAt: Date;
   updatedAt: Date;
   content: string;
+  submissionType: SubmissionType;
   multipleChoice: JSON;
   keywords: keyword[];
 }

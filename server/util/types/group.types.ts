@@ -1,17 +1,11 @@
+import { groupSelectDetail, groupSelectShort } from '../selectInput/select';
 import { AssignmentShort, Uuid } from './assignment.types';
+import { Prisma } from '.prisma/client';
 
-export type GroupShort = {
-  id: Uuid;
-  progress: number[];
-  assignmentId: Uuid;
-  name: string;
-};
+export type GroupShort = Prisma.GroupGetPayload<{
+  select: typeof groupSelectShort;
+}>;
 
-export type GroupDetail = {
-  id: Uuid;
-  name: string;
-  progress: number[];
-  assignment: AssignmentShort;
-  discussion: any;
-  students: any[];
-};
+export type GroupDetail = Prisma.GroupGetPayload<{
+  select: typeof groupSelectDetail;
+}>;

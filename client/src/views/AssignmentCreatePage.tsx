@@ -40,7 +40,7 @@ function AssignmentCreatePage() {
   const { setError } = useError();
 
   const teacherId = user?.teacher?.id;
-  const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath();
+  const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath([]);
   const learningPaths = paginatedData?.data ?? [];
 
   const keywords = Array.from(
@@ -62,6 +62,9 @@ function AssignmentCreatePage() {
     useState<LearningPathShort[]>(learningPaths);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
   const [groups, setGroups] = useState<StudentShort[][]>(studentsData.map((student) => [student]));
+  const [deadline, setDeadline] = useState<Date | null>(null);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     const updatedPaths = learningPaths.filter(
@@ -93,12 +96,29 @@ function AssignmentCreatePage() {
   };
 
   const handleSubmit = () => {
-    //TODO: add (name, description) and deadline
+    //TODO: deadline
+    if (!name.trim()) {
+      setError(t('assignmentNameRequired'));
+      return;
+    }
+    if (!selectedLearningPath) {
+      setError(t('learningPathRequired'));
+      return;
+    }
+
+    if (!deadline) {
+      setError(t('deadlineRequired'));
+      return;
+    }
+
     const data: AssignmentCreate = {
+      name: name,
+      description: description,
       classId: classId!,
       teacherId: teacherId!,
       groups: groups.map((group) => group.map((student) => student.id)),
       learningPathId: selectedLearningPath!.id,
+      deadline: new Date(deadline).toISOString(),
     };
     assignmentMutation.mutate(data, {
       onSuccess: (response: AssignmentDetail) => {
@@ -155,6 +175,9 @@ function AssignmentCreatePage() {
               variant="outlined"
               margin="normal"
               fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              helperText={`${name.length}/255`}
             />
             <TextField
               id="description-assignment"
@@ -164,8 +187,12 @@ function AssignmentCreatePage() {
               margin="dense"
               rows={5}
               fullWidth
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              slotProps={{ htmlInput: { maxLength: 500 } }}
+              helperText={`${description.length}/500`}
             />
-            <DateTextField />
+            <DateTextField date={deadline} setDate={setDeadline} />
           </Grid>
 
           {/* Keywords & Learning Paths */}

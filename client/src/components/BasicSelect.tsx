@@ -10,14 +10,14 @@ interface BasicSelectProps<T> {
   isOptionEqualToValue?: (option: T, value: T) => boolean;
 }
 
-function BasicSelect<T>({ 
-    labelName, 
-    options, 
-    required, 
-    state,
-    getOptionLabel,
-    isOptionEqualToValue = (a, b) => a === b,
-  }: BasicSelectProps<T>) {
+function BasicSelect<T>({
+  labelName,
+  options,
+  required,
+  state,
+  getOptionLabel,
+  isOptionEqualToValue = (a, b) => a === b,
+}: BasicSelectProps<T>) {
   const [value, setValue] = state ?? useState<T | null>(null);
   const [inputValue, setInputValue] = useState('');
 
