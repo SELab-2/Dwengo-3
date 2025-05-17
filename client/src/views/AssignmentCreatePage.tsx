@@ -61,10 +61,16 @@ function AssignmentCreatePage() {
   const [filteredLearningPaths, setFilteredLearningPaths] =
     useState<LearningPathShort[]>(learningPaths);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
-  const [groups, setGroups] = useState<StudentShort[][]>(studentsData.map((student) => [student]));
+  const [groups, setGroups] = useState<StudentShort[][]>([]);
   const [deadline, setDeadline] = useState<Date | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    if (studentsData.length > 0) {
+      setGroups(studentsData.map((student) => [student]));
+    }
+  }, [studentsData]);
 
   useEffect(() => {
     const updatedPaths = learningPaths.filter(
