@@ -43,7 +43,7 @@ export function useFavoriteById(id?: string) {
 }
 
 /**
- * Creates a favoirte.
+ * Creates a favorite.
  *
  * @param data - The data of the favorite to be created.
  * @returns The query object containing the favorite data.

@@ -29,9 +29,7 @@ const calculateProgress = (
     );
   }
 
-  // calculate the progress based on assignment and favorite
-  // TODO
-  return 50;
+  return 0;
 };
 
 function LearningPathCard({
