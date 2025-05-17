@@ -26,45 +26,67 @@ import {
   useClassJoinRequests,
   useHandleClassJoinRequestStudent,
 } from '../hooks/useClassJoinRequest.ts';
-import { Decision } from '../util/interfaces/classJoinRequest.interfaces.ts';
+import {
+  ClassJoinRequestDetail,
+  Decision,
+} from '../util/interfaces/classJoinRequest.interfaces.ts';
 import { useError } from '../hooks/useError.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useAuth } from '../hooks/useAuth.ts';
 
 function ClassDashboardPage() {
+  const { user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
-
+  const { setError } = useError();
+  const classJoinMutation = useHandleClassJoinRequestStudent();
   const { classId } = useParams<{ classId: string }>();
   const {
     data: classData,
     isLoading: isClassDataLoading,
     refetch: refetchClassData,
   } = useClassById(classId!);
-  const {
-    data: joinRequestData,
-    isLoading: isJoinRequestDataLoading,
-    refetch: refetchJoinRequests,
-  } = useClassJoinRequests(classId!);
-  const classJoinMutation = useHandleClassJoinRequestStudent();
 
-  const { data: assignmentsData } = useAssignmentsOfClass(classId!);
+  const teacher = user?.teacher;
 
+  let joinRequests: ClassJoinRequestDetail[] = [];
   let assignment = undefined;
   let totalProgress = undefined;
   let groupsCompleted = undefined;
-  if ((assignmentsData?.data?.length ?? 0) > 0) {
-    assignment = assignmentsData?.data[assignmentsData?.data.length - 1]!;
-    totalProgress = assignment.learningPath.learningPathNodes.length;
-    groupsCompleted = assignment.groups
-      .map((group) => group.progress[group.progress.length - 1] + 1)
-      .flat();
+  let refetch = undefined;
+
+  if (teacher) {
+    const {
+      data: joinRequestData,
+      isLoading: isJoinRequestDataLoading,
+      refetch: refetchJoinRequests,
+    } = useClassJoinRequests(classId!);
+
+    refetch = refetchJoinRequests;
+
+    const { data: assignmentsData, isLoading: isAssignmentsLoading } = useAssignmentsOfClass(
+      classId!,
+    );
+
+    if ((assignmentsData?.data?.length ?? 0) > 0) {
+      assignment = assignmentsData?.data[assignmentsData?.data.length - 1]!;
+      totalProgress = assignment.learningPath.learningPathNodes.length;
+      groupsCompleted = assignment.groups
+        .map((group) => group.progress[group.progress.length - 1] + 1)
+        .flat();
+    }
+    joinRequests = joinRequestData?.data || [];
+
+    if (isJoinRequestDataLoading || isAssignmentsLoading) {
+      return (
+        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
+          {t('loading')}
+        </Typography>
+      );
+    }
   }
-
-  const { setError } = useError();
-
-  const joinRequests = joinRequestData?.data || [];
 
   const handleClassJoinRequest = (id: string, decision: Decision) => {
     classJoinMutation.mutate(
@@ -74,7 +96,7 @@ function ClassDashboardPage() {
         onSuccess: async () => {
           // reload students component to fetch new data
           await refetchClassData();
-          await refetchJoinRequests();
+          await refetch!();
         },
         onError: (error: Error) => {
           // Show error message in snackbar
@@ -169,16 +191,18 @@ function ClassDashboardPage() {
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}
             </Typography>
 
-            <Button
-              variant="contained"
-              sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
-              onClick={() => {
-                // TODO: add link to edit class page
-                alert('TODO: Navigate to Edit Class Page');
-              }} // Replace with actual navigation
-            >
-              {t('editClassGroup')}
-            </Button>
+            {teacher && (
+              <Button
+                variant="contained"
+                sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
+                onClick={() => {
+                  // TODO: add link to edit class page
+                  alert('TODO: Navigate to Edit Class Page');
+                }} // Replace with actual navigation
+              >
+                {t('editClassGroup')}
+              </Button>
+            )}
           </Paper>
         </GridLegacy>
 
@@ -197,15 +221,19 @@ function ClassDashboardPage() {
                       <strong>{t('name')}</strong>
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography variant="h6">
-                      <strong>{t('progress')}: </strong>
-                      <Link to={AppRoutes.learningPath(assignment?.learningPath.id || '/404')}>
-                        {assignment?.learningPath.title}
-                      </Link>
-                    </Typography>
-                  </TableCell>
-                  <TableCell />
+                  {teacher && (
+                    <Box>
+                      <TableCell>
+                        <Typography variant="h6">
+                          <strong>{t('progress')}: </strong>
+                          <Link to={AppRoutes.learningPath(assignment?.learningPath.id || '/404')}>
+                            {assignment?.learningPath.title}
+                          </Link>
+                        </Typography>
+                      </TableCell>
+                      <TableCell />
+                    </Box>
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -232,23 +260,27 @@ function ClassDashboardPage() {
                           {student.user.name} {student.user.surname}
                         </Typography>
                       </TableCell>
-                      <TableCell sx={{ minWidth: 200 }}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={progress}
-                          sx={{ height: 8, borderRadius: 5 }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="contained"
-                          onClick={() =>
-                            navigate(AppRoutes.classStudentDetails(classData!.id, student!.id))
-                          }
-                        >
-                          {t('details')}
-                        </Button>
-                      </TableCell>
+                      {teacher && (
+                        <Box>
+                          <TableCell sx={{ minWidth: 200 }}>
+                            <LinearProgress
+                              variant="determinate"
+                              value={progress}
+                              sx={{ height: 8, borderRadius: 5 }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              onClick={() =>
+                                navigate(AppRoutes.classStudentDetails(classData!.id, student!.id))
+                              }
+                            >
+                              {t('details')}
+                            </Button>
+                          </TableCell>
+                        </Box>
+                      )}
                     </TableRow>
                   );
                 })}
@@ -256,7 +288,7 @@ function ClassDashboardPage() {
             </Table>
           </TableContainer>
 
-          {!isJoinRequestDataLoading && joinRequests.length > 0 && (
+          {joinRequests.length > 0 && (
             <Box sx={{ mt: 4 }}>
               <Typography variant="h4">{t('admissionRequests')}</Typography>
               <Paper sx={{ p: 2, mt: 2 }}>
