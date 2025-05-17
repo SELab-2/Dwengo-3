@@ -35,14 +35,17 @@ import { AppRoutes } from '../util/app.routes.ts';
 import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useAuth } from '../hooks/useAuth.ts';
+import { useNotification } from '../hooks/useNotification.ts';
 
 function ClassDashboardPage() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { setError } = useError();
+  const { setNotification } = useNotification();
   const classJoinMutation = useHandleClassJoinRequestStudent();
   const { classId } = useParams<{ classId: string }>();
+
   const {
     data: classData,
     isLoading: isClassDataLoading,
@@ -92,8 +95,8 @@ function ClassDashboardPage() {
     classJoinMutation.mutate(
       { requestId: id, decision: decision },
       {
-        // TODO snackbar gebruiken om de melding te tonen on Success?
         onSuccess: async () => {
+          setNotification(t('joinRequestSuccess'));
           // reload students component to fetch new data
           await refetchClassData();
           await refetch!();
@@ -161,7 +164,10 @@ function ClassDashboardPage() {
               <IconButton
                 size="small"
                 aria-label={t('copy')}
-                onClick={() => navigator.clipboard.writeText(classData?.id ?? '')}
+                onClick={() => {
+                  setNotification(t('copied'));
+                  navigator.clipboard.writeText(classData?.id ?? '');
+                }}
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon fontSize="small" />
