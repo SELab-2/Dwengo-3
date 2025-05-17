@@ -7,12 +7,14 @@ import {
 } from '../util/types/learningObject.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
+
+import { NotFoundError } from '../util/types/error.types';
+
 import {
   learningObjectSelectDetail,
   learningObjectSelectShort,
-} from '../util/selectInput/learningObject.select';
-import { NotFoundError } from '../util/types/error.types';
-import { learningPathNodeSelectShort } from '../util/selectInput/learningPathNode.select';
+  learningPathNodeSelectShort,
+} from '../util/selectInput/select';
 
 export class LearningObjectPersistence {
   private prisma: PrismaClient;

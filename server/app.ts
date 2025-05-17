@@ -24,13 +24,20 @@ import session from 'express-session';
 import { errorHandling } from './errorHandling';
 import cors from 'cors';
 import { FavoritesController } from './routes/favorites.routes';
+import { RedisStore } from 'connect-redis';
+import { createClient } from 'redis';
+import { LearningThemeController } from './routes/learningTheme.routes';
 
 export const app: Express = express();
-const port = 3001;
 
 // Allow requests from frontend
 // TODO: change this for production
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3001'];
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3001',
+  'https://sel2-3.ugent.be',
+];
 
 app.use(
   cors({
@@ -62,23 +69,56 @@ if (process.env.SESSION_SECRET === undefined) {
   throw new Error('Secret for cookies not present');
 }
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-      maxAge: 1000 * 60 * 60 * 5, // 5 hours
-      path: '/',
-    },
-  }),
-);
+if (process.env.NODE_ENV != 'testing') {
+  const redisClient = createClient({
+    url: process.env.REDIS_URL,
+  });
+  redisClient.connect().catch(console.error);
+
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      store: new RedisStore({ client: redisClient }),
+      cookie: {
+        secure: false,
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+        maxAge: 1000 * 60 * 60 * 5, // 5 hours
+        path: '/',
+      },
+    }),
+  );
+} else {
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        secure: false,
+        httpOnly: true,
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 60 * 5, // 5 hours
+        path: '/',
+      },
+    }),
+  );
+}
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
+
+// todo: i am leaving it here as this is handy to debug some responses from express to the client
+// app.use(function(req, res, next) {
+//   res.on('finish', () => {
+//     console.log(`request url = ${req.originalUrl}`);
+//     console.log(res.getHeaders());
+//   });
+//   next();
+// });
 
 const apiRouter = express.Router();
 if (process.env.NODE_ENV === 'development') {
@@ -103,10 +143,7 @@ apiRouter.use('/auth', auth);
 apiRouter.use('/discussion', new DiscussionController().router);
 apiRouter.use('/message', new MessageController().router);
 apiRouter.use('/favorites', new FavoritesController().router);
+apiRouter.use('/learningTheme', new LearningThemeController().router);
 
 // Error handling middleware
 app.use(errorHandling);
-
-app.listen(port, () => {
-  console.log(`[SERVER] - listening on http://localhost:${port}`);
-});

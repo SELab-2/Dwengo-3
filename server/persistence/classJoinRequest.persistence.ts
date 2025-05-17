@@ -7,9 +7,9 @@ import {
 } from '../util/types/classJoinRequest.types';
 import { ClassRole, Prisma } from '@prisma/client';
 import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
-import { classJoinRequestSelectDetail } from '../util/selectInput/classJoinRequest.select';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { UsersPersistence } from './auth/users.persistence';
+import { classJoinRequestSelectDetail } from '../util/selectInput/select';
 
 export class ClassJoinRequestPersistence {
   private usersPersistence: UsersPersistence;

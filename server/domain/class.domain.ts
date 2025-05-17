@@ -2,6 +2,7 @@ import { ClassPersistence } from '../persistence/class.persistence';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   ClassCreateSchema,
+  ClassDetail,
   ClassFilterParams,
   ClassFilterSchema,
   ClassUpdateSchema,
@@ -80,7 +81,7 @@ export class ClassDomain {
   }
 
   public async checkUserBelongsToClass(user: UserEntity, classId: string) {
-    const classById = await this.classPersistence.getClassById(classId);
+    const classById: ClassDetail = await this.classPersistence.getClassById(classId);
     let exists = false;
     if (user.role === ClassRoleEnum.TEACHER) {
       exists = classById?.teachers.some((teacher) => teacher.id === user.teacher?.id) || false;

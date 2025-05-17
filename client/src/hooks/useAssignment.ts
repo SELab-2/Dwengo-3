@@ -1,6 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { createAssignment, fetchAssignmentById, fetchAssignments } from "../api/assignment";
-import { AssignmentCreate } from "../util/interfaces/assignment.interfaces";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createAssignment, fetchAssignmentById, fetchAssignments } from '../api/assignment';
+import { AssignmentCreate } from '../util/interfaces/assignment.interfaces';
+
 /**
  * Fetches a list of assignments based on the provided class, group, student, and teacher IDs.
  *
@@ -10,20 +11,29 @@ import { AssignmentCreate } from "../util/interfaces/assignment.interfaces";
  * @param teacherId - The ID of the teacher whose assignments are to be fetched.
  * @returns The query object containing the assignment data.
  */
-export function useAssignments(
-    classId?: string, 
-    groupId?: string, 
-    studentId?: string, 
-    teacherId?: string,
-    page: number = 1,
-    pageSize: number = 10
-) {
+export function useAssignments({
+  studentId,
+  classId,
+  groupId,
+  teacherId,
+  page,
+  pageSize,
+}: {
+  studentId?: string;
+  classId?: string;
+  groupId?: string;
+  teacherId?: string;
+  page?: number;
+  pageSize?: number;
+}) {
   return useQuery({
-    queryKey: ['assignments', classId, groupId, studentId, teacherId],
+    queryKey: ['assignments', studentId, classId, groupId, teacherId, page, pageSize],
     queryFn: async () => {
-      return await fetchAssignments({classId, groupId, studentId, teacherId, page, pageSize});
+      return await fetchAssignments({ classId, groupId, studentId, teacherId, page, pageSize });
     },
-    enabled: !!classId || !!groupId || !!studentId || !!teacherId,})}
+    enabled: !!classId || !!groupId || !!studentId || !!teacherId,
+  });
+}
 
 /**
  * Hook to fetch assignments for a specific student
@@ -61,15 +71,15 @@ export function useAssignmentById(assignmentId: string) {
 
 /**
  * Creates a new assignment with the provided assignment name.
- * 
+ *
  * @returns The mutation object containing the assignment data.
  */
 export function useCreateAssignment() {
-    return useMutation({
-        mutationFn: async (data: AssignmentCreate) => {
-            return await createAssignment(data);
-        }
-    });
+  return useMutation({
+    mutationFn: async (data: AssignmentCreate) => {
+      return await createAssignment(data);
+    },
+  });
 }
 
 /**

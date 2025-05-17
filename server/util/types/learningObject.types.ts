@@ -2,10 +2,7 @@ import { z } from 'zod';
 import { Uuid } from './assignment.types';
 import { Decimal } from '@prisma/client/runtime/library';
 import { Prisma } from '.prisma/client';
-import {
-  learningObjectSelectDetail,
-  learningObjectSelectShort,
-} from '../selectInput/learningObject.select';
+import { learningObjectSelectShort, learningObjectSelectDetail } from '../selectInput/select';
 
 export const ContentTypeEnum = z.enum([
   'TEXT_PLAIN',

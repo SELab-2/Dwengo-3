@@ -31,7 +31,7 @@ jobs:
         run: cd /home/selab2/dwengo/client && npm run build
 
       - name: Deploy client with rsync
-        run: rsync -a --delete --exclude=schemaspy /home/selab2/dwengo/client/build/ /var/www/html/
+        run: rsync -a --delete /home/selab2/dwengo/client/dist/ /var/www/html/
 
       - name: Swagger docs up and running
         run: cd /home/selab2/dwengo && sleep 5 && ./test-swagger-running.sh;
