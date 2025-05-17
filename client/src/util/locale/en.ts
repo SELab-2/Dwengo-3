@@ -103,5 +103,12 @@ export const en = {
     deleteAccountWarning: 'Warning: Deleting your account is permanent and cannot be undone.',
     joinRequestSucces: 'Request to join the class has been successfully sent',
     deadlineRequired: 'Deadline is required',
+    titleRequired: 'Title is required',
+    contentRequired: 'Content is required',
+    announcementSucces: 'Announcement was successfully posted',
+    title: 'Title',
+    content: 'Content',
+    createAnnouncement: 'Create new announcement',
+    post: 'Post',
   },
 };
