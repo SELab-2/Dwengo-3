@@ -10,7 +10,7 @@ import {
 import { PrismaSingleton } from './prismaSingleton';
 import { Uuid } from '../util/types/assignment.types';
 import { groupSelectDetail, groupSelectShort } from '../util/selectInput/select';
-import { assignmentSelectDetail, groupSelectDetail } from '../util/selectInput/select';
+import { assignmentSelectDetail } from '../util/selectInput/select';
 import { GroupDetail } from '../util/types/group.types';
 import { FileSubmission } from '../util/types/assignmentSubmission.types';
 import fs from 'fs';
@@ -101,6 +101,7 @@ export class GroupPersistence {
         currentNodeIndex: value,
       },
     });
+  }
 
   public async deleteStudentFromGroup(studentId: string, groupId: string) {
     const group = await this.prisma.group.update({
