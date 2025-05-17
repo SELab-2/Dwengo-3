@@ -25,7 +25,6 @@ jobs:
           path: |
             server/node_modules
             client/node_modules
-            db/node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
@@ -37,11 +36,6 @@ jobs:
     needs: [ install ]
     runs-on: self-hosted
     steps:
-      - name: Drop test database
-        run: |
-          PGPASSWORD=password psql -U postgres -h localhost -p 5433 -c "DROP DATABASE IF EXISTS dwengo_test_db;"
-          PGPASSWORD=password psql -U postgres -h localhost -p 5433 -c "CREATE DATABASE dwengo_test_db;"
-
       - name: Set up database
         run: |
           export ENV_FILE=test/.env.test && ./prisma.sh migrate reset --force;
