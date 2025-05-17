@@ -1,30 +1,16 @@
-import {
-  Box,
-  boxClasses,
-  Button,
-  LinearProgress,
-  Paper,
-  Snackbar,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, LinearProgress, Paper, Snackbar, Stack, Typography } from '@mui/material';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useLearningPathById } from '../hooks/useLearningPath';
-import { useLearningObjectById } from '../hooks/useLearningObject';
-import { useLearningPathNodeById } from '../hooks/useLearningPathNode';
 import { useTranslation } from 'react-i18next';
 import { ErrorOutline } from '@mui/icons-material';
 import FileTextField from '../components/textfields/FileTextField';
 import {
-  useAssignmentSubmissionById,
-  useAssignmentSubmissions,
   useCreateAssignmentSubmission,
   useUpdateAssignmentSubmission,
 } from '../hooks/useAssignmentSubmission';
 import {
   AssignmentSubmissionDetail,
-  AssignmentSubmissionShort,
   FileSubmission,
   MultipleChoice,
   SubmissionType,
@@ -44,7 +30,6 @@ import { useGroup, useUpdateCurrentIndexForGroup } from '../hooks/useGroup.ts';
 import { LearningPathNodeTransitionDetail } from '../util/interfaces/LearningPathNodeTransition.interfaces.ts';
 import { LearningPathNodeDetail } from '../util/interfaces/learningPathNode.interfaces.ts';
 import { LearningObjectDetail } from '../util/interfaces/learningObject.interfaces.ts';
-import { PaginatedData } from '../util/interfaces/general.interfaces.ts';
 import { fetchLearningObjectById } from '../api/learningObject.ts';
 import { fetchLearningPathNodeById } from '../api/learningPathNode.ts';
 import { AppRoutes } from '../util/app.routes.ts';
@@ -66,7 +51,7 @@ function LearningPathPage() {
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
 
-  const { data: group } = useGroup(groupId ?? undefined, favoriteId ?? undefined);
+  const { data: data } = useGroup(groupId ?? undefined);
 
   const [currentSubmission, setCurrentSubmission] = useState<
     AssignmentSubmissionDetail | undefined
@@ -83,18 +68,19 @@ function LearningPathPage() {
   const totalSteps = learningPath?.learningPathNodes.length || 0;
 
   // progress in % to show in progress bar
-  const currentProgress = (furthestIndex / totalSteps) * 100;
+  const currentProgress =
+    progress.length > 0 ? ((Math.max(...progress) + 1) / totalSteps) * 100 : 0;
 
   // last node to visit
   const maxIndex = totalSteps - 1;
 
   useEffect(() => {
-    if (!group) return;
+    if (!data) return;
 
-    setProgress(group.progress);
-    setFurthestIndex(group.currentNodeIndex !== -1 ? group.currentNodeIndex : totalSteps);
-    setActiveIndex(group.currentNodeIndex !== -1 ? group.currentNodeIndex : totalSteps);
-  }, [learningPath, group]);
+    setProgress(data.progress);
+    setFurthestIndex(data.currentNodeIndex !== -1 ? data.currentNodeIndex : totalSteps);
+    setActiveIndex(data.currentNodeIndex !== -1 ? data.currentNodeIndex : totalSteps);
+  }, [learningPath, data]);
 
   const [progressEvent, setProgressEvent] = useState<AxiosProgressEvent | undefined>(undefined);
   const updateIndexMutation = useUpdateCurrentIndexForGroup();
