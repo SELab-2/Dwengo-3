@@ -32,12 +32,14 @@ function ClassCard({ classDetails }: { classDetails: PopulatedClass }) {
   const getProgress = (assignment: PopulatedAssignment) => {
     if (user?.role === ClassRoleEnum.STUDENT) {
       // For a student, calculate the progress based on the group they're in
+      const group = assignment.groups.filter((group) =>
+        group.students?.some((student) => student.id === user?.student?.id),
+      )[0]; //TODO: for some reason group.students is undefined
       const progress =
-        assignment.groups
-          .filter((group) => group.students?.some((student) => student.id === user?.student?.id))[0] //TODO: for some reason group.students is undefined
-          ?.progress.at(-1) || 0;
+        ((Math.max(...group.progress) + 1) / assignment.learningPath.learningPathNodes.length) *
+        100;
 
-      return Math.round((progress / assignment.learningPath.learningPathNodes.length) * 100);
+      return Math.round(progress);
     } else {
       // For a teacher, calculate the progress based on all groups in the class
       const totalProgress = assignment.groups.reduce((acc, group) => {

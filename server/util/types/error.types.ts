@@ -209,6 +209,10 @@ export class BadRequestError extends APIError {
         return "Can't fetch info from an assignment you're not a member of...";
       case 40051:
         return 'A group can only have one discussion...';
+      case 40052:
+        return 'New node index is lower than the current furthest visited node...';
+      case 40053:
+        return 'Could not find the group with given id...';
       default:
         return 'Bad request...';
     }

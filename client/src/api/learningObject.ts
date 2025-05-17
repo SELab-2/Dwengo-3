@@ -12,10 +12,11 @@ import { PaginatedData } from '../util/interfaces/general.interfaces';
  * Fetches a LearningObject by its ID.
  *
  * @param id - The ID of the learningObject to be fetched.
+ * @param signal signal used to abort request.
  * @returns The learningObject details.
  */
-export async function fetchLearningObjectById(id: string) {
-  const response = await apiClient.get(ApiRoutes.learningObject.get(id));
+export async function fetchLearningObjectById(id: string, signal?: AbortSignal) {
+  const response = await apiClient.get(ApiRoutes.learningObject.get(id), { signal });
   const result: LearningObjectDetail = response.data;
 
   return result;

@@ -3,8 +3,8 @@ import { GroupShort } from './group.interfaces';
 import { LearningPathNodeShort } from './learningPathNode.interfaces';
 
 export enum SubmissionType {
-  'FILE' = 'FILE',
   'MULTIPLE_CHOICE' = 'MULTIPLE_CHOICE',
+  'FILE' = 'FILE',
   'READ' = 'READ',
 }
 

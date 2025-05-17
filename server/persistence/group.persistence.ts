@@ -9,7 +9,8 @@ import {
 } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { Uuid } from '../util/types/assignment.types';
-import { assignmentSelectDetail, groupSelectDetail } from '../util/selectInput/select';
+import { groupSelectDetail, groupSelectShort } from '../util/selectInput/select';
+import { assignmentSelectDetail } from '../util/selectInput/select';
 import { GroupDetail } from '../util/types/group.types';
 import { FileSubmission } from '../util/types/assignmentSubmission.types';
 import fs from 'fs';
@@ -66,6 +67,38 @@ export class GroupPersistence {
       },
       data: {
         progress,
+      },
+    });
+  }
+
+  public async createGroups(groups: Uuid[][], assignmentId: string) {
+    return await PrismaSingleton.instance.$transaction(
+      groups.map((group: Uuid[], index: number) =>
+        PrismaSingleton.instance.group.create({
+          data: {
+            name: `Group ${index + 1}`,
+            assignment: {
+              connect: {
+                id: assignmentId,
+              },
+            },
+            students: {
+              connect: group.map((student: Uuid) => ({ id: student })),
+            },
+          },
+          select: groupSelectShort,
+        }),
+      ),
+    );
+  }
+
+  public async updateCurrentNodeIndex(id: string, value: number) {
+    return await PrismaSingleton.instance.group.update({
+      where: {
+        id: id,
+      },
+      data: {
+        currentNodeIndex: value,
       },
     });
   }
