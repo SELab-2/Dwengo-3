@@ -9,6 +9,7 @@ import { useClassById } from '../hooks/useClass.ts';
 import { useAnnouncementDetails } from '../hooks/useAnnouncement.ts';
 import Paginator from '../components/Paginator';
 import { useState } from 'react';
+import { AppRoutes } from '../util/app.routes.ts';
 
 function ClassAnnouncementsPage() {
   const { user } = useAuth();
@@ -66,8 +67,7 @@ function ClassAnnouncementsPage() {
               variant="contained"
               sx={{ backgroundColor: theme.palette.primary.main }}
               onClick={() => {
-                //TODO: Add functionality to create a new announcement
-                alert('Create new announcement');
+                navigate(AppRoutes.classAnnouncementCreate(classId!));
               }}
             >
               {t('createNewAnnouncement')}

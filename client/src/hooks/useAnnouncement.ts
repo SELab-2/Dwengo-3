@@ -1,6 +1,6 @@
-import { AnnouncementDetail } from '../util/interfaces/announcement.interfaces';
-import { useQuery } from '@tanstack/react-query';
-import { fetchAnnouncementById, fetchAnnouncements } from '../api/announcement';
+import { AnnouncementCreate, AnnouncementDetail } from '../util/interfaces/announcement.interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createAnnouncement, fetchAnnouncementById, fetchAnnouncements } from '../api/announcement';
 import { fetchNestedData } from '../api/util';
 
 /**
@@ -81,5 +81,13 @@ export function useAnnouncementDetails(
     },
     enabled: !!studentId || !!teacherId, // Enable the query only if studentId or teacherId is provided
     refetchOnWindowFocus: false,
+  });
+}
+
+export function useAnnouncementCreate() {
+  return useMutation({
+    mutationFn: async (data: AnnouncementCreate) => {
+      return await createAnnouncement(data);
+    },
   });
 }
