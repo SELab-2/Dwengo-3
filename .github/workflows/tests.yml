@@ -37,6 +37,9 @@ jobs:
     needs: [ install ]
     runs-on: self-hosted
     steps:
+      - name: Clean old Prisma migration cache
+        run: rm -rf /home/actions-runner/_work/Dwengo-3/Dwengo-3/db/prisma/migrations
+
       - name: Set up database
         run: |
           export ENV_FILE=test/.env.test && ./prisma.sh migrate reset --force;
