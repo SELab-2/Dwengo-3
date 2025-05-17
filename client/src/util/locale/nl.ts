@@ -106,7 +106,7 @@ export const nl = {
     announcementSucces: 'Aankondiging is succesvol verstuurd',
     title: 'Titel',
     content: 'Inhoud',
-    createAnnouncement: 'Nieuwe aankongiging aanmaken',
+    createAnnouncement: 'Nieuwe aankondiging aanmaken',
     post: 'Plaatsen',
   },
 };
