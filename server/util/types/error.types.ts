@@ -209,6 +209,8 @@ export class BadRequestError extends APIError {
         return "Can't fetch info from an assignment you're not a member of...";
       case 40051:
         return 'A group can only have one discussion...';
+      case 40052:
+        return 'You cannot remove yourself from your own class...';
       default:
         return 'Bad request...';
     }
