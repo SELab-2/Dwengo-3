@@ -26,7 +26,7 @@ export function useFavorite(userID?: string, page: number = 1, pageSize: number 
 }
 
 /**
- * Fetches a favoirte by its ID.
+ * Fetches a favorite by its ID.
  *
  * @param id - The ID of the favorite to be fetched.
  * @returns The query object containing the favorite data.
