@@ -1,8 +1,6 @@
-import { Box, Button, Card, LinearProgress, Paper, Stack, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { useTranslation } from 'react-i18next';
-import { AssignmentDetail, AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
+import { Box, LinearProgress, Paper, Typography } from '@mui/material';
+import React from 'react';
+import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import { FavoriteShort } from '../util/interfaces/favorite.interfaces';
 import DateTypography from './DateTypography';
 
