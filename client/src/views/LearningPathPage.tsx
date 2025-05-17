@@ -153,6 +153,8 @@ function LearningPathPage() {
     return () => abort.abort();
   }, [learningPath, activeIndex]);
 
+  console.debug(currentAnswer);
+
   const multipleChoice = () => {
     if (!currentObject || currentObject.submissionType !== SubmissionType.MULTIPLE_CHOICE) {
       return undefined;
@@ -242,6 +244,7 @@ function LearningPathPage() {
           submissionType: SubmissionType.MULTIPLE_CHOICE,
           nodeId: currentNode!!.id,
           groupId: groupId!!,
+          submission: currentAnswer ? currentAnswer : undefined,
         },
         {
           onError: (error) => {
@@ -461,7 +464,7 @@ function LearningPathPage() {
                             sx={{
                               width: '100%',
                               textTransform: 'none',
-                              border: `${currentAnswer === option ? 'blue' : 'black'}`,
+                              border: option === currentAnswer ? '1px solid blue' : 'none',
                             }}
                           >
                             {option}
