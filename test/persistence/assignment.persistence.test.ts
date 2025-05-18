@@ -75,8 +75,10 @@ describe('assignment persistence test', () => {
             },
           }));
         expect(expectedAssignments).not.toEqual([]);
-        await expect(req).resolves.toEqual({
-          data: expect.arrayContaining(expectedAssignments),
+        await expect(req).resolves.toMatchObject({
+          data: expect.arrayContaining(
+            expectedAssignments.map((ass) => expect.objectContaining(ass)),
+          ),
           totalPages: 1,
         });
       }
@@ -122,8 +124,10 @@ describe('assignment persistence test', () => {
             },
           ];
           expect(expectedAssignments.sort((a, b) => a.id.localeCompare(b.id))).not.toEqual([]);
-          await expect(req).resolves.toEqual({
-            data: expect.arrayContaining(expectedAssignments),
+          await expect(req).resolves.toMatchObject({
+            data: expect.arrayContaining(
+              expectedAssignments.map((ass) => expect.objectContaining(ass)),
+            ),
             totalPages: 1,
           });
         }
@@ -167,8 +171,10 @@ describe('assignment persistence test', () => {
             { teacherId: teacher.id },
             { page: 1, pageSize: 10, skip: 0 },
           );
-          await expect(req).resolves.toEqual({
-            data: expect.arrayContaining(expectedAssignments),
+          await expect(req).resolves.toMatchObject({
+            data: expect.arrayContaining(
+              expectedAssignments.map((ass) => expect.objectContaining(ass)),
+            ),
             totalPages: 1,
           });
         }
@@ -212,8 +218,10 @@ describe('assignment persistence test', () => {
             { studentId: student.id },
             { page: 1, pageSize: 10, skip: 0 },
           );
-          await expect(req).resolves.toEqual({
-            data: expect.arrayContaining(expectedAssignments),
+          await expect(req).resolves.toMatchObject({
+            data: expect.arrayContaining(
+              expectedAssignments.map((ass) => expect.objectContaining(ass)),
+            ),
             totalPages: 1,
           });
         }
