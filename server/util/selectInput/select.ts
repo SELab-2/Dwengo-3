@@ -197,6 +197,7 @@ export const assignmentSelectShort = {
 export const classSelectDetail = {
   id: true,
   name: true,
+  description: true,
   teachers: {
     select: teacherSelectShort,
   },

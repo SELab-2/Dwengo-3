@@ -22,6 +22,7 @@ export type ClassCreateParams = z.infer<typeof ClassCreateSchema>;
 
 export const ClassUpdateSchema = z.object({
   name: z.string().min(1, 'Name must be a non-empty string').trim().optional(),
+  description: z.string().min(1, 'Description must be a non-empty string').trim().optional(),
 });
 
 export type ClassUpdateParams = z.infer<typeof ClassUpdateSchema>;
