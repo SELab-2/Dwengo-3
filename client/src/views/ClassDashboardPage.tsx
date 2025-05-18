@@ -190,25 +190,21 @@ function ClassDashboardPage() {
             </List>
 
             <Typography variant="h6" sx={{ mt: 3, fontWeight: 'bold' }}>
-              {t('notes')}
+              {t('classDescription')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'gray' }}>
-              {classData!.notes || // TODO add notes to class
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}
+              {classData!.description}
             </Typography>
 
-            {teacher && (
-              <Button
-                variant="contained"
-                sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
-                onClick={() => {
-                  // TODO: add link to edit class page
-                  alert('TODO: Navigate to Edit Class Page');
-                }} // Replace with actual navigation
-              >
-                {t('editClassGroup')}
-              </Button>
-            )}
+            <Button
+              variant="contained"
+              sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
+              onClick={() => {
+                navigate(AppRoutes.classEdit(classId!));
+              }}
+            >
+              {t('editClassGroup')}
+            </Button>
           </Paper>
         </GridLegacy>
 

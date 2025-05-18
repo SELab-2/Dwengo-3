@@ -98,6 +98,10 @@ export class ClassDomain {
       throw new BadRequestError(40035);
     }
 
+    if (teacherId === user.teacher.id) {
+      throw new BadRequestError(40052);
+    }
+
     if (!(await this.classPersistence.isTeacherFromClass(user.teacher.id, classId))) {
       throw new BadRequestError(40035);
     }
