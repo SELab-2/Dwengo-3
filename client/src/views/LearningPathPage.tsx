@@ -141,7 +141,7 @@ function LearningPathPage() {
           setCurrentSubmission(submission);
         }
       } catch (error: any) {
-        setError(error.message);
+        setError(error.response.data.message || error.message);
       } finally {
         setIsLoading(false);
       }
@@ -202,8 +202,8 @@ function LearningPathPage() {
           },
         },
         {
-          onError: (error) => {
-            setError(error.message);
+          onError: (error: any) => {
+            setError(error.response.data.message || error.message);
           },
         },
       );
@@ -215,8 +215,8 @@ function LearningPathPage() {
           groupId: groupId!!,
         },
         {
-          onError: (error) => {
-            setError(error.message);
+          onError: (error: any) => {
+            setError(error.response.data.message || error.message);
           },
         },
       );
@@ -233,8 +233,8 @@ function LearningPathPage() {
           },
         },
         {
-          onError: (error) => {
-            setError(error.message);
+          onError: (error: any) => {
+            setError(error.response.data.message || error.message);
           },
         },
       );
@@ -247,8 +247,8 @@ function LearningPathPage() {
           submission: currentAnswer ? currentAnswer : undefined,
         },
         {
-          onError: (error) => {
-            setError(error.message);
+          onError: (error: any) => {
+            setError(error.response.data.message || error.message);
           },
         },
       );
@@ -331,8 +331,8 @@ function LearningPathPage() {
               setFile(null);
               setCurrentSubmission(response);
             },
-            onError: (error) => {
-              setError(error.message);
+            onError: (error: any) => {
+              setError(error.response.data.message || error.message);
             },
           },
         )
@@ -350,8 +350,8 @@ function LearningPathPage() {
               setFile(null);
               setCurrentSubmission(response);
             },
-            onError: (error) => {
-              setError(error.message);
+            onError: (error: any) => {
+              setError(error.response.data.message || error.message);
             },
           },
         );
