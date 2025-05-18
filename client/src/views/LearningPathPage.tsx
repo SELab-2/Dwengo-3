@@ -178,29 +178,38 @@ function LearningPathPage() {
     <Box display="flex" height="90vh">
       {/* Sidebar */}
       <Box width="300px" p={2} sx={(theme) => ({ bgcolor: theme.palette.custom.color6 })}>
-        {learningPath.learningPathNodes.map((node, index) => (
-          <Box
-            key={node.id}
-            onClick={() => {
-              if (index !== activeIndex) {
-                setWrongAnswer(false);
-                setActiveIndex(index);
-              }
-            }}
-            p={1}
-            mb={1}
-            bgcolor={nodeColor(index)}
-            borderRadius="8px"
-            sx={{ cursor: 'pointer', transition: 'all 0.3s', '&:hover': { bgcolor: 'lightgray' } }}
-          >
-            <Typography fontWeight="bold" variant="body1" noWrap>
-              {node.learningObject.title}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" noWrap>
-              ~{node.learningObject.estimatedTime} min
-            </Typography>
-          </Box>
-        ))}
+        {learningPath.learningPathNodes
+          .filter((node, index) => {
+            const isInProgress = progress.includes(index);
+            return isInProgress || index >= activeIndex;
+          })
+          .map((node, index) => (
+            <Box
+              key={node.id}
+              onClick={() => {
+                if (index !== activeIndex) {
+                  setWrongAnswer(false);
+                  setActiveIndex(index);
+                }
+              }}
+              p={1}
+              mb={1}
+              bgcolor={nodeColor(index)}
+              borderRadius="8px"
+              sx={{
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                '&:hover': { bgcolor: 'lightgray' },
+              }}
+            >
+              <Typography fontWeight="bold" variant="body1" noWrap>
+                {node.learningObject.title}
+              </Typography>
+              <Typography variant="caption" color="text.secondary" noWrap>
+                ~{node.learningObject.estimatedTime} min
+              </Typography>
+            </Box>
+          ))}
       </Box>
 
       {/* Main Content */}
