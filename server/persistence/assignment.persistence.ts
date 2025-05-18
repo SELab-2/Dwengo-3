@@ -123,7 +123,6 @@ export class AssignmentPersistence {
       select: assignmentSelectDetail,
     });
 
-    assignment.groups = await this.groupPersistence.createGroups(params.groups, assignment.id);
     return assignment;
   }
 
