@@ -1,12 +1,10 @@
 import { groupSelectDetail, groupSelectShort } from '../selectInput/select';
-import { AssignmentShort, Uuid } from './assignment.types';
 import { z } from 'zod';
 import { Prisma } from '.prisma/client';
 
 export type GroupShort = Prisma.GroupGetPayload<{
   select: typeof groupSelectShort;
 }>;
-
 
 export const UpdateIndexSchema = z.object({
   groupId: z.string().uuid(),

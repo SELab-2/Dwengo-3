@@ -21,9 +21,11 @@ import { AssignmentSubmissionPersistence } from './assignmentSubmission.persiste
 
 export class AssignmentPersistence {
   private submissionPersistence: AssignmentSubmissionPersistence;
+  private groupPersistence: GroupPersistence;
 
   public constructor() {
     this.submissionPersistence = new AssignmentSubmissionPersistence();
+    this.groupPersistence = new GroupPersistence();
   }
 
   public async getAssignments(
@@ -121,7 +123,7 @@ export class AssignmentPersistence {
       select: assignmentSelectDetail,
     });
 
-    //create groups for the assignment
+    assignment.groups = await this.groupPersistence.createGroups(params.groups, assignment.id);
     return assignment;
   }
 
