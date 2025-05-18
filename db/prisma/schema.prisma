@@ -81,7 +81,7 @@ model LearningPathNode {
 model LearningNodeTransition {
   id                 String           @id @default(uuid())
   learningPathNodeId String
-  condition          String? // Condition is null => default transition; condition must have following form: "answer == 0" or "true==true"
+  condition          String?
   toNodeIndex        Int
   learningPathNode   LearningPathNode @relation(fields: [learningPathNodeId], references: [id])
 }
@@ -176,6 +176,7 @@ model Group {
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
   progress              Int[]                  @default([]) // indeces of completed nodes
+  currentNodeIndex      Int                    @default(0)
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }
@@ -206,7 +207,7 @@ model AssignmentSubmission {
   favoriteId     String?
   nodeId         String
   submissionType SubmissionType
-  submission     Json
+  submission     Json?
   node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   group          Group?           @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   favorite       Favorite?        @relation(fields: [favoriteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -219,6 +220,7 @@ model Favorite {
   userId                String
   learningPathId        String
   progress              Int[]                  @default([]) // indeces of completed nodes
+  currentNodeIndex      Int                    @default(0)
   learningPath          LearningPath           @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user                  User                   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignmentSubmissions AssignmentSubmission[]

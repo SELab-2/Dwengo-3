@@ -148,6 +148,7 @@ CREATE TABLE "Group" (
     "name" TEXT NOT NULL,
     "assignmentId" TEXT NOT NULL,
     "progress" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+    "currentNodeIndex" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Group_pkey" PRIMARY KEY ("id")
 );
@@ -172,7 +173,7 @@ CREATE TABLE "AssignmentSubmission" (
     "favoriteId" TEXT,
     "nodeId" TEXT NOT NULL,
     "submissionType" "SubmissionType" NOT NULL,
-    "submission" JSONB NOT NULL,
+    "submission" JSONB,
 
     CONSTRAINT "AssignmentSubmission_pkey" PRIMARY KEY ("id")
 );
@@ -183,6 +184,7 @@ CREATE TABLE "Favorite" (
     "userId" TEXT NOT NULL,
     "learningPathId" TEXT NOT NULL,
     "progress" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+    "currentNodeIndex" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Favorite_pkey" PRIMARY KEY ("id")
 );

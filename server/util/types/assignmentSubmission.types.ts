@@ -16,7 +16,7 @@ export const SubmissionFilterSchema = z
   .object({
     groupId: z.string().uuid().optional(),
     nodeId: z.string().optional(),
-    favoriteId: z.string().uuid().optional(),
+    favoriteId: z.string().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: 'At least one filter must be provided.',
