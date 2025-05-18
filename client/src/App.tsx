@@ -30,6 +30,7 @@ import DiscussionCreatePage from './views/DiscussionCreatePage.tsx';
 import ClassDiscussionsPage from './views/ClassDiscussionsPage.tsx';
 import ProtectContent from './components/ProtectContent.tsx';
 import { NotificationProvider } from './contexts/NotificationContext.tsx';
+import AnnouncementCreatePage from './views/AnnouncemntCreatePage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -96,6 +97,10 @@ function App() {
                         <Route
                           path={AppRoutes.classAnnouncements(':classId')}
                           element={<ClassAnnouncementsPage />}
+                        />
+                        <Route
+                          path={AppRoutes.classAnnouncementCreate(':classId')}
+                          element={<AnnouncementCreatePage />}
                         />
                         <Route
                           path={AppRoutes.announcement(':announcementId')}

@@ -3,6 +3,7 @@ import { GroupShort } from './group.interfaces';
 
 export interface StudentShort {
   id: string;
+  userId: string;
   user: {
     name: string;
     surname: string;
