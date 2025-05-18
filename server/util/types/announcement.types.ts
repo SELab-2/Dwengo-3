@@ -47,16 +47,16 @@ export const AnnouncementCreatePersistenceSchema = z.object({
 });
 
 export const AnnouncementCreateDomainSchema = z.object({
-  title: z.string().min(1, 'Title must be a non-empty string').trim(),
-  content: z.string().min(1, 'Content must be a non-empty string').trim(),
+  title: z.string().min(1, 'Title must be a non-empty string').trim().max(255),
+  content: z.string().min(1, 'Content must be a non-empty string').trim().max(750),
   classId: z.string(),
 });
 
 export const TeacherIdSchema = z.string();
 
 export const AnnouncementUpdateSchema = z.object({
-  title: z.string().min(1, 'Title must be a non-empty string').trim().optional(),
-  content: z.string().min(1, 'Content must be a non-empty string').trim().optional(),
+  title: z.string().min(1, 'Title must be a non-empty string').trim().max(255).optional(),
+  content: z.string().min(1, 'Content must be a non-empty string').trim().max(750).optional(),
 });
 
 export type AnnouncementByFilterQueryParams = z.infer<typeof AnnouncementFilterQuerySchema>;

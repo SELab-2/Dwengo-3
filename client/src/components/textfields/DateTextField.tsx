@@ -47,7 +47,7 @@ function DateTextField({
         timezone="system"
         label={t('deadline')}
         sx={{ mt: 2, width: '100%' }}
-        minDate={dayjs()}
+        minDateTime={dayjs()}
         timeSteps={{ minutes: 1 }}
         value={date ? dayjs(date) : null}
         onChange={(newValue) => {

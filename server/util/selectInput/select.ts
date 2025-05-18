@@ -37,6 +37,7 @@ export const classSelectShort = {
 export const groupSelectShort = {
   id: true,
   progress: true,
+  currentNodeIndex: true,
   assignmentId: true,
   name: true,
   students: {
@@ -196,6 +197,7 @@ export const assignmentSelectShort = {
 export const classSelectDetail = {
   id: true,
   name: true,
+  description: true,
   teachers: {
     select: teacherSelectShort,
   },
@@ -212,6 +214,12 @@ export const assignmentSelectShort2 = {
   name: true,
   groups: {
     select: groupSelectShort,
+  },
+  class: {
+    select: {
+      id: true,
+      name: true,
+    },
   },
   deadline: true,
   learningPath: {
@@ -297,6 +305,7 @@ export const groupSelectDetail = {
   id: true,
   name: true,
   progress: true,
+  currentNodeIndex: true,
   assignment: {
     select: assignmentSelectShort,
   },

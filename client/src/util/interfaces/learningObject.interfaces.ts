@@ -1,7 +1,7 @@
 import { SubmissionType } from './assignmentSubmission.interfaces';
 import { keyword } from './keyword.interfaces';
 
-enum contentType {
+export enum ContentType {
   'TEXT_PLAIN',
   'TEXT_MARKDOWN',
   'IMAGE_IMAGE_BLOCK',
@@ -34,7 +34,7 @@ export interface LearningObjectDetail {
   language: string;
   title: string;
   description: string;
-  contentType: contentType;
+  contentType: ContentType;
   contentLocation: string;
   targetAges: number[];
   teacherExclusive: boolean;
@@ -47,7 +47,6 @@ export interface LearningObjectDetail {
   returnValue: JSON;
   available: boolean;
   createdAt: Date;
-  updatedAt: Date;
   content: string;
   submissionType: SubmissionType;
   multipleChoice: MultipleChoice;
@@ -61,7 +60,7 @@ export interface LearningObjectCreate {
   language: string;
   title: string;
   description?: string;
-  contentType?: contentType;
+  contentType?: ContentType;
   targetAges?: number[];
   teacherExclusive?: boolean;
   skosConcepts?: string[];
@@ -81,7 +80,7 @@ export interface LearningObjectUpdate {
   version?: number;
   title?: string;
   description?: string;
-  contentType?: contentType;
+  contentType?: ContentType;
   targetAges?: number[];
   teacherExclusive?: boolean;
   skosConcepts?: string[];

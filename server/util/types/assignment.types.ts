@@ -21,13 +21,18 @@ export const AssignmentFilterSchema = z
 export const IdSchema = z.string().uuid();
 
 export const AssignmentCreateSchema = z.object({
-  name: z.string().min(1).max(100),
+  name: z.string().min(1).max(255),
   description: z.string().min(0).max(500),
   groups: z.string().uuid().array().nonempty().array().nonempty(),
   classId: z.string().uuid(),
   teacherId: z.string().uuid().optional(),
   learningPathId: z.string(),
-  deadline: z.string().datetime({ offset: true }).optional(),
+  deadline: z
+    .string()
+    .datetime({ offset: true })
+    .refine((value) => new Date(value) > new Date(), {
+      message: 'Deadline must be a future date.',
+    }),
 });
 
 export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;

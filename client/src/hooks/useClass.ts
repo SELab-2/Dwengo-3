@@ -1,5 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createClass, fetchClassById, fetchClasses, fetchPopulatedClassById } from '../api/class';
+import {
+  createClass,
+  deleteStudentFromClass,
+  deleteTeacherFromClass,
+  fetchClassById,
+  fetchClasses,
+  fetchPopulatedClassById,
+} from '../api/class';
 import { ClassDetail, ClassRoleEnum, PopulatedClass } from '../util/interfaces/class.interfaces';
 import { ApiRoutes } from '../api/api.routes';
 import apiClient from '../api/apiClient';
@@ -259,5 +266,21 @@ export function usePopulatedClassesById(
     },
     enabled: !!classIds.length,
     refetchOnWindowFocus: false,
+  });
+}
+
+export function useDeleteTeacherFromClass() {
+  return useMutation({
+    mutationFn: async ({ classId, teacherId }: { classId: string; teacherId: string }) => {
+      return await deleteTeacherFromClass(classId, teacherId);
+    },
+  });
+}
+
+export function useDeleteStudentFromClass() {
+  return useMutation({
+    mutationFn: async ({ classId, studentId }: { classId: string; studentId: string }) => {
+      return await deleteStudentFromClass(classId, studentId);
+    },
   });
 }

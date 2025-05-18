@@ -32,6 +32,7 @@ const { mockAssignmentPeristence, mockClassPeristence, mockGroupPeristence } = v
     mockGroupPeristence: {
       getGroupById: vi.fn(),
       getGroupByIdWithCustomIncludes: vi.fn(),
+      createGroups: vi.fn(),
     },
   };
 });
@@ -120,6 +121,7 @@ let createAssigmentParams = {
   groups: [[testStudents[0].id, testStudents[1].id]],
   name: 'test',
   description: 'testDescription',
+  deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
   classId: testClasses[0].id,
   teacherId: testTeachers[0].id,
   learningPathId: testLearningPaths[0].id,

@@ -34,6 +34,7 @@ export const AppRoutes = {
   learningThemes: '/learning-themes',
   learningTheme: (id: string) => `/learning-themes/${id}`,
   class: (id: string) => `/class/${id}`,
+  classEdit: (classId: string) => `/class/${classId}/edit`,
   classStudentDetails: (classId: string, studentId: string) =>
     `/class/${classId}/student/${studentId}`,
   classAdd: '/class/add',
@@ -42,6 +43,7 @@ export const AppRoutes = {
     `/class/${classId}/assignments/${assignmentId}`,
   classAssignmentCreate: (classId: string) => `/class/${classId}/assignments/create`,
   classAnnouncements: (classId: string) => `/class/${classId}/announcements`,
+  classAnnouncementCreate: (classId: string) => `/class/${classId}/announcements/create`,
   announcement: (announcementId: string) => `/announcement/${announcementId}`,
   classDiscussions: (classId: string) => `/class/${classId}/discussions`,
   groupSubmission: (classId: string, assignmentId: string, groupId: string) =>
