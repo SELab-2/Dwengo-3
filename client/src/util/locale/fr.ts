@@ -111,5 +111,7 @@ export const fr = {
     content: 'Contenu',
     createAnnouncement: 'Créer une nouvelle annonce',
     post: 'Publier',
+    joinRequestSuccess: 'La demande d’adhésion a été approuvée',
+    copied: 'Copié dans le presse-papiers',
   },
 };
