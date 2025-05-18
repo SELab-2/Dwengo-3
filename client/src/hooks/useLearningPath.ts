@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { fetchLearningPaths, fetchLearningPathById } from '../api/learningPath';
+import { PaginatedData } from '../util/interfaces/general.interfaces';
 
 /**
  * Fetches a list of learningPaths based on keywords, ages, page, and pageSize.
@@ -10,16 +11,16 @@ import { fetchLearningPaths, fetchLearningPathById } from '../api/learningPath';
  * @param pageSize - The number of items per page for pagination.
  * @returns The query object containing the learningPath data.
  */
-export function useLearningPath(
-  keywords?: string[],
-  ages?: number[],
-  page: number = 1,
-  pageSize: number = 10,
-) {
-  return useQuery({
-    queryKey: ['learningPath', keywords, ages, page, pageSize],
-    queryFn: async () => {
-      return await fetchLearningPaths(keywords, ages, page, pageSize);
+export function useLearningPath(keywords?: string[], ages?: number[], pageSize: number = 10) {
+  return useInfiniteQuery({
+    queryKey: ['learningPath', keywords, ages, pageSize],
+    queryFn: async ({ pageParam = 1 }) => {
+      return await fetchLearningPaths(keywords, ages, pageParam, pageSize);
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return nextPage <= lastPage.totalPages ? nextPage : undefined;
     },
     enabled: !!keywords,
     refetchOnWindowFocus: false,

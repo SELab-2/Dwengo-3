@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import {
+  Autocomplete,
   Box,
   Button,
   Divider,
@@ -45,8 +46,17 @@ function AssignmentCreatePage() {
     navigate(AppRoutes.classAssignments(classId!));
   }
 
-  const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath([]);
-  const learningPaths = paginatedData?.data ?? [];
+  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+
+  const {
+    data: paginatedData,
+    isLoading: isLoadingLearningPaths,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useLearningPath(selectedKeywords);
+
+  const learningPaths = paginatedData?.pages.flatMap((page) => page.data) ?? [];
 
   const keywords = Array.from(
     new Set(
@@ -60,8 +70,6 @@ function AssignmentCreatePage() {
 
   const { data: classData, isLoading: isLoadingClass } = useClassById(classId!);
   const studentsData = classData?.students ?? [];
-
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [groupSize, setGroupSize] = useState(1);
   const [filteredLearningPaths, setFilteredLearningPaths] =
     useState<LearningPathShort[]>(learningPaths);
@@ -70,6 +78,8 @@ function AssignmentCreatePage() {
   const [deadline, setDeadline] = useState<Date | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [inputValueKeywords, setInputValueKeywords] = useState('');
+  const [inputValuePaths, setInputValuePaths] = useState('');
 
   useEffect(() => {
     if (studentsData.length > 0) {
@@ -209,18 +219,74 @@ function AssignmentCreatePage() {
 
           {/* Keywords & Learning Paths */}
           <Grid size={{ xs: 12, md: 4, sm: 6 }}>
-            <MultipleSelectChip
-              label={t('keywords')}
+            <Autocomplete
+              multiple
               options={keywords}
-              state={[selectedKeywords, setSelectedKeywords]}
+              value={selectedKeywords}
+              onChange={(_, newValue) => {
+                setSelectedKeywords(newValue);
+              }}
+              inputValue={inputValueKeywords}
+              onInputChange={(_, newInputValue) => {
+                setInputValueKeywords(newInputValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('keywords')}
+                  placeholder={t('keywords')}
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+              ListboxProps={{
+                onScroll: (event) => {
+                  const listboxNode = event.currentTarget;
+                  if (
+                    listboxNode.scrollTop + listboxNode.clientHeight >=
+                      listboxNode.scrollHeight - 10 &&
+                    hasNextPage &&
+                    !isFetchingNextPage
+                  ) {
+                    fetchNextPage();
+                  }
+                },
+              }}
             />
-            <BasicSelect<LearningPathShort>
-              required
-              labelName={t('learningPath')}
-              options={filteredLearningPaths}
-              state={[selectedLearningPath, setSelectedLearningPath]}
-              getOptionLabel={(option) => option.title}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
+            <Autocomplete
+              value={selectedLearningPath}
+              onChange={(_, newValue: LearningPathShort | null) => {
+                setSelectedLearningPath(newValue);
+              }}
+              inputValue={inputValuePaths}
+              onInputChange={(_, newInputValue) => {
+                setInputValuePaths(newInputValue);
+              }}
+              options={learningPaths}
+              getOptionLabel={(path) => path.title}
+              isOptionEqualToValue={(option, value) => option.id == value.id}
+              renderInput={(params) => (
+                <TextField
+                  required
+                  {...params}
+                  label={t('learningPath')}
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+              ListboxProps={{
+                onScroll: (event) => {
+                  const listboxNode = event.currentTarget;
+                  if (
+                    listboxNode.scrollTop + listboxNode.clientHeight >=
+                      listboxNode.scrollHeight - 10 &&
+                    hasNextPage &&
+                    !isFetchingNextPage
+                  ) {
+                    fetchNextPage();
+                  }
+                },
+              }}
             />
           </Grid>
 
