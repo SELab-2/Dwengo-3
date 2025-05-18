@@ -61,7 +61,9 @@ describe('Test learningObjectApi', () => {
 
     const response = await fetchLearningObjectById(id);
 
-    expect(apiClient.get).toHaveBeenCalledWith(ApiRoutes.learningObject.get(id));
+    expect(apiClient.get).toHaveBeenCalledWith(ApiRoutes.learningObject.get(id), {
+      signal: undefined,
+    });
     expect(response).toEqual(expected.data);
   });
 
