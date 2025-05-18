@@ -25,7 +25,7 @@ export function useFavorite(
   return useQuery({
     queryKey: ['favorite', learningPathId, userID, page, pageSize],
     queryFn: async () => {
-      return await fetchFavorites(learningPathId, userID, page, pageSize);
+      return await fetchFavorites(userID, page, pageSize, learningPathId);
     },
     refetchOnWindowFocus: false,
   });

@@ -15,18 +15,12 @@ import apiClient from './apiClient';
  * @param userId - The userId of the user of which the favorites need to be fetched
  * @returns Paginated data containing the list of favorites.
  */
-export async function fetchFavorites(
-  learningPathId?: string,
-  userId?: string,
-  page?: number,
-  pageSize?: number,
-) {
+export async function fetchFavorites(userId?: string, page?: number, pageSize?: number) {
   const response = await apiClient.get(ApiRoutes.favorites.list, {
     params: {
       page,
       pageSize,
       userId,
-      learningPathId,
     },
   });
 
