@@ -28,11 +28,16 @@ function LoginForm() {
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!role) {
+      setError(t('selectRole'));
+      return;
+    }
+
     loginMutation.mutate(
       {
         email: email,
         password: password,
-        role: role!, //TODO: Change this to the correct role
+        role: role,
       },
       {
         onSuccess: (response: UserDetail) => {

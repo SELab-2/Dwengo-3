@@ -14,6 +14,7 @@ export const en = {
     login: 'Login',
     loginWithGoogle: 'Login with Google',
     registerWithGoogle: 'Register with Google',
+    selectRole: 'Please select a role',
     logout: 'Logout',
     notLoggedIn: 'You are not logged in.',
     register: 'Register',

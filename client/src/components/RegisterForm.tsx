@@ -31,6 +31,11 @@ function RegisterForm() {
   const handleRegisterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!role) {
+      setError(t('selectRole'));
+      return;
+    }
+
     registerMutation.mutate(
       {
         username: name.toLowerCase() + '_' + surname.toLowerCase(),
