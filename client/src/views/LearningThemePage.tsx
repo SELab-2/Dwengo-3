@@ -7,8 +7,10 @@ import theme from '../util/theme';
 import { AppRoutes } from '../util/app.routes';
 import { useLearningPath } from '../hooks/useLearningPath';
 import { useLearningThemeById } from '../hooks/useLearningTheme';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
+import { useAuth } from '../hooks/useAuth';
+import { useEnsureFavorite } from '../hooks/useFavorite';
 
 const getImageSrc = (image: string): string => {
   if (!image) return '';
@@ -25,9 +27,11 @@ function LearningPathsOverviewPage() {
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const [paths, setPaths] = useState<LearningPathShort[]>([]);
-
+  const { user } = useAuth();
   const { data: learningTheme } = useLearningThemeById(id);
   const { data, isLoading } = useLearningPath(learningTheme?.keywords, undefined, page, 10);
+  const { mutateAsync: ensureFavoriteMutate } = useEnsureFavorite();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setPaths([]);
@@ -95,7 +99,23 @@ function LearningPathsOverviewPage() {
               width: '100%',
             }}
           >
-            <Link to={AppRoutes.learningPath(id)} replace style={{ textDecoration: 'none' }}>
+            <Box
+              sx={{ cursor: 'pointer' }}
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                try {
+                  const favorite = await ensureFavoriteMutate({
+                    learningPathId: id,
+                    userID: user?.id,
+                  });
+                  navigate(AppRoutes.learningPath(id, undefined, favorite?.id));
+                } catch (err) {
+                  console.error('Failed to ensure favorite:', err);
+                }
+              }}
+            >
               <Box sx={{ width: '100%', display: 'block' }}>
                 <img
                   src={getImageSrc(image)}
@@ -107,7 +127,7 @@ function LearningPathsOverviewPage() {
                   }}
                 />
               </Box>
-            </Link>
+            </Box>
 
             <Box
               sx={{
