@@ -4,7 +4,7 @@
       "id": "efec37ed-3b0f-4059-ac14-2a4d3723e1a9",
       "provider": "LOCAL",
       "username": "user1",
-      "email": "user1@example.com",
+      "email": "create1@example.com",
       "password": "password1",
       "surname": "Smith",
       "name": "John",
@@ -14,7 +14,7 @@
       "id": "f3113be5-2ecb-43bc-91c8-52251f3db83e",
       "provider": "LOCAL",
       "username": "user1",
-      "email": "user1@example.com",
+      "email": "create2@example.com",
       "password": "password1",
       "surname": "Smith",
       "name": "John",
@@ -667,35 +667,37 @@
           "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
         }
       },
-      "assignmentSubmissions": []
+      "assignmentSubmissions": [
+        {
+          "id": "15a341e3-1424-4984-a2bf-ddf27c1bf787",
+          "favoriteId": "e4953103-cfb8-4317-971f-ed47eb09e120",
+          "nodeId": "661a7044-68e3-46b2-9968-b23d95499c46",
+          "submissionType": "FILE",
+          "submission": {
+            "fileName": "filename",
+            "filePath": "filepath"
+          }
+        }
+      ]
+    }
+  ],
+  "testAssignmentSubmissions": [
+    {
+      "id": "ad4a9d9a-0493-4b6f-8204-71ad808f7b1e",
+      "groupId": "11e237ff-aa67-4859-ab1d-3d12731899b6",
+      "nodeId": "661a7044-68e3-46b2-9968-b23d95499c46",
+      "submissionType": "MULTIPLE_CHOICE",
+      "submission": "option"
     },
     {
-      "id": "80f58bb7-09d2-465e-a1d9-e99c47fcd5ab",
-      "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17",
-      "learningPathId": "91aa27dc-2c50-5e6e-b789-769de70cf653",
-      "progress": [5, 6, 7],
-      "learningPath": {
-        "id": "91aa27dc-2c50-5e6e-b789-769de70cf653",
-        "hruid": "lp1",
-        "language": "en",
-        "title": "title1",
-        "description": "This is another description"
-      },
-      "user": {
-        "id": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17",
-        "provider": "LOCAL",
-        "username": "user7",
-        "email": "user7@example.com",
-        "password": "password7",
-        "surname": "Martinez",
-        "name": "James",
-        "role": "STUDENT",
-        "student": {
-          "id": "4c07803c-2222-3333-4444-555566667777",
-          "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
-        }
-      },
-      "assignmentSubmissions": []
+      "id": "15a341e3-1424-4984-a2bf-ddf27c1bf787",
+      "favoriteId": "e4953103-cfb8-4317-971f-ed47eb09e120",
+      "nodeId": "661a7044-68e3-46b2-9968-b23d95499c46",
+      "submissionType": "FILE",
+      "submission": {
+        "fileName": "filename",
+        "filePath": "filepath"
+      }
     }
   ]
 }
