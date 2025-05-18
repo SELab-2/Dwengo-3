@@ -213,6 +213,12 @@ export const assignmentSelectShort2 = {
   groups: {
     select: groupSelectShort,
   },
+  class: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
   deadline: true,
   learningPath: {
     select: {
