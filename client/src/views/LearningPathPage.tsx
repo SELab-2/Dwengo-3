@@ -566,7 +566,7 @@ function LearningPathPage() {
                 &lt; {t('previous')}
               </Button>
               <Button
-                disabled={activeIndex === -1}
+                disabled={activeIndex === -1 || activeIndex > furthestIndex}
                 onClick={async () => {
                   await toNextNode();
                 }}
