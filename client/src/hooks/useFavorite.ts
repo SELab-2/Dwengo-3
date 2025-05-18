@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createFavorite,
   deleteFavorite,
@@ -6,6 +6,9 @@ import {
   fetchFavorites,
 } from '../api/favorites';
 import { FavoriteCreate } from '../util/interfaces/favorite.interfaces';
+import { UpdateIndexParams } from '../util/interfaces/group.interfaces.ts';
+import apiClient from '../api/apiClient.ts';
+import { ApiRoutes } from '../api/api.routes.ts';
 
 /**
  * Fetches a list of favorites based on userID, page, and pageSize.
@@ -73,5 +76,14 @@ export function useDeleteFavorite(id?: string) {
     },
     enabled: !!id,
     refetchOnWindowFocus: false,
+  });
+}
+
+export function useUpdateCurrentNodeIndexForFavorite() {
+  return useMutation({
+    mutationFn: async (data: UpdateIndexParams) => {
+      const response = await apiClient.patch(ApiRoutes.favorites.updateIndex, data);
+      return response.data;
+    },
   });
 }

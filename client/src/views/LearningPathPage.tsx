@@ -35,7 +35,7 @@ import { fetchLearningPathNodeById } from '../api/learningPathNode.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { GroupDetail } from '../util/interfaces/group.interfaces.ts';
 import { FavoriteDetail } from '../util/interfaces/favorite.interfaces.ts';
-import { useFavoriteById } from '../hooks/useFavorite.ts';
+import { useFavoriteById, useUpdateCurrentNodeIndexForFavorite } from '../hooks/useFavorite.ts';
 
 const mathJaxConfig = {
   loader: { load: ['[tex]/ams'] },
@@ -88,7 +88,9 @@ function LearningPathPage() {
   }, [learningPath, data]);
 
   const [progressEvent, setProgressEvent] = useState<AxiosProgressEvent | undefined>(undefined);
-  const updateIndexMutation = useUpdateCurrentIndexForGroup();
+  const updateIndexMutation = groupId
+    ? useUpdateCurrentIndexForGroup()
+    : useUpdateCurrentNodeIndexForFavorite();
   const submissionCreate = useCreateAssignmentSubmission(setProgressEvent);
   const submissionUpdate = useUpdateAssignmentSubmission(setProgressEvent);
   const { setError } = useError();
@@ -158,8 +160,6 @@ function LearningPathPage() {
     return () => abort.abort();
   }, [learningPath, activeIndex]);
 
-  console.debug(currentAnswer);
-
   const multipleChoice = () => {
     if (!currentObject || currentObject.submissionType !== SubmissionType.MULTIPLE_CHOICE) {
       return undefined;
@@ -189,7 +189,7 @@ function LearningPathPage() {
     setFurthestIndex(newIndex);
 
     updateIndexMutation.mutate({
-      groupId: groupId!!, // todo: support favorites
+      id: groupId ? groupId : favoriteId!!,
       index: newIndex === totalSteps ? -1 : newIndex,
     });
 
@@ -217,7 +217,8 @@ function LearningPathPage() {
         {
           submissionType: SubmissionType.READ,
           nodeId: currentNode!!.id,
-          groupId: groupId!!,
+          groupId: groupId ?? undefined,
+          favoriteId: favoriteId ?? undefined,
         },
         {
           onError: (error: any) => {
@@ -248,7 +249,8 @@ function LearningPathPage() {
         {
           submissionType: SubmissionType.MULTIPLE_CHOICE,
           nodeId: currentNode!!.id,
-          groupId: groupId!!,
+          groupId: groupId ?? undefined,
+          favoriteId: favoriteId ?? undefined,
           submission: currentAnswer ? currentAnswer : undefined,
         },
         {

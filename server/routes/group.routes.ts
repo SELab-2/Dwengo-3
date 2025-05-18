@@ -13,5 +13,5 @@ router.get('/:id', isAuthenticated, async (req, res) => {
 
 router.patch('/node', isAuthenticated, async (req, res) => {
   const data: UpdateIndexParams = UpdateIndexSchema.parse(req.body);
-  res.json(await groupDomain.updateCurrentNode(data.groupId, data.index));
+  res.json(await groupDomain.updateCurrentNode(data.id, data.index));
 });

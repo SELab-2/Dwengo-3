@@ -3,6 +3,7 @@ import { UserDomain } from '../domain/user.domain';
 import { FavoritesDomain } from '../domain/favorites.domain';
 import { FavoriteFilterParams } from '../util/types/favorites.types';
 import { isAuthenticated } from './auth.routes';
+import { UpdateIndexSchema } from '../util/types/group.types';
 
 export class FavoritesController {
   public router: Router;
@@ -48,6 +49,11 @@ export class FavoritesController {
         await this.userDomain.getUserFromReq(req),
       ),
     );
+  };
+
+  private node = async (req: Request, res: Response) => {
+    const params = UpdateIndexSchema.parse(req.body);
+    res.json(await this.favoritesDomain.updateIndex(params));
   };
 
   private initializeRoutes() {
@@ -178,5 +184,7 @@ export class FavoritesController {
      *         description: Favorite not found.
      */
     this.router.delete('/:id', isAuthenticated, this.deleteFavorite);
+
+    this.router.patch('/node', isAuthenticated, this.node);
   }
 }
