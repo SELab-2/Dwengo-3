@@ -16,16 +16,11 @@ import { FavoriteCreate } from '../util/interfaces/favorite.interfaces';
  * @param pageSize - The number of items per page for pagination.
  * @returns The query object containing the favorites data.
  */
-export function useFavorite(
-  learningPathId?: string,
-  userID?: string,
-  page: number = 1,
-  pageSize: number = 10,
-) {
+export function useFavorite(userID?: string, page: number = 1, pageSize: number = 10) {
   return useQuery({
-    queryKey: ['favorite', learningPathId, userID, page, pageSize],
+    queryKey: ['favorite', userID, page, pageSize],
     queryFn: async () => {
-      return await fetchFavorites(userID, page, pageSize, learningPathId);
+      return await fetchFavorites(userID, page, pageSize);
     },
     refetchOnWindowFocus: false,
   });
