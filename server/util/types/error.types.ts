@@ -210,6 +210,10 @@ export class BadRequestError extends APIError {
       case 40051:
         return 'A group can only have one discussion...';
       case 40052:
+        return 'New node index is lower than the current furthest visited node...';
+      case 40053:
+        return 'Could not find the group with given id...';
+      case 40054:
         return 'You cannot remove yourself from your own class...';
       default:
         return 'Bad request...';

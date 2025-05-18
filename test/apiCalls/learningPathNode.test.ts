@@ -36,7 +36,9 @@ describe('Test learningPathNodeApi', () => {
 
     const response = await fetchLearningPathNodeById(id);
 
-    expect(apiClient.get).toHaveBeenCalledWith(ApiRoutes.learningPathNode.get(id));
+    expect(apiClient.get).toHaveBeenCalledWith(ApiRoutes.learningPathNode.get(id), {
+      signal: undefined,
+    });
     expect(response).toEqual(expected.data);
   });
 });
