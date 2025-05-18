@@ -1,7 +1,7 @@
 import { Box, Typography, Card, CardContent, Avatar, Button } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import { MarginSize } from '../util/size';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import theme from '../util/theme';
 import { AppRoutes } from '../util/app.routes';
 import { useLearningPath } from '../hooks/useLearningPath';
@@ -9,12 +9,17 @@ import { useState, useEffect } from 'react';
 import Masonry from '@mui/lab/Masonry';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
 import { useLearningThemeById } from '../hooks/useLearningTheme';
+import { useAuth } from '../hooks/useAuth';
+import { useEnsureFavorite } from '../hooks/useFavorite';
 
 function LearningPathsOverviewPage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [page, setPage] = useState(1); // Track current page
   const [learningPaths, setLearningPaths] = useState<LearningPathShort[]>([]); // Store all loaded paths
+  const { mutateAsync: ensureFavoriteMutation } = useEnsureFavorite();
   const { data: learningTheme } = useLearningThemeById(id);
+  const navigate = useNavigate();
   const { data, isLoading, isError, error } = useLearningPath(
     learningTheme?.keywords,
     undefined,
@@ -97,17 +102,29 @@ function LearningPathsOverviewPage() {
               flexDirection: 'column',
             }}
           >
-            <Link
-              to={AppRoutes.learningPath(id)}
+            <Box
+              sx={{ cursor: 'pointer' }}
               style={{ textDecoration: 'none' }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={async (e) => {
+                e.stopPropagation();
+
+                try {
+                  const favorite = await ensureFavoriteMutation({
+                    learningPathId: id,
+                    userID: user?.id,
+                  });
+                  navigate(AppRoutes.learningPath(id, undefined, favorite?.id));
+                } catch (err) {
+                  console.error('Failed to ensure favorite:', err);
+                }
+              }}
             >
               <Avatar
                 src={image}
                 variant="square"
                 sx={{ width: '100%', height: 150, objectFit: 'cover' }}
               />
-            </Link>
+            </Box>
 
             <Link
               to={AppRoutes.learningPath(id)}

@@ -15,7 +15,7 @@ const MultipleChoiceSubSchema = z.string();
 export const SubmissionFilterSchema = z
   .object({
     groupId: z.string().uuid().optional(),
-    nodeId: z.string().uuid().optional(),
+    nodeId: z.string().optional(),
     favoriteId: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
@@ -27,7 +27,7 @@ export const SubmissionCreateSchema = z
   .object({
     groupId: z.string().uuid().optional(),
     favoriteId: z.string().uuid().optional(),
-    nodeId: z.string().uuid(),
+    nodeId: z.string(),
     submissionType: z.nativeEnum(SubmissionType),
     submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()]),
   })
