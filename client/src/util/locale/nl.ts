@@ -11,6 +11,7 @@ export const nl = {
     school: 'School',
     login: 'Inloggen',
     loginWithGoogle: 'Inloggen met Google',
+    registerWithGoogle: 'Registreren met Google',
     logout: 'Afmelden',
     notLoggedIn: 'Je bent niet ingelogd.',
     register: 'Registreren',

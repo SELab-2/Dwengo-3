@@ -13,6 +13,7 @@ export const en = {
     school: 'School',
     login: 'Login',
     loginWithGoogle: 'Login with Google',
+    registerWithGoogle: 'Register with Google',
     logout: 'Logout',
     notLoggedIn: 'You are not logged in.',
     register: 'Register',

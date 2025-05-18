@@ -8,10 +8,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useRegister } from '../hooks/useAuth';
 import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
-import { IsStudentSwitch } from './IsStudentSwitch';
+import { ChooseRole } from './ChooseRole';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
 import { AppRoutes } from '../util/app.routes';
+import GoogleButton from './GoogleButton';
 
 function RegisterForm() {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ function RegisterForm() {
   const [surname, setSurname] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isStudent, setIsStudent] = useState<boolean>(false);
+  const [role, setRole] = useState<ClassRoleEnum | null>(null);
 
   const handleRegisterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,7 +38,7 @@ function RegisterForm() {
         surname: surname,
         email: email,
         password: password,
-        role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER,
+        role: role!,
       },
       {
         onSuccess: (response) => {
@@ -54,19 +55,30 @@ function RegisterForm() {
 
   return (
     <Box component="form" onSubmit={handleRegisterSubmit} sx={{ mt: MarginSize.tiny }}>
+      <Divider />
+      <ChooseRole role={role} setRole={setRole} />
+      <Divider />
       <SurnameTextField surname={name} setSurname={setName} />
       <NameTextField name={surname} setName={setSurname} />
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
-      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: MarginSize.tiny, mb: 2 }}>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: MarginSize.tiny, mb: 2 }}
+        disabled={role === null}
+      >
         {t('register')}
       </Button>
-      <Divider sx={{ mb: MarginSize.tiny }} />
-      <Typography variant="body2" color="textSecondary" align="center">
+      <GoogleButton role={role} label={t('registerWithGoogle')} />
+      <Divider sx={{ mb: MarginSize.tiny, mt: MarginSize.xsmall }} />
+      <Typography variant="body2" color="textSecondary" align="center" sx={{ mb: MarginSize.tiny }}>
         {t('alreadyHaveAccount')}{' '}
       </Typography>
-      <a href="/login">{t('login')}</a>
+      <Button fullWidth variant="outlined" color="primary" href={AppRoutes.login}>
+        {t('login')}
+      </Button>
     </Box>
   );
 }
