@@ -40,6 +40,11 @@ function AssignmentCreatePage() {
   const { setError } = useError();
 
   const teacherId = user?.teacher?.id;
+
+  if (!teacherId) {
+    navigate(AppRoutes.classAssignments(classId!));
+  }
+
   const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath([]);
   const learningPaths = paginatedData?.data ?? [];
 
@@ -61,10 +66,16 @@ function AssignmentCreatePage() {
   const [filteredLearningPaths, setFilteredLearningPaths] =
     useState<LearningPathShort[]>(learningPaths);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
-  const [groups, setGroups] = useState<StudentShort[][]>(studentsData.map((student) => [student]));
+  const [groups, setGroups] = useState<StudentShort[][]>([]);
   const [deadline, setDeadline] = useState<Date | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    if (studentsData.length > 0) {
+      setGroups(studentsData.map((student) => [student]));
+    }
+  }, [studentsData]);
 
   useEffect(() => {
     const updatedPaths = learningPaths.filter(
@@ -160,7 +171,7 @@ function AssignmentCreatePage() {
         <ClassNavigationBar id={classData!.id} className={classData!.name} />
       )}
       <Box sx={{ width: '100%', maxWidth: { xs: '95%', sm: '90%' }, mx: 'auto', mt: 4, p: 2 }}>
-        <BackButton link={`/class/${classData?.id}/assignments`} />
+        <BackButton link={AppRoutes.classAssignments(classId!)} />
 
         <Typography variant="h4" gutterBottom>
           {t('createAssignment')}
@@ -177,6 +188,7 @@ function AssignmentCreatePage() {
               fullWidth
               value={name}
               onChange={(e) => setName(e.target.value)}
+              slotProps={{ htmlInput: { maxLength: 255 } }}
               helperText={`${name.length}/255`}
             />
             <TextField
