@@ -228,7 +228,7 @@ function ClassDashboardPage() {
                     </Typography>
                   </TableCell>
                   {teacher && (
-                    <Box>
+                    <>
                       <TableCell>
                         <Typography variant="h6">
                           <strong>{t('progress')}: </strong>
@@ -238,7 +238,7 @@ function ClassDashboardPage() {
                         </Typography>
                       </TableCell>
                       <TableCell />
-                    </Box>
+                    </>
                   )}
                 </TableRow>
               </TableHead>
@@ -267,12 +267,12 @@ function ClassDashboardPage() {
                         </Typography>
                       </TableCell>
                       {teacher && (
-                        <Box>
+                        <>
                           <TableCell sx={{ minWidth: 200 }}>
                             <LinearProgress
                               variant="determinate"
                               value={progress}
-                              sx={{ height: 8, borderRadius: 5 }}
+                              sx={{ height: 8, borderRadius: 5, width: '100%' }}
                             />
                           </TableCell>
                           <TableCell>
@@ -285,7 +285,7 @@ function ClassDashboardPage() {
                               {t('details')}
                             </Button>
                           </TableCell>
-                        </Box>
+                        </>
                       )}
                     </TableRow>
                   );
