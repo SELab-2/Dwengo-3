@@ -109,6 +109,9 @@ export async function addMockData(prisma: PrismaClient) {
           ).sort((a, b) => a - b),
         })),
       },
+      deadline: faker.date.future(),
+      name: `Assignment about ${faker.food.dish()}`,
+      description: faker.lorem.paragraph(),
     },
   });
 

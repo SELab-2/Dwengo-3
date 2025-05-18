@@ -68,7 +68,7 @@ export class AssignmentPersistence {
                   },
                 },
               },
-              OR: [{ deadline: null }, { deadline: { gt: new Date() } }],
+              deadline: { gt: new Date() },
             }
           : {},
       ],
