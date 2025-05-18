@@ -27,10 +27,10 @@ const multipleChoiceSchema = z
   .object({
     question: z.string().min(1, 'Question is required'),
     options: z.string().array().nonempty(),
-    solution: z.number().positive(),
+    solution: z.string(),
   })
-  .refine((data) => data.solution >= data.options.length, {
-    message: 'The solution index need to be between 0 and options.length',
+  .refine((data) => data.question.includes(data.solution), {
+    message: 'The solution has to be in the options',
     path: [],
   });
 

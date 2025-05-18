@@ -11,7 +11,7 @@ const FileSubmissionSchema = z.object({
 });
 
 const MultipleChoiceSubSchema = z.object({
-  answer: z.number(),
+  answer: z.string(),
 });
 
 export const SubmissionFilterSchema = z

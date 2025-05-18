@@ -15,7 +15,7 @@ export enum ContentType {
 export interface MultipleChoice {
   question: string;
   options: string[];
-  solution: number;
+  solution: string;
 }
 
 export interface LearningObjectShort {

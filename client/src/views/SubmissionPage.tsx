@@ -73,8 +73,8 @@ function SubmissionPage() {
   }
 
   const group: GroupShort = assignment!.groups.find((g) => g.id === groupId)!;
+  console.debug(group.progress);
   const progress: number = calculateProgress(group.progress, assignment!.learningPath);
-  const maxProgress = Math.max(...group.progress);
 
   const handleClick = (key: string) => {
     setOpenItems((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -143,7 +143,7 @@ function SubmissionPage() {
                   (sub) => sub.node.learningObject.id === object.id,
                 );
                 const made =
-                  index <= maxProgress &&
+                  group.progress.includes(index) &&
                   (object.submissionType === SubmissionType.READ || submission !== undefined);
                 return object.submissionType === SubmissionType.READ ? (
                   <ListItem
@@ -194,14 +194,14 @@ function SubmissionPage() {
                                 sx={{
                                   bgcolor:
                                     submission &&
-                                    multipleChoiceSubmission(submission).answer === index
-                                      ? theme.palette.primary.light
+                                    multipleChoiceSubmission(submission).answer === option
+                                      ? theme.palette.action.disabled
                                       : 'transparent',
                                 }}
                               >
                                 <ListItemText primary={`${index + 1}: ${option}`} />
                                 <ListItemIcon>
-                                  {index == object.multipleChoice.solution ? (
+                                  {option === object.multipleChoice.solution ? (
                                     <DoneIcon color="primary" />
                                   ) : (
                                     <ClearIcon color="error" />
