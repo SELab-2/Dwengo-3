@@ -33,6 +33,9 @@ import { LearningObjectDetail } from '../util/interfaces/learningObject.interfac
 import { fetchLearningObjectById } from '../api/learningObject.ts';
 import { fetchLearningPathNodeById } from '../api/learningPathNode.ts';
 import { AppRoutes } from '../util/app.routes.ts';
+import { GroupDetail } from '../util/interfaces/group.interfaces.ts';
+import { FavoriteDetail } from '../util/interfaces/favorite.interfaces.ts';
+import { useFavoriteById } from '../hooks/useFavorite.ts';
 
 const mathJaxConfig = {
   loader: { load: ['[tex]/ams'] },
@@ -51,7 +54,9 @@ function LearningPathPage() {
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
 
-  const { data: data } = useGroup(groupId ?? undefined);
+  let data: GroupDetail | FavoriteDetail | undefined = undefined;
+  if (groupId) data = useGroup(groupId).data;
+  else if (favoriteId) data = useFavoriteById(favoriteId).data;
 
   const [currentSubmission, setCurrentSubmission] = useState<
     AssignmentSubmissionDetail | undefined
