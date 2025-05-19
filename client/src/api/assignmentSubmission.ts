@@ -145,6 +145,5 @@ export async function downloadFileSubmission(id: string, fileName: string) {
   a.href = url;
   a.download = fileName;
   a.click();
-  document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
 }

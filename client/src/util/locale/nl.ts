@@ -103,6 +103,8 @@ export const nl = {
     deleteAccountWarning:
       'Waarschuwing: Het verwijderen van je account is permanent en kan niet ongedaan worden gemaakt.',
     joinRequestSucces: 'Verzoek om toegevoegd te worden aan klas is succesvol verstuurd',
+    question: 'Vraag',
+    completed: 'voltooid',
     deadlineRequired: 'Deadline is verplicht',
     titleRequired: 'Titel is verplicht',
     contentRequired: 'Inhoud is verplicht',

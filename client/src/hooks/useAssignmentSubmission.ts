@@ -55,7 +55,17 @@ export function useAssignmentSubmissions(groupId?: string, favoriteId?: string, 
   return useQuery({
     queryKey: ['assignmentSubmissions', groupId, favoriteId, nodeId],
     queryFn: async () => {
-      return await fetchAssignmentSubmissions(groupId, favoriteId, nodeId);
+      const submissionsShort = await fetchAssignmentSubmissions(
+        groupId,
+        favoriteId,
+        nodeId,
+        1,
+        100,
+      );
+      const submissionsDetail = submissionsShort.data.map((sub) =>
+        fetchAssignmentSubmissionById(sub.id),
+      );
+      return Promise.all(submissionsDetail);
     },
     enabled: !!groupId || !!favoriteId || !!nodeId,
     refetchOnWindowFocus: false,
