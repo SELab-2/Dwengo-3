@@ -51,6 +51,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { GroupDetail } from '../util/interfaces/group.interfaces.ts';
 import { FavoriteDetail } from '../util/interfaces/favorite.interfaces.ts';
 import { useFavoriteById, useUpdateCurrentNodeIndexForFavorite } from '../hooks/useFavorite.ts';
+import { ClassRoleEnum } from '../util/interfaces/class.interfaces.ts';
 
 const mathJaxConfig = {
   loader: { load: ['[tex]/ams'] },
@@ -207,10 +208,11 @@ function LearningPathPage() {
     const newIndex = transition.toNodeIndex === -1 ? maxIndex + 1 : transition.toNodeIndex;
     setFurthestIndex(newIndex);
 
-    updateIndexMutation.mutate({
-      id: groupId ? groupId : favoriteId!!,
-      index: newIndex === totalSteps ? -1 : newIndex,
-    });
+    if (user?.role === ClassRoleEnum.STUDENT)
+      updateIndexMutation.mutate({
+        id: groupId ? groupId : favoriteId!!,
+        index: newIndex === totalSteps ? -1 : newIndex,
+      });
 
     if (newIndex === -1) return;
     setActiveIndex(newIndex);
@@ -291,7 +293,8 @@ function LearningPathPage() {
     switch (currentObject?.submissionType) {
       // no submission needed for read nodes
       case SubmissionType.READ: {
-        await submitRead();
+        if (user?.role === ClassRoleEnum.STUDENT) await submitRead();
+
         const transition = currentNode?.transitions?.[0];
         if (transition === undefined) {
           if (activeIndex === maxIndex) {
@@ -305,7 +308,7 @@ function LearningPathPage() {
       }
       // first submit current selected answer, then proceed
       case SubmissionType.MULTIPLE_CHOICE: {
-        await submitMultipleChoice();
+        if (user?.role === ClassRoleEnum.STUDENT) await submitMultipleChoice();
 
         const transition = currentNode?.transitions?.find((t) => {
           const match = t.condition.match(/answer\s*==\s*(.+)/);
@@ -448,23 +451,24 @@ function LearningPathPage() {
 
       {/* Main Content */}
       <Box flex={1} p={2} display="flex" flexDirection="column">
-        <Box flex={1} display="flex" flexDirection="row" mb={2}>
-          {isMobile && (
-            <>
-              {/* Sidebar for mobile */}
-              <IconButton onClick={() => setDrawerOpen(true)}>
-                <MenuIcon />
-              </IconButton>
-              <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-                {SidebarContent}
-              </Drawer>
-            </>
-          )}
+        {isMobile && (
+          <Box flex={1} display="flex" flexDirection="row" mb={2}>
+            <Typography variant="h5" m={1}>
+              {learningPath?.title}
+            </Typography>
+            {/* Sidebar for mobile */}
+            <IconButton onClick={() => setDrawerOpen(true)}>
+              <MenuIcon />
+            </IconButton>
+            <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+              {SidebarContent}
+            </Drawer>
+          </Box>
+        )}
 
-          <Typography variant="h5" m={1}>
-            {learningPath?.title}
-          </Typography>
-        </Box>
+        <Typography variant="h5" m={1}>
+          {learningPath?.title}
+        </Typography>
 
         <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
         <Typography variant="caption" color="text.secondary" mb={2}>
@@ -565,7 +569,9 @@ function LearningPathPage() {
                               color="primary"
                               sx={{ width: { xs: '100%', sm: '40%' } }}
                               disabled={!groupId && !favoriteId}
-                              onClick={handleFileSubmission}
+                              onClick={() => {
+                                if (user?.role === ClassRoleEnum.STUDENT) handleFileSubmission();
+                              }}
                             >
                               {t('submit')}
                             </Button>
