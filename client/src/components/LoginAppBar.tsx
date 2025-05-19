@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Box } from '@mui/material';
+import { AppBar, Box, Toolbar } from '@mui/material';
 import LanguageSwitcher from './icons/LanguageIcon';
 import DwengoIcon from './icons/DwengoIcon';
 import { ComponentSize } from '../util/size';
@@ -25,7 +25,7 @@ function LoginAppBar() {
             height: '100%',
           }}
         >
-          <DwengoIcon href="/login" />
+          <DwengoIcon href="/" />
         </Box>
         <Box sx={{ marginLeft: 'auto' }}>
           <LanguageSwitcher />
