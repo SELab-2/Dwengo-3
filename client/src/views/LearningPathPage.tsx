@@ -35,6 +35,9 @@ import {
 import { fetchLearningObjectById } from '../api/learningObject.ts';
 import { fetchLearningPathNodeById } from '../api/learningPathNode.ts';
 import { AppRoutes } from '../util/app.routes.ts';
+import { GroupDetail } from '../util/interfaces/group.interfaces.ts';
+import { FavoriteDetail } from '../util/interfaces/favorite.interfaces.ts';
+import { useFavoriteById, useUpdateCurrentNodeIndexForFavorite } from '../hooks/useFavorite.ts';
 
 const mathJaxConfig = {
   loader: { load: ['[tex]/ams'] },
@@ -53,7 +56,9 @@ function LearningPathPage() {
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
 
-  const { data: data } = useGroup(groupId ?? undefined);
+  let data: GroupDetail | FavoriteDetail | undefined = undefined;
+  if (groupId) data = useGroup(groupId).data;
+  else if (favoriteId) data = useFavoriteById(favoriteId).data;
 
   const [currentSubmission, setCurrentSubmission] = useState<
     AssignmentSubmissionDetail | undefined
@@ -85,7 +90,9 @@ function LearningPathPage() {
   }, [learningPath, data]);
 
   const [progressEvent, setProgressEvent] = useState<AxiosProgressEvent | undefined>(undefined);
-  const updateIndexMutation = useUpdateCurrentIndexForGroup();
+  const updateIndexMutation = groupId
+    ? useUpdateCurrentIndexForGroup()
+    : useUpdateCurrentNodeIndexForFavorite();
   const submissionCreate = useCreateAssignmentSubmission(setProgressEvent);
   const submissionUpdate = useUpdateAssignmentSubmission(setProgressEvent);
   const { setError } = useError();
@@ -158,9 +165,7 @@ function LearningPathPage() {
   useEffect(() => {
     setCurrentSubmission(undefined);
   }, [currentNode]);
-
-  console.debug(currentAnswer);
-
+  
   const multipleChoice = () => {
     if (!currentObject || currentObject.submissionType !== SubmissionType.MULTIPLE_CHOICE) {
       return undefined;
@@ -190,7 +195,7 @@ function LearningPathPage() {
     setFurthestIndex(newIndex);
 
     updateIndexMutation.mutate({
-      groupId: groupId!!, // todo: support favorites
+      id: groupId ? groupId : favoriteId!!,
       index: newIndex === totalSteps ? -1 : newIndex,
     });
 
@@ -218,7 +223,8 @@ function LearningPathPage() {
         {
           submissionType: SubmissionType.READ,
           nodeId: currentNode!!.id,
-          groupId: groupId!!,
+          groupId: groupId ?? undefined,
+          favoriteId: favoriteId ?? undefined,
         },
         {
           onError: (error: any) => {
@@ -252,7 +258,8 @@ function LearningPathPage() {
         {
           submissionType: SubmissionType.MULTIPLE_CHOICE,
           nodeId: currentNode!!.id,
-          groupId: groupId!!,
+          groupId: groupId ?? undefined,
+          favoriteId: favoriteId ?? undefined,
           submission: { answer: currentAnswer! },
         },
         {

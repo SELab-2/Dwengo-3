@@ -215,6 +215,8 @@ export class BadRequestError extends APIError {
         return 'Could not find the group with given id...';
       case 40054:
         return 'You cannot remove yourself from your own class...';
+      case 40055:
+        return 'Could not find favorite with given id...';
       default:
         return 'Bad request...';
     }

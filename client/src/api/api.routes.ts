@@ -84,6 +84,7 @@ export const ApiRoutes = {
     list: '/api/favorites',
     get: (id: string) => `/api/favorites/${id}`,
     delete: (id: string) => `/api/favorites/${id}`,
+    updateIndex: '/api/favorites/node',
   },
 
   // LearningTheme
