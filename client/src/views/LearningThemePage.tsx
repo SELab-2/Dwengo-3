@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
 import { useAuth } from '../hooks/useAuth';
 import { useEnsureFavorite } from '../hooks/useFavorite';
+import { useError } from '../hooks/useError';
+import { useTranslation } from 'react-i18next';
 
 const getImageSrc = (image: string): string => {
   if (!image) return '';
@@ -31,6 +33,8 @@ function LearningPathsOverviewPage() {
   const { data: learningTheme } = useLearningThemeById(id);
   const { data, isLoading } = useLearningPath(learningTheme?.keywords, undefined, page, 10);
   const { mutateAsync: ensureFavoriteMutate } = useEnsureFavorite();
+  const { setError } = useError();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -111,8 +115,8 @@ function LearningPathsOverviewPage() {
                     userID: user?.id,
                   });
                   navigate(AppRoutes.learningPath(id, undefined, favorite?.id));
-                } catch (err) {
-                  console.error('Failed to ensure favorite:', err);
+                } catch {
+                  setError(t('failedFavorite'));
                 }
               }}
             >

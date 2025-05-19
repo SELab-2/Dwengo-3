@@ -116,5 +116,6 @@ export const fr = {
     post: 'Publier',
     joinRequestSuccess: 'La demande d’adhésion a été approuvée',
     copied: 'Copié dans le presse-papiers',
+    failedFavorite: 'Échec de l’ajout aux favoris',
   },
 };
