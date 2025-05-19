@@ -7,7 +7,8 @@
       "password": "password1",
       "surname": "Smith",
       "name": "John",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "provider": "LOCAL"
     },
     {
       "id": "2b3c4d5e-2222-3333-4444-555566667777",
@@ -16,7 +17,8 @@
       "password": "password2",
       "surname": "Johnson",
       "name": "Emma",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "provider": "LOCAL"
     },
     {
       "id": "3c4d5e6f-3333-4444-5555-666677778888",
@@ -25,7 +27,8 @@
       "password": "password3",
       "surname": "Brown",
       "name": "Liam",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "provider": "LOCAL"
     },
     {
       "id": "4d5e6f7g-4444-5555-6666-777788889999",
@@ -34,7 +37,8 @@
       "password": "password4",
       "surname": "Williams",
       "name": "Olivia",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "provider": "LOCAL"
     },
     {
       "id": "5e6f7g8h-5555-6666-7777-888899990000",
@@ -43,7 +47,8 @@
       "password": "password5",
       "surname": "Jones",
       "name": "Noah",
-      "role": "TEACHER"
+      "role": "TEACHER",
+      "provider": "LOCAL"
     },
     {
       "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
@@ -52,7 +57,8 @@
       "password": "password6",
       "surname": "Garcia",
       "name": "Sophia",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "provider": "LOCAL"
     },
     {
       "id": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17",
@@ -61,7 +67,8 @@
       "password": "password7",
       "surname": "Martinez",
       "name": "James",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "provider": "LOCAL"
     },
     {
       "id": "8h9i0j1k-8888-9999-0000-111122223333",
@@ -70,7 +77,8 @@
       "password": "password8",
       "surname": "Davis",
       "name": "Mia",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "provider": "LOCAL"
     },
     {
       "id": "9i0j1k2l-9999-0000-1111-222233334444",
@@ -79,7 +87,8 @@
       "password": "password9",
       "surname": "Rodriguez",
       "name": "Benjamin",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "provider": "LOCAL"
     },
     {
       "id": "0j1k2l3m-0000-1111-2222-333344445555",
@@ -88,7 +97,8 @@
       "password": "password10",
       "surname": "Wilson",
       "name": "Charlotte",
-      "role": "STUDENT"
+      "role": "STUDENT",
+      "provider": "LOCAL"
     }
   ],
   "testTeachers": [
