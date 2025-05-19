@@ -8,7 +8,7 @@ import { fetchLearningThemeById, fetchLearningThemes } from '../api/learningThem
  * @param pageSize - The number of items per page for pagination.
  * @returns The query object containing the learningTheme data.
  */
-export function useLearningTheme(page: number = 1, pageSize: number = 10) {
+export function useLearningTheme(page: number = 1, pageSize: number = 100) {
   return useQuery({
     queryKey: ['learningTheme', page, pageSize],
     queryFn: async () => {
