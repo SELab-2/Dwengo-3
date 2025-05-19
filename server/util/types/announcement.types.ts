@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { Prisma } from '.prisma/client';
 import { announcementSelectDetail, announcementSelectShort } from '../selectInput/select';
 import {
+  atLeastOneFieldProvided,
   ClassIdZod,
   ContentZod,
   StudentIdZod,
@@ -25,9 +26,8 @@ export const AnnouncementFilterQuerySchema = z
     timestamp: TimestampZod.optional(),
     timestampFilterType: TimestampFilterTypeZod.optional(),
   })
-  .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: 'At least one filter must be provided.',
-    path: [],
+  .refine(atLeastOneFieldProvided.validate, {
+    message: atLeastOneFieldProvided.message,
   })
   .refine(
     (data) => {
