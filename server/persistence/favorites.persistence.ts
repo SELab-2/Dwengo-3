@@ -9,7 +9,10 @@ import { favoriteSelectShort, favoriteSelectDetail } from '../util/selectInput/s
 export class FavoritesPersistence {
   public async getFavorites(filters: FavoriteFilterParams, paginationParams: PaginationParams) {
     const whereClause: Prisma.FavoriteWhereInput = {
-      AND: [filters.userId ? { userId: filters.userId } : {}],
+      AND: [
+        filters.userId ? { userId: filters.userId } : {},
+        filters.learningPathId ? { learningPathId: filters.learningPathId } : {},
+      ],
     };
 
     return searchAndPaginate(
