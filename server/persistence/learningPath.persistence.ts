@@ -9,6 +9,7 @@ import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 import { NotFoundError } from '../util/types/error.types';
 import { learningPathSelectDetail, learningPathSelectShort } from '../util/selectInput/select';
+import { title } from 'node:process';
 
 export class LearningPathPersistence {
   private prisma: PrismaClient;
@@ -45,6 +46,32 @@ export class LearningPathPersistence {
                   learningObject: {
                     targetAges: {
                       hasSome: filters.age, // Match any of the target ages
+                    },
+                  },
+                },
+              },
+            }
+          : {},
+        filters.searchTitle
+          ? {
+              title: {
+                startsWith: filters.searchTitle,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            }
+          : {},
+        filters.searchKeyword
+          ? {
+              learningPathNodes: {
+                some: {
+                  learningObject: {
+                    keywords: {
+                      some: {
+                        keyword: {
+                          startsWith: filters.searchKeyword,
+                          mode: Prisma.QueryMode.insensitive,
+                        },
+                      },
                     },
                   },
                 },
