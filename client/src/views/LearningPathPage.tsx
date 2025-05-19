@@ -406,7 +406,7 @@ function LearningPathPage() {
 
   const SidebarContent = (
     <Box
-      width={isMobile ? '91%' : '300px'}
+      width={isMobile ? '40vh' : '300px'}
       p={2}
       sx={{
         backgroundColor: theme.palette.custom.color6,
@@ -442,7 +442,7 @@ function LearningPathPage() {
   );
 
   return (
-    <Box display="flex" flexDirection="row" height={isMobile ? '91vh' : '83vh'}>
+    <Box display="flex" flexDirection="row" height={isMobile ? '88vh' : '83vh'}>
       {/* Sidebar for desktop */}
       {!isMobile && SidebarContent}
 
