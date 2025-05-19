@@ -31,7 +31,6 @@ import ClassDiscussionsPage from './views/ClassDiscussionsPage.tsx';
 import { ClassGroupEditPage } from './views/ClassGroupEditPage.tsx';
 import ProtectContent from './components/ProtectContent.tsx';
 import { NotificationProvider } from './contexts/NotificationContext.tsx';
-import SubmissionPage from './views/SubmissionPage.tsx';
 import AnnouncementCreatePage from './views/AnnouncemntCreatePage.tsx';
 
 const queryClient = new QueryClient();
@@ -111,10 +110,6 @@ function App() {
                         <Route
                           path={AppRoutes.classDiscussions(':classId')}
                           element={<ClassDiscussionsPage />}
-                        />
-                        <Route
-                          path={AppRoutes.groupSubmission(':classId', ':assignmentId', ':groupId')}
-                          element={<SubmissionPage />}
                         />
                         <Route
                           path={AppRoutes.classEdit(':classId')}

@@ -7,4 +7,3 @@ db/schemaspy/result/
 db/schemaspy/schemaspy.properties
 test/.env.test
 test/coverage
-server/submission_files

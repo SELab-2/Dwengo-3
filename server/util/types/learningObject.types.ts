@@ -23,18 +23,12 @@ export const learningObjectKeywordSchema = z.object({
 
 export type LearningObjectKeywordParams = z.infer<typeof learningObjectKeywordSchema>;
 
-const multipleChoiceSchema = z
-  .object({
-    question: z.string().min(1, 'Question is required'),
-    options: z.string().array().nonempty(),
-    solution: z.string(),
-  })
-  .refine((data) => data.question.includes(data.solution), {
-    message: 'The solution has to be in the options',
-    path: [],
-  });
+const multipleChoiseShema = z.object({
+  question: z.string().min(1, 'Question is required'),
+  options: z.string().array().nonempty(),
+});
 
-export type MultipleChoice = z.infer<typeof multipleChoiceSchema>;
+export type MultipleChoice = z.infer<typeof multipleChoiseShema>;
 
 export const LearningObjectCreateSchema = z.object({
   hruid: z.string().min(1, 'HRUID is required'),
@@ -55,7 +49,7 @@ export const LearningObjectCreateSchema = z.object({
   returnValue: z.any().optional(), // JSON object
   available: z.boolean().default(true),
   content: z.string().min(1, 'Content is required'),
-  multipleChoice: multipleChoiceSchema.optional(), // JSON object
+  multipleChoice: multipleChoiseShema.optional(), // JSON object
   submissionType: SubmissionTypeEnum.optional(),
   keywords: z.array(learningObjectKeywordSchema).optional(),
 });

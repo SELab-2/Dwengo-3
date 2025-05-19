@@ -8,13 +8,14 @@ export enum SubmissionType {
   'READ' = 'READ',
 }
 
+export interface MultipleChoice {
+  question: string;
+  options: string[];
+}
+
 export interface FileSubmission {
   fileName: string;
   filePath: string;
-}
-
-export interface MultipleChoiceSubmission {
-  answer: string;
 }
 
 export interface AssignmentSubmissionShort {
@@ -34,12 +35,12 @@ export interface AssignmentSubmissionCreate {
   favoriteId?: string;
   nodeId: string;
   submissionType: SubmissionType;
-  submission?: MultipleChoiceSubmission;
+  submission?: string;
   file?: File;
 }
 
 export interface AssignmentSubmissionUpdate {
   submissionType?: SubmissionType;
-  submission?: MultipleChoiceSubmission;
+  submission?: string;
   file?: File;
 }

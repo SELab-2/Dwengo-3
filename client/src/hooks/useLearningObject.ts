@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchLearningObjectById } from '../api/learningObject';
-import { fetchLearningPathById } from '../api/learningPath';
 
 /**
  * Fetches a learningObject by its ID.
@@ -15,21 +14,6 @@ export function useLearningObjectById(id?: string) {
       return await fetchLearningObjectById(id!);
     },
     enabled: !!id,
-    refetchOnWindowFocus: false,
-  });
-}
-
-export function useLearningObjects(learningPathId: string) {
-  return useQuery({
-    queryKey: ['learningObjects', learningPathId],
-    queryFn: async () => {
-      const learningPath = await fetchLearningPathById(learningPathId);
-      const objects = learningPath.learningPathNodes.map((node) =>
-        fetchLearningObjectById(node.learningObject.id),
-      );
-      return await Promise.all(objects);
-    },
-    enabled: !!learningPathId,
     refetchOnWindowFocus: false,
   });
 }
