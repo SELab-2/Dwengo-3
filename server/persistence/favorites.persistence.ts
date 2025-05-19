@@ -73,4 +73,15 @@ export class FavoritesPersistence {
       },
     });
   }
+
+  async updateIndex(id: string, index: number) {
+    return PrismaSingleton.instance.favorite.update({
+      where: {
+        id: id,
+      },
+      data: {
+        currentNodeIndex: index,
+      },
+    });
+  }
 }
