@@ -211,7 +211,7 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       content: 'test',
       teacherExclusive: false,
       available: true,
-      multipleChoice: { question: 'test', options: ['a', 'b', 'c'], solution: 1 },
+      multipleChoice: { question: 'test', options: ['a', 'b', 'c'], solution: 'b' },
       submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
     },
     {

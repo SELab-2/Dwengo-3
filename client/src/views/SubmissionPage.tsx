@@ -73,8 +73,8 @@ function SubmissionPage() {
   }
 
   const group: GroupShort = assignment!.groups.find((g) => g.id === groupId)!;
-  console.debug(group.progress);
-  const progress: number = calculateProgress(group.progress, assignment!.learningPath);
+  const progress = calculateProgress(group.progress, assignment!.learningPath);
+  const maxProgress = Math.max(...group.progress);
 
   const handleClick = (key: string) => {
     setOpenItems((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -132,7 +132,7 @@ function SubmissionPage() {
               }}
             />
 
-            <Typography>{`${progress}% ${t('completed')}`}</Typography>
+            <Typography>{`${Number(progress).toFixed(2)}% ${t('completed')}`}</Typography>
 
             <List
               sx={{ width: '100%', minWidth: { xs: '90%', sm: 600 }, bgcolor: 'background.paper' }}
@@ -148,7 +148,11 @@ function SubmissionPage() {
                 return object.submissionType === SubmissionType.READ ? (
                   <ListItem
                     sx={{
-                      backgroundColor: made ? theme.palette.primary.main : 'gray',
+                      backgroundColor: made
+                        ? theme.palette.primary.main
+                        : index <= maxProgress
+                          ? 'lightblue'
+                          : 'gray',
                       color: 'white',
                     }}
                     key={object.id}
@@ -170,7 +174,9 @@ function SubmissionPage() {
                             object.multipleChoice.solution
                             ? theme.palette.primary.main
                             : 'red'
-                          : 'gray',
+                          : index <= maxProgress
+                            ? 'lightblue'
+                            : 'gray',
                         color: 'white',
                       }}
                       key={object.id}
@@ -217,7 +223,11 @@ function SubmissionPage() {
                 ) : (
                   <ListItemButton
                     sx={{
-                      backgroundColor: made ? theme.palette.primary.main : 'gray',
+                      backgroundColor: made
+                        ? theme.palette.primary.main
+                        : index <= maxProgress
+                          ? 'lightblue'
+                          : 'gray',
                       color: 'white',
                     }}
                     key={object.id}

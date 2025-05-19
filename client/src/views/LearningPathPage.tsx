@@ -143,7 +143,7 @@ function LearningPathPage() {
           setCurrentSubmission(submission);
         }
       } catch (error: any) {
-        setError(error.response.data.message || error.message);
+        setError(error.response?.data.message || error.message);
       } finally {
         setIsLoading(false);
       }
@@ -154,6 +154,10 @@ function LearningPathPage() {
     // if activeIndex changes too fast, abort the request
     return () => abort.abort();
   }, [learningPath, activeIndex]);
+
+  useEffect(() => {
+    setCurrentSubmission(undefined);
+  }, [currentNode]);
 
   console.debug(currentAnswer);
 
@@ -238,6 +242,9 @@ function LearningPathPage() {
           onError: (error: any) => {
             setError(error.response.data.message || error.message);
           },
+          onSuccess: (response) => {
+            setCurrentSubmission(response);
+          },
         },
       );
     else
@@ -251,6 +258,9 @@ function LearningPathPage() {
         {
           onError: (error: any) => {
             setError(error.response.data.message || error.message);
+          },
+          onSuccess: (response) => {
+            setCurrentSubmission(response);
           },
         },
       );
@@ -476,7 +486,7 @@ function LearningPathPage() {
                     </Box>
                   ) : isFile() ? (
                     <Box mt={3}>
-                      {currentSubmission ? (
+                      {currentSubmission && fileSubmission() ? (
                         <Box>
                           <Typography mt={2} variant="subtitle1">
                             {`${t('fileSubmitted')}: `}
