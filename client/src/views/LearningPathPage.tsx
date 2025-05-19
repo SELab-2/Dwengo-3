@@ -435,12 +435,12 @@ function LearningPathPage() {
   );
 
   return (
-    <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} height="90vh">
+    <Box display="flex" flexDirection="row" height={isMobile ? '91vh' : '83vh'}>
       {/* Sidebar for desktop */}
       {!isMobile && SidebarContent}
 
       {/* Main Content */}
-      <Box flex={1} p={3} display="flex" flexDirection="column">
+      <Box flex={1} p={2} display="flex" flexDirection="column">
         <Box flex={1} display="flex" flexDirection="row" mb={2}>
           {isMobile && (
             <>
@@ -471,8 +471,7 @@ function LearningPathPage() {
               overflow="auto"
               sx={{
                 minHeight: 0,
-                maxHeight: 'calc(100vh - var(--navbar-heigh))',
-                maxWidth: isMobile ? '100%' : '70vw',
+                maxWidth: isMobile ? '100vw' : '70vw',
               }}
             >
               {currentNode !== undefined && currentObject ? (
