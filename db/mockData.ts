@@ -20,108 +20,68 @@ export async function addMockData(prisma: PrismaClient) {
   // await prisma.teacher.deleteMany({});
   await prisma.user.deleteMany({ where: { provider: 'LOCAL' } });
 
-  const user = await prisma.user.findFirst({
+  const users = await prisma.user.findMany({
     where: { provider: 'GOOGLE' },
     include: { teacher: true },
   });
 
-  if (!user) {
-    throw new Error('No user found with provider GOOGLE');
-  }
+  for (const user of users) {
+    if (!user) {
+      throw new Error('No user found with provider GOOGLE');
+    }
 
-  // find random learning path
-  const learningPath = (await prisma.learningPath.findFirst({
-    include: { learningPathNodes: true },
-  }))!;
+    // find random learning path
+    const learningPath = (await prisma.learningPath.findFirst({
+      include: { learningPathNodes: true },
+    }))!;
 
-  const students = [];
-  // create 10 students
-  for (let i = 0; i < 10; i++) {
-    students.push(
-      await prisma.user.create({
-        data: {
-          username: `student${i}`,
-          password: 'password',
-          name: faker.person.firstName(),
-          surname: faker.person.lastName(),
-          email: faker.internet.email(),
-          provider: 'LOCAL',
-          role: 'STUDENT',
-          student: {
-            create: {},
-          },
-        },
-        include: {
-          student: true,
-        },
-      }),
-    );
-  }
-
-  const classData = await prisma.class.create({
-    data: {
-      name: 'Klas 5A',
-      teachers: {
-        connect: {
-          id: user!.teacher!.id,
-        },
-      },
-      students: {
-        connect: students.slice(0, 7).map((student) => ({
-          id: student.student!.id,
-        })),
-      },
-      classJoinRequests: {
-        create: students.slice(7).map((student) => ({
-          userId: student.id,
-        })),
-      },
-    },
-  });
-
-  await prisma.assignment.create({
-    data: {
-      class: {
-        connect: {
-          id: classData.id,
-        },
-      },
-      teacher: {
-        connect: {
-          id: user!.teacher!.id,
-        },
-      },
-      learningPath: {
-        connect: {
-          id: learningPath.id,
-        },
-      },
-      groups: {
-        create: students.slice(0, 7).map((student) => ({
-          name: `Group of ${student.name}`,
-          students: {
-            connect: {
-              id: student.student!.id,
+    const students = [];
+    // create 10 students
+    for (let i = 0; i < 10; i++) {
+      students.push(
+        await prisma.user.create({
+          data: {
+            username: `student${i}`,
+            password: 'password',
+            name: faker.person.firstName(),
+            surname: faker.person.lastName(),
+            email: faker.internet.email(),
+            provider: 'LOCAL',
+            role: 'STUDENT',
+            student: {
+              create: {},
             },
           },
-          progress: Array.from({ length: 4 }, () =>
-            Math.floor(Math.random() * learningPath.learningPathNodes.length),
-          ).sort((a, b) => a - b),
-        })),
-      },
-      deadline: faker.date.future(),
-      name: `Assignment about ${faker.food.dish()}`,
-      description: faker.lorem.paragraph(),
-    },
-  });
+          include: {
+            student: true,
+          },
+        }),
+      );
+    }
 
-  for (let i = 0; i < 12; i++) {
-    const content = faker.food.description() + `\n\n${faker.lorem.text()}`;
-
-    await prisma.announcement.create({
+    const classData = await prisma.class.create({
       data: {
-        title: `Announcement about ${faker.food.dish()}`,
-        content: content,
+        name: 'Klas 5A',
+        teachers: {
+          connect: {
+            id: user!.teacher!.id,
+          },
+        },
+        students: {
+          connect: students.slice(0, 7).map((student) => ({
+            id: student.student!.id,
+          })),
+        },
+        classJoinRequests: {
+          create: students.slice(7).map((student) => ({
+            userId: student.id,
+          })),
+        },
+      },
+    });
+
+    await prisma.assignment.create({
+      data: {
         class: {
           connect: {
             id: classData.id,
@@ -132,8 +92,50 @@ export async function addMockData(prisma: PrismaClient) {
             id: user!.teacher!.id,
           },
         },
+        learningPath: {
+          connect: {
+            id: learningPath.id,
+          },
+        },
+        groups: {
+          create: students.slice(0, 7).map((student) => ({
+            name: `Group of ${student.name}`,
+            students: {
+              connect: {
+                id: student.student!.id,
+              },
+            },
+            progress: Array.from({ length: 4 }, () =>
+              Math.floor(Math.random() * learningPath.learningPathNodes.length),
+            ).sort((a, b) => a - b),
+          })),
+        },
+        deadline: faker.date.future(),
+        name: `Assignment about ${faker.food.dish()}`,
+        description: faker.lorem.paragraph(),
       },
     });
+
+    for (let i = 0; i < 12; i++) {
+      const content = faker.food.description() + `\n\n${faker.lorem.text()}`;
+
+      await prisma.announcement.create({
+        data: {
+          title: `Announcement about ${faker.food.dish()}`,
+          content: content,
+          class: {
+            connect: {
+              id: classData.id,
+            },
+          },
+          teacher: {
+            connect: {
+              id: user!.teacher!.id,
+            },
+          },
+        },
+      });
+    }
   }
 }
 
