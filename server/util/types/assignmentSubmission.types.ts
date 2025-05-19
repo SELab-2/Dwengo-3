@@ -4,34 +4,45 @@ import {
   assignmentSubmissionSelectDetail,
   assignmentSubmissionSelectShort,
 } from '../selectInput/select';
+import {
+  AnswerZod,
+  atLeastOneFieldProvided,
+  FavoriteIdZod,
+  FileNameZod,
+  FilePathZod,
+  GroupIdZod,
+  NodeIdZod,
+  SubmissionTypeZod,
+} from './util_types';
 
 const FileSubmissionSchema = z.object({
-  fileName: z.string(),
-  filePath: z.string(),
+  fileName: FileNameZod,
+  filePath: FilePathZod,
 });
 
 const MultipleChoiceSubSchema = z.object({
-  answer: z.string(),
+  answer: AnswerZod,
 });
 
 export const SubmissionFilterSchema = z
   .object({
-    groupId: z.string().uuid().optional(),
-    nodeId: z.string().optional(),
-    favoriteId: z.string().optional(),
+    groupId: GroupIdZod.optional(),
+    nodeId: NodeIdZod.optional(),
+    favoriteId: FavoriteIdZod.optional(),
   })
-  .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: 'At least one filter must be provided.',
-    path: [],
+  .refine(atLeastOneFieldProvided.validate, {
+    message: atLeastOneFieldProvided.message,
   });
 
 export const SubmissionCreateSchema = z
   .object({
-    groupId: z.string().uuid().optional(),
-    favoriteId: z.string().uuid().optional(),
-    nodeId: z.string(),
-    submissionType: z.nativeEnum(SubmissionType),
-    submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()]),
+    groupId: GroupIdZod.optional(),
+    favoriteId: FavoriteIdZod.optional(),
+    nodeId: NodeIdZod,
+    submissionType: SubmissionTypeZod,
+    submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()], {
+      invalid_type_error: 'Invalid submission',
+    }),
   })
   .refine(
     (data) => {
@@ -53,7 +64,7 @@ export const SubmissionCreateSchema = z
 
 export const SubmissionUpdateSchema = z
   .object({
-    submissionType: z.nativeEnum(SubmissionType),
+    submissionType: SubmissionTypeZod,
     submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()]),
   })
   .refine(

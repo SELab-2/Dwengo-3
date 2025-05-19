@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { ConditionZod, IndexZod, NodeIdZod } from './util_types';
 
 export const LearningPathNodeTransitionCreateSchema = z.object({
-  learningPathNodeId: z.string(),
-  toNodeIndex: z.number(),
-  condition: z.string().optional(),
+  learningPathNodeId: NodeIdZod,
+  toNodeIndex: IndexZod,
+  condition: ConditionZod.optional(),
 });
 
 export type LearningPathNodeTransitionCreateParams = z.infer<
