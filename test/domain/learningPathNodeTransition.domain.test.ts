@@ -8,7 +8,7 @@ import {
   testLearningPaths,
 } from '../testObjects.json';
 import { LearningPathNodeTransitionDomain } from '../../server/domain/learningPathNodeTransition.domain';
-import { ClassRoleEnum, UserEntity } from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
 
 // learningPathNodeTransition persistence mock
 const { mockLearningPathNodeTransitionPeristence } = vi.hoisted(() => {
