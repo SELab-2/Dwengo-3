@@ -80,3 +80,30 @@ Om onze backend server zo toegankelijk mogelijk te maken hebben we ervoor gekoze
 ## Opstarten van server
 
 De informatie die je nodig hebt om zelf aan de slag te gaan met de server kan je [hier](../README.md) vinden
+
+## Databank queries
+
+Meer informatie over het databankschema is [hier](../db/README.md). Bij een prismaquery moet worden meegegeven welke attributen van een model allemaal moeten worden teruggegeven in het resultaat. In ons project zijn deze vooraf gedefinieerd in `server/util/selectInput/select.ts`. Een voorbeeld van zo een definitie is de volgende:
+
+```ts
+export const teacherSelectShort = {
+  id: true,
+  userId: true,
+  user: {
+    select: {
+      name: true,
+      surname: true,
+    },
+  },
+};
+```
+
+Over het algemeen zijn er 2 soorten select-definities: deze die eindigen op "Detail", en deze die eindigen op "Short".
+
+###### Detail
+
+De select-definities met "Detail" worden gebruikt wanneer een enkel object wordt opgevraagd via de id van dit object zelf. vb: Men vraagt een assignment op adhv. assignmentId.
+
+###### Short
+
+De select-definities met "Short" worden gebruikt wanneer het resultaat meerdere objecten kan bevatten. Als de gebruiker bijvoorbeeld alle announcements van een klas opvraagt, worden voor al deze announcements enkel de in `AnnouncementSelectShort` beschreven attributen teruggegeven.
