@@ -30,6 +30,31 @@ export async function fetchFavorites(userId?: string, page?: number, pageSize?: 
 }
 
 /**
+ * Ensures a favorite exists for the given learningPathId and userID (creates it if it doesn't exist).
+ *
+ * @param learningPathId - The ID of the learning path to be checked.
+ * @param userId - The ID of the user to be checked.
+ * @returns The favorite.
+ */
+export async function ensureFavorite(learningPathId?: string, userId?: string) {
+  const favorite = await apiClient.get(ApiRoutes.favorites.list, {
+    params: {
+      userId,
+      learningPathId,
+    },
+  });
+
+  const result: PaginatedData<FavoriteShort> = favorite.data;
+  if (result.data.length > 0) {
+    return result.data[0];
+  }
+
+  return createFavorite({
+    learningPathId: learningPathId!,
+  });
+}
+
+/**
  * Fetches a favorite by its ID.
  *
  * @param id - The ID of the favorite to be fetched.
