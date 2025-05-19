@@ -406,7 +406,7 @@ function LearningPathPage() {
 
   const SidebarContent = (
     <Box
-      width={isMobile ? '40vh' : '300px'}
+      width={isMobile ? '70vw' : '300px'}
       p={2}
       sx={{
         backgroundColor: theme.palette.custom.color6,

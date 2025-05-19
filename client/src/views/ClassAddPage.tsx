@@ -69,7 +69,7 @@ function ClassAddPage() {
         <Paper
           elevation={3}
           sx={{
-            width: isMobile ? '30vh' : '100%',
+            width: isMobile ? '70%' : '100%',
             maxWidth: 500,
             mx: 'auto',
             mt: 6,
@@ -108,7 +108,7 @@ function ClassAddPage() {
       <Paper
         elevation={3}
         sx={{
-          width: isMobile ? '30vh' : '100%',
+          width: isMobile ? '70%' : '100%',
           maxWidth: 500,
           mx: 'auto',
           mt: 6,
