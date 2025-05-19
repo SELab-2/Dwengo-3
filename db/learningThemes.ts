@@ -3,7 +3,7 @@ export const learningThemes = [
     id: '889ef737-03ad-4714-8247-11ebfe31b525',
     title: 'AI in Climate',
     image:
-      'https://www.cryptopolitan.com/wp-content/uploads/2024/01/photo_5823672334651866888_y.jpg',
+      'https://images.pexels.com/photos/17485678/pexels-photo-17485678/free-photo-of-an-artist-s-illustration-of-artificial-intelligence-ai-this-image-depicts-how-ai-could-be-used-in-the-field-of-sustainability-from-biodiversity-to-climate-it-was-created-by-nidia-dias.png',
     keywords: [
       'climate',
       'AI',
@@ -12,13 +12,17 @@ export const learningThemes = [
       'luchtkwaliteit',
       'weerstation',
       'co2',
+      'klimaat',
+      'co2',
+      'luchtkwaliteit',
+      'temperatuur',
     ],
   },
   {
     id: '1284a170-58d3-40c3-a527-627c2b8cc640',
-    title: 'Social Robot',
+    title: 'Robotics',
     image:
-      'https://www.laingbuissonnews.com/wp-content/uploads/sites/3/2023/06/Moxie_Lifestyle_HP_M.jpg',
+      'https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     keywords: [
       'social robot',
       'AI',
@@ -32,14 +36,14 @@ export const learningThemes = [
     id: '4ba2e66c-5687-42ee-b6dc-53939f9b7c26',
     title: 'AI in Healthcare',
     image:
-      'https://www.usnews.com/cmsmedia/e7/92/b354714945c697881b3207311271/h18-b-f2-ai-editorial.jpg',
+      'https://cdn.prod.website-files.com/65c37e1a9189104bf8d071be/66faedc74ffa833d72a30331_8.png',
     keywords: ['healthcare', 'AI', 'medicine', 'Thermostaat', 'triage', 'zorg'],
   },
   {
     id: 'e2fe67f3-b545-4b4c-b81a-f3d6c05b167e',
     title: 'Language Technology',
     image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRkEIonuZR-7YrlIgs5tl9o8OI_SnnXH-qtg&s',
+      'https://www.upf.edu/documents/10193/277132547/ImatgearxiuBaroni.jpg/cbd38e7f-8351-fa82-f6ae-de9fbdd14437',
     keywords: [
       'language',
       'AI',
@@ -60,7 +64,7 @@ export const learningThemes = [
     id: '2abb2c99-ae7b-449e-af23-5e37fb98deaf',
     title: 'Programming & Computational Thinking',
     image:
-      'https://i.guim.co.uk/img/media/d059b58efe8ce50d15639f76448becdeec69bc9b/0_184_7200_4320/master/7200.jpg?width=1200&quality=85&auto=format&fit=max&s=d7659f8cde3870d1724610565247623e',
+      'https://cdn.discordapp.com/attachments/1345516706134491268/1374077308725362730/AdobeStock_1065716654.jpeg?ex=682cbcb7&is=682b6b37&hm=1232c4761df46b2206c327c4122debcc01dd64737d4304b56fe00b78c4dbe9e8&',
     keywords: [
       'python',
       'blockly',
@@ -92,8 +96,7 @@ export const learningThemes = [
   {
     id: 'c462f91c-9b73-4264-83a1-0576a604b639',
     title: 'IoT & Embedded Systems',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRD44dPcnBVONsmpDr_jPkWJH86QrTrPRYnjQ&s',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Embedded_Systems_PBL.jpg',
     keywords: [
       'arduino',
       'microcontroller',
@@ -138,7 +141,7 @@ export const learningThemes = [
     id: '831bf26e-9b03-4dc4-93ad-f726ee7b8982',
     title: 'AI & Machine Learning',
     image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCzUqN7xXQAUwfz1hPJuK3BdrTHbzdWUtBeQ&s',
+      'https://cdn.discordapp.com/attachments/1345516706134491268/1374077309484535939/AdobeStock_659545582.jpeg?ex=682cbcb7&is=682b6b37&hm=1d24117c346a5615503c84f640dc8e039fa828db401f60f1177becfd22328b5a&',
     keywords: [
       'neurale netwerken',
       'AI',
@@ -220,26 +223,26 @@ export const learningThemes = [
     id: '296708ff-7f69-40f9-a41f-f230a5f657ea',
     title: 'Networks & Communication',
     image:
-      'https://media.istockphoto.com/id/953782406/photo/hand-of-touching-network-connecting-the-human-dots-icon-in-business-project-management.jpg?s=612x612&w=0&k=20&c=nGWbpiMU7vhRjuBUjgpHr9TPESOKaDOACC6nzb1pI_4=',
+      'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     keywords: ['netwerken', 'communicatie', 'serieel', 'protocol', 'web'],
   },
   {
     id: '5266d17f-c58e-43df-ba88-058bf47ab26e',
     title: 'Hardware & Electronics',
-    image: 'https://predictabledesigns.com/wp-content/uploads/2023/08/featuredimage.jpg',
+    image:
+      'https://images.pexels.com/photos/163100/circuit-circuit-board-resistor-computer-163100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     keywords: ['led', 'weerstand', 'servomotor', 'buzzer', 'zoemer', 'lcd-scherm'],
   },
   {
     id: '79721a9b-166c-4221-99cc-c2065c999577',
     title: 'Ethics & Reflection',
     image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1KOpmStCpOFRLRo_TF75Yv1PmAfSQ4EDceg&s',
+      'https://images.pexels.com/photos/6077181/pexels-photo-6077181.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     keywords: [
       'vooroordelen',
       'reflectie',
       'klasgesprek',
       'influencers',
-      'Computationeel denken',
       'Reflectie',
       'bias',
       'deep fake',
@@ -249,17 +252,10 @@ export const learningThemes = [
     ],
   },
   {
-    id: 'dd6ac378-9acd-4824-8e9d-ad1da5542ee8',
-    title: 'Climate & Environment',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWViJpHgSN9KtCuud3WYinSxbcWfchexY6uQ&s',
-    keywords: ['klimaat', 'co2', 'luchtkwaliteit', 'temperatuur'],
-  },
-  {
     id: '0fc3dd9d-7681-424d-bb62-5311fb32ae04',
     title: 'Mathematics & Logic',
     image:
-      'https://haverblog-media.s3.amazonaws.com/wp-content/uploads/2016/02/15153312/Vergilius-Eremite-cc_Mathematics.jpg',
+      'https://images.pexels.com/photos/3729557/pexels-photo-3729557.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     keywords: ['grafiek', 'operatoren', 'logica', 'wiskunde', 'de bruijn', 'matplotlib'],
   },
 ];

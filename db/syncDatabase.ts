@@ -127,6 +127,7 @@ async function syncLearningThemes(prisma: PrismaClient) {
         keywords: theme.keywords,
       },
       create: {
+        id: theme.id,
         title: theme.title,
         image: theme.image,
         keywords: theme.keywords,
