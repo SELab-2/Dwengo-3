@@ -12,7 +12,6 @@ import {
 import {
   AssignmentSubmissionDetail,
   FileSubmission,
-  MultipleChoice,
   SubmissionType,
 } from '../util/interfaces/assignmentSubmission.interfaces';
 import { useError } from '../hooks/useError';
@@ -29,7 +28,10 @@ import parse from 'html-react-parser';
 import { useGroup, useUpdateCurrentIndexForGroup } from '../hooks/useGroup.ts';
 import { LearningPathNodeTransitionDetail } from '../util/interfaces/LearningPathNodeTransition.interfaces.ts';
 import { LearningPathNodeDetail } from '../util/interfaces/learningPathNode.interfaces.ts';
-import { LearningObjectDetail } from '../util/interfaces/learningObject.interfaces.ts';
+import {
+  LearningObjectDetail,
+  MultipleChoice,
+} from '../util/interfaces/learningObject.interfaces.ts';
 import { fetchLearningObjectById } from '../api/learningObject.ts';
 import { fetchLearningPathNodeById } from '../api/learningPathNode.ts';
 import { AppRoutes } from '../util/app.routes.ts';
@@ -148,7 +150,7 @@ function LearningPathPage() {
           setCurrentSubmission(submission);
         }
       } catch (error: any) {
-        setError(error.response.data.message || error.message);
+        setError(error.response?.data.message || error.message);
       } finally {
         setIsLoading(false);
       }
@@ -160,6 +162,10 @@ function LearningPathPage() {
     return () => abort.abort();
   }, [learningPath, activeIndex]);
 
+  useEffect(() => {
+    setCurrentSubmission(undefined);
+  }, [currentNode]);
+  
   const multipleChoice = () => {
     if (!currentObject || currentObject.submissionType !== SubmissionType.MULTIPLE_CHOICE) {
       return undefined;
@@ -235,12 +241,15 @@ function LearningPathPage() {
           id: currentSubmission.id,
           data: {
             submissionType: SubmissionType.MULTIPLE_CHOICE,
-            submission: currentAnswer!!,
+            submission: { answer: currentAnswer! },
           },
         },
         {
           onError: (error: any) => {
             setError(error.response.data.message || error.message);
+          },
+          onSuccess: (response) => {
+            setCurrentSubmission(response);
           },
         },
       );
@@ -251,11 +260,14 @@ function LearningPathPage() {
           nodeId: currentNode!!.id,
           groupId: groupId ?? undefined,
           favoriteId: favoriteId ?? undefined,
-          submission: currentAnswer ? currentAnswer : undefined,
+          submission: { answer: currentAnswer! },
         },
         {
           onError: (error: any) => {
             setError(error.response.data.message || error.message);
+          },
+          onSuccess: (response) => {
+            setCurrentSubmission(response);
           },
         },
       );
@@ -481,7 +493,7 @@ function LearningPathPage() {
                     </Box>
                   ) : isFile() ? (
                     <Box mt={3}>
-                      {currentSubmission ? (
+                      {currentSubmission && fileSubmission() ? (
                         <Box>
                           <Typography mt={2} variant="subtitle1">
                             {`${t('fileSubmitted')}: `}

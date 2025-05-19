@@ -123,7 +123,15 @@ function ClassStudentDetails() {
                     <TableCell>
                       <Button
                         variant="contained"
-                        onClick={() => alert(`Submission details of the assignment`)}
+                        onClick={() =>
+                          navigate(
+                            AppRoutes.groupSubmission(
+                              classId!,
+                              assignment.id,
+                              assignment.groups[0].id,
+                            ),
+                          )
+                        }
                       >
                         {t('details')}
                       </Button>

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createFavorite,
   deleteFavorite,
+  ensureFavorite,
   fetchFavoriteById,
   fetchFavorites,
 } from '../api/favorites';
@@ -25,6 +26,25 @@ export function useFavorite(userID?: string, page: number = 1, pageSize: number 
       return await fetchFavorites(userID, page, pageSize);
     },
     refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Ensures a favorite exists for the given learningPathId and userID (creates it if it doesn't exist).
+ *
+ * @returns A mutation object that can be used to trigger the ensureFavorite logic.
+ */
+export function useEnsureFavorite() {
+  return useMutation({
+    mutationFn: async ({
+      learningPathId,
+      userID,
+    }: {
+      learningPathId?: string;
+      userID?: string;
+    }) => {
+      return await ensureFavorite(learningPathId, userID);
+    },
   });
 }
 

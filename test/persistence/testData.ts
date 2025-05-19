@@ -211,7 +211,7 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       content: 'test',
       teacherExclusive: false,
       available: true,
-      multipleChoice: { question: 'test', options: ['a', 'b', 'c'] },
+      multipleChoice: { question: 'test', options: ['a', 'b', 'c'], solution: 'b' },
       submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
     },
     {
@@ -378,13 +378,14 @@ export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissi
           learningPathNode.learningObject.id,
         );
         if (learningObject.submissionType === SubmissionTypeEnum.Enum.MULTIPLE_CHOICE) {
-          const multipleChoice = learningObject.multipleChoice as MultipleChoice;
           submissions.push(
             assignemntSubmissionPersistence.createAssignmentSubmission({
               nodeId: learningPathNode.id,
               groupId: group.id,
               submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
-              submission: multipleChoice.options[0],
+              submission: {
+                answer: 2,
+              },
             }),
           );
         } else if (learningObject.submissionType === SubmissionTypeEnum.Enum.FILE) {
