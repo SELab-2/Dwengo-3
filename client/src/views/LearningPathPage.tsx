@@ -453,9 +453,6 @@ function LearningPathPage() {
       <Box flex={1} p={2} display="flex" flexDirection="column">
         {isMobile && (
           <Box flex={1} display="flex" flexDirection="row" mb={2}>
-            <Typography variant="h5" m={1}>
-              {learningPath?.title}
-            </Typography>
             {/* Sidebar for mobile */}
             <IconButton onClick={() => setDrawerOpen(true)}>
               <MenuIcon />
@@ -463,12 +460,18 @@ function LearningPathPage() {
             <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
               {SidebarContent}
             </Drawer>
+
+            <Typography variant="h5" m={1}>
+              {learningPath?.title}
+            </Typography>
           </Box>
         )}
 
-        <Typography variant="h5" m={1}>
-          {learningPath?.title}
-        </Typography>
+        {!isMobile && (
+          <Typography variant="h5" m={1}>
+            {learningPath?.title}
+          </Typography>
+        )}
 
         <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
         <Typography variant="caption" color="text.secondary" mb={2}>
