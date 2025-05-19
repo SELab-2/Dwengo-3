@@ -115,5 +115,6 @@ export const nl = {
     post: 'Plaatsen',
     joinRequestSuccess: 'Toelatingsverzoek is goedgekeurd',
     copied: 'Gekopieerd naar klembord',
+    failedFavorite: 'Toevoegen aan favorieten mislukt',
   },
 };
