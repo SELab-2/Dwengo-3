@@ -14,17 +14,6 @@ import {
   UserNameZod,
 } from './util_types';
 
-// Must be a different name than ClassRole to avoid conflicts/ confusion with prisma client ClassRole type.
-export enum ClassRoleEnum {
-  STUDENT = 'STUDENT',
-  TEACHER = 'TEACHER',
-}
-
-export enum AuthenticationProvider {
-  GOOGLE = 'GOOGLE',
-  LOCAL = 'LOCAL',
-}
-
 // Type for the persistence layer to represent a user including the student or teacher.
 export type FullUserType = User & {
   student?: Student | null;

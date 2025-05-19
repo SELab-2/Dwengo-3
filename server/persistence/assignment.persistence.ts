@@ -4,7 +4,6 @@ import {
   AssignmentDetail,
   AssignmentFilterParams,
   AssignmentShort2,
-  Uuid,
 } from '../util/types/assignment.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
@@ -18,6 +17,7 @@ import {
 } from '../util/selectInput/select';
 import { GroupPersistence } from './group.persistence';
 import { AssignmentSubmissionPersistence } from './assignmentSubmission.persistence';
+import { Uuid } from '../util/types/theme.types';
 
 export class AssignmentPersistence {
   private submissionPersistence: AssignmentSubmissionPersistence;

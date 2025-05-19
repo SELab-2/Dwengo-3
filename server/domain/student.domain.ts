@@ -1,5 +1,5 @@
 import { StudentPersistence } from '../persistence/student.persistence';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   StudentCreateSchema,
@@ -11,6 +11,7 @@ import { UsersPersistence } from '../persistence/auth/users.persistence';
 import { Student, Teacher } from '@prisma/client';
 import { TeacherPersistence } from '../persistence/teacher.persistence';
 import { BadRequestError, NotFoundError } from '../util/types/error.types';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class StudentDomain {
   private studentPersistence: StudentPersistence;

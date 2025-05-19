@@ -15,10 +15,10 @@ import { UserEntity } from '../util/types/user.types';
 import { checkIfUserIsInGroup } from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { BadRequestError } from '../util/types/error.types';
-import { Uuid } from '../util/types/assignment.types';
 import { LearningPathNodePersistence } from '../persistence/learningPathNode.persistence';
 import { FavoritesPersistence } from '../persistence/favorites.persistence';
 import fs from 'fs';
+import { Uuid } from '../util/types/theme.types';
 
 export class AssignmentSubmissionDomain {
   private assignmentSubmissionPersistence: AssignmentSubmissionPersistence;

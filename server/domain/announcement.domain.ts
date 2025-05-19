@@ -10,9 +10,10 @@ import {
   AnnouncementUpdateSchema,
 } from '../util/types/announcement.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { BadRequestError } from '../util/types/error.types';
 import { TeacherIdZod } from '../util/types/util_types';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class AnnouncementDomain {
   private announcementPersistence;

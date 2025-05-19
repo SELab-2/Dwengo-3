@@ -1,11 +1,10 @@
 import { z } from 'zod';
-import { Decimal } from '@prisma/client/runtime/library';
 import { Prisma } from '.prisma/client';
 import { learningObjectSelectShort, learningObjectSelectDetail } from '../selectInput/select';
 import {
   AnswerOptionZod,
   AvailableZod,
-  ContentTypeEnum,
+  ContentTypeEnumZod,
   ContentZod,
   CopyRightZod,
   DescriptionZod,
@@ -66,7 +65,7 @@ export const LearningObjectCreateSchema = z.object({
   language: LanguageZod,
   title: TitleZod,
   description: DescriptionZod.optional(),
-  contentType: ContentTypeEnum.optional(),
+  contentType: ContentTypeEnumZod.optional(),
   targetAges: z.array(TargetAgeZod).optional(),
   teacherExclusive: TeacherExclusiveZod,
   skosConcepts: z.array(SkosConceptZod).optional(),
@@ -80,7 +79,7 @@ export const LearningObjectCreateSchema = z.object({
   content: ContentZod,
   multipleChoice: multipleChoiceSchema.optional(), // JSON object
   submissionType: SubmissionTypeZod.optional(),
-  keywords: z.array(learningObjectKeywordSchema).optional(),
+  keywords: z.array(learningObjectKeywordSchema).nonempty().optional(),
 });
 
 export type LearningObjectCreateParams = z.infer<typeof LearningObjectCreateSchema>;
@@ -91,7 +90,7 @@ export const LearningObjectUpdateSchema = z.object({
   version: VersionZod.optional(),
   title: TitleZod.optional(),
   description: DescriptionZod.optional(),
-  contentType: ContentTypeEnum.optional(),
+  contentType: ContentTypeEnumZod.optional(),
   targetAges: z.array(TargetAgeZod).optional(),
   teacherExclusive: TeacherExclusiveZod.optional(),
   skosConcepts: z.array(SkosConceptZod).optional(),
@@ -104,15 +103,12 @@ export const LearningObjectUpdateSchema = z.object({
   available: AvailableZod.optional(),
   content: ContentZod.optional(),
   multipleChoice: multipleChoiceSchema.optional(),
-  learningObjectsKeywords: z.array(learningObjectKeywordSchema).optional(),
+  keywords: z.array(learningObjectKeywordSchema).optional(),
 });
 
 export type LearningObjectUpdateParams = z.infer<typeof LearningObjectUpdateSchema>;
 
-export type LearningObjectUpdateWithoutKeywords = Omit<
-  LearningObjectUpdateParams,
-  'learningObjectsKeywords'
->;
+export type LearningObjectUpdateWithoutKeywords = Omit<LearningObjectUpdateParams, 'keywords'>;
 
 export const LearningObjectFilterSchema = z.object({
   keywords: z.array(KeywordZod).optional(),

@@ -45,7 +45,7 @@ export const AnnouncementFilterSchema = z.object({
   classId: ClassIdZod.optional(),
   teacherId: TeacherIdZod.optional(),
   studentId: StudentIdZod.optional(),
-  timestamp: TimestampZod.optional(),
+  timestamp: z.date().optional(),
   timestampFilterType: TimestampFilterTypeZod.optional(),
 });
 

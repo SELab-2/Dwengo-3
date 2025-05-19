@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { CreateUserParams, RegisterParams } from '../util/types/auth.types';
 import { AuthProvider, ClassRole, User } from '@prisma/client';
-import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { BadRequestError } from '../util/types/error.types';
 import { UsersPersistence } from '../persistence/auth/users.persistence';
@@ -9,6 +9,7 @@ import { ClassFilterParams, ClassShort } from '../util/types/class.types';
 import { ClassDomain } from './class.domain';
 import { StudentPersistence } from '../persistence/student.persistence';
 import { TeacherPersistence } from '../persistence/teacher.persistence';
+import { AuthenticationProvider, ClassRoleEnum } from '../util/types/enums.types';
 
 export class UserDomain {
   private readonly providerMap = {

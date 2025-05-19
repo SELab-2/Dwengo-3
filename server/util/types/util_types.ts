@@ -2,32 +2,15 @@
  * This file contains all the atomic types used in other zod schemas to avoid code duplication.
  */
 
-import { z, ZodObject } from 'zod';
-import { Prisma, SubmissionType } from '.prisma/client';
-import { AuthenticationProvider, ClassRoleEnum } from './user.types';
+import { z } from 'zod';
+import { SubmissionType } from '.prisma/client';
+import { AuthenticationProvider, ClassRoleEnum, ContentTypeEnum, FilterType } from './enums.types';
 
 const MAX_TITLE_LENGTH = 255;
 const MAX_CONTENT_LENGTH = 1000;
 const MAX_DESCRIPTION_LENGTH = 1000;
 const MAX_FILENAME_LENGTH = 255;
 const MAX_FILEPATH_LENGTH = 255;
-
-export enum FilterType {
-  BEFORE = 'BEFORE',
-  AFTER = 'AFTER',
-  EQUAL = 'EQUAL',
-}
-
-export const ContentTypeEnum = z.enum([
-  'TEXT_PLAIN',
-  'TEXT_MARKDOWN',
-  'IMAGE_IMAGE_BLOCK',
-  'IMAGE_IMAGE',
-  'AUDIO_MPEG',
-  'APPLICATION_PDF',
-  'EXTERN',
-  'BLOCKLY',
-]);
 
 export const ClassIdZod = z.string().uuid('Invalid class ID');
 export const TeacherIdZod = z.string().uuid('Invalid teacher ID');
@@ -159,4 +142,11 @@ export const SubmissionTypeZod = z.nativeEnum(SubmissionType, {
 
 export const AuthenticationProviderZod = z.nativeEnum(AuthenticationProvider, {
   invalid_type_error: 'Invalid authentication provider',
+});
+
+export type UuId = z.infer<typeof UuidZod>;
+export type MessageId = z.infer<typeof MessageIdZod>;
+
+export const ContentTypeEnumZod = z.nativeEnum(ContentTypeEnum, {
+  invalid_type_error: 'Invalid content type',
 });

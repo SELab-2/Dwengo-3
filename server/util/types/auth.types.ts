@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { AuthenticationProvider, ClassRoleEnum } from './user.types';
 import {
   AuthenticationProviderZod,
   ClassRoleZod,
