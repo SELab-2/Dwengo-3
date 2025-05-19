@@ -1,4 +1,16 @@
-import { Box, Button, LinearProgress, Paper, Snackbar, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Drawer,
+  IconButton,
+  LinearProgress,
+  Paper,
+  Snackbar,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useLearningPathById } from '../hooks/useLearningPath';
@@ -35,6 +47,7 @@ import {
 import { fetchLearningObjectById } from '../api/learningObject.ts';
 import { fetchLearningPathNodeById } from '../api/learningPathNode.ts';
 import { AppRoutes } from '../util/app.routes.ts';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const mathJaxConfig = {
   loader: { load: ['[tex]/ams'] },
@@ -380,47 +393,71 @@ function LearningPathPage() {
     return 'white';
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const SidebarContent = (
+    <Box
+      width={isMobile ? '90%' : '300px'}
+      p={2}
+      sx={{
+        backgroundColor: theme.palette.custom.color6,
+        overflowY: 'auto',
+        height: '100%',
+      }}
+    >
+      {learningPath?.learningPathNodes.map((node, index) => (
+        <Box
+          key={node.id}
+          onClick={() => {
+            if (index !== activeIndex) {
+              setWrongAnswer(false);
+              setActiveIndex(index);
+              if (isMobile) setDrawerOpen(false);
+            }
+          }}
+          p={1}
+          mb={1}
+          bgcolor={nodeColor(index)}
+          borderRadius="8px"
+          sx={{ cursor: 'pointer', transition: 'all 0.3s', '&:hover': { bgcolor: 'lightgray' } }}
+        >
+          <Typography fontWeight="bold" variant="body1" noWrap>
+            {node.learningObject.title}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" noWrap>
+            ~{node.learningObject.estimatedTime} min
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  );
+
   return (
-    <Box display="flex" height="90vh">
-      {/* Sidebar */}
-      <Box
-        width="300px"
-        p={2}
-        sx={(theme) => ({
-          backgroundColor: theme.palette.custom.color6,
-          overflowY: 'auto',
-        })}
-      >
-        {learningPath?.learningPathNodes.map((node, index) => (
-          <Box
-            key={node.id}
-            onClick={() => {
-              if (index !== activeIndex) {
-                setWrongAnswer(false);
-                setActiveIndex(index);
-              }
-            }}
-            p={1}
-            mb={1}
-            bgcolor={nodeColor(index)}
-            borderRadius="8px"
-            sx={{ cursor: 'pointer', transition: 'all 0.3s', '&:hover': { bgcolor: 'lightgray' } }}
-          >
-            <Typography fontWeight="bold" variant="body1" noWrap>
-              {node.learningObject.title}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" noWrap>
-              ~{node.learningObject.estimatedTime} min
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+    <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} height="90vh">
+      {/* Sidebar for desktop */}
+      {!isMobile && SidebarContent}
 
       {/* Main Content */}
       <Box flex={1} p={3} display="flex" flexDirection="column">
-        <Typography variant="h5" mb={2}>
-          {learningPath?.title}
-        </Typography>
+        <Box flex={1} display="flex" flexDirection="row" mb={2}>
+          {isMobile && (
+            <>
+              {/* Sidebar for mobile */}
+              <IconButton onClick={() => setDrawerOpen(true)}>
+                <MenuIcon />
+              </IconButton>
+              <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+                {SidebarContent}
+              </Drawer>
+            </>
+          )}
+
+          <Typography variant="h5" m={1}>
+            {learningPath?.title}
+          </Typography>
+        </Box>
 
         <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
         <Typography variant="caption" color="text.secondary" mb={2}>
