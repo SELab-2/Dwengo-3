@@ -14,7 +14,7 @@ In deze laag kan u ook de definitie van de swagger-documentatie voor elke endpoi
 
 #### Domeinlaag
 
-De bestanden die deze laag vormen zijn terug te vinden in de folder `server/domain`. De hooftaak van deze laag is het uitvoeren van validatie. "Heeft de gebruikersinput wel de juiste structuur?", "Mag deze leerkracht de gegevens van deze leerling opvragen?", "Is deze student al deel van deze klas?", etc.
+De bestanden die deze laag vormen zijn terug te vinden in de folder `server/domain`. De hoofdtaak van deze laag is het uitvoeren van validatie. "Heeft de gebruikersinput wel de juiste structuur?", "Mag deze leerkracht de gegevens van deze leerling opvragen?", "Is deze student al deel van deze klas?", etc.
 Indien de request van de gebruiker naar de server is goedgekeurd, spreekt deze laag op zijn beurt de persistentielaag aan.
 
 #### Persistentielaag
@@ -68,10 +68,8 @@ Hierin staat gedefinieerd hoe men de parameters moet structureren om aankondigin
 
 ## Testen
 
-De testen backend testen zijn te vinden in `test/persistence`, `test/routes`, en `test/domain`.
-De testen runnen kan op de volgende manier:
-
-TODO
+De backend testen zijn te vinden in `test/persistence`, `test/routes`, en `test/domain`.
+Meer informatie over de testen is [hier](../test/README.md).
 
 ## Documentatie
 
