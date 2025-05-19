@@ -24,3 +24,9 @@ export enum FilterType {
   AFTER = 'AFTER',
   EQUAL = 'EQUAL',
 }
+
+export enum SubmissionTypeEnum {
+  READ = 'READ',
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  FILE = 'FILE',
+}

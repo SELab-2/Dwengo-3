@@ -3,7 +3,7 @@
  */
 
 import { z } from 'zod';
-import { SubmissionType } from '.prisma/client';
+import { SubmissionType } from '@prisma/client';
 import { AuthenticationProvider, ClassRoleEnum, ContentTypeEnum, FilterType } from './enums.types';
 
 const MAX_TITLE_LENGTH = 255;
