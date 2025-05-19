@@ -32,6 +32,9 @@ export async function addMockData(prisma: PrismaClient) {
 
     // find random learning path
     const learningPath = (await prisma.learningPath.findFirst({
+      where: {
+        id: '67e51a19531d59ac37659f58',
+      },
       include: { learningPathNodes: true },
     }))!;
 
