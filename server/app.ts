@@ -27,6 +27,7 @@ import { FavoritesController } from './routes/favorites.routes';
 import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
 import { LearningThemeController } from './routes/learningTheme.routes';
+import { router as groupRouter } from './routes/group.routes';
 
 export const app: Express = express();
 
@@ -144,6 +145,7 @@ apiRouter.use('/discussion', new DiscussionController().router);
 apiRouter.use('/message', new MessageController().router);
 apiRouter.use('/favorites', new FavoritesController().router);
 apiRouter.use('/learningTheme', new LearningThemeController().router);
+apiRouter.use('/group', groupRouter);
 
 // Error handling middleware
 app.use(errorHandling);

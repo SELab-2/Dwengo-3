@@ -43,6 +43,8 @@ import { MessagePersistence } from '../../server/persistence/message.persistence
 import { UsersPersistence } from '../../server/persistence/auth/users.persistence';
 import { CreateUserParams } from '../../server/util/types/auth.types';
 import * as crypto from 'node:crypto';
+import { GroupDetail } from '../../server/util/types/group.types';
+import { GroupPersistence } from '../../server/persistence/group.persistence';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
@@ -60,6 +62,7 @@ const studentPersistence: StudentPersistence = new StudentPersistence();
 const teacherPersistence: TeacherPersistence = new TeacherPersistence();
 const messagePersistence: MessagePersistence = new MessagePersistence();
 const usersPersistence: UsersPersistence = new UsersPersistence();
+const groupPersistence: GroupPersistence = new GroupPersistence();
 
 export const insertStudents = async (): Promise<FullUserType[]> => {
   const users: CreateUserParams[] = [
@@ -334,10 +337,12 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
   const classes = await insertClassesWithStudents();
   const learningPaths = await insertLearningPaths();
   const assignments: Promise<AssignmentDetail>[] = [];
+
   for (const classData of classes) {
     const groups = classData.students.map((student) => [student.id]);
+
     for (const path of learningPaths) {
-      const assignment = AssignmentCreateSchema.parse({
+      const assignmentData = AssignmentCreateSchema.parse({
         name: 'test',
         description: 'testDescription',
         classId: classData.id,
@@ -346,9 +351,20 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
         learningPathId: path.id,
         deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       });
-      assignments.push(assignmentPersistence.createAssignment(assignment));
+
+      const assignmentPromise = (async () => {
+        const createdAssignment = await assignmentPersistence.createAssignment(assignmentData);
+        createdAssignment.groups = await groupPersistence.createGroups(
+          assignmentData.groups,
+          createdAssignment.id,
+        );
+        return createdAssignment;
+      })();
+
+      assignments.push(assignmentPromise);
     }
   }
+
   return Promise.all(assignments);
 };
 

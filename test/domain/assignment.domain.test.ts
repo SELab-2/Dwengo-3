@@ -32,6 +32,7 @@ const { mockAssignmentPeristence, mockClassPeristence, mockGroupPeristence } = v
     mockGroupPeristence: {
       getGroupById: vi.fn(),
       getGroupByIdWithCustomIncludes: vi.fn(),
+      createGroups: vi.fn(),
     },
   };
 });
