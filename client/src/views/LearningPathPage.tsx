@@ -399,7 +399,7 @@ function LearningPathPage() {
 
   const SidebarContent = (
     <Box
-      width={isMobile ? '90%' : '300px'}
+      width={isMobile ? '91%' : '300px'}
       p={2}
       sx={{
         backgroundColor: theme.palette.custom.color6,
@@ -472,7 +472,7 @@ function LearningPathPage() {
               sx={{
                 minHeight: 0,
                 maxHeight: 'calc(100vh - var(--navbar-heigh))',
-                maxWidth: '70vw',
+                maxWidth: isMobile ? '100%' : '70vw',
               }}
             >
               {currentNode !== undefined && currentObject ? (
