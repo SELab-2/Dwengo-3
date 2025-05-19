@@ -137,8 +137,8 @@ function LearningPathPage() {
               setFile(null);
               setCurrentSubmission(response);
             },
-            onError: (error) => {
-              setError(error.message);
+            onError: (error: any) => {
+              setError(error.response.data.message);
             },
           },
         )
@@ -156,8 +156,8 @@ function LearningPathPage() {
               setFile(null);
               setCurrentSubmission(response);
             },
-            onError: (error) => {
-              setError(error.message);
+            onError: (error: any) => {
+              setError(error.response.data.message);
             },
           },
         );

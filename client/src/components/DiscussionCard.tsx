@@ -48,8 +48,8 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['discussion', discussion.id] });
         },
-        onError: (error) => {
-          setError(error.message);
+        onError: (error: any) => {
+          setError(error.response.data.message);
         },
       },
     );

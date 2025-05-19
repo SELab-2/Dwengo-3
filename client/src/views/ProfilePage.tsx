@@ -47,9 +47,9 @@ function ProfilePage() {
         // Redirect to the login page or home page
         navigate(AppRoutes.login);
       },
-      onError: (error) => {
+      onError: (error: any) => {
         // Handle error (e.g., show error message)
-        setError('Logout failed:' + error.message);
+        setError(error.response.data.message);
       },
     });
   };
@@ -61,8 +61,8 @@ function ProfilePage() {
         navigate(AppRoutes.login);
       },
 
-      onError: (error) => {
-        setError('Delete user failed: ' + error.message);
+      onError: (error: any) => {
+        setError(error.response.data.message);
       },
     });
   };

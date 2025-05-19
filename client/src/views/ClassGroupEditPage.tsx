@@ -156,8 +156,8 @@ export function ClassGroupEditPage() {
                       studentId: id,
                     },
                     {
-                      onError: (e) => {
-                        error.setError(e.message);
+                      onError: (error: any) => {
+                        error.setError(error.response.data.message);
                       },
                     },
                   );
@@ -181,8 +181,8 @@ export function ClassGroupEditPage() {
                       teacherId: id,
                     },
                     {
-                      onError: (e) => {
-                        error.setError(e.message);
+                      onError: (error: any) => {
+                        error.setError(error.response.data.message);
                       },
                     },
                   );

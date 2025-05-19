@@ -92,13 +92,13 @@ const DiscussionCreatePage: React.FC = () => {
                 navigate(AppRoutes.classDiscussions(classId!));
               },
               onError: (error: any) => {
-                setError(error.message);
+                setError(error.response.data.message);
               },
             },
           );
         },
         onError: (error: any) => {
-          setError(error.message);
+          setError(error.response.data.message);
         },
       },
     );
