@@ -49,7 +49,9 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
           queryClient.invalidateQueries({ queryKey: ['discussion', discussion.id] });
         },
         onError: (error: any) => {
-          setError(error.response.data.message);
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
         },
       },
     );

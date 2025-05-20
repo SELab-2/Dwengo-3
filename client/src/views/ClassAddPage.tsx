@@ -30,7 +30,7 @@ function ClassAddPage() {
         navigate(AppRoutes.class(response.id));
       },
       onError: (error: any) => {
-        setError(error.response.data.message);
+        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
       },
     });
   };
@@ -45,7 +45,9 @@ function ClassAddPage() {
           navigate(AppRoutes.myClasses);
         },
         onError: (error: any) => {
-          setError(error.response.data.message);
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
         },
       },
     );

@@ -157,7 +157,11 @@ export function ClassGroupEditPage() {
                     },
                     {
                       onError: (error: any) => {
-                        setError(error.response.data.message);
+                        setError(
+                          error?.response?.data?.message ||
+                            error?.message ||
+                            t('errorSendingErrorMessage'),
+                        );
                       },
                     },
                   );
@@ -182,7 +186,11 @@ export function ClassGroupEditPage() {
                     },
                     {
                       onError: (error: any) => {
-                        setError(error.response.data.message);
+                        setError(
+                          error?.response?.data?.message ||
+                            error?.message ||
+                            t('errorSendingErrorMessage'),
+                        );
                       },
                     },
                   );

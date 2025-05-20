@@ -141,7 +141,7 @@ function LearningPathPage() {
           setCurrentSubmission(submission);
         }
       } catch (error: any) {
-        setError(error.response.data.message || error.message);
+        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
       } finally {
         setIsLoading(false);
       }
@@ -203,7 +203,9 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(error.response.data.message || error.message);
+            setError(
+              error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+            );
           },
         },
       );
@@ -216,7 +218,9 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(error.response.data.message || error.message);
+            setError(
+              error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+            );
           },
         },
       );
@@ -234,7 +238,9 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(error.response.data.message || error.message);
+            setError(
+              error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+            );
           },
         },
       );
@@ -248,7 +254,9 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(error.response.data.message || error.message);
+            setError(
+              error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+            );
           },
         },
       );
@@ -332,7 +340,9 @@ function LearningPathPage() {
               setCurrentSubmission(response);
             },
             onError: (error: any) => {
-              setError(error.response.data.message || error.message);
+              setError(
+                error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+              );
             },
           },
         )
@@ -351,7 +361,9 @@ function LearningPathPage() {
               setCurrentSubmission(response);
             },
             onError: (error: any) => {
-              setError(error.response.data.message || error.message);
+              setError(
+                error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+              );
             },
           },
         );

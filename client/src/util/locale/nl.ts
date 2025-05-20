@@ -113,5 +113,6 @@ export const nl = {
     post: 'Plaatsen',
     joinRequestSuccess: 'Toelatingsverzoek is goedgekeurd',
     copied: 'Gekopieerd naar klembord',
+    errorSendingErrorMessage: 'Fout bij het verzenden van foutmelding',
   },
 };

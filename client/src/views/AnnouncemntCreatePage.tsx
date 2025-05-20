@@ -63,7 +63,9 @@ function AnnouncementCreatePage() {
           navigate(AppRoutes.announcement(response.id));
         },
         onError: (error: any) => {
-          setError(error.response.data.message);
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
         },
       },
     );

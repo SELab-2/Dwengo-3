@@ -115,5 +115,6 @@ export const en = {
     post: 'Post',
     joinRequestSuccess: 'Join request has been approved',
     copied: 'Copied to clipboard',
+    errorSendingErrorMessage: 'Error sending error message',
   },
 };

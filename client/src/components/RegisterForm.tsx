@@ -48,7 +48,9 @@ function RegisterForm() {
           navigate(AppRoutes.home);
         },
         onError: (error: any) => {
-          setError(error.response.data.message);
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
         },
       },
     );
