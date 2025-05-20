@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createAssignment, fetchAssignmentById, fetchAssignments } from '../api/assignment';
-import { AssignmentCreate } from '../util/interfaces/assignment.interfaces';
+import { AssignmentCreate, AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 
 /**
  * Fetches a list of assignments based on the provided class, group, student, and teacher IDs.
@@ -96,5 +96,81 @@ export function useAssignmentsOfClass(classId: string) {
     },
     enabled: !!classId,
     refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Hook to fetch the upcoming deadlines for a specific student or teacher
+ *
+ * @param studentId - The ID of the student for whom to fetch upcoming deadlines
+ * @param teacherId - The ID of the teacher for whom to fetch upcoming deadlines
+ * @return A query object containing the assignments data
+ */
+export function useUpcomingAssignments({
+  studentId,
+  teacherId,
+}: {
+  studentId?: string;
+  teacherId?: string;
+}) {
+  return useQuery({
+    queryKey: ['upcomingDeadlines', studentId, teacherId],
+    queryFn: async () => {
+      const paginatedAssignments = await fetchAssignments({ studentId, teacherId });
+      const { data: assignments } = paginatedAssignments;
+
+      // Filter out assignments with a deadline in the past
+      const filteredAssignments = assignments.filter((assignment) => {
+        const deadline = new Date(assignment.deadline);
+        return deadline > new Date();
+      });
+
+      sortDeadlines(filteredAssignments);
+
+      return filteredAssignments;
+    },
+    enabled: !!studentId || !!teacherId,
+  });
+}
+
+export function useNotStartedAssignments({ studentId }: { studentId?: string }) {
+  return useQuery({
+    queryKey: ['notStartedAssignments', studentId],
+    queryFn: async () => {
+      const paginatedAssignments = await fetchAssignments({ studentId });
+      const { data: assignments } = paginatedAssignments;
+
+      // Filter out assignments with a deadline in the past
+      let filteredAssignments = assignments.filter((assignment) => {
+        const deadline = new Date(assignment.deadline);
+        return deadline > new Date();
+      });
+
+      // Filter out assignments that already have progress
+      filteredAssignments = filteredAssignments.filter((assignment) => {
+        const group = assignment.groups.find((group) => {
+          return group.students.some((student) => student.id == studentId);
+        });
+        return group?.progress.length === 0;
+      });
+
+      sortDeadlines(filteredAssignments);
+
+      return filteredAssignments;
+    },
+    enabled: !!studentId,
+  });
+}
+
+/**
+ * Sorts an array of assignments by their deadlines in ascending order in-place.
+ *
+ * @param assignments - The array of assignments to be sorted.
+ */
+export function sortDeadlines(assignments: AssignmentShort2[]): void {
+  assignments.sort((a, b) => {
+    const deadlineA = a.deadline ? new Date(a.deadline).getTime() : Infinity;
+    const deadlineB = b.deadline ? new Date(b.deadline).getTime() : Infinity;
+    return deadlineA - deadlineB;
   });
 }

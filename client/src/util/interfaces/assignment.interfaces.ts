@@ -26,7 +26,7 @@ export interface AssignmentShort2 {
       };
     }[];
   };
-  deadline?: string;
+  deadline: string;
 }
 
 export interface AssignmentDetail {

@@ -75,3 +75,38 @@ export function useDetailedDiscussionsByIds(ids: string[]) {
     refetchOnWindowFocus: false,
   });
 }
+
+/**
+ * Fetches the newest discussions for a specific user.
+ *
+ * @param userId - The ID of the user for whom to fetch discussions
+ * @returns Paginated data containing the list of discussions.
+ */
+export function useNewestDiscussions({ userId }: { userId: string | undefined }) {
+  return useQuery({
+    queryKey: ['newestDiscussions', userId],
+    queryFn: async () => {
+      const paginatedDiscussions: PaginatedData<DiscussionShort> = await fetchDiscussions(
+        userId,
+        undefined,
+      );
+      const discussions = paginatedDiscussions.data;
+
+      // Map the discussionShorts to discussionDetails
+      const discussionDetails = await Promise.all(
+        discussions.map((discussion) => fetchDiscussionById(discussion.id)),
+      );
+
+      // Sort the discussions be the newest messages
+      const sortedDiscussions = discussionDetails.sort((a, b) => {
+        const aLastMessageDate = a.messages[0]?.createdAt;
+        const bLastMessageDate = b.messages[0]?.createdAt;
+        return bLastMessageDate < aLastMessageDate ? -1 : 1;
+      });
+
+      return sortedDiscussions;
+    },
+    enabled: !!userId,
+    refetchOnWindowFocus: false,
+  });
+}
