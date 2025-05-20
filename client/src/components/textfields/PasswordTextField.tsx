@@ -10,7 +10,14 @@ function PasswordTextField({
 }) {
   const { t } = useTranslation();
 
-  return <CustomTextField value={password} setValue={setPassword} translation={t('password')} />;
+  return (
+    <CustomTextField
+      type="password"
+      value={password}
+      setValue={setPassword}
+      translation={t('password')}
+    />
+  );
 }
 
 export default PasswordTextField;

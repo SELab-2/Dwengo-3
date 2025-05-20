@@ -4,7 +4,9 @@ import CustomTextField from './CustomTextField';
 function EmailTextField({ email, setEmail }: { email: string; setEmail: (email: string) => void }) {
   const { t } = useTranslation();
 
-  return <CustomTextField value={email} setValue={setEmail} translation={t('email')} />;
+  return (
+    <CustomTextField type="email" value={email} setValue={setEmail} translation={t('email')} />
+  );
 }
 
 export default EmailTextField;

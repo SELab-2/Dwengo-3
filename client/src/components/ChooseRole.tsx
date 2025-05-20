@@ -1,6 +1,7 @@
 import { Box, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
+import { IconSize } from '../util/size';
 
 export function ChooseRole({
   role,
@@ -20,8 +21,24 @@ export function ChooseRole({
           setRole(e.target.value as ClassRoleEnum);
         }}
       >
-        <FormControlLabel value={ClassRoleEnum.STUDENT} control={<Radio />} label={t('student')} />
-        <FormControlLabel value={ClassRoleEnum.TEACHER} control={<Radio />} label={t('teacher')} />
+        <FormControlLabel
+          value={ClassRoleEnum.STUDENT}
+          control={
+            <Radio
+              sx={{ '& .MuiSvgIcon-root': { fontSize: IconSize.xsmall } }} // adjust as needed
+            />
+          }
+          label={t('student')}
+        />
+        <FormControlLabel
+          value={ClassRoleEnum.TEACHER}
+          control={
+            <Radio
+              sx={{ '& .MuiSvgIcon-root': { fontSize: IconSize.xsmall } }} // adjust as needed
+            />
+          }
+          label={t('teacher')}
+        />
       </RadioGroup>
     </Box>
   );

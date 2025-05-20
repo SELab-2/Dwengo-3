@@ -1,4 +1,6 @@
-import { TextField } from '@mui/material';
+import { TextField, useMediaQuery } from '@mui/material';
+import { HTMLInputTypeAttribute } from 'react';
+import { MarginSize } from '../../util/size';
 
 function CustomTextField({
   value,
@@ -6,23 +8,30 @@ function CustomTextField({
   translation,
   required = true,
   autoFocus = false,
+  type = 'text',
 }: {
   value: string;
   setValue: (value: string) => void;
   translation: string;
   required?: boolean;
   autoFocus?: boolean;
+  type?: HTMLInputTypeAttribute;
 }) {
+  const isMobile = useMediaQuery('(max-width: 600px)');
+
   return (
     <TextField
-      margin="normal"
       required={required}
       fullWidth
       label={translation}
       name={translation}
-      type="text"
+      type={type}
       autoFocus={autoFocus}
       value={value}
+      sx={{
+        mt: isMobile ? MarginSize.tiny : MarginSize.xsmall,
+      }}
+      size={isMobile ? 'small' : 'medium'}
       onChange={(e) => setValue(e.target.value)}
     />
   );
