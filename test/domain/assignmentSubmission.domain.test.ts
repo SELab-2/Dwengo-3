@@ -116,7 +116,7 @@ let getAssignmentSubmissionsInvalidGroupIdQuery = {
 };
 let getAssignmentSubmissionsInvalidNodeIdQuery = {
   ...testPaginationFilter,
-  nodeId: 'id',
+  nodeId: '',
 };
 let getAssignmentSubmissionsInvalidFavoriteIdQuery = {
   ...testPaginationFilter,
@@ -181,7 +181,6 @@ describe('assignmentSubmission domain', () => {
         ),
       ).rejects.toThrow();
     });
-    /* regexZod laat dit toe
     test('invalid node id fails', async () => {
       await expect(
         assignmentSubmissionDomain.getAssignmentSubmissions(
@@ -190,7 +189,6 @@ describe('assignmentSubmission domain', () => {
         ),
       ).rejects.toThrow();
     });
-    */
     test('invalid favorite id fails', async () => {
       await expect(
         assignmentSubmissionDomain.getAssignmentSubmissions(
