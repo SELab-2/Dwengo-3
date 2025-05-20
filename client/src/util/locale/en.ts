@@ -128,5 +128,7 @@ export const en = {
     latestAnnouncements: 'Latest announcements',
     noLatestAnnouncements: 'No latest announcements',
     lastMessage: 'Last message',
+    latestFinishedAssignments: 'Latest finished assignments',
+    noLatestFinishedAssignments: 'No latest finished assignments',
   },
 };

@@ -1,16 +1,21 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import { useNotStartedAssignments, useUpcomingAssignments } from '../hooks/useAssignment';
+import {
+  useLatestsFinishedAssignments,
+  useNotStartedAssignments,
+  useUpcomingAssignments,
+} from '../hooks/useAssignment';
 import LearningPathCard from '../components/learningPathCard';
 import { AppRoutes } from '../util/app.routes';
 import { myGroup } from '../util/helpers/group.helpers';
 import { useNavigate } from 'react-router-dom';
 import { useLatestDiscussions } from '../hooks/useDiscussion';
-import { NewestDiscussionCard } from '../components/NewestDiscussionCard';
+import { LatestDiscussionCard } from '../components/LatestDiscussionCard';
 import { useLatestsAnnouncements } from '../hooks/useAnnouncement';
 import AnnouncementCard from '../components/AnnouncementCard';
+import LatestFinishedAssignmentCard from '../components/LatestFinishedAssignmentsCard';
 
 function HomePage() {
   const { user } = useAuth();
@@ -31,6 +36,10 @@ function HomePage() {
 
   const { data: latestAnnouncements } = useLatestsAnnouncements({
     studentId: user?.student?.id,
+  });
+
+  const { data: latestFinishedAssignments } = useLatestsFinishedAssignments({
+    teacherId: user?.teacher?.id,
   });
 
   return (
@@ -109,7 +118,10 @@ function HomePage() {
             <Typography variant="body1">{t('noLatestDiscussions')}</Typography>
           )}
           {latestDiscussions?.map((discussion) => (
-            <NewestDiscussionCard discussion={discussion}></NewestDiscussionCard>
+            <LatestDiscussionCard
+              key={discussion.id}
+              discussion={discussion}
+            ></LatestDiscussionCard>
           ))}
 
           <Typography variant="h4">{t('latestAnnouncements')}</Typography>
@@ -132,8 +144,33 @@ function HomePage() {
         </>
       )) || (
         <>
-          <Typography variant="h4">{t('newestDiscussions')}</Typography>
-          <Typography variant="h4">{t('finishedAssignments')}</Typography>
+          <Typography variant="h4">{t('latestDiscussions')}</Typography>
+          {latestDiscussions?.length === 0 && (
+            <Typography variant="body1">{t('noLatestDiscussions')}</Typography>
+          )}
+          {latestDiscussions?.map((discussion) => (
+            <LatestDiscussionCard
+              key={discussion.id}
+              discussion={discussion}
+            ></LatestDiscussionCard>
+          ))}
+          <Typography variant="h4">{t('latestFinishedAssignments')}</Typography>
+          {latestFinishedAssignments?.length === 0 && (
+            <Typography variant="body1">{t('noLatestFinishedAssignments')}</Typography>
+          )}
+          {latestFinishedAssignments?.map(({ assignment, group }) => (
+            <Box
+              key={assignment.id}
+              onClick={() =>
+                navigate(AppRoutes.groupSubmission(assignment.class.id, assignment.id, group.id))
+              }
+            >
+              <LatestFinishedAssignmentCard
+                assignment={assignment}
+                group={group}
+              ></LatestFinishedAssignmentCard>
+            </Box>
+          ))}
         </>
       )}
     </Box>

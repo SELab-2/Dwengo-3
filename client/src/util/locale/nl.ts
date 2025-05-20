@@ -128,5 +128,7 @@ export const nl = {
     latestAnnouncements: 'Recentste aankondigingen',
     noLatestAnnouncements: 'Geen recente aankondigingen',
     lastMessage: 'Laatste bericht',
+    latestFinishedAssignments: 'Recentste voltooide opdrachten',
+    noLatestFinishedAssignments: 'Geen recente voltooide opdrachten',
   },
 };

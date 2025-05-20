@@ -129,5 +129,7 @@ export const fr = {
     latestsAnnouncements: 'Dernières annonces',
     noLatestAnnouncements: 'Aucune annonce récente',
     lastMessage: 'Dernier message',
+    latestFinishedAssignments: 'Derniers devoirs terminés',
+    noLatestFinishedAssignments: 'Aucun devoir terminé récemment',
   },
 };
