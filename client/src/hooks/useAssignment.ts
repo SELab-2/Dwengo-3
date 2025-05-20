@@ -219,3 +219,23 @@ export function useLatestsFinishedAssignments({ teacherId }: { teacherId?: strin
     enabled: !!teacherId,
   });
 }
+
+/**
+ * Hook to fetch the assignment for a specific group
+ *
+ * @param groupId - The ID of the group for which to fetch assignments
+ * @returns A query object containing the assignment data
+ */
+export function useAssignmentOfGroup(groupId: string) {
+  return useQuery({
+    queryKey: ['assignmentsOfGroup', groupId],
+    queryFn: async () => {
+      const { data: paginatedAssignments } = await fetchAssignments({ groupId });
+      const assignment = paginatedAssignments[0];
+      const detailedAssignment = await fetchAssignmentById(assignment.id);
+      return detailedAssignment;
+    },
+    enabled: !!groupId,
+    refetchOnWindowFocus: false,
+  });
+}

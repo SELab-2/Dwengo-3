@@ -106,6 +106,7 @@ export const en = {
     deleteAccountMessage: 'Are you sure you want to delete your account?',
     deleteAccountWarning: 'Warning: Deleting your account is permanent and cannot be undone.',
     joinRequestSucces: 'Request to join the class has been successfully sent',
+    goToDiscussion: 'Go to discussion',
     question: 'Question',
     completed: 'completed',
     deadlineRequired: 'Deadline is required',

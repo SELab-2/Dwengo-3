@@ -33,8 +33,12 @@ import {
   fetchAssignmentSubmissions,
 } from '../api/assignmentSubmission';
 import DownloadIcon from '@mui/icons-material/Download';
+import ForumIcon from '@mui/icons-material/Forum';
 import { useAuth } from '../hooks/useAuth';
 import { AxiosProgressEvent } from 'axios';
+import { useAssignmentOfGroup } from '../hooks/useAssignment';
+import Tooltip from '@mui/material/Tooltip';
+import { useDiscussions } from '../hooks/useDiscussion';
 import { MathJax, MathJaxContext } from 'better-react-mathjax';
 import parse from 'html-react-parser';
 import { useGroup, useUpdateCurrentIndexForGroup } from '../hooks/useGroup.ts';
@@ -52,6 +56,7 @@ import { GroupDetail } from '../util/interfaces/group.interfaces.ts';
 import { FavoriteDetail } from '../util/interfaces/favorite.interfaces.ts';
 import { useFavoriteById, useUpdateCurrentNodeIndexForFavorite } from '../hooks/useFavorite.ts';
 import { ClassRoleEnum } from '../util/interfaces/class.interfaces.ts';
+import { GoToOrCreateDiscussion } from '../components/GoToOrCreateDiscussion.tsx';
 
 const mathJaxConfig = {
   loader: { load: ['[tex]/ams'] },
@@ -69,6 +74,17 @@ function LearningPathPage() {
 
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
+
+  // Fetch the assignment for the group to be able to create a discussion
+  const { data: assignment } = useAssignmentOfGroup(groupId!);
+
+  // Fetch the discussions for the assignment to see if there already is a discussion
+  const { data: paginatedDiscussions } = useDiscussions({
+    userId: user?.id,
+    assignmentId: assignment?.id,
+  });
+  // There should only be one discussion per assignment for this user
+  const discussion = paginatedDiscussions?.data?.[0];
 
   let data: GroupDetail | FavoriteDetail | undefined = undefined;
   if (groupId) data = useGroup(groupId).data;
@@ -452,7 +468,7 @@ function LearningPathPage() {
       {/* Main Content */}
       <Box flex={1} p={2} display="flex" flexDirection="column">
         {isMobile && (
-          <Box flex={1} display="flex" flexDirection="row" mb={2}>
+          <Box display="flex" flexDirection="row" mb={2}>
             {/* Sidebar for mobile */}
             <IconButton onClick={() => setDrawerOpen(true)}>
               <MenuIcon />
@@ -464,13 +480,29 @@ function LearningPathPage() {
             <Typography variant="h5" m={1}>
               {learningPath?.title}
             </Typography>
+            <GoToOrCreateDiscussion
+              assignment={assignment}
+              discussion={discussion}
+              groupId={groupId ?? undefined}
+              isMobile={isMobile}
+              user={user ?? undefined}
+            />
           </Box>
         )}
 
         {!isMobile && (
-          <Typography variant="h5" m={1}>
-            {learningPath?.title}
-          </Typography>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h5" m={1}>
+              {learningPath?.title}
+            </Typography>
+            <GoToOrCreateDiscussion
+              assignment={assignment}
+              discussion={discussion}
+              groupId={groupId ?? undefined}
+              isMobile={isMobile}
+              user={user ?? undefined}
+            />
+          </Box>
         )}
 
         <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
