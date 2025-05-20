@@ -32,8 +32,7 @@ const LanguageSwitcher: React.FC = () => {
         <LanguageIcon
           sx={{
             color: theme.palette.secondary.main,
-            width: IconSize.large,
-            height: IconSize.large,
+            fontSize: { xs: IconSize.small, sm: IconSize.medium, md: IconSize.large }, // Responsive icon size
           }}
         />
       </IconButton>
