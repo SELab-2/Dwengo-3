@@ -1,10 +1,17 @@
+import { Box } from '@mui/material';
+
 function DwengoIcon({ href }: { href: string }) {
   return (
-    <a href={href} style={{ height: '100%' }}>
-      <img
-        src="/dwengo-groen-zwart.svg" // Path to the icon in the public folder
+    <a href={href}>
+      <Box
+        component="img"
+        src="/dwengo-groen-zwart.svg"
         alt="Dwengo Icon"
-        style={{ height: '100%' }} // 75% of the parent container's height
+        sx={{
+          height: { xs: 60, sm: 70, md: 80 }, // Responsive heights in px
+          width: 'auto',
+          display: 'block',
+        }}
       />
     </a>
   );
