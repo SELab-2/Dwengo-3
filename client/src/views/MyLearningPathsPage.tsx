@@ -45,9 +45,11 @@ function MyLearningPathsPage() {
         </Typography>
         <Stack spacing={2}>
           {assignments.map((assignment) => (
-            <Box onClick={isMobile ? (event) => handleClick(event, assignment) : undefined}>
+            <Box
+              key={assignment.id}
+              onClick={isMobile ? (event) => handleClick(event, assignment) : undefined}
+            >
               <LearningPathCard
-                key={assignment.id}
                 assignment={assignment}
                 userId={user?.id}
                 visualizeProgress={false}
@@ -90,6 +92,7 @@ function MyLearningPathsPage() {
         <Stack spacing={2}>
           {favorites.map((favorite) => (
             <Box
+              key={favorite.id}
               onClick={
                 isMobile
                   ? (event) =>
@@ -100,7 +103,6 @@ function MyLearningPathsPage() {
               }
             >
               <LearningPathCard
-                key={favorite.id}
                 favorite={favorite}
                 visualizeProgress={false}
                 actionButtons={
