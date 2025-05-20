@@ -215,8 +215,6 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
         )?.index;
 
         if (!toNodeIndex) {
-          // KANKER API geeft transitions naar nodes die niet bestaan
-          // Ik los dit op door gewoon naar de volgende node te verwijzen 🤬
           toNodeIndex = node_index + 1;
         }
 
