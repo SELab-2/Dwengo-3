@@ -1,7 +1,10 @@
 import { z } from 'zod';
 
 export const LearningPathNodeTransitionCreateSchema = z.object({
-  learningPathNodeId: z.string(),
+  learningPathNodeId: z
+    .string()
+    .regex(/^[0-9a-z]+$/)
+    .or(z.string().uuid()),
   toNodeIndex: z.number(),
   condition: z.string().optional(),
 });

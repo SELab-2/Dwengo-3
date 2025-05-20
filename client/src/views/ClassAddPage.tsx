@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
 import CustomTextField from '../components/textfields/CustomTextField';
 import { useTranslation } from 'react-i18next';
@@ -51,6 +51,9 @@ function ClassAddPage() {
     );
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box
       sx={{
@@ -66,7 +69,7 @@ function ClassAddPage() {
         <Paper
           elevation={3}
           sx={{
-            width: '100%',
+            width: isMobile ? '70%' : '100%',
             maxWidth: 500,
             mx: 'auto',
             mt: 6,
@@ -105,7 +108,7 @@ function ClassAddPage() {
       <Paper
         elevation={3}
         sx={{
-          width: '100%',
+          width: isMobile ? '70%' : '100%',
           maxWidth: 500,
           mx: 'auto',
           mt: 6,

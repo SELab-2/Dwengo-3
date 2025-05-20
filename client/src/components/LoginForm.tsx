@@ -6,13 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useLogin } from '../hooks/useAuth';
 import { ClassRoleEnum } from '../util/interfaces/class.interfaces';
-import { IsStudentSwitch } from './IsStudentSwitch';
 import { useError } from '../hooks/useError';
 import { MarginSize } from '../util/size';
 import { AppRoutes } from '../util/app.routes';
-import { ApiRoutes } from '../api/api.routes';
 import { UserDetail } from '../util/interfaces/user.interfaces';
-import GoogleLoginButton from './GoogleLoginButton';
+import GoogleButton from './GoogleButton';
+import { ChooseRole } from './ChooseRole';
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -22,25 +21,23 @@ function LoginForm() {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isStudent, setIsStudent] = useState<boolean>(false);
+  const [role, setRole] = useState<ClassRoleEnum | null>(null);
 
   const loginMutation = useLogin();
 
-  const handleGoogleLogin = () => {
-    // Redirect to the Google login page
-    window.location.href =
-      import.meta.env.VITE_API_URL +
-      (isStudent ? ApiRoutes.login.google.student : ApiRoutes.login.google.teacher);
-  };
-
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!role) {
+      setError(t('selectRole'));
+      return;
+    }
 
     loginMutation.mutate(
       {
         email: email,
         password: password,
-        role: isStudent ? ClassRoleEnum.STUDENT : ClassRoleEnum.TEACHER, //TODO: Change this to the correct role
+        role: role,
       },
       {
         onSuccess: (response: UserDetail) => {
@@ -58,11 +55,9 @@ function LoginForm() {
   };
 
   return (
-    <Box component="form" onSubmit={handleLoginSubmit} sx={{ mt: 0 }}>
-      <IsStudentSwitch isStudent={isStudent} setIsStudent={setIsStudent} />
-      <Divider sx={{ mb: MarginSize.xsmall }} />
-      <GoogleLoginButton onClick={handleGoogleLogin}></GoogleLoginButton>
-      <Divider sx={{ mt: MarginSize.xsmall }} />
+    <Box component="form" onSubmit={handleLoginSubmit}>
+      <ChooseRole role={role} setRole={setRole} />
+      <Divider />
       <EmailTextField email={email} setEmail={setEmail} />
       <PasswordTextField password={password} setPassword={setPassword} />
       <Button
@@ -70,9 +65,11 @@ function LoginForm() {
         fullWidth
         variant="contained"
         sx={{ mt: MarginSize.tiny, mb: MarginSize.xsmall }}
+        disabled={role === null}
       >
         {t('login')}
       </Button>
+      <GoogleButton role={role} label={t('loginWithGoogle')}></GoogleButton>
     </Box>
   );
 }

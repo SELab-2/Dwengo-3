@@ -6,7 +6,10 @@ export const FavoriteFilterSchema = z.object({
 });
 
 export const FavoriteCreateSchema = z.object({
-  learningPathId: z.string(),
+  learningPathId: z
+    .string()
+    .regex(/^[0-9a-z]+$/)
+    .or(z.string().uuid()),
 });
 
 export type FavoriteFilterParams = z.infer<typeof FavoriteFilterSchema>;
