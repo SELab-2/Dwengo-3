@@ -9,7 +9,7 @@ import {
 } from '../testObjects.json';
 import { LearningPathNodeDomain } from '../../server/domain/learningPathNode.domain';
 import { UserEntity } from '../../server/util/types/user.types';
-import { ClassRoleEnum } from '../../server/util/types/enums.types';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // learningPathNode persistence mock
 const { mockLearningPathNodePeristence } = vi.hoisted(() => {
@@ -32,11 +32,13 @@ let userTeacher: UserEntity = {
   ...testUsers[0],
   role: testUsers[0].role as ClassRoleEnum,
   teacher: testTeachers[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 let userStudent: UserEntity = {
   ...testUsers[5],
   role: testUsers[5].role as ClassRoleEnum,
   student: testStudents[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 
 let createLearningPathNodeParams = testLearningPathNodes[0];
@@ -63,7 +65,7 @@ describe('learningPathNode domain', () => {
     test('user is student fails', async () => {
       await expect(
         learningPathNodeDomain.createLearningPathNode(createLearningPathNodeParams, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40009 });
     });
     test('invalid learningpath id fails', async () => {
       await expect(

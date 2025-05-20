@@ -133,8 +133,6 @@ export class AnnouncementPersistence {
       },
     });
 
-    if (!announcement) {
-      throw new BadRequestError(40037);
-    }
+    return announcement;
   }
 }

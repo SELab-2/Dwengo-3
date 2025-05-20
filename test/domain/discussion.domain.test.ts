@@ -13,7 +13,6 @@ import {
 } from '../testObjects.json';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
-// discussion persistence mock
 const {
   mockDiscussionPeristence,
   mockGroupPersistence,
@@ -133,23 +132,16 @@ describe('discussion domain', () => {
         discussionDomain.getDiscussions(getDiscussionsQuery, userTeacher),
       ).resolves.not.toThrow();
     });
-    test('user does not belong to a group fails', async () => {
-      await expect(
-        discussionDomain.getDiscussions(getDiscussionsQuery, userTeacherOtherGroup),
-      ).rejects.toThrow();
-    });
     test('invalid pagination fails', async () => {
       await expect(
         discussionDomain.getDiscussions(getDiscussionsInvalidPaginationQuery, userTeacher),
       ).rejects.toThrow();
     });
-    /*
-    test('empty query fails', async () => {
+    test('user id is not query user id fails', async () => {
       await expect(
-        discussionDomain.getDiscussions(getDiscussionsEmptyQuery, userTeacher),
-      ).rejects.toThrow();
+        discussionDomain.getDiscussions(getDiscussionsQuery, userStudent),
+      ).rejects.toMatchObject({ _errorCode: 40049 });
     });
-    */
   });
   describe('getDiscussionById', () => {
     test('user belongs to group passes', async () => {
@@ -160,7 +152,7 @@ describe('discussion domain', () => {
     test('user does not belong to group fails', async () => {
       await expect(
         discussionDomain.getDiscussionById(getDiscussionByIdId, userTeacherOtherGroup),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40001 });
     });
   });
   describe('createDiscussion', () => {
@@ -172,7 +164,7 @@ describe('discussion domain', () => {
     test('user does not belong to group fails', async () => {
       await expect(
         discussionDomain.createDiscussion(createDiscussionParams, userTeacherOtherGroup),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40001 });
     });
     test('invalid group id fails', async () => {
       await expect(

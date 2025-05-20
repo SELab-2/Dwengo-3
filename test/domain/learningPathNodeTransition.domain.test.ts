@@ -9,7 +9,7 @@ import {
 } from '../testObjects.json';
 import { LearningPathNodeTransitionDomain } from '../../server/domain/learningPathNodeTransition.domain';
 import { UserEntity } from '../../server/util/types/user.types';
-import { ClassRoleEnum } from '../../server/util/types/enums.types';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // learningPathNodeTransition persistence mock
 const { mockLearningPathNodeTransitionPeristence } = vi.hoisted(() => {
@@ -30,11 +30,13 @@ let userTeacher: UserEntity = {
   ...testUsers[0],
   role: testUsers[0].role as ClassRoleEnum,
   teacher: testTeachers[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 let userStudent: UserEntity = {
   ...testUsers[5],
   role: testUsers[5].role as ClassRoleEnum,
   student: testStudents[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 
 let createLearningPathNodeTransitionParams = testLearningPathNodeTransitions[0];
@@ -67,7 +69,7 @@ describe('learningPathNodeTransition domain', () => {
           createLearningPathNodeTransitionParams,
           userStudent,
         ),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40009 });
     });
     test('invalid pathnode id fails', async () => {
       await expect(
