@@ -75,3 +75,43 @@ export function useDetailedDiscussionsByIds(ids: string[]) {
     refetchOnWindowFocus: false,
   });
 }
+
+/**
+ * Fetches the newest discussions for a specific user.
+ *
+ * @param userId - The ID of the user for whom to fetch discussions
+ * @returns A query object containg a list of discussions sorted by the newest messages. The messages are also sorted by their createdAt date.
+ */
+export function useLatestDiscussions({ userId }: { userId: string | undefined }) {
+  return useQuery({
+    queryKey: ['newestDiscussions', userId],
+    queryFn: async () => {
+      const paginatedDiscussions: PaginatedData<DiscussionShort> = await fetchDiscussions(
+        userId,
+        undefined,
+      );
+      const discussions = paginatedDiscussions.data;
+
+      // Map the discussionShorts to discussionDetails
+      const discussionDetails = await Promise.all(
+        discussions.map((discussion) => fetchDiscussionById(discussion.id)),
+      );
+
+      // Sort all messages by their createdAt date
+      discussionDetails.forEach((discussion) => {
+        discussion.messages.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      });
+
+      // Sort the discussions by the newest messages
+      const sortedDiscussions = discussionDetails.sort((a, b) => {
+        const aLastMessageDate = a.messages[0].createdAt;
+        const bLastMessageDate = b.messages[0].createdAt;
+        return bLastMessageDate.getTime() - aLastMessageDate.getTime();
+      });
+
+      return sortedDiscussions;
+    },
+    enabled: !!userId,
+    refetchOnWindowFocus: false,
+  });
+}

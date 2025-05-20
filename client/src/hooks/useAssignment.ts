@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createAssignment, fetchAssignmentById, fetchAssignments } from '../api/assignment';
-import { AssignmentCreate } from '../util/interfaces/assignment.interfaces';
+import { AssignmentCreate, AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
+import {
+  AssignmentFilterType,
+  filterAssignmentOnProgress,
+} from '../util/helpers/assignment.helper';
 
 /**
  * Fetches a list of assignments based on the provided class, group, student, and teacher IDs.
@@ -96,6 +100,123 @@ export function useAssignmentsOfClass(classId: string) {
     },
     enabled: !!classId,
     refetchOnWindowFocus: false,
+  });
+}
+
+/**
+ * Hook to fetch the upcoming deadlines for a specific student
+ *
+ * @param studentId - The ID of the student for whom to fetch upcoming deadlines
+ * @return A query object containing the assignments data
+ */
+export function useUpcomingAssignments({ studentId }: { studentId?: string }) {
+  return useQuery({
+    queryKey: ['upcomingDeadlines', studentId],
+    queryFn: async () => {
+      const paginatedAssignments = await fetchAssignments({ studentId });
+      const { data: assignments } = paginatedAssignments;
+
+      // Filter out assignments with a deadline in the past
+      let filteredAssignments = assignments.filter((assignment) => {
+        const deadline = new Date(assignment.deadline);
+        return deadline > new Date();
+      });
+
+      // Only include assignments that are not finished
+      filteredAssignments = filteredAssignments.filter((assignment) =>
+        filterAssignmentOnProgress({
+          assignment,
+          studentId,
+          filterType: AssignmentFilterType.NOT_FINISHED,
+        }),
+      );
+
+      sortDeadlines(filteredAssignments);
+
+      return filteredAssignments;
+    },
+    enabled: !!studentId,
+  });
+}
+
+export function useNotStartedAssignments({ studentId }: { studentId?: string }) {
+  return useQuery({
+    queryKey: ['notStartedAssignments', studentId],
+    queryFn: async () => {
+      const paginatedAssignments = await fetchAssignments({ studentId });
+      const { data: assignments } = paginatedAssignments;
+
+      // Filter out assignments with a deadline in the past
+      let filteredAssignments = assignments.filter((assignment) => {
+        const deadline = new Date(assignment.deadline);
+        return deadline > new Date();
+      });
+
+      // Filter out assignments that already have progress
+      filteredAssignments = filteredAssignments.filter((assignment) =>
+        filterAssignmentOnProgress({
+          assignment,
+          studentId,
+          filterType: AssignmentFilterType.NOT_STARTED,
+        }),
+      );
+
+      sortDeadlines(filteredAssignments);
+
+      return filteredAssignments;
+    },
+    enabled: !!studentId,
+  });
+}
+
+/**
+ * Sorts an array of assignments by their deadlines in ascending order in-place.
+ *
+ * @param assignments - The array of assignments to be sorted.
+ */
+export function sortDeadlines(assignments: AssignmentShort2[]): void {
+  assignments.sort((a, b) => {
+    const deadlineA = a.deadline ? new Date(a.deadline).getTime() : Infinity;
+    const deadlineB = b.deadline ? new Date(b.deadline).getTime() : Infinity;
+    return deadlineA - deadlineB;
+  });
+}
+
+export function useLatestsFinishedAssignments({ teacherId }: { teacherId?: string }) {
+  return useQuery({
+    queryKey: ['latestFinishedAssignments', teacherId],
+    queryFn: async () => {
+      const paginatedAssignments = await fetchAssignments({ teacherId });
+      const { data: assignments } = paginatedAssignments;
+
+      // Filter out assignments with a deadline in the future
+      const filteredAssignments = assignments.filter((assignment) => {
+        const deadline = new Date(assignment.deadline);
+        return deadline < new Date();
+      });
+
+      // Sort the assignments by the group that finished it
+      sortDeadlines(filteredAssignments);
+
+      // Create a array of tuples with the assignment and the corresponding group that finished it
+      const finishedAssignments = filteredAssignments.flatMap((assignment) =>
+        assignment.groups
+          .filter((group) =>
+            filterAssignmentOnProgress({
+              assignment,
+              group,
+              filterType: AssignmentFilterType.FINISHED,
+            }),
+          )
+          .map((group) => ({
+            assignment,
+            group,
+          })),
+      );
+
+      return finishedAssignments;
+    },
+    enabled: !!teacherId,
   });
 }
 

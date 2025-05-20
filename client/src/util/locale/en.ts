@@ -1,10 +1,9 @@
-import { chown } from 'fs';
-
 export const en = {
   translation: {
     yes: 'Yes',
     no: 'No',
     or: 'Or',
+    by: 'by',
     fillInRequired: 'Fill in the required fields',
     email: 'Email address',
     name: 'Name',
@@ -121,5 +120,17 @@ export const en = {
     joinRequestSuccess: 'Join request has been approved',
     copied: 'Copied to clipboard',
     failedFavorite: 'Failed to favorite',
+    upcomingDeadlines: 'Upcoming deadlines',
+    noUpcomingDeadlines: 'No upcoming deadlines',
+    startAssignments: 'Start assignments',
+    noNotStartedAssignments: 'No not started assignments',
+    noLatestDiscussions: 'No latest discussions',
+    latestDiscussions: 'Latest discussions',
+    latestAnnouncements: 'Latest announcements',
+    noLatestAnnouncements: 'No latest announcements',
+    lastMessage: 'Last message',
+    latestFinishedAssignments: 'Latest finished assignments',
+    noLatestFinishedAssignments: 'No latest finished assignments',
+    startAssignment: 'Start assignment',
   },
 };

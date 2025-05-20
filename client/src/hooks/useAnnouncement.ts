@@ -91,3 +91,42 @@ export function useAnnouncementCreate() {
     },
   });
 }
+
+/**
+ * Fetches the latest announcements for a specific student or teacher.
+ *
+ * @param studentId - The ID of the student whose announcements are to be fetched
+ * @param teacherId - The ID of the teacher whose announcements are to be fetched
+ * @returns A query object containing the latest announcements
+ */
+export function useLatestsAnnouncements({
+  studentId,
+  teacherId,
+}: {
+  studentId?: string;
+  teacherId?: string;
+}) {
+  return useQuery({
+    queryKey: ['latestAnnouncements', studentId, teacherId],
+    queryFn: async () => {
+      const paginatedAnnouncements = await fetchAnnouncements(undefined, teacherId, studentId);
+      const announcements = paginatedAnnouncements.data;
+
+      // Fetch the details of each announcement
+      const detailedAnnouncements = await Promise.all(
+        announcements.map((announcement) => fetchAnnouncementById(announcement.id)),
+      );
+
+      // Sort the announcements by date in descending order
+      detailedAnnouncements.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime(); // Sort in descending order
+      });
+
+      return detailedAnnouncements;
+    },
+    enabled: !!studentId || !!teacherId,
+    refetchOnWindowFocus: false,
+  });
+}
