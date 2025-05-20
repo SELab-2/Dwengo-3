@@ -14,11 +14,12 @@ import { UserDataTableComponent } from '../components/UserDataTableComponent.tsx
 import { updateClass } from '../api/class.ts';
 import { useAuth } from '../hooks/useAuth.ts';
 import { useError } from '../hooks/useError.ts';
+import { StudentShort } from '../util/interfaces/student.interfaces.ts';
+import { TeacherShort } from '../util/interfaces/teacher.interfaces.ts';
 
 export function ClassGroupEditPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const { classId } = useParams<{ classId: string }>();
   const {
@@ -29,6 +30,8 @@ export function ClassGroupEditPage() {
   const { setError } = useError();
   const [className, setClassName] = useState<string>('');
   const [classDescription, setClassDescription] = useState<string>('');
+  const [students, setStudents] = useState<StudentShort[]>([]);
+  const [teachers, setTeachers] = useState<TeacherShort[]>([]);
   const deleteStudent = useDeleteStudentFromClass();
   const deleteTeacher = useDeleteTeacherFromClass();
 
@@ -36,6 +39,8 @@ export function ClassGroupEditPage() {
     if (classData) {
       setClassName(classData.name);
       setClassDescription(classData.description);
+      setStudents(classData.students);
+      setTeachers(classData.teachers);
     }
   }, [classData]);
 
@@ -141,7 +146,7 @@ export function ClassGroupEditPage() {
               }}
             >
               <UserDataTableComponent
-                data={classData!!.students.map((student) => {
+                data={students.map((student) => {
                   return {
                     id: student.id,
                     name: student.user.name,
@@ -170,7 +175,7 @@ export function ClassGroupEditPage() {
 
               {/* Teachers */}
               <UserDataTableComponent
-                data={classData!!.teachers.map((teacher) => {
+                data={teachers.map((teacher) => {
                   return {
                     id: teacher.id,
                     name: teacher.user.name,
