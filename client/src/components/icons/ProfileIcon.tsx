@@ -7,21 +7,12 @@ function ProfileIcon() {
     <a href="/profile">
       <Box
         sx={{
-          width: IconSize.large,
-          height: IconSize.large,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <AccountCircle
-          color="secondary"
-          fontSize="large"
-          sx={{
-            width: '100%',
-            height: '100%',
-          }}
-        />
+        <AccountCircle color="secondary" fontSize="large" />
       </Box>
     </a>
   );

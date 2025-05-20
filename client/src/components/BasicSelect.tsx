@@ -7,6 +7,7 @@ interface BasicSelectProps<T> {
   required?: boolean;
   state?: [T | null, React.Dispatch<React.SetStateAction<T | null>>];
   getOptionLabel: (option: T) => string;
+  getOptionKey: (option: T) => string;
   isOptionEqualToValue?: (option: T, value: T) => boolean;
 }
 
@@ -16,6 +17,7 @@ function BasicSelect<T>({
   required,
   state,
   getOptionLabel,
+  getOptionKey,
   isOptionEqualToValue = (a, b) => a === b,
 }: BasicSelectProps<T>) {
   const [value, setValue] = state ?? useState<T | null>(null);
@@ -33,6 +35,7 @@ function BasicSelect<T>({
       }}
       options={options}
       getOptionLabel={getOptionLabel}
+      getOptionKey={getOptionKey}
       isOptionEqualToValue={isOptionEqualToValue}
       renderInput={(params) => (
         <TextField required={required} {...params} label={labelName} fullWidth margin="normal" />

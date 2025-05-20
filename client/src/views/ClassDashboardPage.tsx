@@ -177,14 +177,26 @@ function ClassDashboardPage() {
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               {t('coTeachers')}
             </Typography>
-            <List sx={{ maxHeight: 100, overflowY: 'auto', bgcolor: '#f5f5f5', borderRadius: 1 }}>
+            <List
+              sx={{
+                maxHeight: 100,
+                overflowY: 'auto',
+                bgcolor: '#f5f5f5',
+                borderRadius: 1,
+              }}
+            >
               {classData!.teachers.map((teacher, index) => (
                 // TODO add links for students and teachers profiles
                 <ListItem key={index}>
                   <ListItemText
-                    primary={`${teacher.user.name} ${teacher.user.surname}`}
-                    sx={{ color: 'blue', cursor: 'pointer' }}
-                  />
+                    sx={{
+                      color: 'blue',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {teacher.user.name + ' ' + teacher.user.surname}
+                  </ListItemText>
                 </ListItem>
               ))}
             </List>
@@ -228,7 +240,14 @@ function ClassDashboardPage() {
                       <TableCell>
                         <Typography variant="h6">
                           <strong>{t('progress')}: </strong>
-                          <Link to={AppRoutes.learningPath(assignment?.learningPath.id || '/404')}>
+                          <Link
+                            to={AppRoutes.learningPath(assignment?.learningPath.id || '/404')}
+                            style={{
+                              textDecoration: 'none',
+                              fontWeight: 'bold',
+                              fontSize: '1.5rem',
+                            }}
+                          >
                             {assignment?.learningPath.title}
                           </Link>
                         </Typography>
@@ -257,6 +276,7 @@ function ClassDashboardPage() {
                           sx={{
                             color: 'blue',
                             cursor: 'pointer',
+                            fontSize: '1.2rem',
                           }}
                         >
                           {student.user.name} {student.user.surname}
@@ -297,7 +317,9 @@ function ClassDashboardPage() {
                 <Stack spacing={2}>
                   {joinRequests.map((request) => (
                     <Box key={request.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Typography sx={{ flex: 1, color: 'blue', cursor: 'pointer' }}>
+                      <Typography
+                        sx={{ flex: 1, color: 'blue', cursor: 'pointer', fontSize: '1.2rem' }}
+                      >
                         {request.user.name} {request.user.surname}
                       </Typography>
                       <Button

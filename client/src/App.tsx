@@ -38,11 +38,11 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <NotificationProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <NotificationProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <QueryClientProvider client={queryClient}>
               <ProtectContent>
                 <Box
                   sx={{
@@ -132,11 +132,11 @@ function App() {
                   <FooterBar /> {/* Footer is placed after the main content */}
                 </Box>
               </ProtectContent>
-            </ThemeProvider>
-          </QueryClientProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </NotificationProvider>
+            </QueryClientProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </NotificationProvider>
+    </ThemeProvider>
   );
 }
 

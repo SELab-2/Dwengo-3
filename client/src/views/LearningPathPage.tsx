@@ -33,11 +33,9 @@ import {
   fetchAssignmentSubmissions,
 } from '../api/assignmentSubmission';
 import DownloadIcon from '@mui/icons-material/Download';
-import ForumIcon from '@mui/icons-material/Forum';
 import { useAuth } from '../hooks/useAuth';
 import { AxiosProgressEvent } from 'axios';
 import { useAssignmentOfGroup } from '../hooks/useAssignment';
-import Tooltip from '@mui/material/Tooltip';
 import { useDiscussions } from '../hooks/useDiscussion';
 import { MathJax, MathJaxContext } from 'better-react-mathjax';
 import parse from 'html-react-parser';
@@ -461,14 +459,14 @@ function LearningPathPage() {
   );
 
   return (
-    <Box display="flex" flexDirection="row" height={isMobile ? '88vh' : '83vh'}>
+    <Box display="flex" flexDirection="row" height={isMobile ? '88vh' : '90vh'}>
       {/* Sidebar for desktop */}
       {!isMobile && SidebarContent}
 
       {/* Main Content */}
-      <Box flex={1} p={2} display="flex" flexDirection="column">
+      <Box flex={1} p={1} display="flex" flexDirection="column">
         {isMobile && (
-          <Box display="flex" flexDirection="row" mb={2}>
+          <Box display="flex" flexDirection="row" mt={1}>
             {/* Sidebar for mobile */}
             <IconButton onClick={() => setDrawerOpen(true)}>
               <MenuIcon />
@@ -477,7 +475,7 @@ function LearningPathPage() {
               {SidebarContent}
             </Drawer>
 
-            <Typography variant="h5" m={1}>
+            <Typography variant="h5" m={2}>
               {learningPath?.title}
             </Typography>
             <GoToOrCreateDiscussion
@@ -492,7 +490,7 @@ function LearningPathPage() {
 
         {!isMobile && (
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h5" m={1}>
+            <Typography variant="h5" m={2}>
               {learningPath?.title}
             </Typography>
             <GoToOrCreateDiscussion
@@ -505,8 +503,8 @@ function LearningPathPage() {
           </Box>
         )}
 
-        <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
-        <Typography variant="caption" color="text.secondary" mb={2}>
+        <LinearProgress variant="determinate" value={currentProgress} sx={{ m: 2 }} />
+        <Typography variant="caption" color="text.secondary" mx={2}>
           {Math.round(currentProgress)}% completed
         </Typography>
 
@@ -650,7 +648,7 @@ function LearningPathPage() {
               )}
             </Box>
 
-            <Box mt={2} display="flex" justifyContent="space-between">
+            <Box mt={1} display="flex" justifyContent="space-between">
               <Button
                 disabled={activeIndex === 0}
                 onClick={() => {

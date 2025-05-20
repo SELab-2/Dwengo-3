@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -29,7 +29,7 @@ const dwengoColors = {
   color14: 'rgb(255, 255, 255)',
 };
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     primary: {
       main: 'rgb(136, 189, 40)',
@@ -46,6 +46,23 @@ const theme = createTheme({
     },
     custom: dwengoColors,
   },
+  components: {
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          fontSize: '2rem', // default for mobile
+          '@media (min-width:600px)': {
+            fontSize: '2.25rem', // larger on tablet/desktop
+          },
+          '@media (min-width:900px)': {
+            fontSize: '2.5rem', // even larger on large screens
+          },
+        },
+      },
+    },
+  },
 });
+
+theme = responsiveFontSizes(theme);
 
 export default theme;
