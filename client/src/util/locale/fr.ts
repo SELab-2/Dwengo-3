@@ -106,6 +106,8 @@ export const fr = {
     deleteAccountWarning:
       'Attention : la suppression du compte est définitive et ne peut pas être annulée.',
     joinRequestSucces: 'La demande pour rejoindre la classe a été envoyée avec succès',
+    question: 'Question',
+    completed: 'complété',
     deadlineRequired: 'La date limite est obligatoire',
     titleRequired: 'Le titre est requis',
     contentRequired: 'Le contenu est requis',
@@ -117,5 +119,6 @@ export const fr = {
     joinRequestSuccess: 'La demande d’adhésion a été approuvée',
     copied: 'Copié dans le presse-papiers',
     errorSendingErrorMessage: "erreur lors de l'envoi d'un message d'erreur",
+    failedFavorite: 'Échec de l’ajout aux favoris',
   },
 };

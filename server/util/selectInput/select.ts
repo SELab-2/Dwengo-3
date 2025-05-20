@@ -289,6 +289,7 @@ export const assignmentSubmissionSelectDetail = {
 export const favoriteSelectDetail = {
   id: true,
   progress: true,
+  currentNodeIndex: true,
   learningPath: {
     select: learningPathSelectShort,
   },

@@ -13,7 +13,7 @@ import {
  * @param pageSize - The number of items per page for pagination.
  * @returns The list of learningThemes.
  */
-export async function fetchLearningThemes(page: number = 1, pageSize: number = 10) {
+export async function fetchLearningThemes(page: number = 1, pageSize: number = 100) {
   const response = await apiClient.get(ApiRoutes.learningTheme.list, {
     params: {
       page,

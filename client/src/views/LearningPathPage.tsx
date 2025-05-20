@@ -1,4 +1,16 @@
-import { Box, Button, LinearProgress, Paper, Snackbar, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Drawer,
+  IconButton,
+  LinearProgress,
+  Paper,
+  Snackbar,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useLearningPathById } from '../hooks/useLearningPath';
@@ -12,7 +24,6 @@ import {
 import {
   AssignmentSubmissionDetail,
   FileSubmission,
-  MultipleChoice,
   SubmissionType,
 } from '../util/interfaces/assignmentSubmission.interfaces';
 import { useError } from '../hooks/useError';
@@ -29,10 +40,17 @@ import parse from 'html-react-parser';
 import { useGroup, useUpdateCurrentIndexForGroup } from '../hooks/useGroup.ts';
 import { LearningPathNodeTransitionDetail } from '../util/interfaces/LearningPathNodeTransition.interfaces.ts';
 import { LearningPathNodeDetail } from '../util/interfaces/learningPathNode.interfaces.ts';
-import { LearningObjectDetail } from '../util/interfaces/learningObject.interfaces.ts';
+import {
+  LearningObjectDetail,
+  MultipleChoice,
+} from '../util/interfaces/learningObject.interfaces.ts';
 import { fetchLearningObjectById } from '../api/learningObject.ts';
 import { fetchLearningPathNodeById } from '../api/learningPathNode.ts';
 import { AppRoutes } from '../util/app.routes.ts';
+import MenuIcon from '@mui/icons-material/Menu';
+import { GroupDetail } from '../util/interfaces/group.interfaces.ts';
+import { FavoriteDetail } from '../util/interfaces/favorite.interfaces.ts';
+import { useFavoriteById, useUpdateCurrentNodeIndexForFavorite } from '../hooks/useFavorite.ts';
 
 const mathJaxConfig = {
   loader: { load: ['[tex]/ams'] },
@@ -51,7 +69,9 @@ function LearningPathPage() {
   const groupId = searchParams.get('groupId');
   const favoriteId = searchParams.get('favoriteId');
 
-  const { data: data } = useGroup(groupId ?? undefined);
+  let data: GroupDetail | FavoriteDetail | undefined = undefined;
+  if (groupId) data = useGroup(groupId).data;
+  else if (favoriteId) data = useFavoriteById(favoriteId).data;
 
   const [currentSubmission, setCurrentSubmission] = useState<
     AssignmentSubmissionDetail | undefined
@@ -83,7 +103,9 @@ function LearningPathPage() {
   }, [learningPath, data]);
 
   const [progressEvent, setProgressEvent] = useState<AxiosProgressEvent | undefined>(undefined);
-  const updateIndexMutation = useUpdateCurrentIndexForGroup();
+  const updateIndexMutation = groupId
+    ? useUpdateCurrentIndexForGroup()
+    : useUpdateCurrentNodeIndexForFavorite();
   const submissionCreate = useCreateAssignmentSubmission(setProgressEvent);
   const submissionUpdate = useUpdateAssignmentSubmission(setProgressEvent);
   const { setError } = useError();
@@ -153,7 +175,9 @@ function LearningPathPage() {
     return () => abort.abort();
   }, [learningPath, activeIndex]);
 
-  console.debug(currentAnswer);
+  useEffect(() => {
+    setCurrentSubmission(undefined);
+  }, [currentNode]);
 
   const multipleChoice = () => {
     if (!currentObject || currentObject.submissionType !== SubmissionType.MULTIPLE_CHOICE) {
@@ -184,7 +208,7 @@ function LearningPathPage() {
     setFurthestIndex(newIndex);
 
     updateIndexMutation.mutate({
-      groupId: groupId!!, // todo: support favorites
+      id: groupId ? groupId : favoriteId!!,
       index: newIndex === totalSteps ? -1 : newIndex,
     });
 
@@ -214,7 +238,8 @@ function LearningPathPage() {
         {
           submissionType: SubmissionType.READ,
           nodeId: currentNode!!.id,
-          groupId: groupId!!,
+          groupId: groupId ?? undefined,
+          favoriteId: favoriteId ?? undefined,
         },
         {
           onError: (error: any) => {
@@ -233,7 +258,7 @@ function LearningPathPage() {
           id: currentSubmission.id,
           data: {
             submissionType: SubmissionType.MULTIPLE_CHOICE,
-            submission: currentAnswer!!,
+            submission: { answer: currentAnswer! },
           },
         },
         {
@@ -241,6 +266,9 @@ function LearningPathPage() {
             setError(
               error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
             );
+          },
+          onSuccess: (response) => {
+            setCurrentSubmission(response);
           },
         },
       );
@@ -249,14 +277,18 @@ function LearningPathPage() {
         {
           submissionType: SubmissionType.MULTIPLE_CHOICE,
           nodeId: currentNode!!.id,
-          groupId: groupId!!,
-          submission: currentAnswer ? currentAnswer : undefined,
+          groupId: groupId ?? undefined,
+          favoriteId: favoriteId ?? undefined,
+          submission: { answer: currentAnswer! },
         },
         {
           onError: (error: any) => {
             setError(
               error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
             );
+          },
+          onSuccess: (response) => {
+            setCurrentSubmission(response);
           },
         },
       );
@@ -380,47 +412,71 @@ function LearningPathPage() {
     return 'white';
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const SidebarContent = (
+    <Box
+      width={isMobile ? '70vw' : '300px'}
+      p={2}
+      sx={{
+        backgroundColor: theme.palette.custom.color6,
+        overflowY: 'auto',
+        height: '100%',
+      }}
+    >
+      {learningPath?.learningPathNodes.map((node, index) => (
+        <Box
+          key={node.id}
+          onClick={() => {
+            if (index !== activeIndex) {
+              setWrongAnswer(false);
+              setActiveIndex(index);
+              if (isMobile) setDrawerOpen(false);
+            }
+          }}
+          p={1}
+          mb={1}
+          bgcolor={nodeColor(index)}
+          borderRadius="8px"
+          sx={{ cursor: 'pointer', transition: 'all 0.3s', '&:hover': { bgcolor: 'lightgray' } }}
+        >
+          <Typography fontWeight="bold" variant="body1" noWrap>
+            {node.learningObject.title}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" noWrap>
+            ~{node.learningObject.estimatedTime} min
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  );
+
   return (
-    <Box display="flex" height="90vh">
-      {/* Sidebar */}
-      <Box
-        width="300px"
-        p={2}
-        sx={(theme) => ({
-          backgroundColor: theme.palette.custom.color6,
-          overflowY: 'auto',
-        })}
-      >
-        {learningPath?.learningPathNodes.map((node, index) => (
-          <Box
-            key={node.id}
-            onClick={() => {
-              if (index !== activeIndex) {
-                setWrongAnswer(false);
-                setActiveIndex(index);
-              }
-            }}
-            p={1}
-            mb={1}
-            bgcolor={nodeColor(index)}
-            borderRadius="8px"
-            sx={{ cursor: 'pointer', transition: 'all 0.3s', '&:hover': { bgcolor: 'lightgray' } }}
-          >
-            <Typography fontWeight="bold" variant="body1" noWrap>
-              {node.learningObject.title}
-            </Typography>
-            <Typography variant="caption" color="text.secondary" noWrap>
-              ~{node.learningObject.estimatedTime} min
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+    <Box display="flex" flexDirection="row" height={isMobile ? '88vh' : '83vh'}>
+      {/* Sidebar for desktop */}
+      {!isMobile && SidebarContent}
 
       {/* Main Content */}
-      <Box flex={1} p={3} display="flex" flexDirection="column">
-        <Typography variant="h5" mb={2}>
-          {learningPath?.title}
-        </Typography>
+      <Box flex={1} p={2} display="flex" flexDirection="column">
+        <Box flex={1} display="flex" flexDirection="row" mb={2}>
+          {isMobile && (
+            <>
+              {/* Sidebar for mobile */}
+              <IconButton onClick={() => setDrawerOpen(true)}>
+                <MenuIcon />
+              </IconButton>
+              <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+                {SidebarContent}
+              </Drawer>
+            </>
+          )}
+
+          <Typography variant="h5" m={1}>
+            {learningPath?.title}
+          </Typography>
+        </Box>
 
         <LinearProgress variant="determinate" value={currentProgress} sx={{ mb: 1 }} />
         <Typography variant="caption" color="text.secondary" mb={2}>
@@ -434,8 +490,7 @@ function LearningPathPage() {
               overflow="auto"
               sx={{
                 minHeight: 0,
-                maxHeight: 'calc(100vh - var(--navbar-heigh))',
-                maxWidth: '70vw',
+                maxWidth: isMobile ? '100vw' : '70vw',
               }}
             >
               {currentNode !== undefined && currentObject ? (
@@ -486,7 +541,7 @@ function LearningPathPage() {
                     </Box>
                   ) : isFile() ? (
                     <Box mt={3}>
-                      {currentSubmission ? (
+                      {currentSubmission && fileSubmission() ? (
                         <Box>
                           <Typography mt={2} variant="subtitle1">
                             {`${t('fileSubmitted')}: `}

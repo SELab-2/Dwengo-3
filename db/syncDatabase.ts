@@ -1,6 +1,7 @@
 import { ContentTypeEnum, PrismaClient } from '@prisma/client';
 import axios from 'axios';
 import cliProgress from 'cli-progress';
+import { learningThemes } from './learningThemes';
 
 const contentTypeMap: Map<string, any> = new Map();
 contentTypeMap.set('text/plain', ContentTypeEnum.TEXT_PLAIN);
@@ -116,6 +117,25 @@ async function fullSyncLearningObjects(prisma: PrismaClient) {
   progressBar.stop();
 }
 
+async function syncLearningThemes(prisma: PrismaClient) {
+  for (const theme of learningThemes) {
+    await prisma.learningTheme.upsert({
+      where: { id: theme.id },
+      update: {
+        title: theme.title,
+        image: theme.image,
+        keywords: theme.keywords,
+      },
+      create: {
+        id: theme.id,
+        title: theme.title,
+        image: theme.image,
+        keywords: theme.keywords,
+      },
+    });
+  }
+}
+
 async function fullSyncLearningPaths(prisma: PrismaClient) {
   const remotePaths = await fetchRemoteData(API_URLS.learningPaths);
 
@@ -219,7 +239,6 @@ async function fullSyncLearningPaths(prisma: PrismaClient) {
     // Update the progress bar
     progressBar.update(index + 1);
   }
-
   // Stop the progress bar
   progressBar.stop();
 }
@@ -233,6 +252,10 @@ async function syncDatabases(prisma: PrismaClient) {
     console.log('Starting LearningPaths synchronization...');
     await fullSyncLearningPaths(prisma);
     console.log('LearningPaths synchronization completed successfully!');
+
+    console.log('Starting LearningThemes synchronization...');
+    await syncLearningThemes(prisma);
+    console.log('LearningThemes synchronization completed successfully!');
   } catch (error) {
     console.error('Error syncing databases:', error);
   }

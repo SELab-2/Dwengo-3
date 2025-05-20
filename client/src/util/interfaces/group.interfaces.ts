@@ -21,6 +21,6 @@ export interface GroupDetail {
 }
 
 export interface UpdateIndexParams {
-  groupId: string;
+  id: string;
   index: number;
 }
