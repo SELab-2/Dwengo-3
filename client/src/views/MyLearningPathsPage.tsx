@@ -27,7 +27,7 @@ function MyLearningPathsPage() {
   const assignments = paginatedAssignments?.data ?? [];
   const favorites = paginatedFavorites?.data ?? [];
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>, assignment: AssignmentShort2) => {
+  const handleClick = (_: React.MouseEvent<HTMLElement>, assignment: AssignmentShort2) => {
     if (user?.student) {
       navigate(
         AppRoutes.learningPath(assignment.learningPath.id, myGroup(assignment, user?.id)?.id),
