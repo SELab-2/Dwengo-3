@@ -9,10 +9,11 @@ import {
  * Fetches a LearningPathNode by its ID.
  *
  * @param id - The ID of the learningPathNode to be fetched.
+ * @param signal signal object to abort the request.
  * @returns The learningPathNode details.
  */
-export async function fetchLearningPathNodeById(id: string) {
-  const response = await apiClient.get(ApiRoutes.learningPathNode.get(id));
+export async function fetchLearningPathNodeById(id: string, signal?: AbortSignal) {
+  const response = await apiClient.get(ApiRoutes.learningPathNode.get(id), { signal });
   const result: LearningPathNodeDetail = response.data;
 
   return result;

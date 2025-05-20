@@ -84,6 +84,7 @@ export const ApiRoutes = {
     list: '/api/favorites',
     get: (id: string) => `/api/favorites/${id}`,
     delete: (id: string) => `/api/favorites/${id}`,
+    updateIndex: '/api/favorites/node',
   },
 
   // LearningTheme
@@ -138,5 +139,13 @@ export const ApiRoutes = {
   teacher: {
     list: '/api/teacher',
     get: (id: string) => `/api/teacher/${id}`,
+  },
+
+  // Group
+  group: {
+    get(groupId: string) {
+      return `/api/group/${groupId}`;
+    },
+    updateIndex: '/api/group/node',
   },
 };

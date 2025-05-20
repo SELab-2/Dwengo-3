@@ -27,9 +27,9 @@ function LoginPage() {
           <Typography variant="h5" gutterBottom>
             {t('welcomeMessage')}
           </Typography>
-          <Divider sx={{ mb: MarginSize.tiny }} />
+          <Divider />
           <LoginForm />
-          <Divider sx={{ mb: MarginSize.xsmall }} />
+          <Divider sx={{ mb: MarginSize.xsmall, mt: MarginSize.xsmall }} />
           <Button fullWidth variant="outlined" color="primary" onClick={handleRegisterClick}>
             {t('register')}
           </Button>

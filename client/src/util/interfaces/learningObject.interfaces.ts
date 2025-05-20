@@ -1,7 +1,7 @@
 import { SubmissionType } from './assignmentSubmission.interfaces';
 import { keyword } from './keyword.interfaces';
 
-enum contentType {
+export enum ContentType {
   'TEXT_PLAIN',
   'TEXT_MARKDOWN',
   'IMAGE_IMAGE_BLOCK',
@@ -10,6 +10,12 @@ enum contentType {
   'APPLICATION_PDF',
   'EXTERN',
   'BLOCKLY',
+}
+
+export interface MultipleChoice {
+  question: string;
+  options: string[];
+  solution: string;
 }
 
 export interface LearningObjectShort {
@@ -28,7 +34,7 @@ export interface LearningObjectDetail {
   language: string;
   title: string;
   description: string;
-  contentType: contentType;
+  contentType: ContentType;
   contentLocation: string;
   targetAges: number[];
   teacherExclusive: boolean;
@@ -41,10 +47,9 @@ export interface LearningObjectDetail {
   returnValue: JSON;
   available: boolean;
   createdAt: Date;
-  updatedAt: Date;
   content: string;
   submissionType: SubmissionType;
-  multipleChoice: JSON;
+  multipleChoice: MultipleChoice;
   keywords: keyword[];
 }
 
@@ -55,7 +60,7 @@ export interface LearningObjectCreate {
   language: string;
   title: string;
   description?: string;
-  contentType?: contentType;
+  contentType?: ContentType;
   targetAges?: number[];
   teacherExclusive?: boolean;
   skosConcepts?: string[];
@@ -67,7 +72,7 @@ export interface LearningObjectCreate {
   returnValue?: JSON;
   available?: boolean;
   content: string;
-  multipleChoice?: JSON;
+  multipleChoice?: MultipleChoice;
   keywords?: keyword[];
 }
 
@@ -75,7 +80,7 @@ export interface LearningObjectUpdate {
   version?: number;
   title?: string;
   description?: string;
-  contentType?: contentType;
+  contentType?: ContentType;
   targetAges?: number[];
   teacherExclusive?: boolean;
   skosConcepts?: string[];
@@ -87,6 +92,6 @@ export interface LearningObjectUpdate {
   returnValue?: JSON;
   available?: boolean;
   content?: string;
-  multipleChoice?: JSON;
+  multipleChoice?: MultipleChoice;
   keywords?: keyword[];
 }

@@ -17,6 +17,7 @@ import { AxiosProgressEvent } from 'axios';
  * @param groupId - The group of which the assignmentSubmissions need to be fetched
  * @param favoriteId - The favorite of which the assignmentSubmissions need to be fetched
  * @param nodeId - The learningPathNode of which the assignmentSubmissions need to be fetched
+ * @param signal - signal to abort request.
  * @returns A list of assignmentSubmissions
  */
 export async function fetchAssignmentSubmissions(
@@ -25,6 +26,7 @@ export async function fetchAssignmentSubmissions(
   nodeId?: string,
   page?: number,
   pageSize?: number,
+  signal?: AbortSignal,
 ) {
   const response = await apiClient.get(ApiRoutes.assignmentSubmission.list, {
     params: {
@@ -45,6 +47,7 @@ export async function fetchAssignmentSubmissions(
  * Create an assignmentSubmission
  *
  * @param data - The data of the assignmentSubmission to be created
+ * @param setProgressEvent
  * @returns The assignmentSubmissiondetails
  */
 export async function createAssignmentSubmission(
@@ -142,6 +145,5 @@ export async function downloadFileSubmission(id: string, fileName: string) {
   a.href = url;
   a.download = fileName;
   a.click();
-  document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
 }

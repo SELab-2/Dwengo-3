@@ -28,8 +28,11 @@ import ClassAddPage from './views/ClassAddPage.tsx';
 import { AppRoutes } from './util/app.routes.ts';
 import DiscussionCreatePage from './views/DiscussionCreatePage.tsx';
 import ClassDiscussionsPage from './views/ClassDiscussionsPage.tsx';
+import { ClassGroupEditPage } from './views/ClassGroupEditPage.tsx';
 import ProtectContent from './components/ProtectContent.tsx';
 import { NotificationProvider } from './contexts/NotificationContext.tsx';
+import SubmissionPage from './views/SubmissionPage.tsx';
+import AnnouncementCreatePage from './views/AnnouncemntCreatePage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -98,6 +101,10 @@ function App() {
                           element={<ClassAnnouncementsPage />}
                         />
                         <Route
+                          path={AppRoutes.classAnnouncementCreate(':classId')}
+                          element={<AnnouncementCreatePage />}
+                        />
+                        <Route
                           path={AppRoutes.announcement(':announcementId')}
                           element={<AnnouncementDetailpage />}
                         />
@@ -106,11 +113,18 @@ function App() {
                           element={<ClassDiscussionsPage />}
                         />
                         <Route
+                          path={AppRoutes.groupSubmission(':classId', ':assignmentId', ':groupId')}
+                          element={<SubmissionPage />}
+                        />
+                        <Route
+                          path={AppRoutes.classEdit(':classId')}
+                          element={<ClassGroupEditPage />}
+                        />
+                        <Route
                           path={AppRoutes.discussionCreate(':classId')}
                           element={<DiscussionCreatePage />}
                         />
                       </Route>
-
                       {/* Redirect all other routes to an errorpage */}
                       <Route path="*" element={<ErrorPage />} />
                     </Routes>

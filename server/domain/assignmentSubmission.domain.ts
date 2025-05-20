@@ -99,6 +99,7 @@ export class AssignmentSubmissionDomain {
         throw new BadRequestError(40039);
       }
 
+      // update the progress of the group when needed
       if (node.index > Math.max(...groupData.progress)) {
         const new_progress = [...groupData.progress, node.index];
         await this.groupPersistence.updateGroupProgress(data.groupId, new_progress);

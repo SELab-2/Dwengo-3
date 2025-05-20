@@ -75,6 +75,8 @@ export class AssignmentDomain {
       data.teacherId!,
       this.classPersistence,
     );
-    return this.assignmentPersistence.createAssignment(data);
+    const assignment = await this.assignmentPersistence.createAssignment(data);
+    assignment.groups = await this.groupPersistence.createGroups(data.groups, assignment.id);
+    return assignment;
   }
 }

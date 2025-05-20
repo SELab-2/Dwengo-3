@@ -128,6 +128,7 @@ CREATE TABLE "Teacher" (
 CREATE TABLE "Class" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL DEFAULT 'New class',
+    "description" TEXT NOT NULL DEFAULT '',
 
     CONSTRAINT "Class_pkey" PRIMARY KEY ("id")
 );
@@ -147,6 +148,7 @@ CREATE TABLE "Group" (
     "name" TEXT NOT NULL,
     "assignmentId" TEXT NOT NULL,
     "progress" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+    "currentNodeIndex" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Group_pkey" PRIMARY KEY ("id")
 );
@@ -159,7 +161,7 @@ CREATE TABLE "Assignment" (
     "learningPathId" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
     "classId" TEXT NOT NULL,
-    "deadline" TIMESTAMP,
+    "deadline" TIMESTAMP NOT NULL,
 
     CONSTRAINT "Assignment_pkey" PRIMARY KEY ("id")
 );
@@ -171,7 +173,7 @@ CREATE TABLE "AssignmentSubmission" (
     "favoriteId" TEXT,
     "nodeId" TEXT NOT NULL,
     "submissionType" "SubmissionType" NOT NULL,
-    "submission" JSONB NOT NULL,
+    "submission" JSONB,
 
     CONSTRAINT "AssignmentSubmission_pkey" PRIMARY KEY ("id")
 );
@@ -182,6 +184,7 @@ CREATE TABLE "Favorite" (
     "userId" TEXT NOT NULL,
     "learningPathId" TEXT NOT NULL,
     "progress" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+    "currentNodeIndex" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "Favorite_pkey" PRIMARY KEY ("id")
 );

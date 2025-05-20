@@ -9,7 +9,10 @@ import { favoriteSelectShort, favoriteSelectDetail } from '../util/selectInput/s
 export class FavoritesPersistence {
   public async getFavorites(filters: FavoriteFilterParams, paginationParams: PaginationParams) {
     const whereClause: Prisma.FavoriteWhereInput = {
-      AND: [filters.userId ? { userId: filters.userId } : {}],
+      AND: [
+        filters.userId ? { userId: filters.userId } : {},
+        filters.learningPathId ? { learningPathId: filters.learningPathId } : {},
+      ],
     };
 
     return searchAndPaginate(
@@ -67,6 +70,17 @@ export class FavoritesPersistence {
       where: { id: id },
       data: {
         progress: new_progress,
+      },
+    });
+  }
+
+  async updateIndex(id: string, index: number) {
+    return PrismaSingleton.instance.favorite.update({
+      where: {
+        id: id,
+      },
+      data: {
+        currentNodeIndex: index,
       },
     });
   }

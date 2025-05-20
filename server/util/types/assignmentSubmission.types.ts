@@ -10,13 +10,15 @@ const FileSubmissionSchema = z.object({
   filePath: z.string(),
 });
 
-const MultipleChoiceSubSchema = z.string();
+const MultipleChoiceSubSchema = z.object({
+  answer: z.string(),
+});
 
 export const SubmissionFilterSchema = z
   .object({
     groupId: z.string().uuid().optional(),
-    nodeId: z.string().uuid().optional(),
-    favoriteId: z.string().uuid().optional(),
+    nodeId: z.string().optional(),
+    favoriteId: z.string().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: 'At least one filter must be provided.',
@@ -27,7 +29,7 @@ export const SubmissionCreateSchema = z
   .object({
     groupId: z.string().uuid().optional(),
     favoriteId: z.string().uuid().optional(),
-    nodeId: z.string().uuid(),
+    nodeId: z.string(),
     submissionType: z.nativeEnum(SubmissionType),
     submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()]),
   })
