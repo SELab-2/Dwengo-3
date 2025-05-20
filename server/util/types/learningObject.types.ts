@@ -52,7 +52,7 @@ const multipleChoiceSchema = z
     options: AnswerOptionZod.array().nonempty(),
     solution: SolutionZod,
   })
-  .refine((data) => data.question.includes(data.solution), {
+  .refine((data) => data.options.includes(data.solution), {
     message: 'The options have to contain the solution',
   });
 
