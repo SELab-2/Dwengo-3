@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -29,7 +29,7 @@ const dwengoColors = {
   color14: 'rgb(255, 255, 255)',
 };
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     primary: {
       main: 'rgb(136, 189, 40)',
@@ -47,5 +47,7 @@ const theme = createTheme({
     custom: dwengoColors,
   },
 });
+
+theme = responsiveFontSizes(theme);
 
 export default theme;
