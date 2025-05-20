@@ -8,7 +8,7 @@ export type GroupShort = Prisma.GroupGetPayload<{
 }>;
 
 export const UpdateIndexSchema = z.object({
-  groupId: GroupIdZod,
+  id: GroupIdZod,
   index: IndexZod,
 });
 

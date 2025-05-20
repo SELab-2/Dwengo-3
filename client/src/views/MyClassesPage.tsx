@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 import { usePopulatedClasses } from '../hooks/useClass';
@@ -36,6 +36,9 @@ function MyClassesPage() {
   const classes = paginatedData?.data ?? [];
   const totalPages = paginatedData?.totalPages ?? 0;
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box
       sx={{
@@ -43,7 +46,7 @@ function MyClassesPage() {
         flexDirection: 'column',
         alignItems: 'center',
         height: '100%',
-        margin: MarginSize.large,
+        margin: isMobile ? MarginSize.small : MarginSize.large,
       }}
     >
       {/* Title and Button Row */}

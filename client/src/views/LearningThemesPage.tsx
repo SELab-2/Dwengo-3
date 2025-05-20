@@ -1,4 +1,4 @@
-import { Box, Typography, Card, Avatar } from '@mui/material';
+import { Avatar, Box, Card, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { useLearningTheme } from '../hooks/useLearningTheme';
@@ -35,13 +35,14 @@ function LearningThemesPage() {
               boxShadow: 4,
               transition: 'transform 0.3s ease-in-out',
               '&:hover': { transform: 'scale(1.05)', boxShadow: 6 },
+              bgcolor: 'primary.main',
             }}
           >
             {/* Theme Image */}
             <Avatar
               src={image}
               variant="square"
-              sx={{ width: '100%', height: 180, objectFit: 'cover' }}
+              sx={{ width: '100%', height: 210, objectFit: 'cover' }}
             />
 
             {/* Theme Title */}
