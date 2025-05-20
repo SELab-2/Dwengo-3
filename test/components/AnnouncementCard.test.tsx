@@ -4,7 +4,7 @@ import AnnouncementCard from '../../client/src/components/AnnouncementCard';
 import '@testing-library/jest-dom';
 import { setUseNavigateOutput } from '../setUpMocks';
 
-// 👇 Dummy props
+// Dummy props
 const dummyProps = {
   id: 'abc123',
   title: 'Test Aankondiging',
