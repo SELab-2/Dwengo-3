@@ -12,9 +12,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import BasicSelect from '../components/BasicSelect';
-import MultipleSelectChip from '../components/MultipleSelectChip';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useNavigate, useParams } from 'react-router-dom';
 import DateTextField from '../components/textfields/DateTextField';
@@ -22,8 +20,7 @@ import { StudentShort } from '../util/interfaces/student.interfaces';
 import BackButton from '../components/BackButton.tsx';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
-import { useLearningObjectById } from '../hooks/useLearningObject.ts';
-import { useLearningPath, useLearningPathInfinity } from '../hooks/useLearningPath.ts';
+import { useLearningPathInfinity } from '../hooks/useLearningPath.ts';
 import { useCreateAssignment } from '../hooks/useAssignment.ts';
 import { useAuth } from '../hooks/useAuth.ts';
 import { AssignmentCreate, AssignmentDetail } from '../util/interfaces/assignment.interfaces.ts';
@@ -92,25 +89,23 @@ function AssignmentCreatePage() {
     // Keep all previously fetched unique paths (by ID)
     setAllFetchedPaths((prevPaths) => {
       const existingIds = new Set(prevPaths.map((p) => p.id));
+      const existingKeywords = new Set(keywords);
       const merged = [...prevPaths];
+      const newKeywords = [...keywords];
       for (const p of newPaths) {
         if (!existingIds.has(p.id)) {
           merged.push(p);
+          for (const node of p.learningPathNodes) {
+            for (const keyword of node.learningObject.keywords) {
+              if (!existingKeywords.has(keyword.keyword)) {
+                existingKeywords.add(keyword.keyword);
+                newKeywords.push(keyword.keyword);
+              }
+            }
+          }
         }
       }
-
-      // ✅ Compute keywords using the merged list
-      const newKeywords = Array.from(
-        new Set(
-          merged.flatMap((path) =>
-            path.learningPathNodes.flatMap((node) =>
-              node.learningObject.keywords.map((keyword) => keyword.keyword),
-            ),
-          ),
-        ),
-      );
       setKeywords(newKeywords);
-
       return merged;
     });
   }, [paginatedData]);
@@ -278,6 +273,11 @@ function AssignmentCreatePage() {
                       !isFetchingNextPage
                     ) {
                       fetchNextPage();
+                      const item = listboxNode.querySelector('li');
+                      const itemHeight = item?.offsetHeight || 0;
+
+                      // Scroll up by 3 items
+                      listboxNode.scrollTop -= itemHeight * 3;
                     }
                   },
                 },
@@ -317,6 +317,11 @@ function AssignmentCreatePage() {
                       !isFetchingNextPage
                     ) {
                       fetchNextPage();
+                      const item = listboxNode.querySelector('li');
+                      const itemHeight = item?.offsetHeight || 0;
+
+                      // Scroll up by 3 items
+                      listboxNode.scrollTop -= itemHeight * 3;
                     }
                   },
                 },
