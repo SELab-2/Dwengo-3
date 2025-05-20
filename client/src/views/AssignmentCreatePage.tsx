@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import {
+  Autocomplete,
   Box,
   Button,
   Divider,
@@ -11,9 +12,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import BasicSelect from '../components/BasicSelect';
-import MultipleSelectChip from '../components/MultipleSelectChip';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ClassNavigationBar from '../components/ClassNavigationBar';
 import { useNavigate, useParams } from 'react-router-dom';
 import DateTextField from '../components/textfields/DateTextField';
@@ -21,14 +20,14 @@ import { StudentShort } from '../util/interfaces/student.interfaces';
 import BackButton from '../components/BackButton.tsx';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
-import { useLearningObjectById } from '../hooks/useLearningObject.ts';
-import { useLearningPath } from '../hooks/useLearningPath.ts';
+import { useLearningPathInfinity } from '../hooks/useLearningPath.ts';
 import { useCreateAssignment } from '../hooks/useAssignment.ts';
 import { useAuth } from '../hooks/useAuth.ts';
 import { AssignmentCreate, AssignmentDetail } from '../util/interfaces/assignment.interfaces.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { useError } from '../hooks/useError.ts';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces.ts';
+import { useDebounce } from 'use-debounce';
 
 function AssignmentCreatePage() {
   const { user } = useAuth();
@@ -45,26 +44,32 @@ function AssignmentCreatePage() {
     navigate(AppRoutes.classAssignments(classId!));
   }
 
-  const { data: paginatedData, isLoading: isLoadingLearningPaths } = useLearningPath([]);
-  const learningPaths = paginatedData?.data ?? [];
+  const [inputValueKeywords, setInputValueKeywords] = useState('');
+  const [debounceKeywords] = useDebounce(inputValueKeywords, 300);
+  const [inputValuePaths, setInputValuePaths] = useState('');
+  const [debouncePaths] = useDebounce(inputValuePaths, 300);
 
-  const keywords = Array.from(
-    new Set(
-      learningPaths.flatMap((path) =>
-        path.learningPathNodes.flatMap((node) =>
-          node.learningObject.keywords.map((keyword) => keyword.keyword),
-        ),
-      ),
-    ),
-  );
+  const {
+    data: paginatedData,
+    isLoading: isLoadingLearningPaths,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useLearningPathInfinity(debouncePaths, debounceKeywords, 15);
+
+  useEffect(() => {
+    refetch();
+  }, [debouncePaths, debounceKeywords]);
 
   const { data: classData, isLoading: isLoadingClass } = useClassById(classId!);
   const studentsData = classData?.students ?? [];
 
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [groupSize, setGroupSize] = useState(1);
-  const [filteredLearningPaths, setFilteredLearningPaths] =
-    useState<LearningPathShort[]>(learningPaths);
+  const [allFetchedPaths, setAllFetchedPaths] = useState<LearningPathShort[]>([]);
+  const [filteredLearningPaths, setFilteredLearningPaths] = useState<LearningPathShort[]>([]);
+  const [keywords, setKeywords] = useState<string[]>([]);
   const [selectedLearningPath, setSelectedLearningPath] = useState<LearningPathShort | null>(null);
   const [groups, setGroups] = useState<StudentShort[][]>([]);
   const [deadline, setDeadline] = useState<Date | null>(null);
@@ -78,7 +83,35 @@ function AssignmentCreatePage() {
   }, [studentsData]);
 
   useEffect(() => {
-    const updatedPaths = learningPaths.filter(
+    if (!paginatedData || !paginatedData.pages.length) return;
+    const newPaths = paginatedData.pages.flatMap((page) => page.data) ?? [];
+
+    // Keep all previously fetched unique paths (by ID)
+    setAllFetchedPaths((prevPaths) => {
+      const existingIds = new Set(prevPaths.map((p) => p.id));
+      const existingKeywords = new Set(keywords);
+      const merged = [...prevPaths];
+      const newKeywords = [...keywords];
+      for (const p of newPaths) {
+        if (!existingIds.has(p.id)) {
+          merged.push(p);
+          for (const node of p.learningPathNodes) {
+            for (const keyword of node.learningObject.keywords) {
+              if (!existingKeywords.has(keyword.keyword)) {
+                existingKeywords.add(keyword.keyword);
+                newKeywords.push(keyword.keyword);
+              }
+            }
+          }
+        }
+      }
+      setKeywords(newKeywords);
+      return merged;
+    });
+  }, [paginatedData]);
+
+  useEffect(() => {
+    const updatedPaths = allFetchedPaths.filter(
       (path) =>
         // if no keywords are selected, all learningpaths are shown
         selectedKeywords.length === 0 ||
@@ -96,7 +129,7 @@ function AssignmentCreatePage() {
     ) {
       setSelectedLearningPath(null);
     }
-  }, [selectedKeywords, learningPaths]);
+  }, [selectedKeywords, allFetchedPaths]);
 
   const handleGroupSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = Number(event.target.value);
@@ -107,7 +140,6 @@ function AssignmentCreatePage() {
   };
 
   const handleSubmit = () => {
-    //TODO: deadline
     if (!name.trim()) {
       setError(t('assignmentNameRequired'));
       return;
@@ -209,18 +241,91 @@ function AssignmentCreatePage() {
 
           {/* Keywords & Learning Paths */}
           <Grid size={{ xs: 12, md: 4, sm: 6 }}>
-            <MultipleSelectChip
-              label={t('keywords')}
+            <Autocomplete
+              multiple
               options={keywords}
-              state={[selectedKeywords, setSelectedKeywords]}
+              value={selectedKeywords}
+              onChange={(_, newValue) => {
+                setSelectedKeywords(newValue);
+              }}
+              inputValue={inputValueKeywords}
+              onInputChange={(_, newInputValue) => {
+                setInputValueKeywords(newInputValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t('keywords')}
+                  placeholder={t('keywords')}
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+              loading={isLoadingLearningPaths || isFetchingNextPage}
+              slotProps={{
+                listbox: {
+                  onScroll: (event) => {
+                    const listboxNode = event.currentTarget;
+                    if (
+                      listboxNode.scrollTop + listboxNode.clientHeight >=
+                        listboxNode.scrollHeight - 10 &&
+                      hasNextPage &&
+                      !isFetchingNextPage
+                    ) {
+                      fetchNextPage();
+                      const item = listboxNode.querySelector('li');
+                      const itemHeight = item?.offsetHeight || 0;
+
+                      // Scroll up by 3 items
+                      listboxNode.scrollTop -= itemHeight * 3;
+                    }
+                  },
+                },
+              }}
             />
-            <BasicSelect<LearningPathShort>
-              required
-              labelName={t('learningPath')}
+            <Autocomplete
+              value={selectedLearningPath}
+              onChange={(_, newValue: LearningPathShort | null) => {
+                setSelectedLearningPath(newValue);
+              }}
+              inputValue={inputValuePaths}
+              onInputChange={(_, newInputValue) => {
+                setInputValuePaths(newInputValue);
+              }}
               options={filteredLearningPaths}
-              state={[selectedLearningPath, setSelectedLearningPath]}
-              getOptionLabel={(option) => option.title}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(path) => path.title}
+              getOptionKey={(path) => path.id}
+              isOptionEqualToValue={(option, value) => option.id == value.id}
+              renderInput={(params) => (
+                <TextField
+                  required
+                  {...params}
+                  label={t('learningPath')}
+                  fullWidth
+                  margin="normal"
+                />
+              )}
+              loading={isLoadingLearningPaths || isFetchingNextPage}
+              slotProps={{
+                listbox: {
+                  onScroll: (event) => {
+                    const listboxNode = event.currentTarget;
+                    if (
+                      listboxNode.scrollTop + listboxNode.clientHeight >=
+                        listboxNode.scrollHeight - 10 &&
+                      hasNextPage &&
+                      !isFetchingNextPage
+                    ) {
+                      fetchNextPage();
+                      const item = listboxNode.querySelector('li');
+                      const itemHeight = item?.offsetHeight || 0;
+
+                      // Scroll up by 3 items
+                      listboxNode.scrollTop -= itemHeight * 3;
+                    }
+                  },
+                },
+              }}
             />
           </Grid>
 
