@@ -43,13 +43,10 @@ export function NewestDiscussionCard({ discussion }: { discussion: DiscussionDet
   }
 
   return (
-    <Card variant="outlined" sx={{ mb: 2 }}>
+    <Card variant="outlined" sx={{ mb: 2 }} onClick={handleGoToDiscussion}>
       <CardContent>
         <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
-          {assignment?.name ?? t('loading')}
-        </Typography>
-        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-          {classData?.name ?? t('loading')}
+          {classData?.name + ' - ' + assignment?.name}
         </Typography>
         <Stack direction="row" spacing={1} sx={{ mb: 1, flexWrap: 'wrap' }}>
           {groupMembers.map((user) => (
@@ -62,12 +59,10 @@ export function NewestDiscussionCard({ discussion }: { discussion: DiscussionDet
             />
           ))}
         </Stack>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          {t('lastMessage')}: {formattedTime}
+        <Typography variant="body2" color="text.secondary">
+          {t('lastMessage')}: {formattedTime} {t('by')} {latestMessage?.sender.name}{' '}
+          {latestMessage?.sender.surname}
         </Typography>
-        <Button variant="contained" color="primary" onClick={handleGoToDiscussion}>
-          {t('goToDiscussion')}
-        </Button>
       </CardContent>
     </Card>
   );

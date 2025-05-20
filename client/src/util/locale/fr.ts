@@ -1,10 +1,9 @@
-import { join } from 'path';
-
 export const fr = {
   translation: {
     yes: 'Oui',
     no: 'Non',
     or: 'Ou',
+    by: 'par',
     fillInRequired: 'Remplissez les champs obligatoires',
     email: 'Adresse email',
     name: 'Nom',
@@ -121,5 +120,14 @@ export const fr = {
     joinRequestSuccess: 'La demande d’adhésion a été approuvée',
     copied: 'Copié dans le presse-papiers',
     failedFavorite: 'Échec de l’ajout aux favoris',
+    upcomingDeadlines: 'Prochaines échéances',
+    noUpcomingDeadlines: 'Aucune échéance à venir',
+    startAssignments: 'Commencer les devoirs',
+    noNotStartedAssignments: 'Aucun devoir commencé',
+    latestDiscussions: 'Dernières discussions',
+    noLatestDiscussions: 'Aucune discussion récente',
+    latestsAnnouncements: 'Dernières annonces',
+    noLatestAnnouncements: 'Aucune annonce récente',
+    lastMessage: 'Dernier message',
   },
 };

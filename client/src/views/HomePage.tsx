@@ -7,8 +7,10 @@ import LearningPathCard from '../components/learningPathCard';
 import { AppRoutes } from '../util/app.routes';
 import { myGroup } from '../util/helpers/group.helpers';
 import { useNavigate } from 'react-router-dom';
-import { useNewestDiscussions } from '../hooks/useDiscussion';
+import { useLatestDiscussions } from '../hooks/useDiscussion';
 import { NewestDiscussionCard } from '../components/NewestDiscussionCard';
+import { useLatestsAnnouncements } from '../hooks/useAnnouncement';
+import AnnouncementCard from '../components/AnnouncementCard';
 
 function HomePage() {
   const { user } = useAuth();
@@ -23,15 +25,13 @@ function HomePage() {
     studentId: user?.student?.id,
   });
 
-  const { data: newestDiscussions } = useNewestDiscussions({
+  const { data: latestDiscussions } = useLatestDiscussions({
     userId: user?.id,
   });
 
-  console.log('Upcoming Deadlines:', upcomingDeadlines);
-
-  console.log('Not Started Assignments:', notStartedAssignments);
-
-  console.log('Newest Discussions:', newestDiscussions);
+  const { data: latestAnnouncements } = useLatestsAnnouncements({
+    studentId: user?.student?.id,
+  });
 
   return (
     <Box
@@ -104,12 +104,30 @@ function HomePage() {
             />
           ))}
 
-          <Typography variant="h4">{t('newestDiscussions')}</Typography>
-          {newestDiscussions?.length === 0 && (
-            <Typography variant="body1">{t('noNewestDiscussions')}</Typography>
+          <Typography variant="h4">{t('latestDiscussions')}</Typography>
+          {latestDiscussions?.length === 0 && (
+            <Typography variant="body1">{t('noLatestDiscussions')}</Typography>
           )}
-          {newestDiscussions?.map((discussion) => (
+          {latestDiscussions?.map((discussion) => (
             <NewestDiscussionCard discussion={discussion}></NewestDiscussionCard>
+          ))}
+
+          <Typography variant="h4">{t('latestAnnouncements')}</Typography>
+          {latestAnnouncements?.length === 0 && (
+            <Typography variant="body1">{t('noLatestAnnouncements')}</Typography>
+          )}
+          {latestAnnouncements?.map((announcement) => (
+            <Box
+              onClick={() => navigate(AppRoutes.announcement(announcement.id))}
+              key={announcement.id}
+            >
+              <AnnouncementCard
+                id={announcement.id}
+                title={announcement.class.name + ' - ' + announcement.title}
+                teacher={announcement.teacher}
+                content={announcement.content}
+              ></AnnouncementCard>
+            </Box>
           ))}
         </>
       )) || (

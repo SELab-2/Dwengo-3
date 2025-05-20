@@ -91,3 +91,35 @@ export function useAnnouncementCreate() {
     },
   });
 }
+
+export function useLatestsAnnouncements({
+  studentId,
+  teacherId,
+}: {
+  studentId?: string;
+  teacherId?: string;
+}) {
+  return useQuery({
+    queryKey: ['latestAnnouncements', studentId, teacherId],
+    queryFn: async () => {
+      const paginatedAnnouncements = await fetchAnnouncements(undefined, teacherId, studentId);
+      const announcements = paginatedAnnouncements.data;
+
+      // Fetch the details of each announcement
+      const detailedAnnouncements = await Promise.all(
+        announcements.map((announcement) => fetchAnnouncementById(announcement.id)),
+      );
+
+      // Sort the announcements by date in descending order
+      detailedAnnouncements.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime(); // Sort in descending order
+      });
+
+      return detailedAnnouncements;
+    },
+    enabled: !!studentId || !!teacherId,
+    refetchOnWindowFocus: false,
+  });
+}

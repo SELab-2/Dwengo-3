@@ -82,7 +82,7 @@ export function useDetailedDiscussionsByIds(ids: string[]) {
  * @param userId - The ID of the user for whom to fetch discussions
  * @returns Paginated data containing the list of discussions.
  */
-export function useNewestDiscussions({ userId }: { userId: string | undefined }) {
+export function useLatestDiscussions({ userId }: { userId: string | undefined }) {
   return useQuery({
     queryKey: ['newestDiscussions', userId],
     queryFn: async () => {
