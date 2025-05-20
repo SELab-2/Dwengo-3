@@ -56,7 +56,6 @@ export function useGoogleLogin() {
 }
 
 export function useLogout() {
-  // TODO: other logout method
   return useMutation({
     mutationFn: async () => {
       const response = await apiClient.delete(ApiRoutes.logout);

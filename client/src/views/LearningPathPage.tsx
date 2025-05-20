@@ -178,7 +178,7 @@ function LearningPathPage() {
           setCurrentSubmission(submission);
         }
       } catch (error: any) {
-        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
+        setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
       } finally {
         setIsLoading(false);
       }
@@ -243,9 +243,7 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(
-              error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
-            );
+            setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
           },
         },
       );
@@ -259,9 +257,7 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(
-              error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
-            );
+            setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
           },
         },
       );
@@ -279,9 +275,7 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(
-              error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
-            );
+            setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
           },
           onSuccess: (response) => {
             setCurrentSubmission(response);
@@ -299,9 +293,7 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(
-              error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
-            );
+            setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
           },
           onSuccess: (response) => {
             setCurrentSubmission(response);
@@ -364,8 +356,6 @@ function LearningPathPage() {
     }
   };
 
-  // todo: use this function to set the current clicked answer to the selected one, use this to check in submit field
-  // if answer is correct or not
   const handleAnswerClick = (answer: string) => {
     setCurrentAnswer(answer);
   };
@@ -389,9 +379,7 @@ function LearningPathPage() {
               setCurrentSubmission(response);
             },
             onError: (error: any) => {
-              setError(
-                error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
-              );
+              setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
             },
           },
         )
@@ -410,9 +398,7 @@ function LearningPathPage() {
               setCurrentSubmission(response);
             },
             onError: (error: any) => {
-              setError(
-                error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
-              );
+              setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
             },
           },
         );

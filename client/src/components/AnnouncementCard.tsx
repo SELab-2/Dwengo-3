@@ -10,18 +10,9 @@ interface AnnouncementCardProps {
   date: string;
   teacher: TeacherShort;
   content: string;
-  // actionButtons: React.ReactNode;
 }
 
-// TODO : use colorSchema for colors
-const AnnouncementCard = ({
-  id,
-  title,
-  date,
-  teacher,
-  content,
-  // actionButtons,  /* TODO: This is needed to place an edit button on the card when on the detail page and when the user is a teacher */
-}: AnnouncementCardProps) => {
+const AnnouncementCard = ({ id, title, date, teacher, content }: AnnouncementCardProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
