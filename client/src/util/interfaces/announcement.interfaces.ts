@@ -10,6 +10,7 @@ export interface AnnouncementDetail {
   id: string;
   title: string;
   content: string;
+  createdAt: string;
   teacher: TeacherShort;
   class: ClassShort;
 }

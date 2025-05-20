@@ -756,7 +756,6 @@
           }
         }
       },
-
       "UserShort": {
         "type": "object",
         "properties": {
@@ -1071,6 +1070,12 @@
             "type": "string",
             "description": "The content of the announcement.",
             "example": "This is an important announcement."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the announcement was created.",
+            "example": "2023-06-25T10:00:00Z"
           },
           "class": {
             "description": "The class to which the announcement belongs",

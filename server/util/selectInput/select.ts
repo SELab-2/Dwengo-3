@@ -1,5 +1,7 @@
 /* The order of these selects in this file is important to avoid reference before instantiation */
 
+import { create } from 'node:domain';
+
 export const userSelectShort = {
   id: true,
   surname: true,
@@ -85,6 +87,7 @@ export const announcementSelectDetail = {
   id: true,
   title: true,
   content: true,
+  createdAt: true,
   class: {
     select: classSelectShort,
   },
