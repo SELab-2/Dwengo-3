@@ -24,6 +24,9 @@ vi.mock('../client/src/components/BackButton.tsx', () => ({
 vi.mock('../client/node_modules/react-i18next', async () => {
   return {
     useTranslation: () => ({
+      i18n: {
+        language: 'en',
+      },
       t: (key: string) => key,
     }),
   };

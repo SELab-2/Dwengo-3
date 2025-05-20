@@ -83,11 +83,7 @@ export class AnnouncementDomain {
 
     await this.checkUserIsTeacher(user);
     const teacherId = TeacherIdZod.parse(user.teacher?.id);
-    const announcementFromTeacher =
-      await this.announcementPersistence.checkAnnouncementIsFromTeacher(id, teacherId);
-    if (!announcementFromTeacher) {
-      throw new BadRequestError(40037);
-    }
+    await this.announcementPersistence.checkAnnouncementIsFromTeacher(id, teacherId);
     return this.announcementPersistence.updateAnnouncement(id, data);
   }
 
