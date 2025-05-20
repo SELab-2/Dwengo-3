@@ -57,7 +57,10 @@ export function isNotAuthenticated(req: Request, res: Response, next: NextFuncti
   if (req.isUnauthenticated()) {
     return next();
   }
-  throw new AuthorizationError(40302);
+
+  const url =
+    process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : 'https://sel2-3.ugent.be';
+  res.redirect(`${url}`);
 }
 
 export const router = express.Router();
