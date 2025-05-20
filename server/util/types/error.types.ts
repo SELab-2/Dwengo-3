@@ -118,7 +118,7 @@ export class BadRequestError extends APIError {
       case 40002:
         return "Can't fetch classes/groups you're not a student of...";
       case 40004:
-        return 'Provided ID does is not a studentId or teacherId...';
+        return 'Provided ID is not a studentId or teacherId...';
       case 40005:
         return 'You must be a teacher to create a class...';
       case 40006:

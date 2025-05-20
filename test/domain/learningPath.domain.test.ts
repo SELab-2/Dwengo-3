@@ -9,7 +9,7 @@ import {
 } from '../testObjects.json';
 import { LearningPathDomain } from '../../server/domain/learningPath.domain';
 import { UserEntity } from '../../server/util/types/user.types';
-import { ClassRoleEnum } from '../../server/util/types/enums.types';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // learningPath persistence mock
 const { mockLearningPathPeristence } = vi.hoisted(() => {
@@ -32,11 +32,13 @@ let userTeacher: UserEntity = {
   ...testUsers[0],
   role: testUsers[0].role as ClassRoleEnum,
   teacher: testTeachers[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 let userStudent: UserEntity = {
   ...testUsers[5],
   role: testUsers[5].role as ClassRoleEnum,
   student: testStudents[0],
+  provider: AuthenticationProvider.LOCAL,
 };
 
 let getLearningPathsQuery = {
@@ -110,7 +112,7 @@ describe('learningPath domain', () => {
     test('user is student fails', async () => {
       await expect(
         learningPathDomain.createLearningPath(createLearningPathParams, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40009 });
     });
     test('invalid hruid fails', async () => {
       await expect(

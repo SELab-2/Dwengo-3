@@ -149,7 +149,7 @@ let createAssigmentInvalidTeacherIdParams = {
 };
 let createAssigmentUnexistingClassParams = {
   ...createAssigmentParams,
-  classId: '82ff18cb-1b49-4d5d-a678-658cd69hb542',
+  classId: '414d1886-383a-4c1a-aba5-86af803197bd',
 };
 let createAssigmentStudentNotInClassParams = {
   ...createAssigmentParams,
@@ -258,12 +258,12 @@ describe('assignment domain', () => {
     test('student does not belong to class fails', async () => {
       await expect(
         assignmentDomain.getAssignmentById(getAssignmentByIdOtherId.id, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40002 });
     });
     test('teacher does not belong to class fails', async () => {
       await expect(
         assignmentDomain.getAssignmentById(getAssignmentByIdOtherId.id, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40001 });
     });
     test('valid query params and user teacher belongs to class passes', async () => {
       await expect(
@@ -280,12 +280,12 @@ describe('assignment domain', () => {
     test('teacher does not belong to class fails', async () => {
       await expect(
         assignmentDomain.createAssignment(createAssigmentParams, userTeacherNotFirstClass),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40001 });
     });
     test('user is student fails', async () => {
       await expect(
         assignmentDomain.createAssignment(createAssigmentParams, userStudent),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40012 });
     });
     test('groups is invalid type fails', async () => {
       await expect(
@@ -320,12 +320,12 @@ describe('assignment domain', () => {
     test('unexisting class fails', async () => {
       await expect(
         assignmentDomain.createAssignment(createAssigmentUnexistingClassParams, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40401 });
     });
     test('student in groups does not belong to class fails', async () => {
       await expect(
         assignmentDomain.createAssignment(createAssigmentStudentNotInClassParams, userTeacher),
-      ).rejects.toThrow();
+      ).rejects.toMatchObject({ _errorCode: 40040 });
     });
   });
 });

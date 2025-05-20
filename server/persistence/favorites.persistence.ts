@@ -32,10 +32,6 @@ export class FavoritesPersistence {
       select: favoriteSelectDetail,
     });
 
-    if (!favorite) {
-      throw new NotFoundError(40414);
-    }
-
     return favorite;
   }
 
