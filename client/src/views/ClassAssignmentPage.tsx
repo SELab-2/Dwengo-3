@@ -25,10 +25,7 @@ import { AppRoutes } from '../util/app.routes.ts';
 import DateTypography from '../components/DateTypography.tsx';
 import AssignmentInfoCard from '../components/AssignmentInfoCard.tsx';
 
-const calculateProgress = (
-  progress: number[],
-  learningPath: any /* TODO add type when interface is correct*/,
-) => {
+const calculateProgress = (progress: number[], learningPath: any) => {
   const total_nodes = learningPath.learningPathNodes.length;
   // + 1 is added because of zero indexing
   return progress.length > 0 ? ((Math.max(...progress) + 1) / total_nodes) * 100 : 0;

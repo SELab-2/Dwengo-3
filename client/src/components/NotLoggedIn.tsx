@@ -3,7 +3,6 @@ import { MarginSize } from '../util/size';
 import { Login as LoginIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
-// TODO: this component may be deleted as soon as the routes are protected
 function NotLoggedIn() {
   const { t } = useTranslation();
 

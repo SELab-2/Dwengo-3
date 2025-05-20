@@ -188,7 +188,6 @@ function ClassDashboardPage() {
               }}
             >
               {classData!.teachers.map((teacher, index) => (
-                // TODO add links for students and teachers profiles
                 <ListItem key={index}>
                   <ListItemText
                     sx={{
