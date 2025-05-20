@@ -12,6 +12,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LanguageSwitcher from './icons/LanguageIcon';
@@ -33,6 +34,7 @@ function MainAppBar() {
   const { t } = useTranslation();
   const [selectedTab, setSelectedTab] = useState(TabIndex[location.pathname] ?? false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const theme = useTheme();
 
   if ([AppRoutes.login, AppRoutes.register].includes(location.pathname)) {
     return <LoginAppBar />;
@@ -43,7 +45,7 @@ function MainAppBar() {
   };
 
   return (
-    <AppBar position="static" sx={{ height: ComponentSize.medium }}>
+    <AppBar position="static">
       <Toolbar
         sx={{
           display: 'flex',
@@ -97,21 +99,21 @@ function MainAppBar() {
           }}
         >
           <IconButton
-            edge="start"
-            color="inherit"
             aria-label="menu"
             onClick={handleDrawerToggle}
             sx={{
-              display: { xs: 'block', md: 'none' }, // Show only on small screens
-              height: IconSize.large, // Match the size of other icons
-              width: IconSize.large, // Match the size of other icons
-              padding: 0, // Remove extra padding
-              margin: 0, // Remove extra margin
+              display: { xs: 'flex', md: 'none' }, // Show only on small screens
+              p: 0, // Remove extra padding
               alignItems: 'center', // Center the icon vertically
               justifyContent: 'center', // Center the icon horizontally
             }}
           >
-            <MenuIcon sx={{ height: IconSize.large, width: IconSize.large }} />
+            <MenuIcon
+              sx={{
+                color: theme.palette.secondary.main,
+                fontSize: { xs: IconSize.small, sm: IconSize.medium, md: IconSize.large },
+              }}
+            />
           </IconButton>
           <LanguageSwitcher />
           <ProfileIcon />
