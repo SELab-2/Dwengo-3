@@ -95,7 +95,7 @@ function MyLearningPathsPage() {
               key={favorite.id}
               onClick={
                 isMobile
-                  ? (event) =>
+                  ? (_) =>
                       navigate(
                         AppRoutes.learningPath(favorite.learningPath.id, undefined, favorite.id),
                       )
