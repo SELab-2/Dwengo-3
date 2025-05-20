@@ -3,22 +3,22 @@ import { LoginAppBar } from './LoginAppBar';
 import {
   AppBar,
   Box,
-  Tab,
-  Tabs,
-  Toolbar,
-  IconButton,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
+  Tab,
+  Tabs,
+  Toolbar,
   useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LanguageSwitcher from './icons/LanguageIcon';
 import DwengoIcon from './icons/DwengoIcon';
 import ProfileIcon from './icons/ProfileIcon';
-import { ComponentSize, FontSize, IconSize } from '../util/size';
+import { FontSize, IconSize } from '../util/size';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { AppRoutes } from '../util/app.routes';

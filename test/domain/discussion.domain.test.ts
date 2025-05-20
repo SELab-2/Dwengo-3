@@ -3,13 +3,11 @@ import { DiscussionDomain } from '../../server/domain/discussion.domain';
 import { UserEntity } from '../../server/util/types/user.types';
 import {
   testDiscussions,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
   testGroups,
-  testAssignments,
-  testLearningPaths,
+  testPaginationFilter,
+  testStudents,
+  testTeachers,
+  testUsers,
 } from '../testObjects.json';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 

@@ -10,22 +10,13 @@ import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { UserEntity } from '../util/types/user.types';
 import { NotFoundError } from '../util/types/error.types';
-import { classSelectShort, classSelectDetail } from '../util/selectInput/select';
+import { classSelectDetail, classSelectShort } from '../util/selectInput/select';
 
 export class ClassPersistence {
   private prisma;
 
   constructor() {
     this.prisma = PrismaSingleton.instance;
-  }
-
-  private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
-    return {
-      AND: [
-        filters.teacherId ? { teachers: { some: { id: filters.teacherId } } } : {},
-        filters.studentId ? { students: { some: { id: filters.studentId } } } : {},
-      ],
-    };
   }
 
   public async getClasses(paginationParams: PaginationParams, filters: ClassFilterParams) {
@@ -132,5 +123,14 @@ export class ClassPersistence {
       },
       select: classSelectDetail,
     });
+  }
+
+  private buildWhereClause(filters: ClassFilterParams): Prisma.ClassWhereInput {
+    return {
+      AND: [
+        filters.teacherId ? { teachers: { some: { id: filters.teacherId } } } : {},
+        filters.studentId ? { students: { some: { id: filters.studentId } } } : {},
+      ],
+    };
   }
 }

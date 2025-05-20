@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Button,
@@ -69,7 +68,7 @@ export function UserDataTableComponent(props: Props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {props.data.map((item, index) => {
+              {props.data.map((item) => {
                 return (
                   <TableRow>
                     <TableCell>

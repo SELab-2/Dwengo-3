@@ -1,5 +1,5 @@
-import React, { useState, MouseEvent } from 'react';
-import { Menu, MenuItem, IconButton, useTheme } from '@mui/material';
+import React, { MouseEvent, useState } from 'react';
+import { IconButton, Menu, MenuItem, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import LanguageIcon from '@mui/icons-material/Language';
 import { IconSize } from '../../util/size';

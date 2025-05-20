@@ -3,9 +3,9 @@ import apiClient from './apiClient';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
 import qs from 'qs';
 import {
-  LearningPathShort,
-  LearningPathDetail,
   LearningPathCreate,
+  LearningPathDetail,
+  LearningPathShort,
 } from '../util/interfaces/learningPath.interfaces';
 
 /**

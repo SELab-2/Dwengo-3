@@ -1,10 +1,8 @@
-import React from 'react';
-import { Card, CardContent, Typography, Box, CircularProgress } from '@mui/material';
+import { Box, Card, CardContent, CircularProgress, Typography } from '@mui/material';
 import { useDiscussions } from '../hooks/useDiscussion';
 import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import DiscussionCard from './DiscussionCard';
 import { DiscussionShort } from '../util/interfaces/discussion.interfaces';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 
 function DiscussionListCard({
@@ -20,7 +18,6 @@ function DiscussionListCard({
     userId: user?.id,
   });
   const { data: discussions } = paginatedDiscussions || { data: [] };
-  const { t } = useTranslation();
 
   if (discussions.length === 0) {
     return null;
@@ -44,7 +41,7 @@ function DiscussionListCard({
         </Typography>
         {!isLoading && (
           <Box sx={{ overflowY: 'auto', pr: 1 }}>
-            {discussions.map((discussion: DiscussionShort, idx: number) => (
+            {discussions.map((discussion: DiscussionShort) => (
               <DiscussionCard
                 key={discussion.id}
                 discussion={discussion}

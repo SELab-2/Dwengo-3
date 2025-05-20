@@ -9,8 +9,8 @@ import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { BadRequestError, NotFoundError } from '../util/types/error.types';
-import { announcementSelectShort, announcementSelectDetail } from '../util/selectInput/select';
+import { NotFoundError } from '../util/types/error.types';
+import { announcementSelectDetail, announcementSelectShort } from '../util/selectInput/select';
 
 //TODO : import prisma client from singleton
 

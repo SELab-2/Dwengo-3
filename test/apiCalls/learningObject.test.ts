@@ -3,12 +3,11 @@ import apiClient from '../../client/src/api/apiClient';
 import { ApiRoutes } from '../../client/src/api/api.routes';
 import {
   createLearningObject,
+  deleteLearningObject,
   fetchLearningObjectById,
   fetchLearningObjects,
   updateLearningObject,
-  deleteLearningObject,
 } from '../../client/src/api/learningObject';
-import { mock } from 'node:test';
 
 describe('Test learningObjectApi', () => {
   beforeEach(() => {

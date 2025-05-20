@@ -1,15 +1,15 @@
 import {
+  Avatar,
+  Box,
   Card,
   CardContent,
-  Typography,
-  Box,
+  Chip,
   Divider,
-  Avatar,
+  LinearProgress,
   List,
   ListItem,
-  Chip,
-  LinearProgress,
   ListItemText,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import { Class as ClassIcon, Person as PersonIcon } from '@mui/icons-material';

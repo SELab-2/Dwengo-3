@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Prisma } from '.prisma/client';
-import { learningPathNodeSelectShort, learningPathNodeSelectDetail } from '../selectInput/select';
+import { learningPathNodeSelectDetail, learningPathNodeSelectShort } from '../selectInput/select';
 import { InstructionZod, LearningObjectIdZod, LearningPathIdZod } from './util_types';
 
 export const LearningPathNodeCreateSchema = z.object({

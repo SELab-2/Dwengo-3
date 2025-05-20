@@ -1,6 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { fetchLearningPaths, fetchLearningPathById } from '../api/learningPath';
-import { PaginatedData } from '../util/interfaces/general.interfaces';
+import { fetchLearningPathById, fetchLearningPaths } from '../api/learningPath';
 
 /**
  * Fetches a list of learningPaths based on keywords, ages, page, and pageSize.

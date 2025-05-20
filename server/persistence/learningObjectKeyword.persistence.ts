@@ -3,6 +3,7 @@ import { PrismaSingleton } from './prismaSingleton';
 
 export class LearningObjectKeywordPersistence {
   private prisma: PrismaClient;
+
   constructor() {
     this.prisma = PrismaSingleton.instance;
   }

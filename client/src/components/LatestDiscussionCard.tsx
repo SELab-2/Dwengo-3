@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography, Chip, Stack } from '@mui/material';
+import { Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DiscussionDetail } from '../util/interfaces/discussion.interfaces';

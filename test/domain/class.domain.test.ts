@@ -3,8 +3,8 @@ import { ClassDomain } from '../../server/domain/class.domain';
 import {
   testClasses,
   testPaginationFilter,
-  testTeachers,
   testStudents,
+  testTeachers,
   testUsers,
 } from '../testObjects.json';
 import { UserEntity } from '../../server/util/types/user.types';

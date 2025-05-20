@@ -1,6 +1,8 @@
 # API response structure
 
-In dit bestand vind u voor alle resources die door de API worden teruggegeven de verzameling van attributen die in de response te vinden zijn. Eenmaal dit is goedgekeurd is het de bedoeling dat dit in de swagger documentation komt te staan.
+In dit bestand vind u voor alle resources die door de API worden teruggegeven de verzameling van attributen die in de
+response te vinden zijn. Eenmaal dit is goedgekeurd is het de bedoeling dat dit in de swagger documentation komt te
+staan.
 
 ---
 
@@ -119,7 +121,8 @@ Het heeft namelijk geen zin al deze informatie te zien wanneer je een lijst van 
 
 ## LearningObject (short)
 
-Onderstaande attributen worden gereturned wanneer het minimale informatie vereist is. Dit kan bijvoorbeeld zijn wanneer een lijst van leerobjecten wordt opgevraagd.
+Onderstaande attributen worden gereturned wanneer het minimale informatie vereist is. Dit kan bijvoorbeeld zijn wanneer
+een lijst van leerobjecten wordt opgevraagd.
 
 - `id`
 - `title`
@@ -133,7 +136,8 @@ Onderstaande attributen worden gereturned wanneer het minimale informatie vereis
 
 ## LearningPathNode (detail)
 
-Dit wordt gebruikt wanneer een learningPathNode via id wordt opgevraagd. Dit kan het geval zijn wanneer je op een leerobject klikt binnenin een leerpad.
+Dit wordt gebruikt wanneer een learningPathNode via id wordt opgevraagd. Dit kan het geval zijn wanneer je op een
+leerobject klikt binnenin een leerpad.
 
 - `id` (learningPathNodeId)
 - `learningPathId`

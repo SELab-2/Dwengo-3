@@ -14,9 +14,11 @@ import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class ClassJoinRequestPersistence {
   private usersPersistence: UsersPersistence;
+
   public constructor() {
     this.usersPersistence = new UsersPersistence();
   }
+
   public async createClassJoinRequest(data: ClassJoinRequestCreateParams, user: UserEntity) {
     return PrismaSingleton.instance.classJoinRequest.create({
       data: {

@@ -1,4 +1,3 @@
-import { useAuth } from '../hooks/useAuth';
 import { Box, Paper, Typography } from '@mui/material';
 import AnnouncementCard from '../components/AnnouncementCard';
 import { useParams } from 'react-router-dom';
@@ -10,7 +9,7 @@ import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 import { MarginSize } from '../util/size.ts';
 
 function AnnouncementDetailpage() {
-  const { user } = useAuth(); // NEEDED TO CHECK IF USER IS TEACHER OR STUDENT for future edit features
+  // const { user } = useAuth(); // TODO: NEEDED TO CHECK IF USER IS TEACHER OR STUDENT for future edit features
   const { t } = useTranslation();
   const { announcementId } = useParams<{ announcementId: string }>(); // Get the announcement ID from the URL
 

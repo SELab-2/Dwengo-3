@@ -4,8 +4,7 @@ import { DiscussionShort } from '../util/interfaces/discussion.interfaces';
 import { useTranslation } from 'react-i18next';
 import ForumIcon from '@mui/icons-material/Forum';
 import { AppRoutes } from '../util/app.routes';
-import { useAuth } from '../hooks/useAuth';
-import { UserDetail, UserShort } from '../util/interfaces/user.interfaces';
+import { UserDetail } from '../util/interfaces/user.interfaces';
 
 export function GoToOrCreateDiscussion({
   assignment,

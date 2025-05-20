@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Collapse,
   LinearProgress,
   List,
@@ -33,7 +32,6 @@ import {
 } from '../util/interfaces/assignmentSubmission.interfaces';
 import DoneIcon from '@mui/icons-material/Done';
 import { ExpandLess, ExpandMore, FileDownload, QuestionMark } from '@mui/icons-material';
-import { LearningObjectDetail } from '../util/interfaces/learningObject.interfaces';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
 import { useAssignmentSubmissions } from '../hooks/useAssignmentSubmission';
 import { downloadFileSubmission } from '../api/assignmentSubmission';

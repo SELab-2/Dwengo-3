@@ -54,6 +54,93 @@ export class StudentDomain {
   }
 
   /**
+   * Get all students based on a query with the necessary validation.
+   *
+   * @param query - The query to filter and paginate the students and what to include.
+   * @param user - The user making the request.
+   * @returns The paginated students and total pages.
+   */
+  public async getStudents(query: unknown, user: UserEntity) {
+    // Validate and parse pagination query parameters
+    const pagination = PaginationFilterSchema.parse(query);
+
+    // Validate and parse student filters
+    const filters = StudentFilterSchema.parse(query);
+
+    if (user.role === ClassRoleEnum.TEACHER) {
+      // Check if the teacher exists
+      const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
+
+      if (!teacher) {
+        // This should never happen as the user is a teacher
+        throw new NotFoundError(40404);
+      }
+
+      await this.validateGetStudentsAsTeacher(filters, teacher);
+    }
+
+    // A student can only fetch students in their groups
+    if (user.role === ClassRoleEnum.STUDENT) {
+      // Check if the student exists
+      const student = await this.studentPersistence.getStudentByUserId(user.id);
+
+      if (!student) {
+        // This should never happen as the user is a student
+        throw new NotFoundError(40403);
+      }
+
+      await this.validateGetStudentsAsStudent(filters, student);
+    }
+
+    return await this.studentPersistence.getStudents(pagination, filters);
+  }
+
+  public async getStudentById(id: string, user: UserEntity) {
+    if (user.role === ClassRoleEnum.TEACHER) {
+      // Check if the teacher exists
+      const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
+
+      if (!teacher) {
+        // This should never happen as the user is a teacher
+        throw new NotFoundError(40404);
+      }
+
+      // TODO: zie discord, isStudentInTeacherClass functie werkt niet correct
+      // const isStudentInTeacherClass = await this.isStudentInTeacherClass(id, teacher.id);
+      const isStudentInTeacherClass = true;
+
+      if (!isStudentInTeacherClass) {
+        throw new BadRequestError(40036);
+      }
+
+      return this.studentPersistence.getStudentById(id);
+    }
+
+    if (user.role === ClassRoleEnum.STUDENT) {
+      const student = await this.studentPersistence.getStudentByUserId(user.id);
+
+      if (!student) {
+        // This should never happen as the user is a student
+        throw new NotFoundError(40403);
+      }
+
+      // Check if the student exists
+      const studentExists = await this.studentPersistence.getStudentById(id);
+
+      //Check if the student shares a group with the student making the request
+      const shareGroup = student.groups.some((group) =>
+        studentExists.groups.some((group2: any) => group.id === group2.id),
+      );
+
+      if (!shareGroup && id !== student.id) {
+        throw new BadRequestError(40026);
+      }
+
+      return studentExists;
+    }
+  }
+
+  /**
    * Validate the get students query for a teacher.
    *
    * @param query - The query to filter and paginate the students.
@@ -141,93 +228,6 @@ export class StudentDomain {
       if (!shareGroup && query.userId !== student.userId) {
         throw new BadRequestError(40026);
       }
-    }
-  }
-
-  /**
-   * Get all students based on a query with the necessary validation.
-   *
-   * @param query - The query to filter and paginate the students and what to include.
-   * @param user - The user making the request.
-   * @returns The paginated students and total pages.
-   */
-  public async getStudents(query: unknown, user: UserEntity) {
-    // Validate and parse pagination query parameters
-    const pagination = PaginationFilterSchema.parse(query);
-
-    // Validate and parse student filters
-    const filters = StudentFilterSchema.parse(query);
-
-    if (user.role === ClassRoleEnum.TEACHER) {
-      // Check if the teacher exists
-      const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
-
-      if (!teacher) {
-        // This should never happen as the user is a teacher
-        throw new NotFoundError(40404);
-      }
-
-      await this.validateGetStudentsAsTeacher(filters, teacher);
-    }
-
-    // A student can only fetch students in their groups
-    if (user.role === ClassRoleEnum.STUDENT) {
-      // Check if the student exists
-      const student = await this.studentPersistence.getStudentByUserId(user.id);
-
-      if (!student) {
-        // This should never happen as the user is a student
-        throw new NotFoundError(40403);
-      }
-
-      await this.validateGetStudentsAsStudent(filters, student);
-    }
-
-    return await this.studentPersistence.getStudents(pagination, filters);
-  }
-
-  public async getStudentById(id: string, user: UserEntity) {
-    if (user.role === ClassRoleEnum.TEACHER) {
-      // Check if the teacher exists
-      const teacher = await this.teacherPersistence.getTeacherByUserId(user.id);
-
-      if (!teacher) {
-        // This should never happen as the user is a teacher
-        throw new NotFoundError(40404);
-      }
-
-      // TODO: zie discord, isStudentInTeacherClass functie werkt niet correct
-      // const isStudentInTeacherClass = await this.isStudentInTeacherClass(id, teacher.id);
-      const isStudentInTeacherClass = true;
-
-      if (!isStudentInTeacherClass) {
-        throw new BadRequestError(40036);
-      }
-
-      return this.studentPersistence.getStudentById(id);
-    }
-
-    if (user.role === ClassRoleEnum.STUDENT) {
-      const student = await this.studentPersistence.getStudentByUserId(user.id);
-
-      if (!student) {
-        // This should never happen as the user is a student
-        throw new NotFoundError(40403);
-      }
-
-      // Check if the student exists
-      const studentExists = await this.studentPersistence.getStudentById(id);
-
-      //Check if the student shares a group with the student making the request
-      const shareGroup = student.groups.some((group) =>
-        studentExists.groups.some((group2: any) => group.id === group2.id),
-      );
-
-      if (!shareGroup && id !== student.id) {
-        throw new BadRequestError(40026);
-      }
-
-      return studentExists;
     }
   }
 

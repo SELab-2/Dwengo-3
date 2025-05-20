@@ -2,7 +2,7 @@ import { Box, Button, CircularProgress, Divider, Stack, Typography } from '@mui/
 import { useTranslation } from 'react-i18next';
 import ClassNavigationBar from '../components/ClassNavigationBar.tsx';
 import { Add } from '@mui/icons-material';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import DiscussionListCard from '../components/DiscussionListCard.tsx';

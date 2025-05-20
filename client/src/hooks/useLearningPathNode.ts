@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchLearningPathNodeById } from '../api/learningPathNode';
+
 /**
  * Fetches a learningPathNode by its ID.
  *

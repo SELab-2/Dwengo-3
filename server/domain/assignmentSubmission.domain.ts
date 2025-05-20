@@ -44,7 +44,7 @@ export class AssignmentSubmissionDomain {
 
     if (filters.favoriteId) {
       const favorite = await this.favoritesPersistence.getFavoriteById(filters.favoriteId);
-      if (favorite.user.id != user.id) {
+      if (favorite == null || favorite.user.id != user.id) {
         throw new BadRequestError(40043);
       }
     }
@@ -106,7 +106,7 @@ export class AssignmentSubmissionDomain {
       }
     } else if (data.favoriteId) {
       const favoriteData = await this.favoritesPersistence.getFavoriteById(data.favoriteId);
-      if (favoriteData.user.id !== user.id) {
+      if (favoriteData == null || favoriteData.user.id !== user.id) {
         if (req.file) {
           this.deleteFile(req.file.path);
         }

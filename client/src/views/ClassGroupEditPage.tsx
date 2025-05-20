@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AppBar, Box, Button, Paper, TextField, Typography } from '@mui/material';
@@ -12,7 +12,6 @@ import { MarginSize } from '../util/size.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { UserDataTableComponent } from '../components/UserDataTableComponent.tsx';
 import { updateClass } from '../api/class.ts';
-import { useAuth } from '../hooks/useAuth.ts';
 import { useError } from '../hooks/useError.ts';
 import { StudentShort } from '../util/interfaces/student.interfaces.ts';
 import { TeacherShort } from '../util/interfaces/teacher.interfaces.ts';
@@ -22,11 +21,7 @@ export function ClassGroupEditPage() {
   const navigate = useNavigate();
 
   const { classId } = useParams<{ classId: string }>();
-  const {
-    data: classData,
-    isLoading: isClassDataLoading,
-    refetch: refetchClassData,
-  } = useClassById(classId!);
+  const { data: classData, isLoading: isClassDataLoading } = useClassById(classId!);
   const { setError } = useError();
   const [className, setClassName] = useState<string>('');
   const [classDescription, setClassDescription] = useState<string>('');

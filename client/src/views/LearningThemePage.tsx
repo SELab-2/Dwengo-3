@@ -1,8 +1,8 @@
-import { Box, Typography, Card, CardContent, Button } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography } from '@mui/material';
 import Masonry from '@mui/lab/Masonry';
 import GroupIcon from '@mui/icons-material/Group';
 import { MarginSize } from '../util/size';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import theme from '../util/theme';
 import { AppRoutes } from '../util/app.routes';
 import { useLearningPath } from '../hooks/useLearningPath';

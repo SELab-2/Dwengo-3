@@ -1,6 +1,6 @@
 import { Request } from 'express';
-import { CreateUserParams, RegisterParams } from '../util/types/auth.types';
-import { AuthProvider, ClassRole, User } from '@prisma/client';
+import { CreateUserParams } from '../util/types/auth.types';
+import { AuthProvider, ClassRole } from '@prisma/client';
 import { UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { BadRequestError } from '../util/types/error.types';

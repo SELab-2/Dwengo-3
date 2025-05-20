@@ -8,9 +8,10 @@ import { UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
 import { RegisterParams, RegisterSchema } from '../util/types/auth.types';
-import { ClassRoleEnum, AuthenticationProvider } from '../util/types/enums.types';
+import { AuthenticationProvider, ClassRoleEnum } from '../util/types/enums.types';
 
 const userDomain = new UserDomain();
+
 /**
  * Prevent users from registering as one role while using the endpoint for the other.
  * @param req the request being processed.

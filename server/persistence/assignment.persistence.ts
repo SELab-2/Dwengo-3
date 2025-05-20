@@ -10,11 +10,7 @@ import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 import { NotFoundError } from '../util/types/error.types';
-import {
-  assignmentSelectDetail,
-  assignmentSelectShort2,
-  groupSelectShort,
-} from '../util/selectInput/select';
+import { assignmentSelectDetail, assignmentSelectShort2 } from '../util/selectInput/select';
 import { GroupPersistence } from './group.persistence';
 import { AssignmentSubmissionPersistence } from './assignmentSubmission.persistence';
 import { Uuid } from '../util/types/theme.types';

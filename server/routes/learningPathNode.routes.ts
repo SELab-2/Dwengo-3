@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { LearningPathNodeDomain } from '../domain/learningPathNode.domain';
 import { UserDomain } from '../domain/user.domain';
 import { isAuthenticated } from './auth.routes';

@@ -13,7 +13,6 @@ import { ClassJoinRequestDetail } from '../../server/util/types/classJoinRequest
 import {
   LearningObjectCreateParams,
   LearningObjectDetail,
-  MultipleChoice,
 } from '../../server/util/types/learningObject.types';
 import { LearningObjectPersistence } from '../../server/persistence/learningObject.persistence';
 import { LearningObjectKeywordPersistence } from '../../server/persistence/learningObjectKeyword.persistence';
@@ -42,7 +41,6 @@ import { MessagePersistence } from '../../server/persistence/message.persistence
 import { UsersPersistence } from '../../server/persistence/auth/users.persistence';
 import { CreateUserParams } from '../../server/util/types/auth.types';
 import * as crypto from 'node:crypto';
-import { GroupDetail } from '../../server/util/types/group.types';
 import { GroupPersistence } from '../../server/persistence/group.persistence';
 
 const classPersistence: ClassPersistence = new ClassPersistence();

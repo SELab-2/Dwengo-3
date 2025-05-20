@@ -3,13 +3,12 @@ import { FavoritesDomain } from '../../server/domain/favorites.domain';
 import { UserEntity } from '../../server/util/types/user.types';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 import {
-  testDiscussions,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
-  testLearningPaths,
   testFavorites,
+  testLearningPaths,
+  testPaginationFilter,
+  testStudents,
+  testTeachers,
+  testUsers,
 } from '../testObjects.json';
 
 const { mockFavoritesPersistence } = vi.hoisted(() => {

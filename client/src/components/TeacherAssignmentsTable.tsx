@@ -10,7 +10,6 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { t } from 'i18next';
 import { AppRoutes } from '../util/app.routes';
 import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import { useNavigate } from 'react-router-dom';

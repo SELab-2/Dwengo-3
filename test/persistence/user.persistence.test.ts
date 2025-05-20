@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import { FullUserType, UserEntity } from '../../server/util/types/user.types';
+import { FullUserType } from '../../server/util/types/user.types';
 import { ClassRoleEnum } from '../../server/util/types/enums.types';
 import { PrismaSingleton } from '../../server/persistence/prismaSingleton';
 import { deleteAllData, insertUsers } from './testData';

@@ -2,11 +2,11 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { ClassJoinRequestDomain } from '../../server/domain/classJoinRequest.domain';
 import {
   testClasses,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
   testClassJoinRequests,
+  testPaginationFilter,
+  testStudents,
+  testTeachers,
+  testUsers,
 } from '../testObjects.json';
 import { UserEntity } from '../../server/util/types/user.types';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';

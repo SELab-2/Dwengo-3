@@ -1,21 +1,21 @@
 import * as dotenv from 'dotenv';
 import {
-  PrismaClient,
-  User,
-  Student,
-  Teacher,
-  Class,
   Assignment,
+  AssignmentSubmission,
+  Chat,
+  Class,
+  ClassJoinRequest,
+  Group,
+  LearningNodeTransition,
+  LearningObject,
+  LearningObjectKeyword,
   LearningPath,
   LearningPathNode,
-  LearningObject,
-  AssignmentSubmission,
-  LearningNodeTransition,
-  LearningObjectKeyword,
-  Group,
-  ClassJoinRequest,
-  Chat,
   Message,
+  PrismaClient,
+  Student,
+  Teacher,
+  User,
 } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';

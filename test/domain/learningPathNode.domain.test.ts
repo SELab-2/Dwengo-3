@@ -1,12 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import {
-  testLearningPathNodes,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
-  testLearningPaths,
-} from '../testObjects.json';
+import { testLearningPathNodes, testStudents, testTeachers, testUsers } from '../testObjects.json';
 import { LearningPathNodeDomain } from '../../server/domain/learningPathNode.domain';
 import { UserEntity } from '../../server/util/types/user.types';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';

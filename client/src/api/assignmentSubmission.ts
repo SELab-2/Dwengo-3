@@ -36,6 +36,7 @@ export async function fetchAssignmentSubmissions(
       favoriteId,
       nodeId,
     },
+    signal,
   });
 
   const result: PaginatedData<AssignmentSubmissionShort> = response.data;

@@ -1,4 +1,4 @@
-import { Button, Typography, Box, Stack, LinearProgress } from '@mui/material';
+import { Box, Button, LinearProgress, Stack, Typography } from '@mui/material';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MarginSize } from '../../util/size';

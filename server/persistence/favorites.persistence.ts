@@ -3,8 +3,7 @@ import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { FavoriteCreateParams, FavoriteFilterParams } from '../util/types/favorites.types';
-import { NotFoundError } from '../util/types/error.types';
-import { favoriteSelectShort, favoriteSelectDetail } from '../util/selectInput/select';
+import { favoriteSelectDetail, favoriteSelectShort } from '../util/selectInput/select';
 
 export class FavoritesPersistence {
   public async getFavorites(filters: FavoriteFilterParams, paginationParams: PaginationParams) {

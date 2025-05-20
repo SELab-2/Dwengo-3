@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { UserDomain } from '../domain/user.domain';
 import { FavoritesDomain } from '../domain/favorites.domain';
 import { FavoriteFilterParams } from '../util/types/favorites.types';

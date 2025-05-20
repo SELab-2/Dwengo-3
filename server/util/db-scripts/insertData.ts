@@ -1,21 +1,21 @@
 import * as dotenv from 'dotenv';
 import {
-  PrismaClient,
-  LearningObjectKeyword,
-  ClassJoinRequest,
-  Message,
-  LearningNodeTransition,
-  AssignmentSubmission,
-  User,
-  Student,
-  Teacher,
-  Class,
   Assignment,
-  LearningPath,
-  LearningPathNode,
-  LearningObject,
+  AssignmentSubmission,
+  Class,
+  ClassJoinRequest,
   Discussion,
   Group,
+  LearningNodeTransition,
+  LearningObject,
+  LearningObjectKeyword,
+  LearningPath,
+  LearningPathNode,
+  Message,
+  PrismaClient,
+  Student,
+  Teacher,
+  User,
 } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -132,43 +132,37 @@ async function main() {
 
   // Insert all learning paths into the database
   await prisma.learningPath.createMany({
-    data: data.learningPaths.map(
-      ({ id, hruid, language, title, description, image }) => ({
-        id,
-        hruid,
-        language,
-        title,
-        description,
-        image,
-      }),
-    ),
+    data: data.learningPaths.map(({ id, hruid, language, title, description, image }) => ({
+      id,
+      hruid,
+      language,
+      title,
+      description,
+      image,
+    })),
   });
 
   // Insert all assignments into the database
   await prisma.assignment.createMany({
-    data: data.assignments.map(
-      ({ id, learningPathId, teacherId, classId }) => ({
-        id,
-        learningPathId,
-        teacherId,
-        classId,
-      }),
-    ),
+    data: data.assignments.map(({ id, learningPathId, teacherId, classId }) => ({
+      id,
+      learningPathId,
+      teacherId,
+      classId,
+    })),
   });
 
   // Insert all learning objects into the database
   await prisma.learningObject.createMany({
-    data: data.learningObjects.map(
-      ({ id, hruid, uuid, version, language, title, content }) => ({
-        id,
-        hruid,
-        uuid,
-        version,
-        language,
-        title,
-        content,
-      }),
-    ),
+    data: data.learningObjects.map(({ id, hruid, uuid, version, language, title, content }) => ({
+      id,
+      hruid,
+      uuid,
+      version,
+      language,
+      title,
+      content,
+    })),
   });
 
   // Insert all learningPathNodes into the database

@@ -3,8 +3,8 @@ import apiClient from '../../client/src/api/apiClient';
 import { ApiRoutes } from '../../client/src/api/api.routes';
 import {
   createAssignmentSubmission,
-  fetchAssignmentSubmissions,
   fetchAssignmentSubmissionById,
+  fetchAssignmentSubmissions,
   updateAssignmentSubmission,
 } from '../../client/src/api/assignmentSubmission';
 import { SubmissionType } from '../../client/src/util/interfaces/assignmentSubmission.interfaces';

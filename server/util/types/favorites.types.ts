@@ -1,4 +1,4 @@
-import { TypeOf, z } from 'zod';
+import { z } from 'zod';
 import { LearningPathIdZod, UserIdZod } from './util_types';
 
 export const FavoriteFilterSchema = z.object({

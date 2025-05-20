@@ -1,7 +1,7 @@
-import { Box, Typography, Avatar, Divider, Paper, Container, Button } from '@mui/material';
+import { Avatar, Box, Button, Container, Divider, Paper, Typography } from '@mui/material';
 import {
-  Email as EmailIcon,
   Delete as DeleteIcon,
+  Email as EmailIcon,
   ExitToApp as ExitToAppIcon,
 } from '@mui/icons-material';
 import { MarginSize } from '../util/size';

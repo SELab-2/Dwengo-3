@@ -12,8 +12,8 @@ import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 import { NotFoundError } from '../util/types/error.types';
 import {
-  assignmentSubmissionSelectShort,
   assignmentSubmissionSelectDetail,
+  assignmentSubmissionSelectShort,
 } from '../util/selectInput/select';
 import fs from 'fs';
 import { Uuid } from '../util/types/theme.types';

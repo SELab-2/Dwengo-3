@@ -1,6 +1,6 @@
 import { ApiRoutes } from '../api/api.routes';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
-import { StudentShort, StudentDetail } from '../util/interfaces/student.interfaces';
+import { StudentDetail, StudentShort } from '../util/interfaces/student.interfaces';
 import apiClient from './apiClient';
 
 /**

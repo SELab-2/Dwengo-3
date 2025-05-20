@@ -1,7 +1,6 @@
 import { Box, Card, CardContent, Typography, useTheme } from '@mui/material';
 
 interface MessageCardProps {
-  id: string;
   content: string;
   sender: {
     id: string;
@@ -9,11 +8,10 @@ interface MessageCardProps {
     name: string;
     role: string;
   };
-  discussionId: string;
   createdAt: Date;
 }
 
-const MessageCard = ({ id, content, sender, discussionId, createdAt }: MessageCardProps) => {
+const MessageCard = ({ content, sender, createdAt }: MessageCardProps) => {
   const theme = useTheme();
 
   return (

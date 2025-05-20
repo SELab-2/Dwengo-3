@@ -1,4 +1,4 @@
-import { MessageShort, MessageCreate } from '../util/interfaces/message.interfaces';
+import { MessageCreate, MessageShort } from '../util/interfaces/message.interfaces';
 import { PaginatedData } from '../util/interfaces/general.interfaces';
 import { ApiRoutes } from './api.routes';
 import apiClient from './apiClient';

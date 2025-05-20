@@ -3,7 +3,6 @@ import {
   Button,
   LinearProgress,
   Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -22,7 +21,6 @@ import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import { useAssignmentById } from '../hooks/useAssignment.ts';
 import { AppRoutes } from '../util/app.routes.ts';
-import DateTypography from '../components/DateTypography.tsx';
 import AssignmentInfoCard from '../components/AssignmentInfoCard.tsx';
 
 const calculateProgress = (

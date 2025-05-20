@@ -1,11 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
-  testClasses,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
   testLearningObjects,
+  testPaginationFilter,
+  testStudents,
+  testTeachers,
+  testUsers,
 } from '../testObjects.json';
 import { LearningObjectDomain } from '../../server/domain/learningObject.domain';
 import { UserEntity } from '../../server/util/types/user.types';

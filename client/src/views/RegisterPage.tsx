@@ -1,4 +1,4 @@
-import { Container, Divider, Paper, Typography, useMediaQuery } from '@mui/material';
+import { Container, Paper, Typography, useMediaQuery } from '@mui/material';
 import RegisterForm from '../components/RegisterForm';
 import { useTranslation } from 'react-i18next';
 import { MarginSize } from '../util/size';

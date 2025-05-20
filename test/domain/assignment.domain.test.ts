@@ -2,14 +2,14 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { AssignmentDomain } from '../../server/domain/assignment.domain';
 import { UserEntity } from '../../server/util/types/user.types';
 import {
-  testClasses,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
-  testGroups,
   testAssignments,
+  testClasses,
+  testGroups,
   testLearningPaths,
+  testPaginationFilter,
+  testStudents,
+  testTeachers,
+  testUsers,
 } from '../testObjects.json';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 

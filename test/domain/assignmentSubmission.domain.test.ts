@@ -3,15 +3,14 @@ import { AssignmentSubmissionDomain } from '../../server/domain/assignmentSubmis
 import { UserEntity } from '../../server/util/types/user.types';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 import {
-  testDiscussions,
-  testLearningPathNodes,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
-  testLearningPaths,
   testFavorites,
   testGroups,
+  testLearningPathNodes,
+  testLearningPaths,
+  testPaginationFilter,
+  testStudents,
+  testTeachers,
+  testUsers,
 } from '../testObjects.json';
 
 const {

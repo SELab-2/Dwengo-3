@@ -22,7 +22,7 @@ function ClassAssignmentsPage() {
 
   const { data: classData, isLoading: isLoadingClass } = useClassById(classId!);
 
-  const { data: paginatedData, isLoading: isLoadingAssignment } = useAssignments({
+  const { data: paginatedData } = useAssignments({
     classId,
     studentId,
     teacherId,
@@ -31,7 +31,6 @@ function ClassAssignmentsPage() {
   });
 
   const assignments: AssignmentShort2[] = paginatedData?.data ?? [];
-  const totalPages = paginatedData?.totalPages ?? 0;
 
   return (
     <Box sx={{ minHeight: '100vh', p: 3 }}>

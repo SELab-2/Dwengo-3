@@ -7,7 +7,6 @@ import {
   fetchDiscussions,
   updateDiscussion,
 } from '../../client/src/api/discussion';
-import { mock } from 'node:test';
 
 describe('Test discussionApi', () => {
   beforeEach(() => {

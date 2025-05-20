@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchStudentById, fetchStudents } from '../api/student';
 import { fetchTeachers } from '../api/teacher';
 

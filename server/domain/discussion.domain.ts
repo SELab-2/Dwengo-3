@@ -9,7 +9,6 @@ import {
 import { UserEntity } from '../util/types/user.types';
 import {
   checkIfUserInAssignment,
-  checkIfUserIsInClass,
   checkIfUserIsInGroup,
 } from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';

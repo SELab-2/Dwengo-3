@@ -434,7 +434,14 @@
       "progress": []
     }
   ],
-  "testKeywords": [{ "keyword": "keyword1" }, { "keyword": "keyword2" }],
+  "testKeywords": [
+    {
+      "keyword": "keyword1"
+    },
+    {
+      "keyword": "keyword2"
+    }
+  ],
   "testLearningObjects": [
     {
       "id": "3388e211-d585-4ee0-8556-34958491fae5",

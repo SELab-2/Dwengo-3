@@ -8,7 +8,8 @@ You can run this script using the alias provided in the `package.json` file from
 npm run insertData
 ```
 
-The script will insert the data from the `data.json` file into the database. This file needs follow the schema given in the beginning of the script using the prisma models and some extra properties where needed.
+The script will insert the data from the `data.json` file into the database. This file needs follow the schema given in
+the beginning of the script using the prisma models and some extra properties where needed.
 
 ```typescript
 // Insert the data from the JSON file according to this schema
@@ -68,4 +69,5 @@ You can run this script using the alias provided in the `package.json` file from
 npm run readData
 ```
 
-The script will read all the data from the database and print it to the `current_data.json` file in the same format used to insert data via the `insertData.ts` script.
+The script will read all the data from the database and print it to the `current_data.json` file in the same format used
+to insert data via the `insertData.ts` script.

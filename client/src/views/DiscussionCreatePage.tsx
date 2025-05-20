@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
+  FormControl,
+  InputLabel,
   MenuItem,
+  Paper,
   Select,
   TextField,
   Typography,
-  Paper,
-  FormControl,
-  InputLabel,
 } from '@mui/material';
 import { useAssignments } from '../hooks/useAssignment';
 import { useAuth } from '../hooks/useAuth';
@@ -49,10 +49,10 @@ const DiscussionCreatePage: React.FC = () => {
     studentId: user?.student?.id,
     classId,
   });
-  const { data: assignments, totalPages } = paginatedData || { data: [], totalPages: 0 };
+  const { data: assignments } = paginatedData || { data: [], totalPages: 0 };
 
   // Fetch discussions for the current user to be able to filter out the assignments that are already discussed
-  const { data: paginatedDiscussions, isLoading: isLoadingDiscussions } = useDiscussions({
+  const { data: paginatedDiscussions } = useDiscussions({
     userId: user?.id,
   });
   const { data: discussions } = paginatedDiscussions || { data: [] };

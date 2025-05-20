@@ -1,14 +1,13 @@
 import {
+  Box,
+  Button,
   Card,
   CardContent,
-  Typography,
-  Box,
-  IconButton,
-  Collapse,
   Chip,
-  Button,
+  Collapse,
   Paper,
   TextField,
+  Typography,
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -165,10 +164,8 @@ function DiscussionCard({
               discussionDetails.messages.map((msg: any) => (
                 <MessageCard
                   key={msg.id}
-                  id={msg.id}
                   content={msg.content}
                   sender={msg.sender}
-                  discussionId={discussionDetails.id}
                   createdAt={new Date(msg.createdAt)}
                 />
               ))

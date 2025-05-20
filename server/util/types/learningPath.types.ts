@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Prisma } from '.prisma/client';
-import { learningPathSelectShort, learningPathSelectDetail } from '../selectInput/select';
+import { learningPathSelectDetail, learningPathSelectShort } from '../selectInput/select';
 import {
   DescriptionZod,
   HruidZod,

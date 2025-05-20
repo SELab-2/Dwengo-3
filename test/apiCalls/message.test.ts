@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import apiClient from '../../client/src/api/apiClient';
 import { ApiRoutes } from '../../client/src/api/api.routes';
-import { createMessage, fetchMessages, deleteMessage } from '../../client/src/api/message';
+import { createMessage, deleteMessage, fetchMessages } from '../../client/src/api/message';
 
 describe('Test messageApi', () => {
   beforeEach(() => {

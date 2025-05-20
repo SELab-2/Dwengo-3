@@ -3,9 +3,9 @@ import apiClient from '../../client/src/api/apiClient';
 import { ApiRoutes } from '../../client/src/api/api.routes';
 import {
   createFavorite,
+  deleteFavorite,
   fetchFavoriteById,
   fetchFavorites,
-  deleteFavorite,
 } from '../../client/src/api/favorites';
 
 describe('Test favoritesApi', () => {

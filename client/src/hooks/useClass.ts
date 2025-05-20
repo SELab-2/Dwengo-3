@@ -8,10 +8,7 @@ import {
   fetchPopulatedClassById,
 } from '../api/class';
 import { ClassDetail, ClassRoleEnum, PopulatedClass } from '../util/interfaces/class.interfaces';
-import { ApiRoutes } from '../api/api.routes';
-import apiClient from '../api/apiClient';
 import { fetchNestedData } from '../api/util';
-import { create } from 'domain';
 import {
   createClassJoinRequestStudent,
   createClassJoinRequestTeacher,

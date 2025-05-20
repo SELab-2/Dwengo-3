@@ -3,12 +3,12 @@ import { MessageDomain } from '../../server/domain/message.domain';
 import { UserEntity } from '../../server/util/types/user.types';
 import {
   testDiscussions,
+  testGroups,
   testMessages,
   testPaginationFilter,
   testStudents,
   testTeachers,
   testUsers,
-  testGroups,
 } from '../testObjects.json';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 

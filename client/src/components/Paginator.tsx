@@ -1,11 +1,11 @@
 import {
   Box,
+  Divider,
+  MenuItem,
   Pagination,
   PaginationItem,
   Select,
-  MenuItem,
   Typography,
-  Divider,
 } from '@mui/material';
 
 interface PaginatorProps<T> {

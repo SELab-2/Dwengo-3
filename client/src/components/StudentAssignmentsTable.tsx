@@ -1,15 +1,15 @@
 import {
-  TableContainer,
+  Box,
+  Button,
+  LinearProgress,
   Paper,
   Table,
+  TableBody,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableCell,
   Typography,
-  TableBody,
-  LinearProgress,
-  Button,
-  Box,
 } from '@mui/material';
 import { t } from 'i18next';
 import DateTypography from './DateTypography';

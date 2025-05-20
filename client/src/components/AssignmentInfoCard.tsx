@@ -1,4 +1,4 @@
-import { Stack, Typography, Box } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { TeacherShort } from '../util/interfaces/teacher.interfaces';
 import DateTypography from './DateTypography';

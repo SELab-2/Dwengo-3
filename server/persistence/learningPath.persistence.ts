@@ -9,13 +9,51 @@ import { searchAndPaginate } from '../util/pagination/pagination.util';
 
 import { NotFoundError } from '../util/types/error.types';
 import { learningPathSelectDetail, learningPathSelectShort } from '../util/selectInput/select';
-import { title } from 'node:process';
 
 export class LearningPathPersistence {
   private prisma: PrismaClient;
 
   constructor() {
     this.prisma = PrismaSingleton.instance;
+  }
+
+  public async getLearningPaths(
+    filters: LearningPathByFilterParams,
+    paginationParams: PaginationParams,
+  ) {
+    const whereClause: Prisma.LearningPathWhereInput = this.buildWhereClause(filters);
+
+    return searchAndPaginate(
+      this.prisma.learningPath,
+      whereClause,
+      paginationParams,
+      undefined,
+      learningPathSelectShort,
+    );
+  }
+
+  public async getLearningPathById(id: string) {
+    const learningPath = await this.prisma.learningPath.findUnique({
+      where: {
+        id: id,
+      },
+      select: learningPathSelectDetail,
+    });
+
+    if (!learningPath) {
+      throw new NotFoundError(40409);
+    }
+
+    return learningPath;
+  }
+
+  public async createLearningPath(data: LearningPathCreateParams) {
+    // create a learningPath without any connected nodes
+    const learningPath = await this.prisma.learningPath.create({
+      data: data,
+      select: learningPathSelectDetail,
+    });
+    return learningPath;
   }
 
   private buildWhereClause(filters: LearningPathByFilterParams): Prisma.LearningPathWhereInput {
@@ -80,44 +118,5 @@ export class LearningPathPersistence {
           : {},
       ],
     };
-  }
-
-  public async getLearningPaths(
-    filters: LearningPathByFilterParams,
-    paginationParams: PaginationParams,
-  ) {
-    const whereClause: Prisma.LearningPathWhereInput = this.buildWhereClause(filters);
-
-    return searchAndPaginate(
-      this.prisma.learningPath,
-      whereClause,
-      paginationParams,
-      undefined,
-      learningPathSelectShort,
-    );
-  }
-
-  public async getLearningPathById(id: string) {
-    const learningPath = await this.prisma.learningPath.findUnique({
-      where: {
-        id: id,
-      },
-      select: learningPathSelectDetail,
-    });
-
-    if (!learningPath) {
-      throw new NotFoundError(40409);
-    }
-
-    return learningPath;
-  }
-
-  public async createLearningPath(data: LearningPathCreateParams) {
-    // create a learningPath without any connected nodes
-    const learningPath = await this.prisma.learningPath.create({
-      data: data,
-      select: learningPathSelectDetail,
-    });
-    return learningPath;
   }
 }

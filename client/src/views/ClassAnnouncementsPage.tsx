@@ -106,4 +106,5 @@ function ClassAnnouncementsPage() {
     </Box>
   );
 }
+
 export default ClassAnnouncementsPage;

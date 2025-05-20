@@ -1,9 +1,8 @@
 import dotenv from 'dotenv';
-
 dotenv.config({ path: '../.env' });
 
 import { router as auth } from './routes/auth.routes';
-import express, { Express, NextFunction, Request, Response } from 'express';
+import express, { Express } from 'express';
 import { ClassController } from './routes/class.routes';
 import { LearningPathController } from './routes/learningPath.routes';
 import { LearningPathNodeController } from './routes/learningPathNode.routes';

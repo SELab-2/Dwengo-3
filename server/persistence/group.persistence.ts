@@ -1,18 +1,7 @@
-import {
-  Assignment,
-  Class,
-  Group,
-  PrismaClient,
-  Student,
-  SubmissionType,
-  Teacher,
-} from '@prisma/client';
+import { Assignment, Class, Group, PrismaClient, Student, Teacher } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { groupSelectDetail, groupSelectShort } from '../util/selectInput/select';
-import { assignmentSelectDetail } from '../util/selectInput/select';
 import { GroupDetail } from '../util/types/group.types';
-import { FileSubmission } from '../util/types/assignmentSubmission.types';
-import fs from 'fs';
 import { AssignmentSubmissionPersistence } from './assignmentSubmission.persistence';
 import { Uuid } from '../util/types/theme.types';
 

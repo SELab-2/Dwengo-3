@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { useParams, useNavigate } from '../client/node_modules/react-router-dom';
+import { useNavigate, useParams } from '../client/node_modules/react-router-dom';
 import { useAuth } from '../client/src/hooks/useAuth';
 import { createTheme } from '@mui/material';
 

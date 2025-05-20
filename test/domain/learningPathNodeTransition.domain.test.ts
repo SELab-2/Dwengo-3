@@ -1,11 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
-  testLearningPathNodes,
   testLearningPathNodeTransitions,
-  testTeachers,
   testStudents,
+  testTeachers,
   testUsers,
-  testLearningPaths,
 } from '../testObjects.json';
 import { LearningPathNodeTransitionDomain } from '../../server/domain/learningPathNodeTransition.domain';
 import { UserEntity } from '../../server/util/types/user.types';

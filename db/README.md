@@ -1,6 +1,8 @@
 #### Prisma ORM
 
-Om het interageren met de [PostgreSQL](https://www.postgresql.org/) databank zo makkelijk mogelijk te maken, hebben we ervoor gekozen om gebruik te maken van een [ORM](https://www.prisma.io/dataguide/types/relational/what-is-an-orm), namelijk [prisma](https://www.prisma.io/)
+Om het interageren met de [PostgreSQL](https://www.postgresql.org/) databank zo makkelijk mogelijk te maken, hebben we
+ervoor gekozen om gebruik te maken van een [ORM](https://www.prisma.io/dataguide/types/relational/what-is-an-orm),
+namelijk [prisma](https://www.prisma.io/)
 
 De volgende voorbeeld-SQL-query in de code:
 
@@ -19,7 +21,8 @@ const assignment = await PrismaSingleton.instance.assignment.findUnique({
 });
 ```
 
-Dit lijkt misschien geen grote verbetering, maar om de juiste velden te selecteren moeten er zich in pure SQL nog joins voordoen, wat de code minder leesbaar maakt.
+Dit lijkt misschien geen grote verbetering, maar om de juiste velden te selecteren moeten er zich in pure SQL nog joins
+voordoen, wat de code minder leesbaar maakt.
 
 #### DatabankSchema
 

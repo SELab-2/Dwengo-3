@@ -4,10 +4,10 @@ import { ApiRoutes } from '../../client/src/api/api.routes';
 import {
   createClassJoinRequestStudent,
   createClassJoinRequestTeacher,
-  handleClassJoinRequestStudent,
-  handleClassJoinRequestTeacher,
   getClassJoinRequestsStudent,
   getClassJoinRequestsTeacher,
+  handleClassJoinRequestStudent,
+  handleClassJoinRequestTeacher,
 } from '../../client/src/api/classJoinRequest';
 import { Decision } from '../../client/src/util/interfaces/classJoinRequest.interfaces';
 

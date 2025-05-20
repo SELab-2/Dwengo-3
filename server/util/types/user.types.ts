@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ClassRole, Prisma, Student, Teacher, User } from '@prisma/client';
+import { Prisma, Student, Teacher, User } from '@prisma/client';
 import { userSelectShort } from '../selectInput/select';
 import {
   AuthenticationProviderZod,

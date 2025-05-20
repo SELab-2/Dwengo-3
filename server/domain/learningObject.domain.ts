@@ -3,7 +3,6 @@ import { LearningObjectKeywordPersistence } from '../persistence/learningObjectK
 import {
   LearningObjectCreateParams,
   LearningObjectCreateSchema,
-  LearningObjectFilterParams,
   LearningObjectFilterSchema,
   LearningObjectUpdateParams,
   LearningObjectUpdateSchema,

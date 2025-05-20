@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import AnnouncementDetailpage from '../../client/src/views/AnnouncementDetailpage';
 import { useAnnouncementById } from '../../client/src/hooks/useAnnouncement';

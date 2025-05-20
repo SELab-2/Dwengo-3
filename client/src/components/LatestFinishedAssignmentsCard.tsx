@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography, Chip, Stack } from '@mui/material';
+import { Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import { GroupShort } from '../util/interfaces/group.interfaces';
