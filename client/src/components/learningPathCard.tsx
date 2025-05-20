@@ -10,7 +10,6 @@ const calculateProgress = (
   favorite?: FavoriteShort,
 ) => {
   if (assignment) {
-    // find out which group the user is in and retreive the group progress
     const group = assignment.groups.find((group) =>
       group.students.some((student) => student.userId === userId),
     );
@@ -18,7 +17,6 @@ const calculateProgress = (
       if (group.progress.length === 0) {
         return 0;
       }
-
       return (
         ((Math.max(...group.progress) + 1) / assignment.learningPath.learningPathNodes.length) * 100
       );
@@ -28,7 +26,6 @@ const calculateProgress = (
       ((Math.max(...favorite.progress) + 1) / favorite.learningPath.learningPathNodes.length) * 100
     );
   }
-
   return 0;
 };
 
@@ -46,7 +43,7 @@ function LearningPathCard({
   userId?: string;
 }) {
   return (
-    <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+    <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2 /* width removed */ }}>
       <Box sx={{ flex: 1 }}>
         <Typography variant="h6">
           {assignment ? assignment.name : favorite ? favorite.learningPath.title : ''}

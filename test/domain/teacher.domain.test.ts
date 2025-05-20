@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {} from '../testObjects.json';
 import { TeacherDomain } from '../../server/domain/teacher.domain';
 import {
+  testCreateUsers,
   testTeachers,
   testUsers,
   testStudents,
@@ -97,9 +98,6 @@ let updateTeacherInvalidClassesParam = {
   classes: ['class'],
 };
 
-let deleteTeacherParams = { id: testTeachers[0].id };
-let deleteTeacherInvalidParams = { id: '' };
-
 // Tests
 describe('teacher domain', () => {
   beforeEach(() => {
@@ -107,7 +105,7 @@ describe('teacher domain', () => {
   });
   describe('createTeacher', () => {
     beforeEach(() => {
-      createUser = testUsers[0];
+      createUser = testCreateUsers[0];
       createExistingUsers = [createUser, testUsers[1]];
       createTeacherResult = testTeachers[0];
       mockTeacherPeristence.createTeacher.mockImplementation((userId: string) => {
@@ -125,8 +123,7 @@ describe('teacher domain', () => {
       await expect(teacherDomain.createTeacher({ userId: createUser.id })).resolves.toBeDefined();
     });
     test('invalid params fails', async () => {
-      createUser.id = 'id';
-      await expect(teacherDomain.createTeacher({ userId: createUser.id })).rejects.toThrow();
+      await expect(teacherDomain.createTeacher({ userId: 'id' })).rejects.toThrow();
     });
     test('unexisting user fails', async () => {
       createExistingUsers = [testUsers[1]];
@@ -137,7 +134,9 @@ describe('teacher domain', () => {
         }
         return null;
       });
-      await expect(teacherDomain.createTeacher({ userId: createUser.id })).rejects.toThrow();
+      await expect(
+        teacherDomain.createTeacher({ userId: testCreateUsers[0].id }),
+      ).rejects.toMatchObject({ _errorCode: 40405 });
     });
     test('user is already teacher fails', async () => {
       let roleCreateUser = { ...createUser, role: 'TEACHER', teacher: testTeachers[0] };
@@ -149,7 +148,9 @@ describe('teacher domain', () => {
         }
         return null;
       });
-      await expect(teacherDomain.createTeacher({ userId: createUser.id })).rejects.toThrow();
+      await expect(teacherDomain.createTeacher({ userId: createUser.id })).rejects.toMatchObject({
+        _errorCode: 40032,
+      });
     });
     test('user is already student fails', async () => {
       let roleCreateUser = { ...createUser, role: 'STUDENT', teacher: testTeachers[0] };
@@ -161,7 +162,9 @@ describe('teacher domain', () => {
         }
         return null;
       });
-      await expect(teacherDomain.createTeacher({ userId: createUser.id })).rejects.toThrow();
+      await expect(teacherDomain.createTeacher({ userId: createUser.id })).rejects.toMatchObject({
+        _errorCode: 40032,
+      });
     });
   });
   describe('getTeachers', () => {

@@ -1,5 +1,5 @@
 import { FavoritesPersistence } from '../persistence/favorites.persistence';
-import { BadRequestError } from '../util/types/error.types';
+import { BadRequestError, NotFoundError } from '../util/types/error.types';
 import {
   FavoriteCreateParams,
   FavoriteCreateSchema,
@@ -30,6 +30,9 @@ export class FavoritesDomain {
 
   public async getFavoriteById(id: string, user: UserEntity) {
     const favorite = await this.favoritesPersistence.getFavoriteById(id);
+    if (!favorite) {
+      throw new NotFoundError(40414);
+    }
 
     if (favorite.user.id != user.id) {
       throw new BadRequestError(40042);
@@ -45,6 +48,9 @@ export class FavoritesDomain {
 
   public async deleteFavorite(id: string, user: UserEntity) {
     const favorite = await this.favoritesPersistence.getFavoriteById(id);
+    if (!favorite) {
+      throw new NotFoundError(40414);
+    }
 
     if (favorite.user.id != user.id) {
       throw new BadRequestError(40042);

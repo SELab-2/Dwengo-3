@@ -1,4 +1,26 @@
 {
+  "testCreateUsers": [
+    {
+      "id": "efec37ed-3b0f-4059-ac14-2a4d3723e1a9",
+      "provider": "LOCAL",
+      "username": "user1",
+      "email": "create1@example.com",
+      "password": "password1",
+      "surname": "Smith",
+      "name": "John",
+      "role": "TEACHER"
+    },
+    {
+      "id": "f3113be5-2ecb-43bc-91c8-52251f3db83e",
+      "provider": "LOCAL",
+      "username": "user1",
+      "email": "create2@example.com",
+      "password": "password1",
+      "surname": "Smith",
+      "name": "John",
+      "role": "STUDENT"
+    }
+  ],
   "testUsers": [
     {
       "id": "1a2b3c4d-1111-2222-3333-444455556666",
@@ -8,7 +30,11 @@
       "surname": "Smith",
       "name": "John",
       "role": "TEACHER",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "teacher": {
+        "id": "3b06702b-1111-2222-3333-444455556666",
+        "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+      }
     },
     {
       "id": "2b3c4d5e-2222-3333-4444-555566667777",
@@ -18,87 +44,131 @@
       "surname": "Johnson",
       "name": "Emma",
       "role": "TEACHER",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "teacher": {
+        "id": "3b06702b-2222-3333-4444-555566667777",
+        "userId": "2b3c4d5e-2222-3333-4444-555566667777"
+      }
     },
     {
       "id": "3c4d5e6f-3333-4444-5555-666677778888",
+      "provider": "LOCAL",
       "username": "user3",
       "email": "user3@example.com",
       "password": "password3",
       "surname": "Brown",
       "name": "Liam",
       "role": "TEACHER",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "teacher": {
+        "id": "3b06702b-3333-4444-5555-666677778888",
+        "userId": "3c4d5e6f-3333-4444-5555-666677778888"
+      }
     },
     {
       "id": "4d5e6f7g-4444-5555-6666-777788889999",
+      "provider": "LOCAL",
       "username": "user4",
       "email": "user4@example.com",
       "password": "password4",
       "surname": "Williams",
       "name": "Olivia",
       "role": "TEACHER",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "teacher": {
+        "id": "3b06702b-4444-5555-6666-777788889999",
+        "userId": "4d5e6f7g-4444-5555-6666-777788889999"
+      }
     },
     {
       "id": "5e6f7g8h-5555-6666-7777-888899990000",
+      "provider": "LOCAL",
       "username": "user5",
       "email": "user5@example.com",
       "password": "password5",
       "surname": "Jones",
       "name": "Noah",
       "role": "TEACHER",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "teacher": {
+        "id": "3b06702b-5555-6666-7777-888899990000",
+        "userId": "5e6f7g8h-5555-6666-7777-888899990000"
+      }
     },
     {
       "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+      "provider": "LOCAL",
       "username": "user6",
       "email": "user6@example.com",
       "password": "password6",
       "surname": "Garcia",
       "name": "Sophia",
       "role": "STUDENT",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "student": {
+        "id": "4c07803c-1111-2222-3333-444455556666",
+        "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+      }
     },
     {
       "id": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17",
+      "provider": "LOCAL",
       "username": "user7",
       "email": "user7@example.com",
       "password": "password7",
       "surname": "Martinez",
       "name": "James",
       "role": "STUDENT",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "student": {
+        "id": "4c07803c-2222-3333-4444-555566667777",
+        "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+      }
     },
     {
       "id": "8h9i0j1k-8888-9999-0000-111122223333",
+      "provider": "LOCAL",
       "username": "user8",
       "email": "user8@example.com",
       "password": "password8",
       "surname": "Davis",
       "name": "Mia",
       "role": "STUDENT",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "student": {
+        "id": "4c07803c-3333-4444-5555-666677778888",
+        "userId": "8h9i0j1k-8888-9999-0000-111122223333"
+      }
     },
     {
       "id": "9i0j1k2l-9999-0000-1111-222233334444",
+      "provider": "LOCAL",
       "username": "user9",
       "email": "user9@example.com",
       "password": "password9",
       "surname": "Rodriguez",
       "name": "Benjamin",
       "role": "STUDENT",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "student": {
+        "id": "4c07803c-4444-5555-6666-777788889999",
+        "userId": "9i0j1k2l-9999-0000-1111-222233334444"
+      }
     },
     {
       "id": "0j1k2l3m-0000-1111-2222-333344445555",
+      "provider": "LOCAL",
       "username": "user10",
       "email": "user10@example.com",
       "password": "password10",
       "surname": "Wilson",
       "name": "Charlotte",
       "role": "STUDENT",
-      "provider": "LOCAL"
+      "provider": "LOCAL",
+      "student": {
+        "id": "4c07803c-5555-6666-7777-888899990000",
+        "userId": "0j1k2l3m-0000-1111-2222-333344445555"
+      }
     }
   ],
   "testTeachers": [
@@ -242,15 +312,59 @@
       "id": "07cca202-e34c-459a-b289-56a383231cdd",
       "title": "announcement1",
       "content": "content",
-      "classId": "8b07803c-4444-5555-6666-777788889999",
-      "teacherId": "3b06702b-1111-2222-3333-444455556666"
+      "class": {
+        "id": "8b07803c-4444-5555-6666-777788889999",
+        "name": "class1",
+        "students": [
+          {
+            "id": "4c07803c-1111-2222-3333-444455556666",
+            "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+          },
+          {
+            "id": "4c07803c-2222-3333-4444-555566667777",
+            "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+          }
+        ],
+        "teachers": [
+          {
+            "id": "3b06702b-1111-2222-3333-444455556666",
+            "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+          }
+        ]
+      },
+      "teacher": {
+        "id": "3b06702b-1111-2222-3333-444455556666",
+        "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+      }
     },
     {
       "id": "07cca202-e34c-459a-b289-56a383231cee",
       "title": "announcement2",
       "content": "content",
-      "classId": "8b07853c-4444-5555-6666-777788889999",
-      "teacherId": "3b06702b-2222-3333-4444-555566667777"
+      "class": {
+        "id": "8b07853c-4444-5555-6666-777788889999",
+        "name": "class2",
+        "students": [
+          {
+            "id": "4c07803c-3333-4444-5555-666677778888",
+            "userId": "8h9i0j1k-8888-9999-0000-111122223333"
+          },
+          {
+            "id": "4c07803c-4444-5555-6666-777788889999",
+            "userId": "9i0j1k2l-9999-0000-1111-222233334444"
+          }
+        ],
+        "teachers": [
+          {
+            "id": "3b06702b-2222-3333-4444-555566667777",
+            "userId": "2b3c4d5e-2222-3333-4444-555566667777"
+          }
+        ]
+      },
+      "teacher": {
+        "id": "3b06702b-2222-3333-4444-555566667777",
+        "userId": "2b3c4d5e-2222-3333-4444-555566667777"
+      }
     }
   ],
   "testLearningPaths": [
@@ -330,8 +444,9 @@
       "language": "nl",
       "title": "This is a titleeeee",
       "description": "This is a description",
+      "contentType": "TEXT_MARKDOWN",
       "target_ages": [4, 3],
-      "teacherExclusive": true,
+      "teacher_exclusive": true,
       "skos_concepts": [
         "http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen",
         "http://ilearn.ilabt.imec.be/vocab/ondniv/sec-gr2-doorstroom-aso"
@@ -378,8 +493,9 @@
       "language": "fr",
       "title": "This is a titleeeee",
       "description": "This is a description",
+      "contentType": "TEXT_MARKDOWN",
       "target_ages": [4, 3],
-      "teacherExclusive": true,
+      "teacher_exclusive": true,
       "skos_concepts": ["http://ilearn.ilabt.imec.be/vocab/curr1/c-andere-talen"],
       "educational_goals": [
         {
@@ -434,7 +550,7 @@
   ],
   "testDiscussions": [
     {
-      "id": "de671ef9-fbed-4263-846f-7c5ab8f39dc7",
+      "id": "e9a18a83-5796-476d-9978-4db27fc6ba08",
       "groupId": "11e237ff-aa67-4859-ab1d-3d12731899b6",
       "members": ["899edbd7-c766-48f4-8363-56fd8c1f4a2b", "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"],
       "group": {
@@ -446,7 +562,7 @@
   "testMessages": [
     {
       "id": 1,
-      "discussionId": "de671ef9-fbed-4263-846f-7c5ab8f39dc7",
+      "discussionId": "e9a18a83-5796-476d-9978-4db27fc6ba08",
       "content": "content",
       "senderId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
       "sender": {
@@ -457,6 +573,146 @@
         "surname": "Garcia",
         "name": "Sophia",
         "role": "STUDENT"
+      }
+    }
+  ],
+  "testClassJoinRequests": [
+    {
+      "id": "86da33b4-6f8c-4ebb-8c92-776d8d004d8e",
+      "classId": "8b07803c-4444-5555-6666-777788889999",
+      "userId": "1a2b3c4d-1111-2222-3333-444455556666",
+      "user": {
+        "id": "1a2b3c4d-1111-2222-3333-444455556666",
+        "provider": "LOCAL",
+        "username": "user1",
+        "email": "user1@example.com",
+        "password": "password1",
+        "surname": "Smith",
+        "name": "John",
+        "role": "TEACHER",
+        "teacher": {
+          "id": "3b06702b-1111-2222-3333-444455556666",
+          "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+        }
+      },
+      "class": {
+        "id": "8b07803c-4444-5555-6666-777788889999",
+        "name": "class1",
+        "students": [
+          {
+            "id": "4c07803c-1111-2222-3333-444455556666",
+            "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+          },
+          {
+            "id": "4c07803c-2222-3333-4444-555566667777",
+            "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+          }
+        ],
+        "teachers": [
+          {
+            "id": "3b06702b-1111-2222-3333-444455556666",
+            "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+          }
+        ]
+      }
+    },
+    {
+      "id": "657e499e-443d-4333-a064-66020f285f54",
+      "classId": "8b07803c-4444-5555-6666-777788889999",
+      "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+      "user": {
+        "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+        "provider": "LOCAL",
+        "username": "user6",
+        "email": "user6@example.com",
+        "password": "password6",
+        "surname": "Garcia",
+        "name": "Sophia",
+        "role": "STUDENT",
+        "student": {
+          "id": "4c07803c-1111-2222-3333-444455556666",
+          "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+        }
+      },
+      "class": {
+        "id": "8b07803c-4444-5555-6666-777788889999",
+        "name": "class1",
+        "students": [
+          {
+            "id": "4c07803c-1111-2222-3333-444455556666",
+            "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+          },
+          {
+            "id": "4c07803c-2222-3333-4444-555566667777",
+            "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
+          }
+        ],
+        "teachers": [
+          {
+            "id": "3b06702b-1111-2222-3333-444455556666",
+            "userId": "1a2b3c4d-1111-2222-3333-444455556666"
+          }
+        ]
+      }
+    }
+  ],
+  "testFavorites": [
+    {
+      "id": "e4953103-cfb8-4317-971f-ed47eb09e120",
+      "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+      "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+      "progress": [5, 6, 7],
+      "learningPath": {
+        "id": "82ff18cb-1b49-4d5d-a678-658cd69be542",
+        "hruid": "lp0",
+        "language": "nl",
+        "title": "title0",
+        "description": "This is a description"
+      },
+      "user": {
+        "id": "899edbd7-c766-48f4-8363-56fd8c1f4a2b",
+        "provider": "LOCAL",
+        "username": "user6",
+        "email": "user6@example.com",
+        "password": "password6",
+        "surname": "Garcia",
+        "name": "Sophia",
+        "role": "STUDENT",
+        "student": {
+          "id": "4c07803c-1111-2222-3333-444455556666",
+          "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
+        }
+      },
+      "assignmentSubmissions": [
+        {
+          "id": "15a341e3-1424-4984-a2bf-ddf27c1bf787",
+          "favoriteId": "e4953103-cfb8-4317-971f-ed47eb09e120",
+          "nodeId": "661a7044-68e3-46b2-9968-b23d95499c46",
+          "submissionType": "FILE",
+          "submission": {
+            "fileName": "filename",
+            "filePath": "filepath"
+          }
+        }
+      ]
+    }
+  ],
+  "testAssignmentSubmissions": [
+    {
+      "id": "ad4a9d9a-0493-4b6f-8204-71ad808f7b1e",
+      "groupId": "11e237ff-aa67-4859-ab1d-3d12731899b6",
+      "nodeId": "661a7044-68e3-46b2-9968-b23d95499c46",
+      "submissionType": "MULTIPLE_CHOICE",
+      "submission": "option"
+    },
+    {
+      "id": "15a341e3-1424-4984-a2bf-ddf27c1bf787",
+      "favoriteId": "e4953103-cfb8-4317-971f-ed47eb09e120",
+      "nodeId": "661a7044-68e3-46b2-9968-b23d95499c46",
+      "submissionType": "FILE",
+      "submission": {
+        "fileName": "filename",
+        "filePath": "filepath"
       }
     }
   ]

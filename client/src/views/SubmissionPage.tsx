@@ -232,6 +232,7 @@ function SubmissionPage() {
                     }}
                     key={object.id}
                     onClick={() =>
+                      made &&
                       downloadFileSubmission(submission!.id, fileSubmission(submission!).fileName)
                     }
                   >

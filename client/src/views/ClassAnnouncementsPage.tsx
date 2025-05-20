@@ -93,7 +93,11 @@ function ClassAnnouncementsPage() {
             setPage={setPage}
             setPageSize={setPageSize}
             renderItem={(announcement) => (
-              <AnnouncementCard key={announcement.id} {...announcement} />
+              <AnnouncementCard
+                key={announcement.id}
+                {...announcement}
+                date={announcement.createdAt}
+              />
             )}
             renderContainer={(children) => <Stack spacing={2}>{children}</Stack>}
           />

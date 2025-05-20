@@ -99,14 +99,16 @@ export function useLatestDiscussions({ userId }: { userId: string | undefined })
 
       // Sort all messages by their createdAt date
       discussionDetails.forEach((discussion) => {
-        discussion.messages.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        if (discussion.messages) {
+          discussion.messages.sort((a, b) => (b.createdAt < a.createdAt ? -1 : 1));
+        }
       });
 
       // Sort the discussions by the newest messages
       const sortedDiscussions = discussionDetails.sort((a, b) => {
         const aLastMessageDate = a.messages[0].createdAt;
         const bLastMessageDate = b.messages[0].createdAt;
-        return bLastMessageDate.getTime() - aLastMessageDate.getTime();
+        return bLastMessageDate < aLastMessageDate ? -1 : 1;
       });
 
       return sortedDiscussions;

@@ -3,11 +3,12 @@ import { useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { TeacherShort } from '../util/interfaces/teacher.interfaces';
+import DateTypography from './DateTypography';
 
 interface AnnouncementCardProps {
   id: string;
   title: string;
-  //date: string;
+  date: string;
   teacher: TeacherShort;
   content: string;
   // actionButtons: React.ReactNode;
@@ -17,7 +18,7 @@ interface AnnouncementCardProps {
 const AnnouncementCard = ({
   id,
   title,
-  //date,
+  date,
   teacher,
   content,
   // actionButtons,  /* TODO: This is needed to place an edit button on the card when on the detail page and when the user is a teacher */
@@ -40,11 +41,7 @@ const AnnouncementCard = ({
           <Typography variant="h6" fontWeight="bold" onClick={handleClick}>
             {title}
           </Typography>
-          {/* no possible way to get date from backend
-          <Typography variant="body2" color={theme.palette.text.secondary}>
-            {date}
-          </Typography>
-          */}
+          <DateTypography variant="body2" date={new Date(date)} />
           <Typography variant="subtitle1" fontWeight="bold">
             {teacher.user.name}
           </Typography>

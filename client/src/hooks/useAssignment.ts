@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createAssignment, fetchAssignmentById, fetchAssignments } from '../api/assignment';
-import { AssignmentCreate, AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
+import {
+  AssignmentCreate,
+  AssignmentShort2,
+  PopulatedAssignment,
+} from '../util/interfaces/assignment.interfaces';
 import {
   AssignmentFilterType,
   filterAssignmentOnProgress,
@@ -174,7 +178,7 @@ export function useNotStartedAssignments({ studentId }: { studentId?: string }) 
  *
  * @param assignments - The array of assignments to be sorted.
  */
-export function sortDeadlines(assignments: AssignmentShort2[]): void {
+export function sortDeadlines(assignments: AssignmentShort2[] | PopulatedAssignment[]): void {
   assignments.sort((a, b) => {
     const deadlineA = a.deadline ? new Date(a.deadline).getTime() : Infinity;
     const deadlineB = b.deadline ? new Date(b.deadline).getTime() : Infinity;

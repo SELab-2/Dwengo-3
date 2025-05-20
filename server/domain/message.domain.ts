@@ -29,7 +29,7 @@ export class MessageDomain {
 
     if (filters.discussionId) {
       // this checks if user is part of the discussion
-      await this.discussionDomain.getDiscussions({ groupIds: [filters.discussionId] }, user);
+      await this.discussionDomain.getDiscussionById(filters.discussionId, user);
     }
     return this.messagePersistence.getMessages(filters, parseResult.dataPagination);
   }

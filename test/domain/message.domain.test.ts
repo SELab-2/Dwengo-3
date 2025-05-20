@@ -8,17 +8,26 @@ import {
   testStudents,
   testTeachers,
   testUsers,
+  testGroups,
 } from '../testObjects.json';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
-// message persistence mock
-const { mockMessagePeristence } = vi.hoisted(() => {
+const { mockMessagePeristence, mockDiscussionPeristence, mockGroupPersistence } = vi.hoisted(() => {
   return {
     mockMessagePeristence: {
       getMessages: vi.fn(),
       getMessageById: vi.fn(),
       createMessage: vi.fn(),
       deleteMessage: vi.fn(),
+    },
+    mockDiscussionPeristence: {
+      getDiscussions: vi.fn(),
+      getDiscussionById: vi.fn(),
+      createDiscussion: vi.fn(),
+    },
+    mockGroupPersistence: {
+      getGroupById: vi.fn(),
+      getGroupByIdWithCustomIncludes: vi.fn(),
     },
   };
 });
@@ -27,12 +36,22 @@ vi.mock('../../server/persistence/message.persistence', () => ({
     return mockMessagePeristence;
   }),
 }));
+vi.mock('../../server/persistence/discussion.persistence', () => ({
+  DiscussionPersistence: vi.fn().mockImplementation(() => {
+    return mockDiscussionPeristence;
+  }),
+}));
+vi.mock('../../server/persistence/group.persistence', () => ({
+  GroupPersistence: vi.fn().mockImplementation(() => {
+    return mockGroupPersistence;
+  }),
+}));
 
 const messageDomain = new MessageDomain();
-let userTeacher: UserEntity = {
-  ...testUsers[0],
-  role: testUsers[0].role as ClassRoleEnum,
-  teacher: testTeachers[0],
+let userTeacherNotOfGroup: UserEntity = {
+  ...testUsers[2],
+  role: testUsers[2].role as ClassRoleEnum,
+  teacher: testTeachers[2],
   provider: AuthenticationProvider.LOCAL,
 };
 let userStudent: UserEntity = {
@@ -83,13 +102,32 @@ describe('message domain', () => {
       }
       return null;
     });
+    mockMessagePeristence.getMessages.mockImplementation((id: number) => {
+      let found = testMessages.find((m) => m.id === id);
+      if (found) {
+        return found;
+      }
+      return null;
+    });
+    mockDiscussionPeristence.getDiscussionById.mockImplementation((id: string) => {
+      let found = testDiscussions.find((d) => d.id === id);
+      if (found) {
+        return found;
+      }
+      return null;
+    });
+    mockGroupPersistence.getGroupByIdWithCustomIncludes.mockImplementation((id: string) => {
+      let found = testGroups.find((g) => g.id === id);
+      if (found) {
+        return found;
+      }
+      return null;
+    });
   });
   describe('getMessages', () => {
-    /* bug get discussions with id is not possible
-        test('valid query passes', async () => {
-            await expect(messageDomain.getMessages(getMessagesQuery, userStudent)).resolves.not.toThrow()
-        });
-        */
+    test('valid query passes', async () => {
+      await expect(messageDomain.getMessages(getMessagesQuery, userStudent)).resolves.not.toThrow();
+    });
     test('invalid pagination fails', async () => {
       await expect(
         messageDomain.getMessages(getMessagesInvalidPaginationQuery, userStudent),
@@ -103,13 +141,19 @@ describe('message domain', () => {
         messageDomain.getMessages(getMessagesInvalidDiscussionIdQuery, userStudent),
       ).rejects.toThrow();
     });
+    test('user does not belong to group fails', async () => {
+      await expect(
+        messageDomain.getMessages(getMessagesQuery, userTeacherNotOfGroup),
+      ).rejects.toMatchObject({ _errorCode: 40001 });
+    });
   });
   describe('createMessage', () => {
-    /* bug get discussions with id is not possible
-        test('valid params passes', async () => {
-          await expect(messageDomain.createMessage(createMessageParams, userStudent)).resolves.not.toThrow()
-        });
-        */
+    test('valid params passes', async () => {
+      await expect(
+        messageDomain.createMessage(createMessageParams, userStudent),
+      ).resolves.not.toThrow();
+    });
+
     test('invalid discussion id fails', async () => {
       await expect(
         messageDomain.createMessage(createMessageInvalidDiscussionIdParams, userStudent),
@@ -129,13 +173,13 @@ describe('message domain', () => {
     });
     test('invalid id fails', async () => {
       await expect(
-        messageDomain.createMessage(deleteMessageInvalidId, userStudent),
+        messageDomain.deleteMessage(deleteMessageInvalidId, userStudent),
       ).rejects.toThrow();
     });
-    test('message does not belong to user fails', async () => {
+    test('user id is not sender id fails', async () => {
       await expect(
-        messageDomain.createMessage(deleteMessageInvalidId, userTeacher),
-      ).rejects.toThrow();
+        messageDomain.deleteMessage(deleteMessageId, userTeacherNotOfGroup),
+      ).rejects.toMatchObject({ _errorCode: 40008 });
     });
   });
 });

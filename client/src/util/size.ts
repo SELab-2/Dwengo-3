@@ -1,9 +1,10 @@
 export const IconSize = {
+  xsmall: 25,
   small: 30,
-  medium: 35,
-  large: 40,
-  xlarge: 48,
-  huge: 60,
+  medium: 32,
+  large: 35,
+  xlarge: 40,
+  huge: 50,
 };
 
 export const MarginSize = {

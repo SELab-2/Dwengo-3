@@ -37,7 +37,7 @@ export interface AssignmentDetail {
   class: ClassShort;
   groups: GroupShort[];
   learningPath: LearningPathShort;
-  deadline?: string;
+  deadline: string;
 }
 
 export interface PopulatedAssignment {
@@ -47,6 +47,7 @@ export interface PopulatedAssignment {
   teacherId: string;
   class: ClassShort;
   groups: GroupShort[];
+  deadline: string;
   learningPath: LearningPathShort | LearningPathDetail;
 }
 
