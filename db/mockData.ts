@@ -80,6 +80,7 @@ export async function addMockData(prisma: PrismaClient) {
             userId: student.id,
           })),
         },
+        description: faker.lorem.paragraph(),
       },
     });
 
