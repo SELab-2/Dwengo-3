@@ -19,16 +19,24 @@ function LoginPage() {
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center', // Horizontal centering
+        height: '80vh',
       }}
     >
-      <Container component="main" maxWidth="xs">
+      <Container
+        component="main"
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}
+        maxWidth={'xs'}
+      >
         <Paper
           elevation={3}
           sx={{
-            mt: isMobile ? MarginSize.medium : MarginSize.xlarge,
             p: 4,
             textAlign: 'center',
+            m: 'auto',
           }}
         >
           <Typography variant="h5" gutterBottom>
