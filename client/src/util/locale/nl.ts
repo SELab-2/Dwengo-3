@@ -131,5 +131,6 @@ export const nl = {
     lastMessage: 'Laatste bericht',
     latestFinishedAssignments: 'Recentste voltooide opdrachten',
     noLatestFinishedAssignments: 'Geen recente voltooide opdrachten',
+    startAssignment: 'Start opdracht',
   },
 };

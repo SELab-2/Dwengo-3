@@ -132,5 +132,6 @@ export const fr = {
     lastMessage: 'Dernier message',
     latestFinishedAssignments: 'Derniers devoirs terminés',
     noLatestFinishedAssignments: 'Aucun devoir terminé récemment',
+    startAssignment: 'Commencer le devoir',
   },
 };

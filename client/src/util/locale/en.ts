@@ -131,5 +131,6 @@ export const en = {
     lastMessage: 'Last message',
     latestFinishedAssignments: 'Latest finished assignments',
     noLatestFinishedAssignments: 'No latest finished assignments',
+    startAssignment: 'Start assignment',
   },
 };
