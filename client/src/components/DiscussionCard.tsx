@@ -17,15 +17,22 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import { DiscussionShort } from '../util/interfaces/discussion.interfaces';
 import { useDiscussionById } from '../hooks/useDiscussion';
 import MessageCard from './MessageCard';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCreateMessage } from '../hooks/useMessage';
 import { useError } from '../hooks/useError';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
-function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
+function DiscussionCard({
+  discussion,
+  expandedGroupId,
+}: {
+  discussion: DiscussionShort;
+  expandedGroupId?: string;
+}) {
   const { data: discussionDetails } = useDiscussionById(discussion.id);
-  const [expanded, setExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const initialExpansionSet = useRef(false);
   const [showNewMessage, setShowNewMessage] = useState(false);
   const [newMessage, setNewMessage] = useState('');
   const { setError } = useError();
@@ -33,6 +40,17 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
   const queryClient = useQueryClient();
   const theme = useTheme();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (
+      !initialExpansionSet.current &&
+      expandedGroupId &&
+      discussionDetails?.group.id === expandedGroupId
+    ) {
+      setIsExpanded(true);
+      initialExpansionSet.current = true;
+    }
+  }, [expandedGroupId, discussionDetails]);
 
   if (!discussionDetails) {
     return null;
@@ -72,7 +90,7 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
           borderRadius: 1,
           transition: 'background 0.2s',
         }}
-        onClick={() => setExpanded((prev) => !prev)}
+        onClick={() => setIsExpanded((prev) => !prev)}
       >
         {/* Members */}
         <Box display="flex" flexWrap="wrap" gap={1} alignItems="center">
@@ -91,12 +109,11 @@ function DiscussionCard({ discussion }: { discussion: DiscussionShort }) {
         {/* Message count, and fold icon */}
         <Box display="flex" alignItems="center" gap={2}>
           <Typography variant="body2">{discussionDetails.messages?.length ?? 0}</Typography>
-          {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </Box>
       </Box>
-
       {/* Foldable content */}
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+      <Collapse in={isExpanded} timeout="auto" unmountOnExit>
         <CardContent>
           {/* Send new message button */}
           <Box display="flex" alignItems="center" mb={2}>
