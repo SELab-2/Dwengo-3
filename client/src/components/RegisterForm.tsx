@@ -53,7 +53,11 @@ function RegisterForm() {
           // Redirect to the home page
           navigate(AppRoutes.home);
         },
-        onError: (error) => setError(error.message),
+        onError: (error: any) => {
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
+        },
       },
     );
   };

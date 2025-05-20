@@ -101,9 +101,11 @@ function ClassDashboardPage() {
           await refetchClassData();
           await refetch!();
         },
-        onError: (error: Error) => {
+        onError: (error: any) => {
           // Show error message in snackbar
-          setError(error.message);
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
         },
       },
     );

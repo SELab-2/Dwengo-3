@@ -167,8 +167,8 @@ function AssignmentCreatePage() {
       onSuccess: (response: AssignmentDetail) => {
         navigate(AppRoutes.classAssignment(classId!, response.id));
       },
-      onError: (error: Error) => {
-        setError(error.message);
+      onError: (error: any) => {
+        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
       },
     });
   };
