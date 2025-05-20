@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { fetchLearningPaths, fetchLearningPathById } from '../api/learningPath';
+import { PaginatedData } from '../util/interfaces/general.interfaces';
 
 /**
  * Fetches a list of learningPaths based on keywords, ages, page, and pageSize.
@@ -22,6 +23,32 @@ export function useLearningPath(
       return await fetchLearningPaths(keywords, ages, page, pageSize);
     },
     enabled: !!keywords,
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useLearningPathInfinity(
+  searchTitle?: string,
+  searchKeyword?: string,
+  pageSize: number = 10,
+) {
+  return useInfiniteQuery({
+    queryKey: ['learningPath', searchTitle, searchKeyword, pageSize],
+    queryFn: async ({ pageParam = 1 }) => {
+      return await fetchLearningPaths(
+        undefined,
+        undefined,
+        pageParam,
+        pageSize,
+        searchTitle,
+        searchKeyword,
+      );
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return nextPage <= lastPage.totalPages ? nextPage : undefined;
+    },
     refetchOnWindowFocus: false,
   });
 }

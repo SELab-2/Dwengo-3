@@ -22,6 +22,8 @@ export async function fetchLearningPaths(
   ages?: number[],
   page: number = 1,
   pageSize: number = 10,
+  searchTitle?: string,
+  searchKeyword?: string,
 ) {
   const response = await apiClient.get(ApiRoutes.learningPath.list, {
     params: {
@@ -29,6 +31,8 @@ export async function fetchLearningPaths(
       ages,
       page,
       pageSize,
+      searchTitle,
+      searchKeyword,
     },
     paramsSerializer: (params) => {
       return qs.stringify(params, { arrayFormat: 'repeat' });
