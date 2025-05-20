@@ -69,7 +69,7 @@ let getFavoriteByIdId = testFavorites[0].id;
 let getFavoriteByIdNonexistingId = nonexistingId;
 
 let createFavoriteBody = { learningPathId: testLearningPaths[0].id };
-let createFavoriteInvalidIdBody = { learningPathId: 'id' };
+let createFavoriteInvalidIdBody = { learningPathId: '' };
 
 let deleteFavoriteId = testFavorites[0].id;
 let deleteFavoriteNonexistingId = nonexistingId;
@@ -130,13 +130,11 @@ describe('favorites domain', () => {
         favoritesDomain.createFavorite(createFavoriteBody, userStudent1),
       ).resolves.not.toThrow();
     });
-    /* regexZod laat dit toe
     test('invalid learning path id fails', async () => {
       await expect(
         favoritesDomain.createFavorite(createFavoriteInvalidIdBody, userStudent2),
       ).rejects.toThrow();
     });
-    */
   });
   describe('deleteFavorite', () => {
     test('valid params passes', async () => {
