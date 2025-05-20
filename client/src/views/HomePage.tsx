@@ -26,6 +26,7 @@ import { LatestDiscussionCard } from '../components/LatestDiscussionCard';
 import { useLatestsAnnouncements } from '../hooks/useAnnouncement';
 import AnnouncementCard from '../components/AnnouncementCard';
 import LatestFinishedAssignmentCard from '../components/LatestFinishedAssignmentsCard';
+import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 
 function HomePage() {
   const { user } = useAuth();
@@ -56,6 +57,16 @@ function HomePage() {
     teacherId: user?.teacher?.id,
   });
 
+  const handleClick = (event: React.MouseEvent<HTMLElement>, assignment: AssignmentShort2) => {
+    if (user?.student) {
+      navigate(
+        AppRoutes.learningPath(assignment.learningPath.id, myGroup(assignment, user?.id)?.id),
+      );
+    } else {
+      navigate(AppRoutes.classAssignment(assignment.class.id, assignment.id));
+    }
+  };
+
   const studentSections = [
     {
       key: 'upcomingDeadlines',
@@ -66,27 +77,33 @@ function HomePage() {
             <Typography variant="body1">{t('noUpcomingDeadlines')}</Typography>
           )}
           {upcomingDeadlines?.slice(0, maxItems).map((assignment) => (
-            <LearningPathCard
+            <Box
               key={assignment.id}
-              assignment={assignment}
-              userId={user?.id}
-              visualizeProgress={false}
-              actionButtons={
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    navigate(
-                      AppRoutes.learningPath(
-                        assignment.learningPath.id,
-                        myGroup(assignment, user!.id)?.id,
-                      ),
-                    );
-                  }}
-                >
-                  {t('continue')}
-                </Button>
-              }
-            />
+              onClick={isMobile ? (event) => handleClick(event, assignment) : undefined}
+            >
+              <LearningPathCard
+                assignment={assignment}
+                userId={user?.id}
+                visualizeProgress={false}
+                actionButtons={
+                  !isMobile && (
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        navigate(
+                          AppRoutes.learningPath(
+                            assignment.learningPath.id,
+                            myGroup(assignment, user!.id)?.id,
+                          ),
+                        );
+                      }}
+                    >
+                      {t('continue')}
+                    </Button>
+                  )
+                }
+              />
+            </Box>
           ))}
         </Box>
       ),
@@ -100,27 +117,33 @@ function HomePage() {
             <Typography variant="body1">{t('noNotStartedAssignments')}</Typography>
           )}
           {notStartedAssignments?.slice(0, maxItems).map((assignment) => (
-            <LearningPathCard
+            <Box
               key={assignment.id}
-              assignment={assignment}
-              userId={user?.id}
-              visualizeProgress={false}
-              actionButtons={
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    navigate(
-                      AppRoutes.learningPath(
-                        assignment.learningPath.id,
-                        myGroup(assignment, user!.id)?.id,
-                      ),
-                    );
-                  }}
-                >
-                  {t('startAssignment')}
-                </Button>
-              }
-            />
+              onClick={isMobile ? (event) => handleClick(event, assignment) : undefined}
+            >
+              <LearningPathCard
+                assignment={assignment}
+                userId={user?.id}
+                visualizeProgress={false}
+                actionButtons={
+                  !isMobile && (
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        navigate(
+                          AppRoutes.learningPath(
+                            assignment.learningPath.id,
+                            myGroup(assignment, user!.id)?.id,
+                          ),
+                        );
+                      }}
+                    >
+                      {t('continue')}
+                    </Button>
+                  )
+                }
+              />
+            </Box>
           ))}
         </Box>
       ),
