@@ -13,12 +13,12 @@ import {
   checkIfUserIsInGroup,
 } from '../util/cookie-checks/cookieChecks.util';
 import { GroupPersistence } from '../persistence/group.persistence';
-import { Uuid } from '../util/types/assignment.types';
 import { TeacherPersistence } from '../persistence/teacher.persistence';
 import { StudentPersistence } from '../persistence/student.persistence';
 import { BadRequestError } from '../util/types/error.types';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { AssignmentPersistence } from '../persistence/assignment.persistence';
+import { Uuid } from '../util/types/theme.types';
 
 export class DiscussionDomain {
   private discussionPersistence: DiscussionPersistence;

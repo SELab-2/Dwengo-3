@@ -120,6 +120,7 @@ export const fr = {
     post: 'Publier',
     joinRequestSuccess: 'La demande d’adhésion a été approuvée',
     copied: 'Copié dans le presse-papiers',
+    errorSendingErrorMessage: "erreur lors de l'envoi d'un message d'erreur",
     failedFavorite: 'Échec de l’ajout aux favoris',
     upcomingDeadlines: 'Prochaines échéances',
     noUpcomingDeadlines: 'Aucune échéance à venir',

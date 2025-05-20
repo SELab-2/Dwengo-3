@@ -7,9 +7,10 @@ import {
   ClassFilterSchema,
   ClassUpdateSchema,
 } from '../util/types/class.types';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { BadRequestError, NotFoundError } from '../util/types/error.types';
 import { compareUserIdWithFilterId } from '../util/cookie-checks/cookieChecks.util';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class ClassDomain {
   private classPersistence;

@@ -4,10 +4,11 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import passport from 'passport';
 
 import { UserDomain } from '../domain/user.domain';
-import { AuthenticationProvider, ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import * as crypto from 'node:crypto';
 import { AuthorizationError, BadRequestError, NotFoundError } from '../util/types/error.types';
 import { RegisterParams, RegisterSchema } from '../util/types/auth.types';
+import { ClassRoleEnum, AuthenticationProvider } from '../util/types/enums.types';
 
 const userDomain = new UserDomain();
 /**

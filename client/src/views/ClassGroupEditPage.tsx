@@ -26,7 +26,7 @@ export function ClassGroupEditPage() {
     isLoading: isClassDataLoading,
     refetch: refetchClassData,
   } = useClassById(classId!);
-  const error = useError();
+  const { setError } = useError();
   const [className, setClassName] = useState<string>('');
   const [classDescription, setClassDescription] = useState<string>('');
   const deleteStudent = useDeleteStudentFromClass();
@@ -156,8 +156,12 @@ export function ClassGroupEditPage() {
                       studentId: id,
                     },
                     {
-                      onError: (e) => {
-                        error.setError(e.message);
+                      onError: (error: any) => {
+                        setError(
+                          error?.response?.data?.message ||
+                            error?.message ||
+                            t('errorSendingErrorMessage'),
+                        );
                       },
                     },
                   );
@@ -181,8 +185,12 @@ export function ClassGroupEditPage() {
                       teacherId: id,
                     },
                     {
-                      onError: (e) => {
-                        error.setError(e.message);
+                      onError: (error: any) => {
+                        setError(
+                          error?.response?.data?.message ||
+                            error?.message ||
+                            t('errorSendingErrorMessage'),
+                        );
                       },
                     },
                   );

@@ -1350,7 +1350,7 @@
             "example": {
               "question": "What is 2 + 2?",
               "options": ["2", "4", "6"],
-              "answer": "4"
+              "solution": "4"
             }
           },
           "keywords": {

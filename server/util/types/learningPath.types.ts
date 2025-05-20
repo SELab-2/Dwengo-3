@@ -1,10 +1,17 @@
 import { z } from 'zod';
-import { Uuid } from './assignment.types';
 import { Prisma } from '.prisma/client';
 import { learningPathSelectShort, learningPathSelectDetail } from '../selectInput/select';
+import {
+  DescriptionZod,
+  HruidZod,
+  ImageZod,
+  KeywordZod,
+  LanguageZod,
+  TitleZod,
+} from './util_types';
 
 export const LearningPathFilterSchema = z.object({
-  keywords: z.array(z.string()).optional(),
+  keywords: z.array(KeywordZod).optional(),
   age: z
     .array(z.string())
     .transform((val) => val.map(Number))
@@ -14,11 +21,11 @@ export const LearningPathFilterSchema = z.object({
 });
 
 export const LearningPathCreateSchema = z.object({
-  hruid: z.string(),
-  language: z.string(),
-  title: z.string(),
-  description: z.string().optional(),
-  image: z.string().optional(),
+  hruid: HruidZod,
+  language: LanguageZod,
+  title: TitleZod,
+  description: DescriptionZod.optional(),
+  image: ImageZod.optional(),
 });
 
 export type LearningPathByFilterParams = z.infer<typeof LearningPathFilterSchema>;

@@ -119,6 +119,7 @@ export const nl = {
     post: 'Plaatsen',
     joinRequestSuccess: 'Toelatingsverzoek is goedgekeurd',
     copied: 'Gekopieerd naar klembord',
+    errorSendingErrorMessage: 'Fout bij het verzenden van foutmelding',
     failedFavorite: 'Toevoegen aan favorieten mislukt',
     upcomingDeadlines: 'Aankomende deadlines',
     noUpcomingDeadlines: 'Geen aankomende deadlines',

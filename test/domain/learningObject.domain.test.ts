@@ -8,11 +8,8 @@ import {
   testLearningObjects,
 } from '../testObjects.json';
 import { LearningObjectDomain } from '../../server/domain/learningObject.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // learningObject persistence mock
 const { mockLearningObjectPeristence, mockLearningObjectKeywordPeristence } = vi.hoisted(() => {

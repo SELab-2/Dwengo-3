@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { atLeastOneFieldProvided, ClassIdZod, GroupIdZod, UserIdZod } from './util_types';
 
 /**
  * Schema for creating a student
@@ -6,7 +7,7 @@ import { z } from 'zod';
  * @property userId - The id of the user to create the student for
  */
 export const StudentCreateSchema = z.object({
-  userId: z.string().uuid(),
+  userId: UserIdZod,
 });
 
 export type StudentCreateParams = z.infer<typeof StudentCreateSchema>;
@@ -21,28 +22,12 @@ export type StudentCreateParams = z.infer<typeof StudentCreateSchema>;
  */
 export const StudentFilterSchema = z
   .object({
-    userId: z.string().uuid().optional(),
-    classId: z.string().uuid().optional(),
-    groupId: z.string().uuid().optional(),
+    userId: UserIdZod.optional(),
+    classId: ClassIdZod.optional(),
+    groupId: GroupIdZod.optional(),
   })
-  .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: 'At least one filter must be provided.',
-    path: [],
+  .refine(atLeastOneFieldProvided.validate, {
+    message: atLeastOneFieldProvided.message,
   });
 
 export type StudentFilterParams = z.infer<typeof StudentFilterSchema>;
-
-/**
- * Schema for including related entities when fetching students
- *
- * @property classes - Include the classes the student is in
- * @property groups - Include the groups the student is in
- * @property user - Include the user data of the student
- */
-export const StudentIncludeSchema = z.object({
-  classes: z.boolean().optional(),
-  groups: z.boolean().optional(),
-  user: z.boolean().optional(),
-});
-
-export type StudentIncludeParams = z.infer<typeof StudentIncludeSchema>;

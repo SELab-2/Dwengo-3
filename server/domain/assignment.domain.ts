@@ -5,7 +5,6 @@ import {
   AssignmentDetail,
   AssignmentFilterSchema,
   AssignmentShort2,
-  Uuid,
 } from '../util/types/assignment.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import { UserEntity } from '../util/types/user.types';
@@ -18,6 +17,7 @@ import {
 import { ClassPersistence } from '../persistence/class.persistence';
 import { GroupPersistence } from '../persistence/group.persistence';
 import { BadRequestError } from '../util/types/error.types';
+import { Uuid } from '../util/types/theme.types';
 
 export class AssignmentDomain {
   private assignmentPersistence: AssignmentPersistence;

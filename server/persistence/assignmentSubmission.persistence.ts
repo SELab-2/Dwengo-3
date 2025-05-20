@@ -9,7 +9,6 @@ import {
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { Uuid } from '../util/types/assignment.types';
 
 import { NotFoundError } from '../util/types/error.types';
 import {
@@ -17,6 +16,7 @@ import {
   assignmentSubmissionSelectDetail,
 } from '../util/selectInput/select';
 import fs from 'fs';
+import { Uuid } from '../util/types/theme.types';
 
 export class AssignmentSubmissionPersistence {
   public async getAssignmentSubmissions(

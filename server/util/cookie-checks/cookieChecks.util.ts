@@ -1,11 +1,12 @@
 import { ClassRole } from '@prisma/client';
 
-import { Uuid } from '../types/assignment.types';
-import { ClassRoleEnum, UserEntity } from '../types/user.types';
+import { UserEntity } from '../types/user.types';
 import { ClassPersistence } from '../../persistence/class.persistence';
 import { GroupPersistence } from '../../persistence/group.persistence';
 import { BadRequestError, NotFoundError } from '../types/error.types';
 import { AssignmentPersistence } from '../../persistence/assignment.persistence';
+import { Uuid } from '../types/theme.types';
+import { ClassRoleEnum } from '../types/enums.types';
 
 export const compareUserIdWithFilterId = async (
   user: UserEntity,

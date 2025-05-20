@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
-import { TeacherFilterParams, TeacherIncludeParams } from '../util/types/teacher.types';
+import { TeacherFilterParams } from '../util/types/teacher.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { NotFoundError } from '../util/types/error.types';
 import { teacherSelectDetail, teacherSelectShort } from '../util/selectInput/select';

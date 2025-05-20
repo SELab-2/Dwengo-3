@@ -29,8 +29,8 @@ function ClassAddPage() {
       onSuccess: (response: ClassDetail) => {
         navigate(AppRoutes.class(response.id));
       },
-      onError: (error: Error) => {
-        setError(error.message);
+      onError: (error: any) => {
+        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
       },
     });
   };
@@ -44,8 +44,10 @@ function ClassAddPage() {
           setNotification(t('joinRequestSucces'));
           navigate(AppRoutes.myClasses);
         },
-        onError: (error: Error) => {
-          setError(error.message);
+        onError: (error: any) => {
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
         },
       },
     );

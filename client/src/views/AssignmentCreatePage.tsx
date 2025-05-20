@@ -89,22 +89,21 @@ function AssignmentCreatePage() {
     // Keep all previously fetched unique paths (by ID)
     setAllFetchedPaths((prevPaths) => {
       const existingIds = new Set(prevPaths.map((p) => p.id));
-      const existingKeywords = new Set(keywords);
       const merged = [...prevPaths];
-      const newKeywords = [...keywords];
       for (const p of newPaths) {
         if (!existingIds.has(p.id)) {
           merged.push(p);
-          for (const node of p.learningPathNodes) {
-            for (const keyword of node.learningObject.keywords) {
-              if (!existingKeywords.has(keyword.keyword)) {
-                existingKeywords.add(keyword.keyword);
-                newKeywords.push(keyword.keyword);
-              }
-            }
-          }
         }
       }
+      const newKeywords = Array.from(
+        new Set(
+          merged.flatMap((path) =>
+            path.learningPathNodes.flatMap((node) =>
+              node.learningObject.keywords.map((keyword) => keyword.keyword),
+            ),
+          ),
+        ),
+      );
       setKeywords(newKeywords);
       return merged;
     });
@@ -167,8 +166,8 @@ function AssignmentCreatePage() {
       onSuccess: (response: AssignmentDetail) => {
         navigate(AppRoutes.classAssignment(classId!, response.id));
       },
-      onError: (error: Error) => {
-        setError(error.message);
+      onError: (error: any) => {
+        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
       },
     });
   };

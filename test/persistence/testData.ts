@@ -1,20 +1,19 @@
 import {
   AuthenticationProvider,
   ClassRoleEnum,
-  FullUserType,
-  UserEntity,
-} from '../../server/util/types/user.types';
+  ContentTypeEnum,
+  SubmissionTypeEnum,
+} from '../../server/util/types/enums.types';
+import { FullUserType, UserEntity } from '../../server/util/types/user.types';
 import { PrismaSingleton } from '../../server/persistence/prismaSingleton';
 import { ClassPersistence } from '../../server/persistence/class.persistence';
 import { ClassDetail } from '../../server/util/types/class.types';
 import { ClassJoinRequestPersistence } from '../../server/persistence/classJoinRequest.persistence';
 import { ClassJoinRequestDetail } from '../../server/util/types/classJoinRequest.types';
 import {
-  ContentTypeEnum,
   LearningObjectCreateParams,
   LearningObjectDetail,
   MultipleChoice,
-  SubmissionTypeEnum,
 } from '../../server/util/types/learningObject.types';
 import { LearningObjectPersistence } from '../../server/persistence/learningObject.persistence';
 import { LearningObjectKeywordPersistence } from '../../server/persistence/learningObjectKeyword.persistence';
@@ -189,7 +188,7 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       language: 'EN',
       title: 'test',
       description: 'test',
-      contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+      contentType: ContentTypeEnum.TEXT_PLAIN,
       targetAges: [7, 8, 9],
       difficulty: 5,
       estimatedTime: 10,
@@ -204,7 +203,7 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       language: 'EN',
       title: 'test',
       description: 'test',
-      contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+      contentType: ContentTypeEnum.TEXT_PLAIN,
       targetAges: [10, 11, 12],
       difficulty: 5,
       estimatedTime: 10,
@@ -212,7 +211,7 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       teacherExclusive: false,
       available: true,
       multipleChoice: { question: 'test', options: ['a', 'b', 'c'], solution: 'b' },
-      submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
+      submissionType: SubmissionTypeEnum.MULTIPLE_CHOICE,
     },
     {
       hruid: 'Object with file submission',
@@ -221,14 +220,14 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       language: 'EN',
       title: 'test',
       description: 'test',
-      contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+      contentType: ContentTypeEnum.TEXT_PLAIN,
       targetAges: [13, 14, 15],
       difficulty: 5,
       estimatedTime: 10,
       content: 'test',
       teacherExclusive: false,
       available: true,
-      submissionType: SubmissionTypeEnum.Enum.FILE,
+      submissionType: SubmissionTypeEnum.FILE,
     },
   ];
   const keywordsData = [
@@ -377,23 +376,23 @@ export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissi
         const learningObject = await learningObjectPersistence.getLearningObjectById(
           learningPathNode.learningObject.id,
         );
-        if (learningObject.submissionType === SubmissionTypeEnum.Enum.MULTIPLE_CHOICE) {
+        if (learningObject.submissionType === SubmissionTypeEnum.MULTIPLE_CHOICE) {
           submissions.push(
             assignemntSubmissionPersistence.createAssignmentSubmission({
               nodeId: learningPathNode.id,
               groupId: group.id,
-              submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
+              submissionType: SubmissionTypeEnum.MULTIPLE_CHOICE,
               submission: {
-                answer: 2,
+                answer: '2',
               },
             }),
           );
-        } else if (learningObject.submissionType === SubmissionTypeEnum.Enum.FILE) {
+        } else if (learningObject.submissionType === SubmissionTypeEnum.FILE) {
           submissions.push(
             assignemntSubmissionPersistence.createAssignmentSubmission({
               nodeId: learningPathNode.id,
               groupId: group.id,
-              submissionType: SubmissionTypeEnum.Enum.FILE,
+              submissionType: SubmissionTypeEnum.FILE,
               submission: {
                 fileName: 'test.txt',
                 filePath: 'files-submissions/qkjfqmlfqkf.txt',
