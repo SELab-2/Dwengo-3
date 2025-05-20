@@ -5,8 +5,14 @@ import { Prisma } from '.prisma/client';
 import { learningPathNodeSelectShort, learningPathNodeSelectDetail } from '../selectInput/select';
 
 export const LearningPathNodeCreateSchema = z.object({
-  learningPathId: z.string(),
-  learningObjectId: z.string(),
+  learningPathId: z
+    .string()
+    .regex(/^[0-9a-z]+$/)
+    .or(z.string().uuid()),
+  learningObjectId: z
+    .string()
+    .regex(/^[0-9a-z]+$/)
+    .or(z.string().uuid()),
   instruction: z.string().optional(),
 });
 
