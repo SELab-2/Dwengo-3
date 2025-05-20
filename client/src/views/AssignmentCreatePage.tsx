@@ -56,7 +56,7 @@ function AssignmentCreatePage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useLearningPathInfinity(debouncePaths, debounceKeywords, 10);
+  } = useLearningPathInfinity(debouncePaths, debounceKeywords, 15);
 
   useEffect(() => {
     refetch();
