@@ -3,7 +3,7 @@ import { LearningPathIdZod, UserIdZod } from './util_types';
 
 export const FavoriteFilterSchema = z.object({
   userId: UserIdZod,
-  learningPathId: LearningPathIdZod,
+  learningPathId: LearningPathIdZod.optional(),
 });
 
 export const FavoriteCreateSchema = z.object({
