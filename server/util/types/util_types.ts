@@ -12,19 +12,50 @@ const MAX_DESCRIPTION_LENGTH = 1000;
 const MAX_FILENAME_LENGTH = 255;
 const MAX_FILEPATH_LENGTH = 255;
 
+/* To define custom error message for the following 3 zod types, we need to use the `refine` method
+ * simply because zod does not support custom error messages for schemas like the following:
+ * z.string().uuid('Invalid UUID').or(z.string().regex(/^[0-9a-z]+$/))
+ * If both schemas fail, an generic error message would be returned.
+ * Therefor, we test if it is parsed successfully to one of the two schemas and return a custom error message.
+ */
+export const LearningPathIdZod = z.string().refine(
+  (value) => {
+    return UuidZod.safeParse(value).success || UuidRegexZod.safeParse(value).success;
+  },
+  {
+    message: 'Invalid learning path ID',
+  },
+);
+
+export const LearningObjectIdZod = z.string().refine(
+  (value) => {
+    return UuidZod.safeParse(value).success || UuidRegexZod.safeParse(value).success;
+  },
+  {
+    message: 'Invalid learning path ID',
+  },
+);
+
+export const NodeIdZod = z.string().refine(
+  (value) => {
+    return UuidZod.safeParse(value).success || UuidRegexZod.safeParse(value).success;
+  },
+  {
+    message: 'Invalid node ID',
+  },
+);
+
+const UuidRegexZod = z.string().regex(/^[0-9a-z]+$/);
 export const ClassIdZod = z.string().uuid('Invalid class ID');
 export const TeacherIdZod = z.string().uuid('Invalid teacher ID');
 export const StudentIdZod = z.string().uuid('Invalid student ID');
 export const GroupIdZod = z.string().uuid('Invalid group ID');
-export const LearningPathIdZod = z.string();
-export const NodeIdZod = z.string();
 export const FavoriteIdZod = z.string().uuid('Invalid favorite ID');
 export const UserIdZod = z.string().uuid('Invalid user ID');
 export const RequestIdZod = z.string().uuid('Invalid request ID');
 export const AssignmentIdZod = z.string().uuid('Invalid assignment ID');
 export const HruidZod = z.string().trim().nonempty('HRUID must be a non-empty string');
 export const UuidZod = z.string().uuid('Invalid UUID');
-export const LearningObjectIdZod = z.string().uuid('Invalid learning object ID');
 export const DiscussionIdZod = z.string().uuid('Invalid discussion ID');
 export const MessageIdZod = z.number().int().positive('Invalid message ID');
 export const LearningThemeIdZod = z.string().uuid('Invalid learning theme ID');
