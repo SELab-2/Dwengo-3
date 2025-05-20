@@ -5,38 +5,40 @@ import {
   assignmentSelectShort,
   assignmentSelectShort2,
 } from '../selectInput/select';
+import {
+  atLeastOneFieldProvided,
+  ClassIdZod,
+  DeadlineZod,
+  DescriptionZod,
+  GroupIdZod,
+  LearningPathIdZod,
+  StudentIdZod,
+  TeacherIdZod,
+  TitleZod,
+} from './util_types';
 
 export const AssignmentFilterSchema = z
   .object({
-    classId: z.string().uuid().optional(),
-    groupId: z.string().uuid().optional(),
-    teacherId: z.string().uuid().optional(),
-    studentId: z.string().uuid().optional(),
+    classId: ClassIdZod.optional(),
+    groupId: GroupIdZod.optional(),
+    teacherId: TeacherIdZod.optional(),
+    studentId: StudentIdZod.optional(),
   })
-  .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: 'At least one filter must be provided.',
-    path: [],
+  .refine(atLeastOneFieldProvided.validate, {
+    message: atLeastOneFieldProvided.message,
   });
 
-export const IdSchema = z.string().uuid();
-
 export const AssignmentCreateSchema = z.object({
-  name: z.string().min(1).max(255),
-  description: z.string().min(0).max(500),
-  groups: z.string().uuid().array().nonempty().array().nonempty(),
-  classId: z.string().uuid(),
-  teacherId: z.string().uuid().optional(),
-  learningPathId: z.string(),
-  deadline: z
-    .string()
-    .datetime({ offset: true })
-    .refine((value) => new Date(value) > new Date(), {
-      message: 'Deadline must be a future date.',
-    }),
+  name: TitleZod,
+  description: DescriptionZod,
+  groups: GroupIdZod.array().nonempty().array().nonempty(),
+  classId: ClassIdZod,
+  teacherId: TeacherIdZod.optional(),
+  learningPathId: LearningPathIdZod,
+  deadline: DeadlineZod,
 });
 
 export type AssignmentCreateParams = z.infer<typeof AssignmentCreateSchema>;
-export type Uuid = z.infer<typeof IdSchema>;
 export type AssignmentFilterParams = z.infer<typeof AssignmentFilterSchema>;
 
 export type AssignmentDetail = Prisma.AssignmentGetPayload<{

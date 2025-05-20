@@ -8,7 +8,8 @@ import {
   testLearningPaths,
 } from '../testObjects.json';
 import { LearningPathDomain } from '../../server/domain/learningPath.domain';
-import { ClassRoleEnum, UserEntity } from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
+import { ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // learningPath persistence mock
 const { mockLearningPathPeristence } = vi.hoisted(() => {

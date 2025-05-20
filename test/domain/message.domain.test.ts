@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { MessageDomain } from '../../server/domain/message.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
 import {
   testDiscussions,
   testMessages,
@@ -13,6 +9,7 @@ import {
   testTeachers,
   testUsers,
 } from '../testObjects.json';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // message persistence mock
 const { mockMessagePeristence } = vi.hoisted(() => {

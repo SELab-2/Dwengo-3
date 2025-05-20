@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { AssignmentDomain } from '../../server/domain/assignment.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
 import {
   testClasses,
   testPaginationFilter,
@@ -15,6 +11,7 @@ import {
   testAssignments,
   testLearningPaths,
 } from '../testObjects.json';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // assignment persistence mock
 const { mockAssignmentPeristence, mockClassPeristence, mockGroupPeristence } = vi.hoisted(() => {

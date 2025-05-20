@@ -1,14 +1,15 @@
 import { z } from 'zod';
 import { Prisma } from '.prisma/client';
 import { discussionSelectDetail, discussionSelectShort } from '../selectInput/select';
+import { AssignmentIdZod, GroupIdZod, UserIdZod } from './util_types';
 
 export const DiscussionFilterSchema = z.object({
-  userId: z.string().uuid(),
-  assignmentId: z.string().uuid().optional(),
+  userId: UserIdZod.optional(),
+  assignmentId: AssignmentIdZod.optional(),
 });
 
 export const DiscussionCreateSchema = z.object({
-  groupId: z.string().uuid(),
+  groupId: GroupIdZod,
 });
 
 export type DiscussionFilterParams = z.infer<typeof DiscussionFilterSchema>;

@@ -1,63 +1,72 @@
 import { z } from 'zod';
-import { Uuid } from './assignment.types';
-import { Decimal } from '@prisma/client/runtime/library';
 import { Prisma } from '.prisma/client';
 import { learningObjectSelectShort, learningObjectSelectDetail } from '../selectInput/select';
-
-export const ContentTypeEnum = z.enum([
-  'TEXT_PLAIN',
-  'TEXT_MARKDOWN',
-  'IMAGE_IMAGE_BLOCK',
-  'IMAGE_IMAGE',
-  'AUDIO_MPEG',
-  'APPLICATION_PDF',
-  'EXTERN',
-  'BLOCKLY',
-]);
-
-export const SubmissionTypeEnum = z.enum(['READ', 'MULTIPLE_CHOICE', 'FILE']);
+import {
+  AnswerOptionZod,
+  AvailableZod,
+  ContentTypeEnumZod,
+  ContentZod,
+  CopyRightZod,
+  DescriptionZod,
+  DifficultyZod,
+  EducationalGoalZod,
+  EstimatedTimeZod,
+  HruidZod,
+  KeywordZod,
+  LanguageZod,
+  LicenceZod,
+  QuestionZod,
+  ReturnValueZod,
+  SkosConceptZod,
+  SolutionZod,
+  SubmissionTypeZod,
+  TargetAgeZod,
+  TeacherExclusiveZod,
+  TitleZod,
+  UuidZod,
+  VersionZod,
+} from './util_types';
 
 export const learningObjectKeywordSchema = z.object({
-  keyword: z.string().min(1, 'Keyword is required'),
+  keyword: KeywordZod,
 });
 
 export type LearningObjectKeywordParams = z.infer<typeof learningObjectKeywordSchema>;
 
 const multipleChoiceSchema = z
   .object({
-    question: z.string().min(1, 'Question is required'),
-    options: z.string().array().nonempty(),
-    solution: z.string(),
+    question: QuestionZod,
+    options: AnswerOptionZod.array().nonempty(),
+    solution: SolutionZod,
   })
-  .refine((data) => data.question.includes(data.solution), {
-    message: 'The solution has to be in the options',
-    path: [],
+  .refine((data) => data.options.includes(data.solution), {
+    message: 'The options have to contain the solution',
   });
 
 export type MultipleChoice = z.infer<typeof multipleChoiceSchema>;
 
 export const LearningObjectCreateSchema = z.object({
-  hruid: z.string().min(1, 'HRUID is required'),
-  uuid: z.string().uuid(),
-  version: z.number().int().min(1, 'Version must be a positive integer'),
-  language: z.string().min(1, 'Language is required'),
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().optional(),
-  contentType: ContentTypeEnum.optional(),
-  targetAges: z.array(z.number().int().nonnegative()).optional(),
-  teacherExclusive: z.boolean().default(false),
-  skosConcepts: z.array(z.string()).optional(),
-  educationalGoals: z.array(z.any()).optional(), // JSON array
-  copyright: z.string().optional(),
-  licence: z.string().optional(),
-  difficulty: z.number().optional(),
-  estimatedTime: z.number().optional(),
-  returnValue: z.any().optional(), // JSON object
-  available: z.boolean().default(true),
-  content: z.string().min(1, 'Content is required'),
+  hruid: HruidZod,
+  uuid: UuidZod,
+  version: VersionZod,
+  language: LanguageZod,
+  title: TitleZod,
+  description: DescriptionZod.optional(),
+  contentType: ContentTypeEnumZod.optional(),
+  targetAges: z.array(TargetAgeZod).optional(),
+  teacherExclusive: TeacherExclusiveZod,
+  skosConcepts: z.array(SkosConceptZod).optional(),
+  educationalGoals: z.array(EducationalGoalZod).optional(), // JSON array
+  copyright: CopyRightZod,
+  licence: LicenceZod.optional(),
+  difficulty: DifficultyZod.optional(),
+  estimatedTime: EstimatedTimeZod.optional(),
+  returnValue: ReturnValueZod.optional(), // JSON object
+  available: AvailableZod,
+  content: ContentZod,
   multipleChoice: multipleChoiceSchema.optional(), // JSON object
-  submissionType: SubmissionTypeEnum.optional(),
-  keywords: z.array(learningObjectKeywordSchema).optional(),
+  submissionType: SubmissionTypeZod.optional(),
+  keywords: z.array(learningObjectKeywordSchema).nonempty().optional(),
 });
 
 export type LearningObjectCreateParams = z.infer<typeof LearningObjectCreateSchema>;
@@ -65,34 +74,31 @@ export type LearningObjectCreateParams = z.infer<typeof LearningObjectCreateSche
 export type LearningObjectWithoutKeywords = Omit<LearningObjectCreateParams, 'keywords'>;
 
 export const LearningObjectUpdateSchema = z.object({
-  version: z.number().int().min(1, 'Version must be a positive integer').optional(),
-  title: z.string().min(1, 'Title is required').optional(),
-  description: z.string().optional(),
-  contentType: ContentTypeEnum.optional(),
-  targetAges: z.array(z.number().int().nonnegative()).optional(),
-  teacherExclusive: z.boolean().optional(),
-  skosConcepts: z.array(z.string()).optional(),
-  educationalGoals: z.array(z.any()).optional(),
-  copyright: z.string().optional(),
-  licence: z.string().optional(),
-  difficulty: z.number().optional(),
-  estimatedTime: z.number().optional(),
-  returnValue: z.any().optional(),
-  available: z.boolean().optional(),
-  content: z.string().min(1, 'Content is required').optional(),
-  multipleChoice: z.any().optional(),
-  learningObjectsKeywords: z.array(learningObjectKeywordSchema).optional(),
+  version: VersionZod.optional(),
+  title: TitleZod.optional(),
+  description: DescriptionZod.optional(),
+  contentType: ContentTypeEnumZod.optional(),
+  targetAges: z.array(TargetAgeZod).optional(),
+  teacherExclusive: TeacherExclusiveZod.optional(),
+  skosConcepts: z.array(SkosConceptZod).optional(),
+  educationalGoals: z.array(EducationalGoalZod).optional(),
+  copyright: CopyRightZod.optional(),
+  licence: LicenceZod.optional(),
+  difficulty: DifficultyZod.optional(),
+  estimatedTime: EstimatedTimeZod.optional(),
+  returnValue: ReturnValueZod.optional(),
+  available: AvailableZod.optional(),
+  content: ContentZod.optional(),
+  multipleChoice: multipleChoiceSchema.optional(),
+  keywords: z.array(learningObjectKeywordSchema).optional(),
 });
 
 export type LearningObjectUpdateParams = z.infer<typeof LearningObjectUpdateSchema>;
 
-export type LearningObjectUpdateWithoutKeywords = Omit<
-  LearningObjectUpdateParams,
-  'learningObjectsKeywords'
->;
+export type LearningObjectUpdateWithoutKeywords = Omit<LearningObjectUpdateParams, 'keywords'>;
 
 export const LearningObjectFilterSchema = z.object({
-  keywords: z.array(z.string()).optional(),
+  keywords: z.array(KeywordZod).optional(),
   targetAges: z
     .array(z.string())
     .transform((val) => val.map(Number))

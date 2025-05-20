@@ -7,11 +7,8 @@ import {
   testStudents,
   testUsers,
 } from '../testObjects.json';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // class persistence mock
 const { mockClassPeristence } = vi.hoisted(() => {

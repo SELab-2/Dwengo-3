@@ -5,9 +5,10 @@ import {
   ClassJoinRequestFilterSchema,
 } from '../util/types/classJoinRequest.types';
 import { ClassJoinRequestPersistence } from '../persistence/classJoinRequest.persistence';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { BadRequestError } from '../util/types/error.types';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class ClassJoinRequestDomain {
   private classJoinRequestPersistence: ClassJoinRequestPersistence;

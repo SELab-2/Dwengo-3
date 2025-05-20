@@ -9,8 +9,9 @@ import {
   LearningObjectUpdateSchema,
 } from '../util/types/learningObject.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { BadRequestError } from '../util/types/error.types';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class LearningObjectDomain {
   private learningObjectPersistence;
@@ -66,8 +67,7 @@ export class LearningObjectDomain {
   ) {
     // TODO: Check if user is owner of learning object once there is an owner attribute
     // Validate the request body using Zod schema
-    const { learningObjectsKeywords, ...dataWithoutKeywords } =
-      LearningObjectUpdateSchema.parse(body);
+    const { keywords, ...dataWithoutKeywords } = LearningObjectUpdateSchema.parse(body);
 
     const dataToUpdate = {
       ...dataWithoutKeywords,
@@ -75,11 +75,8 @@ export class LearningObjectDomain {
 
     await this.learningObjectPersistence.updateLearningObject(id, dataToUpdate);
 
-    if (learningObjectsKeywords) {
-      await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(
-        id,
-        learningObjectsKeywords,
-      );
+    if (keywords) {
+      await this.learningObjectKeywordPersistence.updateLearningObjectKeywords(id, keywords);
     }
   }
 

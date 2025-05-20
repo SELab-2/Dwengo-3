@@ -6,8 +6,9 @@ import {
 import { AssignmentSubmissionPersistence } from '../../server/persistence/assignmentSubmission.persistence';
 import { deleteAllData, insertAssignmentsSubmissions } from './testData';
 import { PrismaSingleton } from '../../server/persistence/prismaSingleton';
-import { MultipleChoice, SubmissionTypeEnum } from '../../server/util/types/learningObject.types';
+import { MultipleChoice } from '../../server/util/types/learningObject.types';
 import { LearningObjectPersistence } from '../../server/persistence/learningObject.persistence';
+import { SubmissionTypeEnum } from '../../server/util/types/enums.types';
 
 let submissions: AssignmentSubmissionDetail[];
 const assignemntSubmissionPersistence: AssignmentSubmissionPersistence =
@@ -75,13 +76,13 @@ describe('assignmentSubmission persistence test', () => {
     test('request with existing id should update assignmentSubmission correctly', async () => {
       for (const submission of submissions) {
         let newSubmission;
-        if (submission.submissionType === SubmissionTypeEnum.Enum.MULTIPLE_CHOICE) {
+        if (submission.submissionType === SubmissionTypeEnum.MULTIPLE_CHOICE) {
           const learningObject = await learningObjectPersistence.getLearningObjectById(
             submission.node.learningObject.id,
           );
           const multipleChoice = learningObject.multipleChoice as MultipleChoice;
           newSubmission = multipleChoice.options[1];
-        } else if (submission.submissionType === SubmissionTypeEnum.Enum.FILE) {
+        } else if (submission.submissionType === SubmissionTypeEnum.FILE) {
           newSubmission = {
             fileName: 'newFile.txt',
             filePath: 'files-submissions/atoitjklfnqfn.txt',
