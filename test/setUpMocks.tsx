@@ -27,6 +27,7 @@ vi.mock('../client/node_modules/react-i18next', async () => {
       i18n: {
         language: 'en',
       },
+      t: (key: string) => key,
     }),
   };
 });
