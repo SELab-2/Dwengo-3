@@ -1,4 +1,4 @@
-import { AssignmentShort2 } from '../interfaces/assignment.interfaces';
+import { AssignmentShort2, PopulatedAssignment } from '../interfaces/assignment.interfaces';
 import { GroupDetail, GroupShort } from '../interfaces/group.interfaces';
 
 /**
@@ -14,7 +14,7 @@ export function getProgress({
   studentId,
   group,
 }: {
-  assignment: AssignmentShort2;
+  assignment: AssignmentShort2 | PopulatedAssignment;
   studentId?: string;
   group?: GroupShort | GroupDetail;
 }) {

@@ -10,6 +10,7 @@ import {
   Chip,
   LinearProgress,
   ListItemText,
+  useMediaQuery,
 } from '@mui/material';
 import { Class as ClassIcon, Person as PersonIcon } from '@mui/icons-material';
 import { ClassRoleEnum, PopulatedClass } from '../util/interfaces/class.interfaces';
@@ -19,39 +20,35 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PopulatedAssignment } from '../util/interfaces/assignment.interfaces';
 import { useAuth } from '../hooks/useAuth';
+import { sortDeadlines } from '../hooks/useAssignment';
+import { getProgress } from '../util/helpers/assignment.helper';
+import { IconSize } from '../util/size';
 
 function ClassCard({ classDetails }: { classDetails: PopulatedClass }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  // TODO: sort according to deadline
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
   const assignments = classDetails.assignments as PopulatedAssignment[];
 
-  // Calculate the progress for a specific learning path and user
-  const getProgress = (assignment: PopulatedAssignment) => {
-    if (user?.role === ClassRoleEnum.STUDENT) {
-      // For a student, calculate the progress based on the group they're in
-      const group = assignment.groups.filter((group) =>
-        group.students?.some((student) => student.id === user?.student?.id),
-      )[0];
-      const progress =
-        group.progress.length > 0
-          ? ((Math.max(...group.progress) + 1) / assignment.learningPath.learningPathNodes.length) *
-            100
-          : 0;
+  // Sort assignments by deadline
+  sortDeadlines(assignments);
 
-      return Math.round(progress);
+  // Calculate the progress for a specific learning path and user
+  const getProgressOfAssignment = (assignment: PopulatedAssignment) => {
+    if (user?.role === ClassRoleEnum.STUDENT) {
+      return getProgress({ assignment, studentId: user?.student?.id });
     } else {
       // For a teacher, calculate the progress based on all groups in the class
       const totalProgress = assignment.groups.reduce((acc, group) => {
-        return acc + (group.progress.at(-1) || 0);
+        return acc + getProgress({ assignment, group });
       }, 0);
+
       const totalGroups = assignment.groups.length;
 
-      return Math.round(
-        (totalProgress / (totalGroups * assignment.learningPath.learningPathNodes.length)) * 100,
-      );
+      return Math.round(totalProgress / totalGroups);
     }
   };
 
@@ -71,7 +68,14 @@ function ClassCard({ classDetails }: { classDetails: PopulatedClass }) {
       <CardContent>
         {/* Header with class name and teacher */}
         <Box display="flex" alignItems="center" mb={2}>
-          <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
+          <Avatar
+            sx={{
+              bgcolor: 'primary.main',
+              mr: 2,
+              height: isMobile ? IconSize.large : IconSize.xlarge,
+              width: isMobile ? IconSize.large : IconSize.xlarge,
+            }}
+          >
             <ClassIcon />
           </Avatar>
           <Box>
@@ -92,7 +96,7 @@ function ClassCard({ classDetails }: { classDetails: PopulatedClass }) {
         {/* Learning paths list */}
         <List disablePadding>
           {assignments.slice(0, 2).map((assignment, index) => {
-            const progress = getProgress(assignment);
+            const progress = getProgressOfAssignment(assignment);
 
             return (
               <React.Fragment key={index}>
@@ -107,7 +111,13 @@ function ClassCard({ classDetails }: { classDetails: PopulatedClass }) {
                           {assignment.learningPath.title}
                         </Typography>
                         <Chip
-                          label={'10/05/2025'} /* TODO: replace with actual value */
+                          label={new Date(assignment.deadline).toLocaleDateString(undefined, {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
                           size="small"
                           variant="outlined"
                           sx={{ ml: 1 }}
@@ -115,13 +125,10 @@ function ClassCard({ classDetails }: { classDetails: PopulatedClass }) {
                       </Typography>
                     }
                     secondary={
-                      <Typography
-                        component="div" // Render Typography as a <div> instead of a <p>
-                        sx={{ mt: 1 }}
-                      >
+                      <Typography component="div" sx={{ mt: 1 }}>
                         <LinearProgress
                           variant="determinate"
-                          value={progress} //TODO: replace with actual progress value
+                          value={progress}
                           sx={{
                             height: 8,
                             borderRadius: 4,
