@@ -1,14 +1,16 @@
-import { Typography, TypographyVariant } from '@mui/material';
+import { SxProps, Theme, Typography, TypographyVariant } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 function DateTypography({
   text,
   date,
   variant,
+  sx,
 }: {
   text?: string;
   date: Date;
   variant?: TypographyVariant;
+  sx?: SxProps<Theme>;
 }) {
   const { i18n } = useTranslation();
 
@@ -18,7 +20,7 @@ function DateTypography({
   }).format(date);
 
   return (
-    <Typography variant={variant} gutterBottom>
+    <Typography variant={variant} gutterBottom sx={sx}>
       {`${text ? text : ''}${formattedDate}`}
     </Typography>
   );

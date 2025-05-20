@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express';
 import { ClassJoinRequestDomain } from '../domain/classJoinRequest.domain';
 import { UserDomain } from '../domain/user.domain';
-import { ClassRoleEnum } from '../util/types/user.types';
 import { isAuthenticated } from './auth.routes';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class ClassJoinRequestController {
   public router: Router;

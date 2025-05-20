@@ -1,6 +1,6 @@
-import { AnnouncementDetail } from '../util/interfaces/announcement.interfaces';
-import { useQuery } from '@tanstack/react-query';
-import { fetchAnnouncementById, fetchAnnouncements } from '../api/announcement';
+import { AnnouncementCreate, AnnouncementDetail } from '../util/interfaces/announcement.interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createAnnouncement, fetchAnnouncementById, fetchAnnouncements } from '../api/announcement';
 import { fetchNestedData } from '../api/util';
 
 /**
@@ -80,6 +80,53 @@ export function useAnnouncementDetails(
       };
     },
     enabled: !!studentId || !!teacherId, // Enable the query only if studentId or teacherId is provided
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useAnnouncementCreate() {
+  return useMutation({
+    mutationFn: async (data: AnnouncementCreate) => {
+      return await createAnnouncement(data);
+    },
+  });
+}
+
+/**
+ * Fetches the latest announcements for a specific student or teacher.
+ *
+ * @param studentId - The ID of the student whose announcements are to be fetched
+ * @param teacherId - The ID of the teacher whose announcements are to be fetched
+ * @returns A query object containing the latest announcements
+ */
+export function useLatestsAnnouncements({
+  studentId,
+  teacherId,
+}: {
+  studentId?: string;
+  teacherId?: string;
+}) {
+  return useQuery({
+    queryKey: ['latestAnnouncements', studentId, teacherId],
+    queryFn: async () => {
+      const paginatedAnnouncements = await fetchAnnouncements(undefined, teacherId, studentId);
+      const announcements = paginatedAnnouncements.data;
+
+      // Fetch the details of each announcement
+      const detailedAnnouncements = await Promise.all(
+        announcements.map((announcement) => fetchAnnouncementById(announcement.id)),
+      );
+
+      // Sort the announcements by date in descending order
+      detailedAnnouncements.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime(); // Sort in descending order
+      });
+
+      return detailedAnnouncements;
+    },
+    enabled: !!studentId || !!teacherId,
     refetchOnWindowFocus: false,
   });
 }

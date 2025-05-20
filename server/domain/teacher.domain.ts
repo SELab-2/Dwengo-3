@@ -1,11 +1,7 @@
 import { TeacherPersistence } from '../persistence/teacher.persistence';
 import { ClassPersistence } from '../persistence/class.persistence';
 import { UserEntity } from '../util/types/user.types';
-import {
-  TeacherCreateSchema,
-  TeacherFilterSchema,
-  TeacherIncludeSchema,
-} from '../util/types/teacher.types';
+import { TeacherCreateSchema, TeacherFilterSchema } from '../util/types/teacher.types';
 import { UsersPersistence } from '../persistence/auth/users.persistence';
 import { Class } from '@prisma/client';
 import { PaginationFilterSchema } from '../util/types/pagination.types';

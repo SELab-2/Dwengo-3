@@ -15,6 +15,7 @@ import { AppRoutes } from '../util/app.routes';
 import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import DateTypography from './DateTypography';
 
 function TeacherAssignmentsTable({
   assignments,
@@ -55,7 +56,10 @@ function TeacherAssignmentsTable({
               }}
             >
               <TableCell sx={{ minWidth: 180, width: '50%' }}>
-                <Typography variant="h6">{t('learningPath')}</Typography>
+                <Typography variant="h6">{t('name')}</Typography>
+              </TableCell>
+              <TableCell sx={{ minWidth: 180, width: '25%' }}>
+                <Typography variant="h6">{t('deadline')}</Typography>
               </TableCell>
               <TableCell />
             </TableRow>
@@ -70,8 +74,17 @@ function TeacherAssignmentsTable({
                       fontSize: { xs: '14px', sm: '16px' },
                     }}
                   >
-                    {assignment.learningPath.title}
+                    {assignment.name}
                   </Typography>
+                </TableCell>
+                <TableCell>
+                  {assignment.deadline ? (
+                    <DateTypography date={new Date(assignment.deadline!)} />
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      /
+                    </Typography>
+                  )}
                 </TableCell>
                 <TableCell align="right">
                   <Button

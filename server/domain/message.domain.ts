@@ -5,11 +5,11 @@ import {
   MessageCreateSchema,
   MessageDetail,
   MessageFilterSchema,
-  MessageIdSchema,
 } from '../util/types/message.types';
 import { UserEntity } from '../util/types/user.types';
 import { DiscussionDomain } from './discussion.domain';
 import { BadRequestError } from '../util/types/error.types';
+import { MessageIdZod } from '../util/types/util_types';
 
 export class MessageDomain {
   private messagePersistence: MessagePersistence;
@@ -45,8 +45,8 @@ export class MessageDomain {
     return this.messagePersistence.createMessage(data);
   }
 
-  public async deleteMessage(id: number, user: UserEntity): Promise<MessageDetail> {
-    const messageId = MessageIdSchema.parse(id);
+  public async deleteMessage(id: string, user: UserEntity): Promise<MessageDetail> {
+    const messageId = MessageIdZod.parse(id);
     const message = await this.messagePersistence.getMessageById(messageId);
     if (
       (user.role === ClassRole.TEACHER && user.teacher!.userId !== message.sender.id) ||

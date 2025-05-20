@@ -1,10 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { UserDomain } from '../../server/domain/user.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 import {
   testDiscussions,
   testPaginationFilter,

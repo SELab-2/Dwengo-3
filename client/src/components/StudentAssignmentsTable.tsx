@@ -17,6 +17,8 @@ import GroupListDialog from './GroupListDialog';
 import { AssignmentShort2 } from '../util/interfaces/assignment.interfaces';
 import { useState } from 'react';
 import { StudentShort } from '../util/interfaces/student.interfaces';
+import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '../util/app.routes';
 
 const calculateProgress = (
   progress: number[],
@@ -28,6 +30,7 @@ const calculateProgress = (
 };
 
 function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort2[] }) {
+  const navigate = useNavigate();
   const [students, setStudents] = useState<StudentShort[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -64,7 +67,7 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
               }}
             >
               <TableCell sx={{ minWidth: 100, width: '25%' }}>
-                <Typography variant="h6">{t('learningPath')}</Typography>
+                <Typography variant="h6">{t('name')}</Typography>
               </TableCell>
               <TableCell sx={{ minWidth: 360, width: '25%' }}>
                 <Typography variant="h6">{t('progression')}</Typography>
@@ -88,7 +91,7 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
                       fontSize: { xs: '14px', sm: '16px' },
                     }}
                   >
-                    {assignment.learningPath.title}
+                    {assignment.name}
                   </Typography>
                 </TableCell>
                 <TableCell>
@@ -120,8 +123,13 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  {/*<DateTypography date={assignment.deadline} />*/}
-                  <DateTypography date={new Date()} />
+                  {assignment.deadline ? (
+                    <DateTypography date={new Date(assignment.deadline!)} />
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      /
+                    </Typography>
+                  )}
                 </TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>
                   <Button
@@ -131,7 +139,11 @@ function StudentAssignmentsTable({ assignments }: { assignments: AssignmentShort
                       padding: { xs: '5px 10px', sm: '8px 16px' },
                       minWidth: { xs: '60px', sm: '160px' },
                     }}
-                    onClick={() => alert('TODO')}
+                    onClick={() =>
+                      navigate(
+                        AppRoutes.learningPath(assignment.learningPath.id, assignment.groups[0].id),
+                      )
+                    }
                   >
                     {t('continue')}
                   </Button>

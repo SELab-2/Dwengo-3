@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { AnnouncementDomain } from '../../server/domain/announcement.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
 import {
   testUsers,
   testTeachers,
@@ -13,6 +9,7 @@ import {
   testClasses,
   testAnnouncements,
 } from '../testObjects.json';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // announcement persistence mock
 const { mockAnnouncementPeristence, mockClassPeristence } = vi.hoisted(() => {
@@ -176,6 +173,15 @@ describe('announcement domain', () => {
     mockAnnouncementPeristence.updateAnnouncement.mockImplementation((id, data) => {
       return updateAnnouncementParams;
     });
+    mockAnnouncementPeristence.checkAnnouncementIsFromTeacher.mockImplementation(
+      (id, teacherid) => {
+        let found = testAnnouncements.find((a) => a.id === id);
+        if (found && found.teacher.id === teacherid) {
+          return found;
+        }
+        return null;
+      },
+    );
   });
   describe('getAnnouncements', () => {
     test('valid student query passes', async () => {

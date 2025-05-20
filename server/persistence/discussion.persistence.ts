@@ -8,12 +8,10 @@ import {
 } from '../util/types/discussion.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import {
-  discussionSelectDetail,
-  discussionSelectShort,
-} from '../util/selectInput/discussion.select';
-import { Uuid } from '../util/types/assignment.types';
+
 import { NotFoundError } from '../util/types/error.types';
+import { discussionSelectDetail, discussionSelectShort } from '../util/selectInput/select';
+import { Uuid } from '../util/types/theme.types';
 
 export class DiscussionPersistence {
   private prisma: PrismaClient;
@@ -27,7 +25,10 @@ export class DiscussionPersistence {
     paginationParams: PaginationParams,
   ): Promise<{ data: DiscussionShort[]; totalPages: number }> {
     const whereClause: Prisma.DiscussionWhereInput = {
-      AND: [filters.userId ? { members: { some: { id: filters.userId } } } : {}],
+      AND: [
+        filters.userId ? { members: { some: { id: filters.userId } } } : {},
+        filters.assignmentId ? { group: { assignmentId: filters.assignmentId } } : {},
+      ],
     };
 
     return searchAndPaginate(

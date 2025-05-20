@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { AssignmentDomain } from '../../server/domain/assignment.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
 import {
   testClasses,
   testPaginationFilter,
@@ -15,6 +11,7 @@ import {
   testAssignments,
   testLearningPaths,
 } from '../testObjects.json';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 // assignment persistence mock
 const { mockAssignmentPeristence, mockClassPeristence, mockGroupPeristence } = vi.hoisted(() => {
@@ -32,6 +29,7 @@ const { mockAssignmentPeristence, mockClassPeristence, mockGroupPeristence } = v
     mockGroupPeristence: {
       getGroupById: vi.fn(),
       getGroupByIdWithCustomIncludes: vi.fn(),
+      createGroups: vi.fn(),
     },
   };
 });
@@ -118,6 +116,9 @@ let existingAssignments = testAssignments;
 
 let createAssigmentParams = {
   groups: [[testStudents[0].id, testStudents[1].id]],
+  name: 'test',
+  description: 'testDescription',
+  deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
   classId: testClasses[0].id,
   teacherId: testTeachers[0].id,
   learningPathId: testLearningPaths[0].id,

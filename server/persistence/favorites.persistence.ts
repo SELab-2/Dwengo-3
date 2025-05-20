@@ -3,13 +3,16 @@ import { searchAndPaginate } from '../util/pagination/pagination.util';
 import { PrismaSingleton } from './prismaSingleton';
 import { PaginationParams } from '../util/types/pagination.types';
 import { FavoriteCreateParams, FavoriteFilterParams } from '../util/types/favorites.types';
-import { FavoriteSelectDetail, FavoriteSelectShort } from '../util/selectInput/favorites.select';
 import { NotFoundError } from '../util/types/error.types';
+import { favoriteSelectShort, favoriteSelectDetail } from '../util/selectInput/select';
 
 export class FavoritesPersistence {
   public async getFavorites(filters: FavoriteFilterParams, paginationParams: PaginationParams) {
     const whereClause: Prisma.FavoriteWhereInput = {
-      AND: [filters.userId ? { userId: filters.userId } : {}],
+      AND: [
+        filters.userId ? { userId: filters.userId } : {},
+        filters.learningPathId ? { learningPathId: filters.learningPathId } : {},
+      ],
     };
 
     return searchAndPaginate(
@@ -17,7 +20,7 @@ export class FavoritesPersistence {
       whereClause,
       paginationParams,
       undefined,
-      FavoriteSelectShort,
+      favoriteSelectShort,
     );
   }
 
@@ -26,7 +29,7 @@ export class FavoritesPersistence {
       where: {
         id: id,
       },
-      select: FavoriteSelectDetail,
+      select: favoriteSelectDetail,
     });
 
     return favorite;
@@ -46,7 +49,7 @@ export class FavoritesPersistence {
           },
         },
       },
-      select: FavoriteSelectDetail,
+      select: favoriteSelectDetail,
     });
     return favorite;
   }
@@ -54,7 +57,7 @@ export class FavoritesPersistence {
   public async deleteFavorite(id: string) {
     return await PrismaSingleton.instance.favorite.delete({
       where: { id: id },
-      select: FavoriteSelectDetail,
+      select: favoriteSelectDetail,
     });
   }
 
@@ -63,6 +66,17 @@ export class FavoritesPersistence {
       where: { id: id },
       data: {
         progress: new_progress,
+      },
+    });
+  }
+
+  async updateIndex(id: string, index: number) {
+    return PrismaSingleton.instance.favorite.update({
+      where: {
+        id: id,
+      },
+      data: {
+        currentNodeIndex: index,
       },
     });
   }

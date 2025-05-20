@@ -1,38 +1,28 @@
-import {
-  Box,
-  Typography,
-  Avatar,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Paper,
-  Container,
-} from '@mui/material';
+import { Box, Typography, Avatar, Divider, Paper, Container, Button } from '@mui/material';
 import {
   Email as EmailIcon,
-  School as SchoolIcon,
-  CalendarToday as CalendarIcon,
   Delete as DeleteIcon,
   ExitToApp as ExitToAppIcon,
 } from '@mui/icons-material';
 import { MarginSize } from '../util/size';
-import { useAuth, useLogout } from '../hooks/useAuth';
+import { useAuth, useDelete, useLogout } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import NotLoggedIn from '../components/NotLoggedIn';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { useError } from '../hooks/useError';
+import { useState } from 'react';
+import YesNoDialogProps from '../components/YesNoDialog';
 
 function ProfilePage() {
-  // TODO: call to API to get user data?
   const { user } = useAuth();
   const { t } = useTranslation();
   const logoutMutation = useLogout();
+  const deleteMutation = useDelete();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { setError } = useError();
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleLogout = () => {
     logoutMutation.mutateAsync(undefined, {
@@ -43,15 +33,24 @@ function ProfilePage() {
         // Redirect to the login page or home page
         navigate(AppRoutes.login);
       },
-      onError: (error) => {
+      onError: (error: any) => {
         // Handle error (e.g., show error message)
-        setError('Logout failed:' + error.message);
+        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
       },
     });
   };
 
   const handleDeleteAccount = () => {
-    // TODO: Implement account deletion logic
+    deleteMutation.mutateAsync(undefined, {
+      onSuccess: () => {
+        logout();
+        navigate(AppRoutes.login);
+      },
+
+      onError: (error: any) => {
+        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
+      },
+    });
   };
 
   if (!user) {
@@ -68,6 +67,16 @@ function ProfilePage() {
           gap: MarginSize.small,
         }}
       >
+        <YesNoDialogProps
+          title={t('deleteAccountMessage')}
+          warning={t('deleteAccountWarning')}
+          open={open}
+          onClose={() => setOpen(false)}
+          onYes={() => {
+            setOpen(false);
+            handleDeleteAccount();
+          }}
+        />
         <Paper elevation={5} sx={{ p: 3, width: '100%', flexGrow: 1 }}>
           <Box display="flex" alignItems="center" mb={3}>
             <Avatar sx={{ width: 80, height: 80, mr: 3 }} />
@@ -81,45 +90,40 @@ function ProfilePage() {
             </Box>
           </Box>
 
-          <Typography variant="body1">user.description?</Typography>
-
           <Divider sx={{ my: 2 }} />
 
-          <Box display="flex" flexDirection="column" gap={1} mb={2}>
-            <Box display="flex" alignItems="center">
-              <EmailIcon color="action" sx={{ mr: 1 }} />
-              <Typography variant="body1">
-                {t('email')}: {user?.email}
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center">
-              <SchoolIcon color="action" sx={{ mr: 1 }} />
-              <Typography variant="body1">{t('school')}: user.school?</Typography>
-            </Box>
-            <Box display="flex" alignItems="center">
-              <CalendarIcon color="action" sx={{ mr: 1 }} />
-              <Typography variant="body1">{t('memberSince')}: user.createdAt?</Typography>
-            </Box>
+          <Box display="flex" alignItems="center">
+            <EmailIcon color="action" sx={{ mr: 1 }} />
+            <Typography variant="body1">
+              {t('email')}: {user?.email}
+            </Typography>
           </Box>
           <Divider sx={{ my: 2 }} />
-          <Box display="flex" flexDirection="row" justifyContent="space-between">
-            <List sx={{ width: '48%' }}>
-              <ListItem component="button" onClick={() => handleDeleteAccount()}>
-                <ListItemIcon>
-                  <DeleteIcon color="error" />
-                </ListItemIcon>
-                <ListItemText primary={t('deleteAccount')} />
-              </ListItem>
-            </List>
-            <Divider orientation="vertical" flexItem />
-            <List sx={{ width: '48%' }}>
-              <ListItem component="button" onClick={() => handleLogout()}>
-                <ListItemIcon>
-                  <ExitToAppIcon color="action" />
-                </ListItemIcon>
-                <ListItemText primary={t('logout')} />
-              </ListItem>
-            </List>
+          <Box
+            display="flex"
+            flexDirection={{ xs: 'column', sm: 'row' }}
+            gap={2}
+            justifyContent="space-between"
+            mt={2}
+          >
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteIcon />}
+              fullWidth
+              onClick={() => setOpen(true)}
+            >
+              {t('deleteAccount')}
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<ExitToAppIcon />}
+              fullWidth
+              onClick={handleLogout}
+            >
+              {t('logout')}
+            </Button>
           </Box>
         </Paper>
       </Box>

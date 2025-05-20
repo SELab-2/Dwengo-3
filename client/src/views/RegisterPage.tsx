@@ -13,7 +13,6 @@ function RegisterPage() {
           <Typography variant="h5" gutterBottom>
             {t('register')}
           </Typography>
-          <Divider sx={{ mt: MarginSize.xsmall }} />
           <RegisterForm />
         </Paper>
       </Container>

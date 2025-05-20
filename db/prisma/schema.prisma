@@ -57,6 +57,13 @@ model LearningObjectKeyword {
   @@id([learningObjectId, keyword])
 }
 
+model LearningTheme {
+  id       String   @id @default(uuid())
+  image    String
+  title    String
+  keywords String[]
+}
+
 model LearningPathNode {
   id                    String                   @id @default(uuid())
   learningPathId        String
@@ -74,7 +81,7 @@ model LearningPathNode {
 model LearningNodeTransition {
   id                 String           @id @default(uuid())
   learningPathNodeId String
-  condition          String? // Condition is null => default transition; condition must have following form: "answer == 0" or "true==true"
+  condition          String?
   toNodeIndex        Int
   learningPathNode   LearningPathNode @relation(fields: [learningPathNodeId], references: [id])
 }
@@ -146,6 +153,7 @@ model Teacher {
 model Class {
   id                String             @id @default(uuid())
   name              String             @default("New class")
+  description       String             @default("")
   students          Student[]
   teachers          Teacher[]
   assignments       Assignment[]
@@ -157,8 +165,8 @@ model ClassJoinRequest {
   id      String @id @default(uuid())
   classId String
   userId  String
-  user    User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  class   Class  @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model Group {
@@ -168,15 +176,19 @@ model Group {
   discussion            Discussion?
   assignmentSubmissions AssignmentSubmission[]
   progress              Int[]                  @default([]) // indeces of completed nodes
+  currentNodeIndex      Int                    @default(0)
   assignment            Assignment             @relation(fields: [assignmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   students              Student[]
 }
 
 model Assignment {
   id             String       @id @default(uuid())
+  name           String
+  description    String
   learningPathId String
   teacherId      String
   classId        String
+  deadline       DateTime     @db.Timestamp
   groups         Group[]
   class          Class        @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   teacher        Teacher      @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -195,7 +207,7 @@ model AssignmentSubmission {
   favoriteId     String?
   nodeId         String
   submissionType SubmissionType
-  submission     Json
+  submission     Json?
   node           LearningPathNode @relation(fields: [nodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   group          Group?           @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   favorite       Favorite?        @relation(fields: [favoriteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -208,6 +220,7 @@ model Favorite {
   userId                String
   learningPathId        String
   progress              Int[]                  @default([]) // indeces of completed nodes
+  currentNodeIndex      Int                    @default(0)
   learningPath          LearningPath           @relation(fields: [learningPathId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user                  User                   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   assignmentSubmissions AssignmentSubmission[]
@@ -218,7 +231,7 @@ model Discussion {
   groupId  String    @unique
   messages Message[]
   members  User[]
-  group    Group     @relation(fields: [groupId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  group    Group     @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model Message {
@@ -226,18 +239,18 @@ model Message {
   content      String
   senderId     String
   discussionId String
-  sender       User       @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sender       User       @relation(fields: [senderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   createdAt    DateTime   @default(now()) @db.Timestamp
 }
 
 model Announcement {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   title     String
   content   String
   classId   String
   createdAt DateTime @default(now()) @db.Timestamp
-  class     Class   @relation(fields: [classId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   teacherId String
-  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }

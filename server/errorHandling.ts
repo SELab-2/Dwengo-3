@@ -19,7 +19,7 @@ export function errorHandling(err: Error, req: Request, res: Response, next: Nex
 
   if (err instanceof ZodError) {
     statusCode = 400;
-    errorMessage = 'Request Validation Error';
+    errorMessage = err.errors[0].message;
   } else if (err instanceof APIError) {
     statusCode = err.statusCode;
     errorMessage = err.message;
@@ -27,10 +27,12 @@ export function errorHandling(err: Error, req: Request, res: Response, next: Nex
 
   // Send a more informative response in development
   if (process.env.NODE_ENV === 'production') {
-    res.status(statusCode).send(errorMessage);
+    res.status(statusCode).json({
+      message: errorMessage,
+    });
   } else {
     res.status(statusCode).json({
-      message: err.message,
+      message: errorMessage,
       stack: err.stack,
       path: req.path,
       method: req.method,

@@ -26,59 +26,86 @@ import {
   useClassJoinRequests,
   useHandleClassJoinRequestStudent,
 } from '../hooks/useClassJoinRequest.ts';
-import { Decision } from '../util/interfaces/classJoinRequest.interfaces.ts';
+import {
+  ClassJoinRequestDetail,
+  Decision,
+} from '../util/interfaces/classJoinRequest.interfaces.ts';
 import { useError } from '../hooks/useError.ts';
 import { AppRoutes } from '../util/app.routes.ts';
 import { useAssignmentsOfClass } from '../hooks/useAssignment.ts';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useAuth } from '../hooks/useAuth.ts';
+import { useNotification } from '../hooks/useNotification.ts';
 
 function ClassDashboardPage() {
+  const { user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
-
+  const { setError } = useError();
+  const { setNotification } = useNotification();
+  const classJoinMutation = useHandleClassJoinRequestStudent();
   const { classId } = useParams<{ classId: string }>();
+
   const {
     data: classData,
     isLoading: isClassDataLoading,
     refetch: refetchClassData,
   } = useClassById(classId!);
-  const {
-    data: joinRequestData,
-    isLoading: isJoinRequestDataLoading,
-    refetch: refetchJoinRequests,
-  } = useClassJoinRequests(classId!);
-  const classJoinMutation = useHandleClassJoinRequestStudent();
 
-  const { data: assignmentsData } = useAssignmentsOfClass(classId!);
+  const teacher = user?.teacher;
 
+  let joinRequests: ClassJoinRequestDetail[] = [];
   let assignment = undefined;
   let totalProgress = undefined;
   let groupsCompleted = undefined;
-  if ((assignmentsData?.data?.length ?? 0) > 0) {
-    assignment = assignmentsData?.data[assignmentsData?.data.length - 1]!;
-    totalProgress = assignment.learningPath.learningPathNodes.length;
-    groupsCompleted = assignment.groups
-      .map((group) => group.progress[group.progress.length - 1] + 1)
-      .flat();
+  let refetch = undefined;
+
+  if (teacher) {
+    const {
+      data: joinRequestData,
+      isLoading: isJoinRequestDataLoading,
+      refetch: refetchJoinRequests,
+    } = useClassJoinRequests(classId!);
+
+    refetch = refetchJoinRequests;
+
+    const { data: assignmentsData, isLoading: isAssignmentsLoading } = useAssignmentsOfClass(
+      classId!,
+    );
+
+    if ((assignmentsData?.data?.length ?? 0) > 0) {
+      assignment = assignmentsData?.data[assignmentsData?.data.length - 1]!;
+      totalProgress = assignment.learningPath.learningPathNodes.length;
+      groupsCompleted = assignment.groups
+        .map((group) => group.progress[group.progress.length - 1] + 1)
+        .flat();
+    }
+    joinRequests = joinRequestData?.data || [];
+
+    if (isJoinRequestDataLoading || isAssignmentsLoading) {
+      return (
+        <Typography variant="h6" sx={{ textAlign: 'center', marginTop: MarginSize.large }}>
+          {t('loading')}
+        </Typography>
+      );
+    }
   }
-
-  const { setError } = useError();
-
-  const joinRequests = joinRequestData?.data || [];
 
   const handleClassJoinRequest = (id: string, decision: Decision) => {
     classJoinMutation.mutate(
       { requestId: id, decision: decision },
       {
-        // TODO snackbar gebruiken om de melding te tonen on Success?
         onSuccess: async () => {
+          setNotification(t('joinRequestSuccess'));
           // reload students component to fetch new data
           await refetchClassData();
-          await refetchJoinRequests();
+          await refetch!();
         },
-        onError: (error: Error) => {
+        onError: (error: any) => {
           // Show error message in snackbar
-          setError(error.message);
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
         },
       },
     );
@@ -133,13 +160,16 @@ function ClassDashboardPage() {
                   }}
                   component="span"
                 >
-                  {classData!.id}
+                  {classData?.id}
                 </Typography>
               </Box>
               <IconButton
                 size="small"
                 aria-label={t('copy')}
-                onClick={() => navigator.clipboard.writeText(classData!.id)}
+                onClick={() => {
+                  setNotification(t('copied'));
+                  navigator.clipboard.writeText(classData?.id ?? '');
+                }}
                 sx={{ ml: 1 }}
               >
                 <ContentCopyIcon fontSize="small" />
@@ -149,33 +179,43 @@ function ClassDashboardPage() {
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               {t('coTeachers')}
             </Typography>
-            <List sx={{ maxHeight: 100, overflowY: 'auto', bgcolor: '#f5f5f5', borderRadius: 1 }}>
+            <List
+              sx={{
+                maxHeight: 100,
+                overflowY: 'auto',
+                bgcolor: '#f5f5f5',
+                borderRadius: 1,
+              }}
+            >
               {classData!.teachers.map((teacher, index) => (
                 // TODO add links for students and teachers profiles
                 <ListItem key={index}>
                   <ListItemText
-                    primary={`${teacher.user.name} ${teacher.user.surname}`}
-                    sx={{ color: 'blue', cursor: 'pointer' }}
-                  />
+                    sx={{
+                      color: 'blue',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {teacher.user.name + ' ' + teacher.user.surname}
+                  </ListItemText>
                 </ListItem>
               ))}
             </List>
 
             <Typography variant="h6" sx={{ mt: 3, fontWeight: 'bold' }}>
-              {t('notes')}
+              {t('classDescription')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'gray' }}>
-              {classData!.notes || // TODO add notes to class
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}
+              {classData!.description}
             </Typography>
 
             <Button
               variant="contained"
               sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
               onClick={() => {
-                // TODO: add link to edit class page
-                alert('TODO: Navigate to Edit Class Page');
-              }} // Replace with actual navigation
+                navigate(AppRoutes.classEdit(classId!));
+              }}
             >
               {t('editClassGroup')}
             </Button>
@@ -197,15 +237,26 @@ function ClassDashboardPage() {
                       <strong>{t('name')}</strong>
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography variant="h6">
-                      <strong>{t('progress')}: </strong>
-                      <Link to={AppRoutes.learningPath(assignment?.learningPath.id || '/404')}>
-                        {assignment?.learningPath.title}
-                      </Link>
-                    </Typography>
-                  </TableCell>
-                  <TableCell />
+                  {teacher && (
+                    <>
+                      <TableCell>
+                        <Typography variant="h6">
+                          <strong>{t('progress')}: </strong>
+                          <Link
+                            to={AppRoutes.learningPath(assignment?.learningPath.id || '/404')}
+                            style={{
+                              textDecoration: 'none',
+                              fontWeight: 'bold',
+                              fontSize: '1.5rem',
+                            }}
+                          >
+                            {assignment?.learningPath.title}
+                          </Link>
+                        </Typography>
+                      </TableCell>
+                      <TableCell />
+                    </>
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -227,28 +278,33 @@ function ClassDashboardPage() {
                           sx={{
                             color: 'blue',
                             cursor: 'pointer',
+                            fontSize: '1.2rem',
                           }}
                         >
                           {student.user.name} {student.user.surname}
                         </Typography>
                       </TableCell>
-                      <TableCell sx={{ minWidth: 200 }}>
-                        <LinearProgress
-                          variant="determinate"
-                          value={progress}
-                          sx={{ height: 8, borderRadius: 5 }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="contained"
-                          onClick={() =>
-                            navigate(AppRoutes.classStudentDetails(classData!.id, student!.id))
-                          }
-                        >
-                          {t('details')}
-                        </Button>
-                      </TableCell>
+                      {teacher && (
+                        <>
+                          <TableCell sx={{ minWidth: 200 }}>
+                            <LinearProgress
+                              variant="determinate"
+                              value={progress}
+                              sx={{ height: 8, borderRadius: 5, width: '100%' }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              onClick={() =>
+                                navigate(AppRoutes.classStudentDetails(classData!.id, student!.id))
+                              }
+                            >
+                              {t('details')}
+                            </Button>
+                          </TableCell>
+                        </>
+                      )}
                     </TableRow>
                   );
                 })}
@@ -256,14 +312,16 @@ function ClassDashboardPage() {
             </Table>
           </TableContainer>
 
-          {!isJoinRequestDataLoading && joinRequests.length > 0 && (
+          {joinRequests.length > 0 && (
             <Box sx={{ mt: 4 }}>
               <Typography variant="h4">{t('admissionRequests')}</Typography>
               <Paper sx={{ p: 2, mt: 2 }}>
                 <Stack spacing={2}>
                   {joinRequests.map((request) => (
                     <Box key={request.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Typography sx={{ flex: 1, color: 'blue', cursor: 'pointer' }}>
+                      <Typography
+                        sx={{ flex: 1, color: 'blue', cursor: 'pointer', fontSize: '1.2rem' }}
+                      >
                         {request.user.name} {request.user.surname}
                       </Typography>
                       <Button

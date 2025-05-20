@@ -8,11 +8,12 @@ import {
   AnnouncementFilterQuerySchema,
   AnnouncementUpdateParams,
   AnnouncementUpdateSchema,
-  TeacherIdSchema,
 } from '../util/types/announcement.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { BadRequestError } from '../util/types/error.types';
+import { TeacherIdZod } from '../util/types/util_types';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class AnnouncementDomain {
   private announcementPersistence;
@@ -72,7 +73,7 @@ export class AnnouncementDomain {
     await this.checkUserIsTeacher(user);
     await this.classDomain.checkUserBelongsToClass(user, query.classId);
 
-    const teacherData = TeacherIdSchema.parse(user.teacher?.id);
+    const teacherData = TeacherIdZod.parse(user.teacher?.id);
 
     return this.announcementPersistence.createAnnouncement(announcementData, teacherData);
   }
@@ -81,14 +82,12 @@ export class AnnouncementDomain {
     const data = AnnouncementUpdateSchema.parse(query);
 
     await this.checkUserIsTeacher(user);
-    const teacherId = TeacherIdSchema.parse(user.teacher?.id);
-
-    const announcement = await this.announcementPersistence.getAnnouncementById(id);
-
-    if (announcement.teacher.id != teacherId) {
+    const teacherId = TeacherIdZod.parse(user.teacher?.id);
+    const announcementFromTeacher =
+      await this.announcementPersistence.checkAnnouncementIsFromTeacher(id, teacherId);
+    if (!announcementFromTeacher) {
       throw new BadRequestError(40037);
     }
-
     return this.announcementPersistence.updateAnnouncement(id, data);
   }
 

@@ -1,17 +1,19 @@
-import { AssignmentShort, Uuid } from './assignment.types';
+import { groupSelectDetail, groupSelectShort } from '../selectInput/select';
+import { z } from 'zod';
+import { Prisma } from '.prisma/client';
+import { GroupIdZod, IndexZod } from './util_types';
 
-export type GroupShort = {
-  id: Uuid;
-  progress: number[];
-  assignmentId: Uuid;
-  name: string;
-};
+export type GroupShort = Prisma.GroupGetPayload<{
+  select: typeof groupSelectShort;
+}>;
 
-export type GroupDetail = {
-  id: Uuid;
-  name: string;
-  progress: number[];
-  assignment: AssignmentShort;
-  discussion: any;
-  students: any[];
-};
+export const UpdateIndexSchema = z.object({
+  id: GroupIdZod,
+  index: IndexZod,
+});
+
+export type UpdateIndexParams = z.infer<typeof UpdateIndexSchema>;
+
+export type GroupDetail = Prisma.GroupGetPayload<{
+  select: typeof groupSelectDetail;
+}>;

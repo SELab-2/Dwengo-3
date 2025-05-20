@@ -1,19 +1,16 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { MessageDomain } from '../../server/domain/message.domain';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
 import {
   testDiscussions,
-  testPaginationFilter,
-  testTeachers,
-  testStudents,
-  testUsers,
   testMessages,
+  testPaginationFilter,
+  testStudents,
+  testTeachers,
+  testUsers,
   testGroups,
 } from '../testObjects.json';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 const { mockMessagePeristence, mockDiscussionPeristence, mockGroupPersistence } = vi.hoisted(() => {
   return {

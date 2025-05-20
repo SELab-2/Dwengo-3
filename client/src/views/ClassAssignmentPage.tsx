@@ -3,6 +3,7 @@ import {
   Button,
   LinearProgress,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -20,6 +21,9 @@ import BackButton from '../components/BackButton.tsx';
 import { useClassById } from '../hooks/useClass.ts';
 import { MarginSize } from '../util/size.ts';
 import { useAssignmentById } from '../hooks/useAssignment.ts';
+import { AppRoutes } from '../util/app.routes.ts';
+import DateTypography from '../components/DateTypography.tsx';
+import AssignmentInfoCard from '../components/AssignmentInfoCard.tsx';
 
 const calculateProgress = (
   progress: number[],
@@ -59,17 +63,14 @@ function ClassAssignmentPage() {
       )}
 
       <Box sx={{ mx: 'auto', width: '100%', maxWidth: { xs: '90%', sm: 1000 }, p: 2 }}>
-        <BackButton link={`/class/${classData!.id}/assignments`} />
+        <BackButton link={AppRoutes.classAssignments(classId!)} />
 
-        <Typography variant="h3" gutterBottom>
-          {/*assignment!.name*/}
-          {assignment!.learningPath.title}
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          {`${t('givenBy')}: ${assignment!.teacher.user.name} ${assignment!.teacher.user.surname}`}
-        </Typography>
-
-        {/*<DateTypography text={`${t('deadline')}: `} date={assignment.deadline} variant='h5' />*/}
+        <AssignmentInfoCard
+          name={assignment!.name}
+          description={assignment!.description}
+          teacher={assignment!.teacher}
+          deadline={assignment!.deadline}
+        />
 
         <GroupListDialog
           students={assignment?.groups[selectedGroupIndex]?.students ?? []}
@@ -146,7 +147,9 @@ function ClassAssignmentPage() {
                         padding: { xs: '5px 10px', sm: '8px 16px' },
                         minWidth: { xs: '60px', sm: '100px' },
                       }}
-                      onClick={() => alert('TODO')}
+                      onClick={() =>
+                        navigate(AppRoutes.groupSubmission(classId!, assignmentId!, group.id))
+                      }
                     >
                       {t('details')}
                     </Button>

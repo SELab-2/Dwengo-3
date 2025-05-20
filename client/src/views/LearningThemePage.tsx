@@ -1,70 +1,62 @@
-import { Box, Typography, Card, CardContent, Avatar, Button } from '@mui/material';
+import { Box, Typography, Card, CardContent, Button } from '@mui/material';
+import Masonry from '@mui/lab/Masonry';
 import GroupIcon from '@mui/icons-material/Group';
 import { MarginSize } from '../util/size';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import theme from '../util/theme';
 import { AppRoutes } from '../util/app.routes';
 import { useLearningPath } from '../hooks/useLearningPath';
-import { useState, useEffect } from 'react';
-import Masonry from '@mui/lab/Masonry';
+import { useLearningThemeById } from '../hooks/useLearningTheme';
+import { useEffect, useState } from 'react';
 import { LearningPathShort } from '../util/interfaces/learningPath.interfaces';
+import { useAuth } from '../hooks/useAuth';
+import { useEnsureFavorite } from '../hooks/useFavorite';
+import { useError } from '../hooks/useError';
+import { useTranslation } from 'react-i18next';
 
-const themeKeywordsMap = {
-  'AI in Climate': ['AI', 'Climate'],
-  'Social Robot': ['Robotics', 'AI'],
-  'AI in Healthcare': ['AI', 'Healthcare'],
-  'Language Technology': ['EN'],
+const getImageSrc = (image: string): string => {
+  if (!image) return '';
+  if (image.startsWith('data:image')) return image;
+  try {
+    const url = new URL(image);
+    return url.href;
+  } catch {
+    return `data:image/png;base64,${image}`;
+  }
 };
 
 function LearningPathsOverviewPage() {
   const { id } = useParams();
-  const [page, setPage] = useState(1); // Track current page
-  const [learningPaths, setLearningPaths] = useState<LearningPathShort[]>([]); // Store all loaded paths
-  const { data, isLoading, isError, error } = useLearningPath(
-    themeKeywordsMap[id as keyof typeof themeKeywordsMap],
-    undefined,
-    page,
-    10,
-  );
+  const [page, setPage] = useState(1);
+  const [paths, setPaths] = useState<LearningPathShort[]>([]);
+  const { user } = useAuth();
+  const { data: learningTheme } = useLearningThemeById(id);
+  const { data, isLoading } = useLearningPath(learningTheme?.keywords, undefined, page, 10);
+  const { mutateAsync: ensureFavoriteMutate } = useEnsureFavorite();
+  const { setError } = useError();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (data?.data?.length ?? 0 > 0) {
-      if (page === 1) {
-        // React keeps the state across page navigation, so when we go back to this page,
-        // we need to reset the learningPaths state.
-        setLearningPaths([]);
-      }
+    setPaths([]);
+    setPage(1);
+  }, [id]);
 
-      setLearningPaths((prevPaths) => [...prevPaths, ...(data?.data ?? [])]);
+  useEffect(() => {
+    if (data?.data?.length) {
+      setPaths((prev) => [...prev, ...data.data]);
     }
   }, [data]);
 
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set()); // Use a Set for multiple expanded IDs
-
-  console.log(page);
-
   const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1); // Increment page number to load more data
-  };
-
-  const handleToggleExpanded = (id: string) => {
-    setExpandedIds((prev) => {
-      const newExpandedIds = new Set(prev);
-      if (newExpandedIds.has(id)) {
-        newExpandedIds.delete(id); // If already expanded, collapse it
-      } else {
-        newExpandedIds.add(id); // If collapsed, expand it
-      }
-      return newExpandedIds;
-    });
+    setPage((prev) => prev + 1);
   };
 
   if (isLoading && page === 1) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error?.message}</div>;
   if (!data) return <div>No data available</div>;
 
   const targetAgesRange = (index: number) => {
-    const nodes = learningPaths[index].learningPathNodes;
+    const nodes = paths[index].learningPathNodes;
     let ages: number[] = [];
 
     for (const node of nodes) {
@@ -82,12 +74,19 @@ function LearningPathsOverviewPage() {
   };
 
   return (
-    <Box sx={{ p: MarginSize.large, maxHeight: '80vh', overflowY: 'auto' }}>
-      <Masonry
-        columns={{ xs: 1, sm: 2, md: 3, lg: 5 }} // Responsive columns
-        spacing={3}
-      >
-        {learningPaths.map(({ id, title, image, description }, index) => (
+    <Box
+      sx={{
+        p: MarginSize.large,
+        maxWidth: '70%',
+        margin: '0 auto',
+        flex: '1 1 auto',
+        minHeight: 0,
+        height: '70vh',
+        overflowY: 'auto',
+      }}
+    >
+      <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 5 }} spacing={3}>
+        {paths.map(({ id, title, image, description }, index) => (
           <Card
             key={id}
             sx={{
@@ -100,44 +99,59 @@ function LearningPathsOverviewPage() {
                 ],
               ),
               boxShadow: 3,
-              display: 'flex',
-              flexDirection: 'column',
+              display: 'block',
+              width: '100%',
             }}
           >
-            <Link
-              to={AppRoutes.learningPath(id)}
-              style={{ textDecoration: 'none' }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Avatar
-                src={image}
-                variant="square"
-                sx={{ width: '100%', height: 150, objectFit: 'cover' }}
-              />
-            </Link>
+            <Box
+              sx={{ cursor: 'pointer' }}
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
 
-            <Link
-              to={AppRoutes.learningPath(id)}
-              style={{ textDecoration: 'none', position: 'absolute', top: 3, right: 3 }}
-              onClick={(e) => e.stopPropagation()}
+                try {
+                  const favorite = await ensureFavoriteMutate({
+                    learningPathId: id,
+                    userID: user?.id,
+                  });
+                  navigate(AppRoutes.learningPath(id, undefined, favorite?.id));
+                } catch {
+                  setError(t('failedFavorite'));
+                }
+              }}
             >
-              <Box
-                sx={{
-                  backgroundColor: theme.palette.primary.main,
-                  color: 'black',
-                  borderRadius: '8px',
-                  px: 1.5,
-                  py: 0.5,
-                  fontSize: '0.75rem',
-                  fontWeight: 'bold',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.5,
-                }}
-              >
-                <GroupIcon sx={{ fontSize: 16 }} /> {targetAgesRange(index)}
+              <Box sx={{ width: '100%', display: 'block' }}>
+                <img
+                  src={getImageSrc(image)}
+                  alt={title}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block',
+                  }}
+                />
               </Box>
-            </Link>
+            </Box>
+
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 3,
+                right: 3,
+                backgroundColor: theme.palette.primary.main,
+                color: 'black',
+                borderRadius: '8px',
+                px: 1.5,
+                py: 0.5,
+                fontSize: '0.75rem',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+              }}
+            >
+              <GroupIcon sx={{ fontSize: 16 }} /> {targetAgesRange(index)}
+            </Box>
 
             <Box sx={{ p: 2, color: 'white' }}>
               <Typography variant="h6" fontWeight="bold">
@@ -146,54 +160,21 @@ function LearningPathsOverviewPage() {
             </Box>
 
             <CardContent>
-              <ExpandableDescription
-                id={id}
-                description={description}
-                expanded={expandedIds.has(id)} // Check if this ID is in the set of expanded IDs
-                onToggle={() => handleToggleExpanded(id)}
-              />
+              <Typography variant="body2">{description}</Typography>
             </CardContent>
           </Card>
         ))}
       </Masonry>
 
-      {data.totalPages > page && (
-        <Button onClick={handleLoadMore} sx={{ marginTop: 2, width: '100%' }}>
-          Load More
-        </Button>
+      {/* Load More button */}
+      {data?.totalPages > page && (
+        <Box textAlign="center" mt={3}>
+          <Button variant="contained" onClick={handleLoadMore} disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Load More'}
+          </Button>
+        </Box>
       )}
     </Box>
-  );
-}
-
-type ExpandableDescriptionProps = {
-  id: string;
-  description: string;
-  expanded: boolean;
-  onToggle: () => void;
-};
-
-function ExpandableDescription({ description, expanded, onToggle }: ExpandableDescriptionProps) {
-  const shortDescription =
-    description.length > 100 ? description.slice(0, 97) + '...' : description;
-
-  return (
-    <>
-      <Typography variant="body2">{expanded ? description : shortDescription}</Typography>
-      {description.length > 100 && (
-        <Button
-          size="small"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onToggle();
-          }}
-          sx={{ color: 'white' }}
-        >
-          {expanded ? 'Read Less' : 'Read More'}
-        </Button>
-      )}
-    </>
   );
 }
 

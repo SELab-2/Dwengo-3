@@ -3,40 +3,54 @@ import { z } from 'zod';
 import {
   assignmentSubmissionSelectDetail,
   assignmentSubmissionSelectShort,
-} from '../selectInput/assignmentSubmission.select';
+} from '../selectInput/select';
+import {
+  AnswerZod,
+  atLeastOneFieldProvided,
+  FavoriteIdZod,
+  FileNameZod,
+  FilePathZod,
+  GroupIdZod,
+  NodeIdZod,
+  SubmissionTypeZod,
+} from './util_types';
 
 const FileSubmissionSchema = z.object({
-  fileName: z.string(),
-  filePath: z.string(),
+  fileName: FileNameZod,
+  filePath: FilePathZod,
 });
 
-const MultipleChoiceSubSchema = z.string();
+const MultipleChoiceSubSchema = z.object({
+  answer: AnswerZod,
+});
 
 export const SubmissionFilterSchema = z
   .object({
-    groupId: z.string().uuid().optional(),
-    nodeId: z.string().uuid().optional(),
-    favoriteId: z.string().uuid().optional(),
+    groupId: GroupIdZod.optional(),
+    nodeId: NodeIdZod.optional(),
+    favoriteId: FavoriteIdZod.optional(),
   })
-  .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: 'At least one filter must be provided.',
-    path: [],
+  .refine(atLeastOneFieldProvided.validate, {
+    message: atLeastOneFieldProvided.message,
   });
 
 export const SubmissionCreateSchema = z
   .object({
-    groupId: z.string().uuid().optional(),
-    favoriteId: z.string().uuid().optional(),
-    nodeId: z.string().uuid(),
-    submissionType: z.nativeEnum(SubmissionType),
-    submission: z.union([FileSubmissionSchema, MultipleChoiceSubSchema]),
+    groupId: GroupIdZod.optional(),
+    favoriteId: FavoriteIdZod.optional(),
+    nodeId: NodeIdZod,
+    submissionType: SubmissionTypeZod,
+    submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()], {
+      invalid_type_error: 'Invalid submission',
+    }),
   })
   .refine(
-    (data) =>
-      (data.submissionType === SubmissionType.MULTIPLE_CHOICE &&
-        typeof data.submission === 'string') ||
-      (data.submissionType === SubmissionType.FILE &&
-        FileSubmissionSchema.safeParse(data.submission).success),
+    (data) => {
+      if (data.submissionType === SubmissionType.MULTIPLE_CHOICE) {
+        return data.submission !== null && data.submission !== undefined;
+      }
+      return true; // Accept any value for FILE or other types
+    },
     {
       message:
         'submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE',
@@ -50,15 +64,16 @@ export const SubmissionCreateSchema = z
 
 export const SubmissionUpdateSchema = z
   .object({
-    submissionType: z.nativeEnum(SubmissionType),
-    submission: z.union([FileSubmissionSchema, MultipleChoiceSubSchema]),
+    submissionType: SubmissionTypeZod,
+    submission: z.union([FileSubmissionSchema.optional(), MultipleChoiceSubSchema.optional()]),
   })
   .refine(
-    (data) =>
-      (data.submissionType === SubmissionType.MULTIPLE_CHOICE &&
-        typeof data.submission === 'string') ||
-      (data.submissionType === SubmissionType.FILE &&
-        FileSubmissionSchema.safeParse(data.submission).success),
+    (data) => {
+      if (data.submissionType === SubmissionType.MULTIPLE_CHOICE) {
+        return data.submission !== null && data.submission !== undefined;
+      }
+      return true; // Accept any value for FILE or other types
+    },
     {
       message:
         'submission must match the submissionType: a string for MULTIPLE_CHOICE or an object for FILE',

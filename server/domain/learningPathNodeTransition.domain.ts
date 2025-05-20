@@ -3,8 +3,9 @@ import {
   LearningPathNodeTransitionCreateParams,
   LearningPathNodeTransitionCreateSchema,
 } from '../util/types/learningPathNodeTransition.types';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { BadRequestError } from '../util/types/error.types';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class LearningPathNodeTransitionDomain {
   private learningPathNodeTransitionPersistence;

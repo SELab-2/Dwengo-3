@@ -1,20 +1,19 @@
 import {
   AuthenticationProvider,
   ClassRoleEnum,
-  FullUserType,
-  UserEntity,
-} from '../../server/util/types/user.types';
+  ContentTypeEnum,
+  SubmissionTypeEnum,
+} from '../../server/util/types/enums.types';
+import { FullUserType, UserEntity } from '../../server/util/types/user.types';
 import { PrismaSingleton } from '../../server/persistence/prismaSingleton';
 import { ClassPersistence } from '../../server/persistence/class.persistence';
 import { ClassDetail } from '../../server/util/types/class.types';
 import { ClassJoinRequestPersistence } from '../../server/persistence/classJoinRequest.persistence';
 import { ClassJoinRequestDetail } from '../../server/util/types/classJoinRequest.types';
 import {
-  ContentTypeEnum,
   LearningObjectCreateParams,
   LearningObjectDetail,
   MultipleChoice,
-  SubmissionTypeEnum,
 } from '../../server/util/types/learningObject.types';
 import { LearningObjectPersistence } from '../../server/persistence/learningObject.persistence';
 import { LearningObjectKeywordPersistence } from '../../server/persistence/learningObjectKeyword.persistence';
@@ -43,6 +42,8 @@ import { MessagePersistence } from '../../server/persistence/message.persistence
 import { UsersPersistence } from '../../server/persistence/auth/users.persistence';
 import { CreateUserParams } from '../../server/util/types/auth.types';
 import * as crypto from 'node:crypto';
+import { GroupDetail } from '../../server/util/types/group.types';
+import { GroupPersistence } from '../../server/persistence/group.persistence';
 
 const classPersistence: ClassPersistence = new ClassPersistence();
 const classJoinRequestPersistence: ClassJoinRequestPersistence = new ClassJoinRequestPersistence();
@@ -60,6 +61,7 @@ const studentPersistence: StudentPersistence = new StudentPersistence();
 const teacherPersistence: TeacherPersistence = new TeacherPersistence();
 const messagePersistence: MessagePersistence = new MessagePersistence();
 const usersPersistence: UsersPersistence = new UsersPersistence();
+const groupPersistence: GroupPersistence = new GroupPersistence();
 
 export const insertStudents = async (): Promise<FullUserType[]> => {
   const users: CreateUserParams[] = [
@@ -186,7 +188,7 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       language: 'EN',
       title: 'test',
       description: 'test',
-      contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+      contentType: ContentTypeEnum.TEXT_PLAIN,
       targetAges: [7, 8, 9],
       difficulty: 5,
       estimatedTime: 10,
@@ -201,15 +203,15 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       language: 'EN',
       title: 'test',
       description: 'test',
-      contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+      contentType: ContentTypeEnum.TEXT_PLAIN,
       targetAges: [10, 11, 12],
       difficulty: 5,
       estimatedTime: 10,
       content: 'test',
       teacherExclusive: false,
       available: true,
-      multipleChoice: { question: 'test', options: ['a', 'b', 'c'] },
-      submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
+      multipleChoice: { question: 'test', options: ['a', 'b', 'c'], solution: 'b' },
+      submissionType: SubmissionTypeEnum.MULTIPLE_CHOICE,
     },
     {
       hruid: 'Object with file submission',
@@ -218,14 +220,14 @@ export const insertLearningObjects = async (): Promise<LearningObjectDetail[]> =
       language: 'EN',
       title: 'test',
       description: 'test',
-      contentType: ContentTypeEnum.Enum.TEXT_PLAIN,
+      contentType: ContentTypeEnum.TEXT_PLAIN,
       targetAges: [13, 14, 15],
       difficulty: 5,
       estimatedTime: 10,
       content: 'test',
       teacherExclusive: false,
       available: true,
-      submissionType: SubmissionTypeEnum.Enum.FILE,
+      submissionType: SubmissionTypeEnum.FILE,
     },
   ];
   const keywordsData = [
@@ -334,18 +336,34 @@ export const insertAssignments = async (): Promise<AssignmentDetail[]> => {
   const classes = await insertClassesWithStudents();
   const learningPaths = await insertLearningPaths();
   const assignments: Promise<AssignmentDetail>[] = [];
+
   for (const classData of classes) {
     const groups = classData.students.map((student) => [student.id]);
+
     for (const path of learningPaths) {
-      const assignment = AssignmentCreateSchema.parse({
+      const assignmentData = AssignmentCreateSchema.parse({
+        name: 'test',
+        description: 'testDescription',
         classId: classData.id,
         teacherId: classData.teachers[0].id,
         groups: groups,
         learningPathId: path.id,
+        deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       });
-      assignments.push(assignmentPersistence.createAssignment(assignment));
+
+      const assignmentPromise = (async () => {
+        const createdAssignment = await assignmentPersistence.createAssignment(assignmentData);
+        createdAssignment.groups = await groupPersistence.createGroups(
+          assignmentData.groups,
+          createdAssignment.id,
+        );
+        return createdAssignment;
+      })();
+
+      assignments.push(assignmentPromise);
     }
   }
+
   return Promise.all(assignments);
 };
 
@@ -358,22 +376,23 @@ export const insertAssignmentsSubmissions = async (): Promise<AssignmentSubmissi
         const learningObject = await learningObjectPersistence.getLearningObjectById(
           learningPathNode.learningObject.id,
         );
-        if (learningObject.submissionType === SubmissionTypeEnum.Enum.MULTIPLE_CHOICE) {
-          const multipleChoice = learningObject.multipleChoice as MultipleChoice;
+        if (learningObject.submissionType === SubmissionTypeEnum.MULTIPLE_CHOICE) {
           submissions.push(
             assignemntSubmissionPersistence.createAssignmentSubmission({
               nodeId: learningPathNode.id,
               groupId: group.id,
-              submissionType: SubmissionTypeEnum.Enum.MULTIPLE_CHOICE,
-              submission: multipleChoice.options[0],
+              submissionType: SubmissionTypeEnum.MULTIPLE_CHOICE,
+              submission: {
+                answer: '2',
+              },
             }),
           );
-        } else if (learningObject.submissionType === SubmissionTypeEnum.Enum.FILE) {
+        } else if (learningObject.submissionType === SubmissionTypeEnum.FILE) {
           submissions.push(
             assignemntSubmissionPersistence.createAssignmentSubmission({
               nodeId: learningPathNode.id,
               groupId: group.id,
-              submissionType: SubmissionTypeEnum.Enum.FILE,
+              submissionType: SubmissionTypeEnum.FILE,
               submission: {
                 fileName: 'test.txt',
                 filePath: 'files-submissions/qkjfqmlfqkf.txt',
@@ -434,15 +453,14 @@ export const insertMessages = async (): Promise<MessageDetail[]> => {
 };
 
 export const deleteAllData = async (): Promise<void> => {
-  await PrismaSingleton.instance.classJoinRequest.deleteMany();
-  await PrismaSingleton.instance.assignmentSubmission.deleteMany();
-  await PrismaSingleton.instance.announcement.deleteMany();
-  await PrismaSingleton.instance.message.deleteMany();
-  await PrismaSingleton.instance.discussion.deleteMany();
-  await PrismaSingleton.instance.group.deleteMany();
-  await PrismaSingleton.instance.assignment.deleteMany();
-  await PrismaSingleton.instance.user.deleteMany();
-  await PrismaSingleton.instance.class.deleteMany();
+  const students = await PrismaSingleton.instance.student.findMany();
+  for (const student of students) {
+    await studentPersistence.deleteStudent(student.id);
+  }
+  const teachers = await PrismaSingleton.instance.teacher.findMany();
+  for (const teacher of teachers) {
+    await teacherPersistence.deleteTeacher(teacher.id);
+  }
   await PrismaSingleton.instance.learningPathNode.deleteMany();
   await PrismaSingleton.instance.learningPath.deleteMany();
   await PrismaSingleton.instance.learningObject.deleteMany();

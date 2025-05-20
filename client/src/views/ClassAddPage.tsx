@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
 import CustomTextField from '../components/textfields/CustomTextField';
 import { useTranslation } from 'react-i18next';
@@ -8,11 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../util/app.routes';
 import { useError } from '../hooks/useError';
 import { useAuth } from '../hooks/useAuth';
+import { useNotification } from '../hooks/useNotification';
 
 function ClassAddPage() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { setError } = useError();
+  const { setNotification } = useNotification();
   const navigate = useNavigate();
 
   const [className, setClassName] = useState('');
@@ -27,8 +29,8 @@ function ClassAddPage() {
       onSuccess: (response: ClassDetail) => {
         navigate(AppRoutes.class(response.id));
       },
-      onError: (error: Error) => {
-        setError(error.message);
+      onError: (error: any) => {
+        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
       },
     });
   };
@@ -39,14 +41,20 @@ function ClassAddPage() {
       { classId, role: user!.role },
       {
         onSuccess: () => {
+          setNotification(t('joinRequestSucces'));
           navigate(AppRoutes.myClasses);
         },
-        onError: (error: Error) => {
-          setError(error.message);
+        onError: (error: any) => {
+          setError(
+            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
+          );
         },
       },
     );
   };
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Box
@@ -63,7 +71,7 @@ function ClassAddPage() {
         <Paper
           elevation={3}
           sx={{
-            width: '100%',
+            width: isMobile ? '70%' : '100%',
             maxWidth: 500,
             mx: 'auto',
             mt: 6,
@@ -102,7 +110,7 @@ function ClassAddPage() {
       <Paper
         elevation={3}
         sx={{
-          width: '100%',
+          width: isMobile ? '70%' : '100%',
           maxWidth: 500,
           mx: 'auto',
           mt: 6,

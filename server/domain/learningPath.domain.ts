@@ -6,8 +6,9 @@ import {
   LearningPathFilterSchema,
 } from '../util/types/learningPath.types';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { BadRequestError } from '../util/types/error.types';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class LearningPathDomain {
   private learningPathPersistence;

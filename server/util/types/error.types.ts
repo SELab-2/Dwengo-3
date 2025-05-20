@@ -91,6 +91,10 @@ export class NotFoundError extends APIError {
         return 'Favorite not found...';
       case 40415:
         return 'Announcement not found...';
+      case 40416:
+        return 'learningTheme not found...';
+      case 40417:
+        return 'File not found...';
       default:
         return 'Not found...';
     }
@@ -196,7 +200,23 @@ export class BadRequestError extends APIError {
       case 40046:
         return 'User already exists...';
       case 40047:
-        return "Can't fetch other user's discussions...";
+        return 'You must be a teacher to manage learningThemes...';
+      case 40048:
+        return 'You can only delete your own account...';
+      case 40049:
+        return "Can't fetch discussions from another user...";
+      case 40050:
+        return "Can't fetch info from an assignment you're not a member of...";
+      case 40051:
+        return 'A group can only have one discussion...';
+      case 40052:
+        return 'New node index is lower than the current furthest visited node...';
+      case 40053:
+        return 'Could not find the group with given id...';
+      case 40054:
+        return 'You cannot remove yourself from your own class...';
+      case 40055:
+        return 'Could not find favorite with given id...';
       default:
         return 'Bad request...';
     }
@@ -211,5 +231,16 @@ export class UnauthorizedError extends APIError {
 
   get statusCode(): number {
     return 401;
+  }
+}
+
+export class FileDownloadError extends APIError {
+  constructor(errorCode: number, message?: string) {
+    super(errorCode, message);
+    this.name = 'FileDownloadError';
+  }
+
+  get statusCode(): number {
+    return 500;
   }
 }

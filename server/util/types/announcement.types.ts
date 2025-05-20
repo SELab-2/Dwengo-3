@@ -1,9 +1,16 @@
 import { z } from 'zod';
 import { Prisma } from '.prisma/client';
+import { announcementSelectDetail, announcementSelectShort } from '../selectInput/select';
 import {
-  announcementSelectDetail,
-  announcementSelectShort,
-} from '../selectInput/announcement.select';
+  atLeastOneFieldProvided,
+  ClassIdZod,
+  ContentZod,
+  StudentIdZod,
+  TeacherIdZod,
+  TimestampFilterTypeZod,
+  TimestampZod,
+  TitleZod,
+} from './util_types';
 
 export enum FilterType {
   BEFORE = 'BEFORE',
@@ -13,15 +20,14 @@ export enum FilterType {
 
 export const AnnouncementFilterQuerySchema = z
   .object({
-    classId: z.string().uuid().optional(),
-    teacherId: z.string().uuid().optional(),
-    studentId: z.string().uuid().optional(),
-    timestamp: z.coerce.number().optional(),
-    timestampFilterType: z.nativeEnum(FilterType).optional(),
+    classId: ClassIdZod.optional(),
+    teacherId: TeacherIdZod.optional(),
+    studentId: StudentIdZod.optional(),
+    timestamp: TimestampZod.optional(),
+    timestampFilterType: TimestampFilterTypeZod.optional(),
   })
-  .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: 'At least one filter must be provided.',
-    path: [],
+  .refine(atLeastOneFieldProvided.validate, {
+    message: atLeastOneFieldProvided.message,
   })
   .refine(
     (data) => {
@@ -36,30 +42,28 @@ export const AnnouncementFilterQuerySchema = z
   );
 
 export const AnnouncementFilterSchema = z.object({
-  classId: z.string().uuid().optional(),
-  teacherId: z.string().uuid().optional(),
-  studentId: z.string().uuid().optional(),
+  classId: ClassIdZod.optional(),
+  teacherId: TeacherIdZod.optional(),
+  studentId: StudentIdZod.optional(),
   timestamp: z.date().optional(),
-  timestampFilterType: z.nativeEnum(FilterType).optional(),
+  timestampFilterType: TimestampFilterTypeZod.optional(),
 });
 
 export const AnnouncementCreatePersistenceSchema = z.object({
-  title: z.string().min(1, 'Title must be a non-empty string').trim(),
-  content: z.string().min(1, 'Content must be a non-empty string').trim(),
-  classId: z.string(),
+  title: TitleZod,
+  content: ContentZod,
+  classId: ClassIdZod,
 });
 
 export const AnnouncementCreateDomainSchema = z.object({
-  title: z.string().min(1, 'Title must be a non-empty string').trim(),
-  content: z.string().min(1, 'Content must be a non-empty string').trim(),
-  classId: z.string(),
+  title: TitleZod,
+  content: ContentZod,
+  classId: ClassIdZod,
 });
 
-export const TeacherIdSchema = z.string();
-
 export const AnnouncementUpdateSchema = z.object({
-  title: z.string().min(1, 'Title must be a non-empty string').trim().optional(),
-  content: z.string().min(1, 'Content must be a non-empty string').trim().optional(),
+  title: TitleZod,
+  content: ContentZod.optional(),
 });
 
 export type AnnouncementByFilterQueryParams = z.infer<typeof AnnouncementFilterQuerySchema>;
@@ -68,7 +72,7 @@ export type AnnouncementCreatePersistenceParams = z.infer<
   typeof AnnouncementCreatePersistenceSchema
 >;
 export type AnnouncementCreateDomainParams = z.infer<typeof AnnouncementCreateDomainSchema>;
-export type TeacherId = z.infer<typeof TeacherIdSchema>;
+export type TeacherId = z.infer<typeof TeacherIdZod>;
 export type AnnouncementUpdateParams = z.infer<typeof AnnouncementUpdateSchema>;
 
 export type AnnouncementDetail = Prisma.AnnouncementGetPayload<{

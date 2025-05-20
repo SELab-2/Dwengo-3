@@ -24,13 +24,13 @@
   "testUsers": [
     {
       "id": "1a2b3c4d-1111-2222-3333-444455556666",
-      "provider": "LOCAL",
       "username": "user1",
       "email": "user1@example.com",
       "password": "password1",
       "surname": "Smith",
       "name": "John",
       "role": "TEACHER",
+      "provider": "LOCAL",
       "teacher": {
         "id": "3b06702b-1111-2222-3333-444455556666",
         "userId": "1a2b3c4d-1111-2222-3333-444455556666"
@@ -38,13 +38,13 @@
     },
     {
       "id": "2b3c4d5e-2222-3333-4444-555566667777",
-      "provider": "LOCAL",
       "username": "user2",
       "email": "user2@example.com",
       "password": "password2",
       "surname": "Johnson",
       "name": "Emma",
       "role": "TEACHER",
+      "provider": "LOCAL",
       "teacher": {
         "id": "3b06702b-2222-3333-4444-555566667777",
         "userId": "2b3c4d5e-2222-3333-4444-555566667777"
@@ -59,6 +59,7 @@
       "surname": "Brown",
       "name": "Liam",
       "role": "TEACHER",
+      "provider": "LOCAL",
       "teacher": {
         "id": "3b06702b-3333-4444-5555-666677778888",
         "userId": "3c4d5e6f-3333-4444-5555-666677778888"
@@ -73,6 +74,7 @@
       "surname": "Williams",
       "name": "Olivia",
       "role": "TEACHER",
+      "provider": "LOCAL",
       "teacher": {
         "id": "3b06702b-4444-5555-6666-777788889999",
         "userId": "4d5e6f7g-4444-5555-6666-777788889999"
@@ -87,6 +89,7 @@
       "surname": "Jones",
       "name": "Noah",
       "role": "TEACHER",
+      "provider": "LOCAL",
       "teacher": {
         "id": "3b06702b-5555-6666-7777-888899990000",
         "userId": "5e6f7g8h-5555-6666-7777-888899990000"
@@ -101,6 +104,7 @@
       "surname": "Garcia",
       "name": "Sophia",
       "role": "STUDENT",
+      "provider": "LOCAL",
       "student": {
         "id": "4c07803c-1111-2222-3333-444455556666",
         "userId": "899edbd7-c766-48f4-8363-56fd8c1f4a2b"
@@ -115,6 +119,7 @@
       "surname": "Martinez",
       "name": "James",
       "role": "STUDENT",
+      "provider": "LOCAL",
       "student": {
         "id": "4c07803c-2222-3333-4444-555566667777",
         "userId": "15f62d4d-b2aa-44d9-a9c1-b6f164530b17"
@@ -129,6 +134,7 @@
       "surname": "Davis",
       "name": "Mia",
       "role": "STUDENT",
+      "provider": "LOCAL",
       "student": {
         "id": "4c07803c-3333-4444-5555-666677778888",
         "userId": "8h9i0j1k-8888-9999-0000-111122223333"
@@ -143,6 +149,7 @@
       "surname": "Rodriguez",
       "name": "Benjamin",
       "role": "STUDENT",
+      "provider": "LOCAL",
       "student": {
         "id": "4c07803c-4444-5555-6666-777788889999",
         "userId": "9i0j1k2l-9999-0000-1111-222233334444"
@@ -157,6 +164,7 @@
       "surname": "Wilson",
       "name": "Charlotte",
       "role": "STUDENT",
+      "provider": "LOCAL",
       "student": {
         "id": "4c07803c-5555-6666-7777-888899990000",
         "userId": "0j1k2l3m-0000-1111-2222-333344445555"
@@ -272,23 +280,31 @@
   "testAssignments": [
     {
       "id": "886bdd97-a2c5-4d42-926a-84d421c36dcd",
+      "name": "test",
+      "description": "testDescription",
       "learningPathId": "82ff18cb-1b49-4d5d-a678-658cd69be542",
       "teacherId": "3b06702b-1111-2222-3333-444455556666",
       "classId": "8b07803c-4444-5555-6666-777788889999",
       "class": {
         "id": "8b07803c-4444-5555-6666-777788889999",
         "name": "class1"
-      }
+      },
+      "name": "Assignment 1",
+      "description": "Test assignment"
     },
     {
       "id": "6e312a15-dcc0-45d3-8660-17c749910839",
+      "name": "test",
+      "description": "testDescription",
       "learningPathId": "91aa27dc-2c50-5e6e-b789-769de70cf653",
       "teacherId": "3b06702b-2222-3333-4444-555566667777",
       "classId": "8b07853c-4444-5555-6666-777788889999",
       "class": {
         "id": "8b07853c-4444-5555-6666-777788889999",
         "name": "class2"
-      }
+      },
+      "name": "Assignment 2",
+      "description": "Test assignment"
     }
   ],
   "testAnnouncements": [

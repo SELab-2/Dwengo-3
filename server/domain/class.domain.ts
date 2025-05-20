@@ -2,13 +2,15 @@ import { ClassPersistence } from '../persistence/class.persistence';
 import { PaginationFilterSchema } from '../util/types/pagination.types';
 import {
   ClassCreateSchema,
+  ClassDetail,
   ClassFilterParams,
   ClassFilterSchema,
   ClassUpdateSchema,
 } from '../util/types/class.types';
-import { ClassRoleEnum, UserEntity } from '../util/types/user.types';
+import { UserEntity } from '../util/types/user.types';
 import { BadRequestError, NotFoundError } from '../util/types/error.types';
 import { compareUserIdWithFilterId } from '../util/cookie-checks/cookieChecks.util';
+import { ClassRoleEnum } from '../util/types/enums.types';
 
 export class ClassDomain {
   private classPersistence;
@@ -80,7 +82,7 @@ export class ClassDomain {
   }
 
   public async checkUserBelongsToClass(user: UserEntity, classId: string) {
-    const classById = await this.classPersistence.getClassById(classId);
+    const classById: ClassDetail = await this.classPersistence.getClassById(classId);
     let exists = false;
     if (user.role === ClassRoleEnum.TEACHER) {
       exists = classById?.teachers.some((teacher) => teacher.id === user.teacher?.id) || false;
@@ -95,6 +97,10 @@ export class ClassDomain {
   public async removeTeacherFromClass(classId: string, teacherId: string, user: UserEntity) {
     if (!user.teacher) {
       throw new BadRequestError(40035);
+    }
+
+    if (teacherId === user.teacher.id) {
+      throw new BadRequestError(40054);
     }
 
     if (!(await this.classPersistence.isTeacherFromClass(user.teacher.id, classId))) {

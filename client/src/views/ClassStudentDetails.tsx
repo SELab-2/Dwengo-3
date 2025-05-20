@@ -100,7 +100,14 @@ function ClassStudentDetails() {
                           cursor: 'pointer',
                           textDecoration: 'underline',
                         }}
-                        onClick={() => navigate(AppRoutes.learningPath(assignment.learningPath.id))}
+                        onClick={() =>
+                          navigate(
+                            AppRoutes.learningPath(
+                              assignment.learningPath.id,
+                              assignment.groups[0].id,
+                            ),
+                          )
+                        }
                       >
                         {assignment.learningPath.title}
                       </Typography>
@@ -116,7 +123,15 @@ function ClassStudentDetails() {
                     <TableCell>
                       <Button
                         variant="contained"
-                        onClick={() => alert(`Submission details of the assignment`)}
+                        onClick={() =>
+                          navigate(
+                            AppRoutes.groupSubmission(
+                              classId!,
+                              assignment.id,
+                              assignment.groups[0].id,
+                            ),
+                          )
+                        }
                       >
                         {t('details')}
                       </Button>

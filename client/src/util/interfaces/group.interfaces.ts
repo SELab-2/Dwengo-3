@@ -14,7 +14,13 @@ export interface GroupDetail {
   id: string;
   name: string;
   progress: number[];
+  currentNodeIndex: number;
   assignment: AssignmentShort;
   discussion: DiscussionShort;
   students: StudentShort[];
+}
+
+export interface UpdateIndexParams {
+  id: string;
+  index: number;
 }

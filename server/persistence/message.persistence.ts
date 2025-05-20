@@ -4,12 +4,13 @@ import {
   MessageCreateParams,
   MessageDetail,
   MessageFilterParams,
-  MessageId,
 } from '../util/types/message.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { messageSelectDetail, messageSelectShort } from '../util/selectInput/message.select';
+
 import { NotFoundError } from '../util/types/error.types';
+import { messageSelectDetail, messageSelectShort } from '../util/selectInput/select';
+import { MessageId } from '../util/types/util_types';
 
 export class MessagePersistence {
   private prisma: PrismaClient;

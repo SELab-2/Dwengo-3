@@ -1,19 +1,22 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, SubmissionType } from '@prisma/client';
 import {
   AssignmentSubCreateParams,
   AssignmentSubFilterParams,
   AssignmentSubmissionShort,
   AssignmentSubUpdateParams,
+  FileSubmission,
 } from '../util/types/assignmentSubmission.types';
 import { PaginationParams } from '../util/types/pagination.types';
 import { PrismaSingleton } from './prismaSingleton';
 import { searchAndPaginate } from '../util/pagination/pagination.util';
-import { Uuid } from '../util/types/assignment.types';
-import {
-  assignmentSubmissionSelectDetail,
-  assignmentSubmissionSelectShort,
-} from '../util/selectInput/assignmentSubmission.select';
+
 import { NotFoundError } from '../util/types/error.types';
+import {
+  assignmentSubmissionSelectShort,
+  assignmentSubmissionSelectDetail,
+} from '../util/selectInput/select';
+import fs from 'fs';
+import { Uuid } from '../util/types/theme.types';
 
 export class AssignmentSubmissionPersistence {
   public async getAssignmentSubmissions(
@@ -64,7 +67,7 @@ export class AssignmentSubmissionPersistence {
             },
           },
           submissionType: params.submissionType,
-          submission: params.submission,
+          submission: params.submission!,
         },
         select: assignmentSubmissionSelectDetail,
       });
@@ -82,7 +85,7 @@ export class AssignmentSubmissionPersistence {
             },
           },
           submissionType: params.submissionType,
-          submission: params.submission,
+          submission: params.submission!,
         },
         select: assignmentSubmissionSelectDetail,
       });
@@ -100,5 +103,30 @@ export class AssignmentSubmissionPersistence {
       },
       select: assignmentSubmissionSelectDetail,
     });
+  }
+
+  public async deleteAssignmentSubmissions({
+    groupId,
+    favoriteId,
+  }: {
+    groupId?: string;
+    favoriteId?: string;
+  }) {
+    const submissions = await PrismaSingleton.instance.assignmentSubmission.findMany({
+      where: {
+        groupId: groupId,
+        favoriteId: favoriteId,
+      },
+    });
+
+    for (const submission of submissions) {
+      if (submission.submissionType === SubmissionType.FILE) {
+        const filePath = (submission.submission as FileSubmission).filePath;
+        fs.unlink(filePath, (_) => {});
+      }
+      await PrismaSingleton.instance.assignmentSubmission.delete({
+        where: { id: submission.id },
+      });
+    }
   }
 }

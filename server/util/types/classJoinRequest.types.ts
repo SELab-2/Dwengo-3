@@ -1,29 +1,35 @@
 import { z } from 'zod';
 import { Prisma } from '.prisma/client';
-import { classJoinRequestSelectDetail } from '../selectInput/classJoinRequest.select';
+import { classJoinRequestSelectDetail } from '../selectInput/select';
+import {
+  atLeastOneFieldProvided,
+  ClassIdZod,
+  RequestDecisionZod,
+  RequestIdZod,
+  UserIdZod,
+} from './util_types';
 
 export const ClassJoinRequestCreateScheme = z.object({
-  classId: z.string().uuid('ClassId must be a valid UUID'),
+  classId: ClassIdZod,
 });
 
 export type ClassJoinRequestCreateParams = z.infer<typeof ClassJoinRequestCreateScheme>;
 
 export const ClassJoinRequestFilterSchema = z
   .object({
-    classId: z.string().uuid().optional(),
-    userId: z.string().uuid().optional(),
+    classId: ClassIdZod.optional(),
+    userId: UserIdZod.optional(),
   })
-  .refine((data) => data.classId || data.userId, {
-    message: 'At least one of classId or userId must be provided.',
-    path: ['classId', 'userId'], // This will attach the error to both fields
+  .refine(atLeastOneFieldProvided.validate, {
+    message: atLeastOneFieldProvided.message,
   });
 
 export type ClassJoinRequestFilterParams = z.infer<typeof ClassJoinRequestFilterSchema>;
 
 export const ClassJoinRequestDecisionSchema = z
   .object({
-    requestId: z.string().uuid(),
-    decision: z.enum(['accept', 'deny']),
+    requestId: RequestIdZod,
+    decision: RequestDecisionZod,
   })
   .transform((data) => {
     return {

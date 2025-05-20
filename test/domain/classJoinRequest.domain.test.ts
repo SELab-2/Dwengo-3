@@ -8,11 +8,8 @@ import {
   testUsers,
   testClassJoinRequests,
 } from '../testObjects.json';
-import {
-  AuthenticationProvider,
-  ClassRoleEnum,
-  UserEntity,
-} from '../../server/util/types/user.types';
+import { UserEntity } from '../../server/util/types/user.types';
+import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
 
 const { mockClassJoinRequestPeristence, mockClassPeristence } = vi.hoisted(() => {
   return {
