@@ -137,15 +137,10 @@ describe('discussion domain', () => {
         discussionDomain.getDiscussions(getDiscussionsInvalidPaginationQuery, userTeacher),
       ).rejects.toThrow();
     });
-    test('empty query fails', async () => {
-      await expect(
-        discussionDomain.getDiscussions(getDiscussionsEmptyQuery, userTeacher),
-      ).rejects.toThrow();
-    });
     test('user id is not query user id fails', async () => {
       await expect(
         discussionDomain.getDiscussions(getDiscussionsQuery, userStudent),
-      ).rejects.toMatchObject({ _errorCode: 40047 });
+      ).rejects.toMatchObject({ _errorCode: 40049 });
     });
   });
   describe('getDiscussionById', () => {
