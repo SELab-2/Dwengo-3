@@ -8,6 +8,7 @@ import { setUseNavigateOutput } from '../setUpMocks';
 const dummyProps = {
   id: 'abc123',
   title: 'Test Aankondiging',
+  date: '2023-12-31T23:59:59.000Z',
   teacher: {
     id: '456',
     user: {
