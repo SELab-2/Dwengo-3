@@ -92,6 +92,13 @@ export function useAnnouncementCreate() {
   });
 }
 
+/**
+ * Fetches the latest announcements for a specific student or teacher.
+ *
+ * @param studentId - The ID of the student whose announcements are to be fetched
+ * @param teacherId - The ID of the teacher whose announcements are to be fetched
+ * @returns A query object containing the latest announcements
+ */
 export function useLatestsAnnouncements({
   studentId,
   teacherId,

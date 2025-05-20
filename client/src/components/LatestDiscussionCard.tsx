@@ -22,9 +22,7 @@ export function LatestDiscussionCard({ discussion }: { discussion: DiscussionDet
   const groupMembers = discussion.members;
 
   // Get latest message timestamp
-  const latestMessage = discussion.messages?.length
-    ? discussion.messages[discussion.messages.length - 1]
-    : null;
+  const latestMessage = discussion.messages.sort((a, b) => (b.createdAt < a.createdAt ? -1 : 1))[0];
   const latestTimestamp = latestMessage?.createdAt;
 
   // Format timestamp

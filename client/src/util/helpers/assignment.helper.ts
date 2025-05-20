@@ -1,6 +1,14 @@
 import { AssignmentShort2 } from '../interfaces/assignment.interfaces';
 import { GroupDetail, GroupShort } from '../interfaces/group.interfaces';
 
+/**
+ * Calculates the progress of a student in an assignment.
+ *
+ * @param assignment - The assignment object containing details about the assignment.
+ * @param studentId - The ID of the student whose progress is to be calculated.
+ * @param group - The group object containing details about the group.
+ * @returns The progress percentage of the student or group in the assignment.
+ */
 export function getProgress({
   assignment,
   studentId,
@@ -31,6 +39,17 @@ export const enum AssignmentFilterType {
   NOT_FINISHED = 'notFinished',
 }
 
+/**
+ * Filters assignments based on their progress.
+ *
+ * @remarks This function has to be used in a filter function.
+ *
+ * @param assignment - The assignment object containing details about the assignment.
+ * @param studentId - The ID of the student whose progress is to be calculated.
+ * @param group - The group object containing details about the group.
+ * @param filterType - The type of filter to apply (finished, not started, not finished).
+ * @returns A boolean indicating whether the assignment matches the filter criteria.
+ */
 export function filterAssignmentOnProgress({
   assignment,
   studentId,

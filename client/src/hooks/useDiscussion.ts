@@ -80,7 +80,7 @@ export function useDetailedDiscussionsByIds(ids: string[]) {
  * Fetches the newest discussions for a specific user.
  *
  * @param userId - The ID of the user for whom to fetch discussions
- * @returns Paginated data containing the list of discussions.
+ * @returns A query object containg a list of discussions sorted by the newest messages. The messages are also sorted by their createdAt date.
  */
 export function useLatestDiscussions({ userId }: { userId: string | undefined }) {
   return useQuery({
@@ -97,11 +97,16 @@ export function useLatestDiscussions({ userId }: { userId: string | undefined })
         discussions.map((discussion) => fetchDiscussionById(discussion.id)),
       );
 
-      // Sort the discussions be the newest messages
+      // Sort all messages by their createdAt date
+      discussionDetails.forEach((discussion) => {
+        discussion.messages.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      });
+
+      // Sort the discussions by the newest messages
       const sortedDiscussions = discussionDetails.sort((a, b) => {
-        const aLastMessageDate = a.messages[0]?.createdAt;
-        const bLastMessageDate = b.messages[0]?.createdAt;
-        return bLastMessageDate < aLastMessageDate ? -1 : 1;
+        const aLastMessageDate = a.messages[0].createdAt;
+        const bLastMessageDate = b.messages[0].createdAt;
+        return bLastMessageDate.getTime() - aLastMessageDate.getTime();
       });
 
       return sortedDiscussions;
