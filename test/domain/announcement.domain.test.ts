@@ -10,6 +10,7 @@ import {
   testAnnouncements,
 } from '../testObjects.json';
 import { AuthenticationProvider, ClassRoleEnum } from '../../server/util/types/enums.types';
+import { BadRequestError } from '../../server/util/types/error.types';
 
 // announcement persistence mock
 const { mockAnnouncementPeristence, mockClassPeristence } = vi.hoisted(() => {
@@ -178,6 +179,8 @@ describe('announcement domain', () => {
         let found = testAnnouncements.find((a) => a.id === id);
         if (found && found.teacher.id === teacherid) {
           return found;
+        } else {
+          throw new BadRequestError(40037);
         }
         return null;
       },
