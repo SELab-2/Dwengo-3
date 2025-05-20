@@ -1,4 +1,14 @@
-import { Box, Button, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { MarginSize } from '../util/size';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +31,10 @@ function HomePage() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const maxItems = 5;
 
   const { data: upcomingDeadlines } = useUpcomingAssignments({
     studentId: user?.student?.id,
@@ -42,29 +56,16 @@ function HomePage() {
     teacherId: user?.teacher?.id,
   });
 
-  console.log('latestDiscussions', latestDiscussions);
-
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        height: '100%',
-        margin: MarginSize.large,
-        flexDirection: 'column',
-        gap: MarginSize.small,
-      }}
-    >
-      <Typography variant="h4">
-        {t('welcome')} {user?.name ?? 'Nobody'}!
-      </Typography>
-
-      {(user?.role === 'STUDENT' && (
-        <>
-          <Typography variant="h4">{t('upcomingDeadlines')}</Typography>
+  const studentSections = [
+    {
+      key: 'upcomingDeadlines',
+      title: t('upcomingDeadlines'),
+      content: (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {upcomingDeadlines?.length === 0 && (
             <Typography variant="body1">{t('noUpcomingDeadlines')}</Typography>
           )}
-          {upcomingDeadlines?.map((assignment) => (
+          {upcomingDeadlines?.slice(0, maxItems).map((assignment) => (
             <LearningPathCard
               key={assignment.id}
               assignment={assignment}
@@ -77,7 +78,7 @@ function HomePage() {
                     navigate(
                       AppRoutes.learningPath(
                         assignment.learningPath.id,
-                        myGroup(assignment, user?.id)?.id,
+                        myGroup(assignment, user!.id)?.id,
                       ),
                     );
                   }}
@@ -87,11 +88,18 @@ function HomePage() {
               }
             />
           ))}
-          <Typography variant="h4">{t('startAssignments')}</Typography>
+        </Box>
+      ),
+    },
+    {
+      key: 'startAssignments',
+      title: t('startAssignments'),
+      content: (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {notStartedAssignments?.length === 0 && (
             <Typography variant="body1">{t('noNotStartedAssignments')}</Typography>
           )}
-          {notStartedAssignments?.map((assignment) => (
+          {notStartedAssignments?.slice(0, maxItems).map((assignment) => (
             <LearningPathCard
               key={assignment.id}
               assignment={assignment}
@@ -104,7 +112,7 @@ function HomePage() {
                     navigate(
                       AppRoutes.learningPath(
                         assignment.learningPath.id,
-                        myGroup(assignment, user?.id)?.id,
+                        myGroup(assignment, user!.id)?.id,
                       ),
                     );
                   }}
@@ -114,23 +122,34 @@ function HomePage() {
               }
             />
           ))}
-
-          <Typography variant="h4">{t('latestDiscussions')}</Typography>
+        </Box>
+      ),
+    },
+    {
+      key: 'latestDiscussions',
+      title: t('latestDiscussions'),
+      content: (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {latestDiscussions?.length === 0 && (
             <Typography variant="body1">{t('noLatestDiscussions')}</Typography>
           )}
-          {latestDiscussions?.map((discussion) => (
-            <LatestDiscussionCard
-              key={discussion.id}
-              discussion={discussion}
-            ></LatestDiscussionCard>
-          ))}
-
-          <Typography variant="h4">{t('latestAnnouncements')}</Typography>
+          {latestDiscussions
+            ?.slice(0, maxItems)
+            .map((discussion) => (
+              <LatestDiscussionCard key={discussion.id} discussion={discussion} />
+            ))}
+        </Box>
+      ),
+    },
+    {
+      key: 'latestAnnouncements',
+      title: t('latestAnnouncements'),
+      content: (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {latestAnnouncements?.length === 0 && (
             <Typography variant="body1">{t('noLatestAnnouncements')}</Typography>
           )}
-          {latestAnnouncements?.map((announcement) => (
+          {latestAnnouncements?.slice(0, maxItems).map((announcement) => (
             <Box
               onClick={() => navigate(AppRoutes.announcement(announcement.id))}
               key={announcement.id}
@@ -140,40 +159,106 @@ function HomePage() {
                 title={announcement.class.name + ' - ' + announcement.title}
                 teacher={announcement.teacher}
                 content={announcement.content}
-              ></AnnouncementCard>
+              />
             </Box>
           ))}
-        </>
-      )) || (
-        <>
-          <Typography variant="h4">{t('latestDiscussions')}</Typography>
+        </Box>
+      ),
+    },
+  ];
+
+  const teacherSections = [
+    {
+      key: 'latestDiscussions',
+      title: t('latestDiscussions'),
+      content: (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {latestDiscussions?.length === 0 && (
             <Typography variant="body1">{t('noLatestDiscussions')}</Typography>
           )}
-          {latestDiscussions?.map((discussion) => (
-            <LatestDiscussionCard
-              key={discussion.id}
-              discussion={discussion}
-            ></LatestDiscussionCard>
-          ))}
-          <Typography variant="h4">{t('latestFinishedAssignments')}</Typography>
+          {latestDiscussions
+            ?.slice(0, maxItems)
+            .map((discussion) => (
+              <LatestDiscussionCard key={discussion.id} discussion={discussion} />
+            ))}
+        </Box>
+      ),
+    },
+    {
+      key: 'latestFinishedAssignments',
+      title: t('latestFinishedAssignments'),
+      content: (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {latestFinishedAssignments?.length === 0 && (
             <Typography variant="body1">{t('noLatestFinishedAssignments')}</Typography>
           )}
-          {latestFinishedAssignments?.map(({ assignment, group }) => (
+          {latestFinishedAssignments?.slice(0, maxItems).map(({ assignment, group }) => (
             <Box
               key={assignment.id}
               onClick={() =>
                 navigate(AppRoutes.groupSubmission(assignment.class.id, assignment.id, group.id))
               }
             >
-              <LatestFinishedAssignmentCard
-                assignment={assignment}
-                group={group}
-              ></LatestFinishedAssignmentCard>
+              <LatestFinishedAssignmentCard assignment={assignment} group={group} />
             </Box>
           ))}
-        </>
+        </Box>
+      ),
+    },
+  ];
+
+  const sections = user?.role === 'STUDENT' ? studentSections : teacherSections;
+
+  if (!user) {
+    return null;
+  }
+
+  // Split sections for two columns
+  const mid = Math.ceil(sections.length / 2);
+  const leftSections = sections.slice(0, mid);
+  const rightSections = sections.slice(mid);
+
+  return (
+    <Box sx={{ flexGrow: 1, margin: MarginSize.small }}>
+      <Typography variant="h4" sx={{ mb: 2 }}>
+        {t('welcome')} {user?.name ?? 'Nobody'}!
+      </Typography>
+      {isMobile ? (
+        // Single column for mobile
+        <Box>
+          {sections.map((section) => (
+            <Accordion key={section.key} defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="h6">{section.title}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>{section.content}</AccordionDetails>
+            </Accordion>
+          ))}
+        </Box>
+      ) : (
+        // Two independently scrollable columns for desktop
+        <Box sx={{ display: 'flex', gap: 2, height: '70vh' }}>
+          <Box sx={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {leftSections.map((section) => (
+              <Accordion key={section.key} defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">{section.title}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>{section.content}</AccordionDetails>
+              </Accordion>
+            ))}
+          </Box>
+          <Box sx={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {rightSections.map((section) => (
+              <Accordion key={section.key} defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">{section.title}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>{section.content}</AccordionDetails>
+              </Accordion>
+            ))}
+          </Box>
+        </Box>
       )}
     </Box>
   );
