@@ -10,7 +10,6 @@ import {
 } from './util_types';
 
 export const RegisterSchema = z.object({
-  id: z.string().uuid('invalid uuid format').optional(), // TODO REMOVE THIS
   username: UserNameZod,
   email: EmailZod,
   password: PasswordZod,
@@ -20,7 +19,6 @@ export const RegisterSchema = z.object({
 });
 
 export const CreateUserSchema = z.object({
-  id: z.string().uuid('invalid uuid format').optional(), // TODO REMOVE THIS
   username: UserNameZod,
   provider: AuthenticationProviderZod,
   email: EmailZod,

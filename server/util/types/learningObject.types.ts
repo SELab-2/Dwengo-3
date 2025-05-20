@@ -27,19 +27,6 @@ import {
   VersionZod,
 } from './util_types';
 
-// export const ContentTypeEnum = z.enum([
-//   'TEXT_PLAIN',
-//   'TEXT_MARKDOWN',
-//   'IMAGE_IMAGE_BLOCK',
-//   'IMAGE_IMAGE',
-//   'AUDIO_MPEG',
-//   'APPLICATION_PDF',
-//   'EXTERN',
-//   'BLOCKLY',
-// ]);
-
-// export const SubmissionTypeEnum = z.enum(['READ', 'MULTIPLE_CHOICE', 'FILE']);
-
 export const learningObjectKeywordSchema = z.object({
   keyword: KeywordZod,
 });
