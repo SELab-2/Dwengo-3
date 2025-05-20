@@ -42,6 +42,8 @@ function HomePage() {
     teacherId: user?.teacher?.id,
   });
 
+  console.log('latestDiscussions', latestDiscussions);
+
   return (
     <Box
       sx={{
