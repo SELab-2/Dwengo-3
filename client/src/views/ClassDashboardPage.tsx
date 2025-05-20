@@ -210,15 +210,17 @@ function ClassDashboardPage() {
               {classData!.description}
             </Typography>
 
-            <Button
-              variant="contained"
-              sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
-              onClick={() => {
-                navigate(AppRoutes.classEdit(classId!));
-              }}
-            >
-              {t('editClassGroup')}
-            </Button>
+            {teacher && (
+              <Button
+                variant="contained"
+                sx={{ mt: 3, bgcolor: '#424242', color: 'white' }}
+                onClick={() => {
+                  navigate(AppRoutes.classEdit(classId!));
+                }}
+              >
+                {t('editClassGroup')}
+              </Button>
+            )}
           </Paper>
         </GridLegacy>
 
