@@ -41,9 +41,6 @@ function DiscussionCard({
   const theme = useTheme();
   const { t } = useTranslation();
 
-  console.log('DiscussionCard', discussionDetails);
-  console.log('expandedGroupId', expandedGroupId);
-
   useEffect(() => {
     if (
       !initialExpansionSet.current &&

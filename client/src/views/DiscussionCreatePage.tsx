@@ -71,17 +71,13 @@ const DiscussionCreatePage: React.FC = () => {
     assignmentId ?? filteredAssignments[0]?.id ?? '',
   );
 
-  // If the selected assignment id changes, update the selected assignment
-  let selectedAssignment: AssignmentShort2 | undefined;
-  useEffect(() => {
-    selectedAssignment = filteredAssignments.find(
-      (a: AssignmentShort2) => a.id === selectedAssignmentId,
-    );
-  }, [selectedAssignmentId]);
-
   // Create the discussion with the given input
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const selectedAssignment = filteredAssignments.find(
+      (a: AssignmentShort2) => a.id === selectedAssignmentId,
+    );
 
     const groupId =
       selectedAssignment?.groups.filter((group: GroupShort) =>
@@ -134,7 +130,7 @@ const DiscussionCreatePage: React.FC = () => {
             >
               {filteredAssignments?.map((assignment: AssignmentShort2) => (
                 <MenuItem key={assignment.id} value={assignment.id}>
-                  {assignment.learningPath.title}
+                  {assignment.name}
                 </MenuItem>
               ))}
             </Select>

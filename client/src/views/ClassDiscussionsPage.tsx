@@ -30,9 +30,11 @@ function DiscussionsPage() {
   // Refs for each assignment card
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // Parse hash for assignmentId and groupId (format: assignmentId:groupId)
+  // Scroll location hash for a discussion from groupId for assignment with assignmentId
   let hashAssignmentId: string | undefined = undefined;
   let hashGroupId: string | undefined = undefined;
+
+  // If the location hash is set, parse it to get the assignmentId and groupId
   if (location.hash.startsWith('#')) {
     const hash = location.hash.substring(1);
     const [assignmentId, groupId] = hash.split(':');
@@ -40,6 +42,7 @@ function DiscussionsPage() {
     if (groupId) hashGroupId = groupId;
   }
 
+  // Scroll to the correct discussion in the correct assignment card if the scroll location hash is set
   useEffect(() => {
     if (hashAssignmentId) {
       const el = cardRefs.current[hashAssignmentId];
