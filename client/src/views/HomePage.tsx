@@ -156,6 +156,7 @@ function HomePage() {
             >
               <AnnouncementCard
                 id={announcement.id}
+                date={announcement.createdAt}
                 title={announcement.class.name + ' - ' + announcement.title}
                 teacher={announcement.teacher}
                 content={announcement.content}

@@ -38,7 +38,11 @@ function AnnouncementDetailpage() {
             mt: 1,
           }}
         >
-          <AnnouncementCard key={announcement?.id || 0} {...announcement!} />
+          <AnnouncementCard
+            key={announcement?.id || 0}
+            {...announcement!}
+            date={announcement!.createdAt}
+          />
         </Paper>
       </Box>
     </Box>
