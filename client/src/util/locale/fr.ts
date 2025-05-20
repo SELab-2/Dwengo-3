@@ -13,6 +13,8 @@ export const fr = {
     school: 'École',
     login: 'Connexion',
     loginWithGoogle: 'Connexion avec Google',
+    registerWithGoogle: "S'inscrire avec Google",
+    selectRole: 'Veuillez sélectionner un rôle',
     logout: 'Déconnexion',
     notLoggedIn: "Vous n'êtes pas connecté.",
     register: "S'inscrire",
