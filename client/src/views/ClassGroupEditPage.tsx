@@ -150,6 +150,7 @@ export function ClassGroupEditPage() {
                 })}
                 title={t('students')}
                 onActionPressed={async (id: string) => {
+                  setStudents([...students.filter((ss) => ss.id !== id)]);
                   deleteStudent.mutate(
                     {
                       classId: classId!!,
@@ -179,6 +180,7 @@ export function ClassGroupEditPage() {
                 })}
                 title={t('teachers')}
                 onActionPressed={async (id: string) => {
+                  setTeachers([...teachers.filter((ss) => ss.id !== id)]);
                   deleteTeacher.mutate(
                     {
                       classId: classId!!,
