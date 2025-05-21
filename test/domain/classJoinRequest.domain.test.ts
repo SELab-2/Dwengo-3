@@ -212,11 +212,11 @@ describe('classJoinRequest domain', () => {
     test('get student request as teacher fails', async () => {
       await expect(
         classJoinRequestDomain.getJoinRequests(
-          getJoinRequestTeacherQuery,
+          getJoinRequestStudentQuery,
           userTeacher,
           ClassRoleEnum.STUDENT,
         ),
-      ).rejects.toMatchObject({ _errorCode: 40013 });
+      ).rejects.toMatchObject({ _errorCode: 40015 });
     });
     test('get teacher request as student fails', async () => {
       await expect(

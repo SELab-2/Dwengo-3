@@ -35,7 +35,7 @@ function ProfilePage() {
       },
       onError: (error: any) => {
         // Handle error (e.g., show error message)
-        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
+        setError(error?.response?.data?.message || error?.message || t('undefinedError'));
       },
     });
   };
@@ -48,7 +48,7 @@ function ProfilePage() {
       },
 
       onError: (error: any) => {
-        setError(error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'));
+        setError(error?.response?.data?.message || error?.message || t('undefinedError'));
       },
     });
   };

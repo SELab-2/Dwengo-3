@@ -159,9 +159,7 @@ export function ClassGroupEditPage() {
                     {
                       onError: (error: any) => {
                         setError(
-                          error?.response?.data?.message ||
-                            error?.message ||
-                            t('errorSendingErrorMessage'),
+                          error?.response?.data?.message || error?.message || t('undefinedError'),
                         );
                       },
                     },
@@ -189,9 +187,7 @@ export function ClassGroupEditPage() {
                     {
                       onError: (error: any) => {
                         setError(
-                          error?.response?.data?.message ||
-                            error?.message ||
-                            t('errorSendingErrorMessage'),
+                          error?.response?.data?.message || error?.message || t('undefinedError'),
                         );
                       },
                     },
