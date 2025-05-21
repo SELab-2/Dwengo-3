@@ -84,7 +84,8 @@ export async function addMockData(prisma: PrismaClient) {
       },
     });
 
-    await prisma.assignment.create({
+    // Create assignment with groups and fetch the created groups
+    const assignment = await prisma.assignment.create({
       data: {
         class: {
           connect: {
@@ -118,7 +119,50 @@ export async function addMockData(prisma: PrismaClient) {
         name: `Assignment about ${faker.food.dish()}`,
         description: faker.lorem.paragraph(),
       },
+      include: {
+        groups: {
+          include: {
+            students: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    // --- Add discussions for each group ---
+    for (const group of assignment.groups) {
+      // Get all student user IDs in the group
+      const studentUserIds = group.students.map((s) => s.user.id);
+      // Add the teacher's user ID(s) as well
+      const teacherUserIds = [user.id];
+
+      // Create the discussion
+      const discussion = await prisma.discussion.create({
+        data: {
+          group: { connect: { id: group.id } },
+          members: {
+            connect: [
+              ...studentUserIds.map((id) => ({ id })),
+              ...teacherUserIds.map((id) => ({ id })),
+            ],
+          },
+        },
+      });
+
+      // Optionally, add a few messages to the discussion
+      for (let m = 0; m < 3; m++) {
+        await prisma.message.create({
+          data: {
+            content: faker.lorem.sentence(),
+            sender: { connect: { id: studentUserIds[m % studentUserIds.length] } },
+            discussion: { connect: { id: discussion.id } },
+          },
+        });
+      }
+    }
 
     for (let i = 0; i < 12; i++) {
       const content = faker.food.description() + `\n\n${faker.lorem.text()}`;
