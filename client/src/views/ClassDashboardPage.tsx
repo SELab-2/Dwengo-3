@@ -249,7 +249,7 @@ function ClassDashboardPage() {
                               fontSize: '1.5rem',
                             }}
                           >
-                            {assignment?.learningPath.title}
+                            {assignment?.name}
                           </Link>
                         </Typography>
                       </TableCell>
