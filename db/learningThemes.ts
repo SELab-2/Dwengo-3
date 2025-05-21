@@ -64,7 +64,7 @@ export const learningThemes = [
     id: '2abb2c99-ae7b-449e-af23-5e37fb98deaf',
     title: 'Programming & Computational Thinking',
     image:
-      'https://cdn.discordapp.com/attachments/1345516706134491268/1374077308725362730/AdobeStock_1065716654.jpeg?ex=682cbcb7&is=682b6b37&hm=1232c4761df46b2206c327c4122debcc01dd64737d4304b56fe00b78c4dbe9e8&',
+      'https://cdn.discordapp.com/attachments/1345516706134491268/1374077308725362730/AdobeStock_1065716654.jpeg?ex=682eb6f7&is=682d6577&hm=ac612c5bcdb21eb33af778b76d8b28398f296dc657863307cab3381364e3d664&',
     keywords: [
       'python',
       'blockly',
@@ -141,7 +141,7 @@ export const learningThemes = [
     id: '831bf26e-9b03-4dc4-93ad-f726ee7b8982',
     title: 'AI & Machine Learning',
     image:
-      'https://cdn.discordapp.com/attachments/1345516706134491268/1374077309484535939/AdobeStock_659545582.jpeg?ex=682cbcb7&is=682b6b37&hm=1d24117c346a5615503c84f640dc8e039fa828db401f60f1177becfd22328b5a&',
+      'https://cdn.discordapp.com/attachments/1345516706134491268/1374077309484535939/AdobeStock_659545582.jpeg?ex=682eb6f7&is=682d6577&hm=96f008fa483fa36dbcc8bd2e20c94b22eed16bc1c3c35d76f91d2678fe448d61&',
     keywords: [
       'neurale netwerken',
       'AI',

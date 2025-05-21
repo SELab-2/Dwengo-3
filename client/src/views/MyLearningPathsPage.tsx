@@ -38,7 +38,7 @@ function MyLearningPathsPage() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', maxWidth: 800, mx: 'auto', m: 4 }}>
+    <Box sx={{ minHeight: '100vh', maxWidth: 800, my: 4, mx: 'auto' }}>
       <Box key={'assignments'} sx={{ mt: 4 }}>
         <Typography variant="h5" gutterBottom>
           {t('assignments')}
