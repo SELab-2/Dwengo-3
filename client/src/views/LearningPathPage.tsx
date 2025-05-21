@@ -429,30 +429,39 @@ function LearningPathPage() {
         height: '100%',
       }}
     >
-      {learningPath?.learningPathNodes.map((node, index) => (
-        <Box
-          key={node.id}
-          onClick={() => {
-            if (index !== activeIndex) {
-              setWrongAnswer(false);
-              setActiveIndex(index);
-              if (isMobile) setDrawerOpen(false);
-            }
-          }}
-          p={1}
-          mb={1}
-          bgcolor={nodeColor(index)}
-          borderRadius="8px"
-          sx={{ cursor: 'pointer', transition: 'all 0.3s', '&:hover': { bgcolor: 'lightgray' } }}
-        >
-          <Typography fontWeight="bold" variant="body1" noWrap>
-            {node.learningObject.title}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" noWrap>
-            ~{node.learningObject.estimatedTime} min
-          </Typography>
-        </Box>
-      ))}
+      {learningPath?.learningPathNodes
+        .filter((_, index) => {
+          const isInProgress = progress.includes(index);
+          return isInProgress || index >= activeIndex;
+        })
+        .map((node, index) => (
+          <Box
+            key={node.id}
+            onClick={() => {
+              if (index !== activeIndex) {
+                setWrongAnswer(false);
+                setActiveIndex(index);
+                if (isMobile) setDrawerOpen(false);
+              }
+            }}
+            p={1}
+            mb={1}
+            bgcolor={nodeColor(index)}
+            borderRadius="8px"
+            sx={{
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              '&:hover': { bgcolor: 'lightgray' },
+            }}
+          >
+            <Typography fontWeight="bold" variant="body1" noWrap>
+              {node.learningObject.title}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" noWrap>
+              ~{node.learningObject.estimatedTime} min
+            </Typography>
+          </Box>
+        ))}
     </Box>
   );
 
