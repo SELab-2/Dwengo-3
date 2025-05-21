@@ -178,7 +178,7 @@ function LearningPathPage() {
           setCurrentSubmission(submission);
         }
       } catch (error: any) {
-        setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
+        setError(error?.response?.data?.message || t('undefinedError'));
       } finally {
         setIsLoading(false);
       }
@@ -243,7 +243,7 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
+            setError(error?.response?.data?.message || t('undefinedError'));
           },
         },
       );
@@ -257,7 +257,7 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
+            setError(error?.response?.data?.message || t('undefinedError'));
           },
         },
       );
@@ -275,7 +275,7 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
+            setError(error?.response?.data?.message || t('undefinedError'));
           },
           onSuccess: (response) => {
             setCurrentSubmission(response);
@@ -293,7 +293,7 @@ function LearningPathPage() {
         },
         {
           onError: (error: any) => {
-            setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
+            setError(error?.response?.data?.message || t('undefinedError'));
           },
           onSuccess: (response) => {
             setCurrentSubmission(response);
@@ -379,7 +379,7 @@ function LearningPathPage() {
               setCurrentSubmission(response);
             },
             onError: (error: any) => {
-              setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
+              setError(error?.response?.data?.message || t('undefinedError'));
             },
           },
         )
@@ -398,7 +398,7 @@ function LearningPathPage() {
               setCurrentSubmission(response);
             },
             onError: (error: any) => {
-              setError(error?.response?.data?.message || t('errorSendingErrorMessage'));
+              setError(error?.response?.data?.message || t('undefinedError'));
             },
           },
         );
