@@ -103,9 +103,7 @@ function ClassDashboardPage() {
         },
         onError: (error: any) => {
           // Show error message in snackbar
-          setError(
-            error?.response?.data?.message || error?.message || t('errorSendingErrorMessage'),
-          );
+          setError(error?.response?.data?.message || error?.message || t('undefinedError'));
         },
       },
     );

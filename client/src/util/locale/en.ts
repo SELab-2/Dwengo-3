@@ -119,7 +119,7 @@ export const en = {
     post: 'Post',
     joinRequestSuccess: 'Join request has been approved',
     copied: 'Copied to clipboard',
-    errorSendingErrorMessage: 'Error sending error message',
+    undefinedError: 'Oops, something went wrong. Please try again later.',
     failedFavorite: 'Failed to favorite',
     upcomingDeadlines: 'Upcoming deadlines',
     noUpcomingDeadlines: 'No upcoming deadlines',
