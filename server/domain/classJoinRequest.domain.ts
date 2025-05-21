@@ -48,10 +48,6 @@ export class ClassJoinRequestDomain {
         throw new BadRequestError(40006);
       }
 
-      if (classRole === ClassRoleEnum.STUDENT) {
-        throw new BadRequestError(40013);
-      }
-
       // If userId is provided, it must match the teacher's own userId
       // Teachers should only be able to view join requests for their own classes.
       if (userId && userId !== user.id) {
