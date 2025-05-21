@@ -92,6 +92,7 @@ const DiscussionCreatePage: React.FC = () => {
             {
               discussionId: response.id,
               content: message,
+              senderId: user!.id,
             },
             {
               onSuccess: () => {

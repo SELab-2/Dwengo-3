@@ -8,8 +8,16 @@ import { createMessage } from '../api/message';
  */
 export function useCreateMessage() {
   return useMutation({
-    mutationFn: async ({ discussionId, content }: { discussionId: string; content: string }) => {
-      return await createMessage({ discussionId, content });
+    mutationFn: async ({
+      discussionId,
+      content,
+      senderId,
+    }: {
+      discussionId: string;
+      content: string;
+      senderId: string;
+    }) => {
+      return await createMessage({ discussionId, content, senderId });
     },
   });
 }
