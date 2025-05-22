@@ -18,4 +18,5 @@ export interface MessageDetail {
 export interface MessageCreate {
   content: string;
   discussionId: string;
+  senderId: string;
 }

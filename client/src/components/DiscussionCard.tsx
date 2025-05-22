@@ -21,6 +21,7 @@ import { useCreateMessage } from '../hooks/useMessage';
 import { useError } from '../hooks/useError';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../hooks/useAuth';
 
 function DiscussionCard({
   discussion,
@@ -29,6 +30,7 @@ function DiscussionCard({
   discussion: DiscussionShort;
   expandedGroupId?: string;
 }) {
+  const { user } = useAuth();
   const { data: discussionDetails } = useDiscussionById(discussion.id);
   const [isExpanded, setIsExpanded] = useState(false);
   const initialExpansionSet = useRef(false);
@@ -56,10 +58,16 @@ function DiscussionCard({
   }
 
   const handleSendMessage = () => {
+    // Check if the user is loaded
+    if (!user) {
+      return;
+    }
+
     createMessageMutation.mutate(
       {
         content: newMessage,
         discussionId: discussionDetails.id,
+        senderId: user?.id,
       },
       {
         onSuccess: () => {
