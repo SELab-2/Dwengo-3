@@ -6,19 +6,19 @@ import { faker } from '@faker-js/faker/locale/nl_BE';
 dotenv.config({ path: '../.env' });
 
 export async function addMockData(prisma: PrismaClient) {
-  await prisma.group.deleteMany({});
-  await prisma.assignment.deleteMany({});
-  await prisma.assignmentSubmission.deleteMany({});
-  await prisma.classJoinRequest.deleteMany({});
-  await prisma.announcement.deleteMany({});
-  await prisma.class.deleteMany({});
-  await prisma.message.deleteMany({});
-  await prisma.discussion.deleteMany({});
-  await prisma.favorite.deleteMany({});
-
-  await prisma.student.deleteMany({});
-  // await prisma.teacher.deleteMany({});
-  await prisma.user.deleteMany({ where: { provider: 'LOCAL' } });
+  // await prisma.group.deleteMany({});
+  // await prisma.assignment.deleteMany({});
+  // await prisma.assignmentSubmission.deleteMany({});
+  // await prisma.classJoinRequest.deleteMany({});
+  // await prisma.announcement.deleteMany({});
+  // await prisma.class.deleteMany({});
+  // await prisma.message.deleteMany({});
+  // await prisma.discussion.deleteMany({});
+  // await prisma.favorite.deleteMany({});
+  //
+  // await prisma.student.deleteMany({});
+  // // await prisma.teacher.deleteMany({});
+  // await prisma.user.deleteMany({ where: { provider: 'LOCAL' } });
 
   const users = await prisma.user.findMany({
     where: { email: 'peter.leerkracht@test.com' },
