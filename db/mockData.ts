@@ -21,7 +21,7 @@ export async function addMockData(prisma: PrismaClient) {
   await prisma.user.deleteMany({ where: { provider: 'LOCAL' } });
 
   const users = await prisma.user.findMany({
-    where: { provider: 'GOOGLE' },
+    where: { email: 'peter.leerkracht@test.com' },
     include: { teacher: true },
   });
 
@@ -38,7 +38,12 @@ export async function addMockData(prisma: PrismaClient) {
       include: { learningPathNodes: true },
     }))!;
 
-    const students = [];
+    const students = [
+      (await prisma.user.findFirst({
+        where: { email: 'robbe.student@test.com' },
+        include: { student: true },
+      }))!,
+    ];
     // create 10 students
     for (let i = 0; i < 10; i++) {
       students.push(
